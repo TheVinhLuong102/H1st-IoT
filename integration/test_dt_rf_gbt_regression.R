@@ -61,6 +61,7 @@ regression_model <- seriousdlqin2yrs ~ revolvingutilizationofunsecuredlines + ag
 # ---- test decision tree model ---
 dtModel <- adatao.decisionTree(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, minInstancePerNode = 5000, minInformationGain = 0.0)
 print(dtModel)
+adatao.variableImportance(dtModel)
 
 # evaluate model using r2 
 # # fitted model Rsquared calcuation R2 = ssreg / sstot
@@ -86,6 +87,8 @@ expect_equal(sqrt(dtMse),sqrt(mean((dtPred_df$ytrue - dtPred_df$yPredict)^2)))
 # --- test RF model --- featureSubsetStrategy = 'auto'
 rfModel <- adatao.randomForest(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32, numTrees = 20, featureSubsetStrategy = 'auto', minInstancePerNode = 5000, minInformationGain = 0.0, seed = 0)
 print(rfModel)
+adatao.variableImportance(rfModel)
+
 # make prediction on testData
 rfPredData <- adatao.predict(rfModel, testData)
 
@@ -102,6 +105,8 @@ expect_equal(sqrt(rfMse),sqrt(mean((RfPred_df$ytrue - RfPred_df$yPredict)^2)))
 # --- test RF model --- featureSubsetStrategy = 'all'
 rfModel <- adatao.randomForest(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32, numTrees = 50, featureSubsetStrategy = 'all', minInstancePerNode = 5000, minInformationGain = 0.0, seed = 0)
 print(rfModel)
+adatao.variableImportance(rfModel)
+
 # make prediction on testData
 rfPredData <- adatao.predict(rfModel, testData)
 
@@ -118,6 +123,7 @@ expect_equal(sqrt(rfMse),sqrt(mean((RfPred_df$ytrue - RfPred_df$yPredict)^2)))
 # --- test RF model --- featureSubsetStrategy = 'sqrt'
 rfModel <- adatao.randomForest(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32, numTrees = 100, featureSubsetStrategy = 'sqrt', minInstancePerNode = 5000, minInformationGain = 0.0, seed = 0)
 print(rfModel)
+adatao.variableImportance(rfModel)
 # make prediction on testData
 rfPredData <- adatao.predict(rfModel, testData)
 
@@ -134,6 +140,7 @@ expect_equal(sqrt(rfMse),sqrt(mean((RfPred_df$ytrue - RfPred_df$yPredict)^2)))
 # --- test RF model --- featureSubsetStrategy = 'log2'
 rfModel <- adatao.randomForest(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32, numTrees = 100, featureSubsetStrategy = 'log2', minInstancePerNode = 5000, minInformationGain = 0.0, seed = 0)
 print(rfModel)
+adatao.variableImportance(rfModel)
 # make prediction on testData
 rfPredData <- adatao.predict(rfModel, testData)
 
@@ -149,6 +156,7 @@ expect_equal(sqrt(rfMse),sqrt(mean((RfPred_df$ytrue - RfPred_df$yPredict)^2)))
 # --- test RF model --- featureSubsetStrategy = 'onethird'
 rfModel <- adatao.randomForest(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32, numTrees = 200, featureSubsetStrategy = 'onethird', minInstancePerNode = 5000, minInformationGain = 0.0, seed = 0)
 print(rfModel)
+adatao.variableImportance(rfModel)
 # make prediction on testData
 rfPredData <- adatao.predict(rfModel, testData)
 
@@ -165,6 +173,7 @@ expect_equal(sqrt(rfMse),sqrt(mean((RfPred_df$ytrue - RfPred_df$yPredict)^2)))
 # ---- test GBT model --- lossFn = "SquaredError"
 gbtModel <- adatao.gradientBoostedTrees(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32,  numIterations = 50,  learningRate = 0.1, lossFn = "SquaredError", minInstancePerNode = 5000, minInformationGain = 0.0)
 print(gbtModel)
+adatao.variableImportance(gbtModel)
 # make prediction
 gbtPredData <- adatao.predict(rfModel, testData)
 
@@ -181,6 +190,7 @@ expect_equal(sqrt(gbtMse),sqrt(mean((gbtPred_df$ytrue - gbtPred_df$yPredict)^2))
 # ---- test GBT model --- lossFn = "LogLoss"
 gbtModel <- adatao.gradientBoostedTrees(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32,  numIterations = 200, lossFn = "LogLoss",  learningRate = 0.001, minInstancePerNode = 5000, minInformationGain = 0.0)
 print(gbtModel)
+adatao.variableImportance(gbtModel)
 # make prediction
 gbtPredData <- adatao.predict(rfModel, testData)
 
@@ -197,6 +207,7 @@ expect_equal(sqrt(gbtMse),sqrt(mean((gbtPred_df$ytrue - gbtPred_df$yPredict)^2))
 # ---- test GBT model --- lossFn = "AbsoluteError"
 gbtModel <- adatao.gradientBoostedTrees(regression_model, data=trainingData, method = 'regression', impurity = 'Variance', maxDepth = 10, maxBin = 32,  numIterations = 100,  learningRate = 0.01, lossFn = "AbsoluteError", minInstancePerNode = 5000, minInformationGain = 0.0)
 print(gbtModel)
+adatao.variableImportance(gbtModel)
 # make prediction
 gbtPredData <- adatao.predict(rfModel, testData)
 
