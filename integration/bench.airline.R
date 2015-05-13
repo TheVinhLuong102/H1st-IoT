@@ -50,7 +50,7 @@ bench <- function(HOST, USERNAME, TABLE, setupCommands, commands, teardownComman
 }
 
 connect <- c(
-  quote(adatao.connect(HOST))
+  quote(adatao.connect(HOST, 16000, USERNAME, PASSWORD))
 )
 disconnect <- c(
   quote(adatao.disconnect())
@@ -166,7 +166,7 @@ bench.airline.standard <- function(HOST, USERNAME, TABLE, numIters) {
 }
 
 #' as light weightly as possible to test through all APIs
-bench.airline.sample <- function(HOST, USERNAME, TABLE) {
+bench.airline.sample <- function(HOST, USERNAME, PASSWORD, TABLE) {
   before <- c(
     connect,
     airline.sample100
@@ -600,8 +600,9 @@ if (length(argv) < 5) {
 section <- argv[[1]]
 host <- argv[[2]]
 username <- argv[[3]]
-table <- argv[[4]]
-numIters<- as.integer(argv[[5]])
+password <- argv[[4]]
+table <- argv[[5]]
+numIters<- as.integer(argv[[6]])
 
 library(adatao)
 
@@ -611,7 +612,7 @@ options(warn=0)
 if (section == "standard") {
   bench.airline.standard(host, username, table, numIters)
 } else if (section == "sample") {
-  bench.airline.sample(host, username, table)
+  bench.airline.sample(host, username, password, table)
 } else if (section == "load") {
   bench.airline.load(host, username, table, numIters)
 } else if (section == "hdfs") {
