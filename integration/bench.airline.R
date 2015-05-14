@@ -5,11 +5,12 @@
 # otherwise pause for a random think time ~ Exponential distribution of lambda, e.g. rexp() in R
 pauseRate <- as.double(Sys.getenv("ADATAO_THINK_TIME_LAMBDA"))
 
-bench <- function(HOST, USERNAME, TABLE, setupCommands, commands, teardownCommands, numIters, doSetupOnce=F, labels=NULL) {
+bench <- function(HOST, USERNAME, PASSWORD, TABLE, setupCommands, commands, teardownCommands, numIters, doSetupOnce=F, labels=NULL) {
   env <- new.env()
   assign("HOST", HOST, envir=env)
   assign("TABLE", TABLE, envir=env)
   assign("USERNAME", USERNAME, envir=env)
+  assign("PASSWORD", PASSWORD, envir=env)
   if (doSetupOnce) sapply(setupCommands, FUN=eval, envir=env)
   
   timing <- matrix(rep(NA, length(commands)*numIters), c(length(commands), numIters))
@@ -156,13 +157,13 @@ all_api_cmds <- c(
 
 #' this serves a standard all-features benchmark
 #' or as a full-scale system smoke tests
-bench.airline.standard <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.standard <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(
     connect,
     airline.load
     )
   cmds <- all_api_cmds
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
 #' as light weightly as possible to test through all APIs
@@ -172,10 +173,10 @@ bench.airline.sample <- function(HOST, USERNAME, PASSWORD, TABLE) {
     airline.sample100
     )
   cmds <- all_api_cmds
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, 1, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, 1, doSetupOnce=T)
 }
 
-bench.airline.load <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.load <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   cmds <- c(
     # 7 cols
     quote(adatao.sql2ddf(paste("select year, month, dayofmonth, deptime, distance, arrdelay, depdelay from ", TABLE))),
@@ -184,11 +185,11 @@ bench.airline.load <- function(HOST, USERNAME, TABLE, numIters) {
     # 29 cols
     quote(adatao.sql2ddf(paste("select * from ", TABLE)))
   )
-  bench(HOST, USERNAME, TABLE, connect, cmds, disconnect, numIters, doSetupOnce=F)
+  bench(HOST, USERNAME, PASSWORD, TABLE, connect, cmds, disconnect, numIters, doSetupOnce=F)
 }
 
 
-bench.airline.stats <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.stats <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   cmds <- c(  
     # basic stats
     quote(nrow(df)),
@@ -203,10 +204,10 @@ bench.airline.stats <- function(HOST, USERNAME, TABLE, numIters) {
     quote(adatao.cor(df$arrdelay, df$depdelay)),
     quote(adatao.as.factor(df, column="cancelled"))
   )
-  bench(HOST, USERNAME, TABLE, c(connect, airline.load14), cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, c(connect, airline.load14), cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.lm.gd <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.lm.gd <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect, airline.load14, c(
     quote(df <- adatao.as.factor(df, cols=c("year", "month", "dayofmonth", "dayofweek"))),
     quote(df.scaled <- adatao.scale(df, "normalization")),
@@ -264,10 +265,10 @@ bench.airline.lm.gd <- function(HOST, USERNAME, TABLE, numIters) {
                      learningRate=0.25,
                      numIterations=20))
   )
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.linearmodels <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.linearmodels <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect, airline.load14, c(
     quote(df <- adatao.as.factor(df, cols=c("year", "month", "dayofmonth", "dayofweek"))),
     quote(splits <- adatao.cv.kfold(data=df, k=3, seed=42)),
@@ -307,10 +308,10 @@ bench.airline.linearmodels <- function(HOST, USERNAME, TABLE, numIters) {
                      k=5, seed=11,
                      regularized="ridge", lambda=1))
   )
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.logistic <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.logistic <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect, c(
     quote(df <- adatao.sql2ddf(paste("select year, month, dayofmonth, dayofweek,
                                   deptime, distance, uniquecarrier,
@@ -355,10 +356,10 @@ bench.airline.logistic <- function(HOST, USERNAME, TABLE, numIters) {
                       k=5, seed=12,
                       regularized="ridge", lambda=1))
   )
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.rddmatrix <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.rddmatrix <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect, airline.load14)
   cmds <- c(
     # lm base
@@ -379,10 +380,10 @@ bench.airline.rddmatrix <- function(HOST, USERNAME, TABLE, numIters) {
     quote(adatao.lm(arrdelay ~ month, data=df))
   )
   labels <- c("lm base 1", "lm base 2", "lm base 3", "lm categorical 1", "lm categorical 2", "lm categorical 3")
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters=2, labels=labels, doSetupOnce=F)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters=2, labels=labels, doSetupOnce=F)
 }
 
-bench.airline.kmeans <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.kmeans <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   cmds <- c(
     # kmeans base
     quote(adatao.kmeans(df,
@@ -444,10 +445,10 @@ bench.airline.kmeans <- function(HOST, USERNAME, TABLE, numIters) {
                       120,
                       10))
   )
-  bench(HOST, USERNAME, TABLE, c(connect, airline.load14), cmds, disconnect, numIters, doSetupOnce=F)
+  bench(HOST, USERNAME, PASSWORD, TABLE, c(connect, airline.load14), cmds, disconnect, numIters, doSetupOnce=F)
 }
 
-bench.airline.randomForest <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.randomForest <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect,
     quote(df <- adatao.sql2ddf(paste("select arrdelay, depdelay, cancelled, carrierdelay, weatherdelay, nasdelay, securitydelay, lateaircraftdelay from ", TABLE)))
   )
@@ -482,10 +483,10 @@ bench.airline.randomForest <- function(HOST, USERNAME, TABLE, numIters) {
 #                                              userSeed=122))
   )
     
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.metrics <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.metrics <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   before <- c(connect, airline.load14, c(
     quote(df.scaled <- adatao.scale(df, "normalization")),
     quote(lm1 <- adatao.lm(arrdelay ~ depdelay + carrierdelay + weatherdelay + nasdelay + securitydelay + lateaircraftdelay,
@@ -537,10 +538,10 @@ bench.airline.metrics <- function(HOST, USERNAME, TABLE, numIters) {
     # metric on cv split
     quote(adatao.metrics(data=prediction))
   )
-  bench(HOST, USERNAME, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
+  bench(HOST, USERNAME, PASSWORD, TABLE, before, cmds, disconnect, numIters, doSetupOnce=T)
 }
 
-bench.airline.hdfs <- function(HOST, USERNAME, TABLE, numIters) {
+bench.airline.hdfs <- function(HOST, USERNAME, PASSWORD, TABLE, numIters) {
   setup <- c(
     connect,
     quote(df <- adatao.loadTable(TABLE)),
@@ -580,7 +581,7 @@ bench.airline.hdfs <- function(HOST, USERNAME, TABLE, numIters) {
     quote(summary(df)),
     quote(adatao.lm(arrdelay ~ depdelay + distance, data=df))
   )
-  bench(HOST, USERNAME, TABLE, setup, cmds, disconnect, numIters, doSetupOnce=F)
+  bench(HOST, USERNAME, PASSWORD, TABLE, setup, cmds, disconnect, numIters, doSetupOnce=F)
 }
 
 usage <- function() {
@@ -610,29 +611,29 @@ options(adatao.debug=T)
 options(warn=0)
 
 if (section == "standard") {
-  bench.airline.standard(host, username, table, numIters)
+  bench.airline.standard(host, username, password, table, numIters)
 } else if (section == "sample") {
   bench.airline.sample(host, username, password, table)
 } else if (section == "load") {
-  bench.airline.load(host, username, table, numIters)
+  bench.airline.load(host, username, password, table, numIters)
 } else if (section == "hdfs") {
-  bench.airline.hdfs(host, username, table, numIters)
+  bench.airline.hdfs(host, username, password, table, numIters)
 } else if (section == "stats") {
-  bench.airline.stats(host, username, table, numIters)
+  bench.airline.stats(host, username, password, table, numIters)
 } else if (section == "lm.gd") {
-  bench.airline.lm.gd(host, username, table, numIters)
+  bench.airline.lm.gd(host, username, password, table, numIters)
 } else if (section == "linearmodels") {
-  bench.airline.linearmodels(host, username, table, numIters)
+  bench.airline.linearmodels(host, username, password, table, numIters)
 } else if (section == "logistic") {
-  bench.airline.logistic(host, username, table, numIters)
+  bench.airline.logistic(host, username, password, table, numIters)
 } else if (section == "rddmatrix") {
-  bench.airline.rddmatrix(host, username, table, numIters)
+  bench.airline.rddmatrix(host, username, password, table, numIters)
 } else if (section == "kmeans") {
-  bench.airline.kmeans(host, username, table, numIters)
+  bench.airline.kmeans(host, username, password, table, numIters)
 } else if (section == "metrics") {
-  bench.airline.metrics(host, username, table, numIters)
+  bench.airline.metrics(host, username, password, table, numIters)
 } else if (section == "randomForest") {
-  bench.airline.randomForest(host, username, table, numIters)
+  bench.airline.randomForest(host, username, password, table, numIters)
 } else {
   stop(paste("Invalid benchmark section: ", section,""))
 }
