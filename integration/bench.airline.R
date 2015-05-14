@@ -592,9 +592,9 @@ usage <- function() {
 
 argv <- commandArgs(trailingOnly = TRUE)
 
-if (length(argv) < 5) {
+if (length(argv) < 6) {
   usage()
-  stop("Require 5 arguments.")
+  stop("Require 6 arguments.")
 }
 
 section <- argv[[1]]
