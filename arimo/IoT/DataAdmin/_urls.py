@@ -8,15 +8,15 @@ from arimo.IoT.DataAdmin.base.autocompletes import EquipmentDataFieldAutoComplet
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/admin')),
 
-    # url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^grappelli/', include('grappelli.urls')),
 
     url(r'^admin/', admin.site.urls),
 
-    url(r'^EquipmentDataField-AutoComplete/$',
+    url(r'^{}/$'.format(EquipmentDataFieldAutoComplete.name),
         EquipmentDataFieldAutoComplete.as_view(),
-        name='EquipmentDataField-AutoComplete'),
+        name=EquipmentDataFieldAutoComplete.name),
 
-    url(r'^EquipmentUniqueType-AutoComplete/$',
+    url(r'^{}/$'.format(EquipmentUniqueTypeAutoComplete.name),
         EquipmentUniqueTypeAutoComplete.as_view(),
-        name='EquipmentUniqueType-AutoComplete')
+        name=EquipmentUniqueTypeAutoComplete.name)
 ]

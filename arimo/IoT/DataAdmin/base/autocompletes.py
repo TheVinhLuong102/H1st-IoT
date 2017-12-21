@@ -4,6 +4,8 @@ from .models import EquipmentDataField, EquipmentUniqueType
 
 
 class EquipmentDataFieldAutoComplete(autocomplete.Select2QuerySetView):
+    name = 'EquipmentDataField-AutoComplete'
+
     def get_queryset(self):
         if self.request.user.is_authenticated():
             query_set = EquipmentDataField.objects.all()
@@ -18,6 +20,8 @@ class EquipmentDataFieldAutoComplete(autocomplete.Select2QuerySetView):
 
 
 class EquipmentUniqueTypeAutoComplete(autocomplete.Select2QuerySetView):
+    name = 'EquipmentUniqueType-AutoComplete'
+
     def get_queryset(self):
         if self.request.user.is_authenticated():
             query_set = EquipmentUniqueType.objects.all()
