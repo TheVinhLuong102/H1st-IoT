@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'arimo.IoT.DataAdmin.Base',
+    'arimo.IoT.DataAdmin.base',
     'arimo.IoT.DataAdmin.PredMaint'
 ]
 
