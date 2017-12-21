@@ -79,7 +79,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
-ROOT_URLCONF = 'arimo.IoT.DataAdmin._urls'
+ROOT_URLCONF = 'arimo.IoT.DataAdmin._project.urls'
 
 TEMPLATES = [
     {
@@ -97,7 +97,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = '...'
+WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 
 
 # Database
