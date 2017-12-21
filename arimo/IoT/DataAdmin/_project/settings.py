@@ -103,16 +103,16 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': '...',
-#         'USER': '...',
-#         'PASSWORD': '...',
-#         'HOST': '...',
-#         'PORT': '5432'
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': NotImplemented,
+        'USER': NotImplemented,
+        'PASSWORD': NotImplemented,
+        'HOST': NotImplemented,
+        'PORT': '5432'
+    }
+}
 
 
 # Password validation
