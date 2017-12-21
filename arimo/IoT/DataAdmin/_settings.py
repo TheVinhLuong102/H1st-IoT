@@ -27,7 +27,7 @@ _ON_LINUX_CLUSTER = sys.platform.startswith('linux')
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '...'
+SECRET_KEY = '_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not _ON_LINUX_CLUSTER
