@@ -1,0 +1,11 @@
+# Python
+*.pyc
+build/
+dist/
+src/
+*egg-info*
+*ipynb_checkpoints*
+
+# IntelliJ IDEA files
+*.iml
+.idea/
