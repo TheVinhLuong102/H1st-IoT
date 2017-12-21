@@ -1,0 +1,3 @@
+include requirements.txt
+include arimo/metadata.json
+recursive-exclude *.pyc

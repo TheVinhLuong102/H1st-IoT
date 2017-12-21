@@ -1,0 +1,22 @@
+Django >= 1.11.8, < 2
+
+Django-AutoComplete-Light >= 3.2.10
+Django-Generic-M2M >= 0.3.1
+Django-GM2M >= 0.4.10
+Django-QuerySetSequence >= 0.8
+Django-Tagging >= 0.4.6
+Django-Taggit >= 0.22.1
+
+Django-Grappelli >= 2.10.1
+
+Django-Extensions >= 1.9.8
+
+Django-Nested-InLines >= 0.1
+
+SQLAlchemy >= 1.2.0b3
+Alembic >= 0.9.6
+SQLAlchemy-Migrate >= 0.11.0
+
+PsycoPG2 >= 2.7.3.2
+
+AWSEBCLI >= 3.12.1
