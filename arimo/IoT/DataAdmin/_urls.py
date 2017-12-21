@@ -8,7 +8,7 @@ from arimo.IoT.DataAdmin.base.autocompletes import EquipmentDataFieldAutoComplet
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/admin')),
 
-    url(r'^grappelli/', include('grappelli.urls')),
+    # url(r'^grappelli/', include('grappelli.urls')),
 
     url(r'^admin/', admin.site.urls),
 
