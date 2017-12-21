@@ -1,0 +1,22 @@
+from django.conf.urls import include, url
+from django.contrib import admin
+from django.views.generic.base import RedirectView
+
+from arimo.IoT.DataAdmin.base.autocompletes import EquipmentDataFieldAutoComplete, EquipmentUniqueTypeAutoComplete
+
+
+URL_PATTERNS = [
+    url(r'^$', RedirectView.as_view(url='/admin')),
+
+    url(r'^grappelli/', include('grappelli.urls')),
+
+    url(r'^admin/', admin.site.urls),
+
+    url(r'^EquipmentDataField-AutoComplete/$',
+        EquipmentDataFieldAutoComplete.as_view(),
+        name='EquipmentDataField-AutoComplete'),
+
+    url(r'^EquipmentUniqueType-AutoComplete/$',
+        EquipmentUniqueTypeAutoComplete.as_view(),
+        name='EquipmentUniqueType-AutoComplete')
+]
