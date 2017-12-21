@@ -5,7 +5,7 @@ from django.views.generic.base import RedirectView
 from arimo.IoT.DataAdmin.base.autocompletes import EquipmentDataFieldAutoComplete, EquipmentUniqueTypeAutoComplete
 
 
-URL_PATTERNS = [
+urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/admin')),
 
     url(r'^grappelli/', include('grappelli.urls')),
