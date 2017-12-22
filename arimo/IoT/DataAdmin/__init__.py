@@ -1,9 +1,10 @@
+from argparse import Namespace
+
 from django.conf import settings
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
-from arimo.util import Namespace
 
 
 class Project(object):
