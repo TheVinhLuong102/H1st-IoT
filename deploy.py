@@ -32,7 +32,8 @@ json.dump(
          NAME=args.db_name,
          USER=args.db_usr,
          PASSWORD=args.db_pw),
-    open(_DB_DETAILS_FILE_PATH, 'w'))
+    open(_DB_DETAILS_FILE_PATH, 'w'),
+    indent=2)
 
 
 os.system('eb create {}'.format(args.eb_env))
