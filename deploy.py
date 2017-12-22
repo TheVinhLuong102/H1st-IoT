@@ -43,4 +43,7 @@ os.system(
         args.env))
 
 
-json.dump(_DEFAULT_DB_DETAILS, open(_DB_DETAILS_FILE_PATH, 'w'), indent=2)
+json.dump(
+    _DEFAULT_DB_DETAILS,
+    open(_DB_DETAILS_FILE_PATH, 'w'),
+    indent=2)
