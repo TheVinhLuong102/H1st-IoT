@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
@@ -6,12 +7,13 @@ from arimo.util import Namespace
 
 
 class Project(object):
-    def __init__(self, **db_args):
-        d = arimo.IoT.DataAdmin._project.settings.__dict__.copy()
-        d['DATABASES']['default'].update(db_args)
+    def __init__(self, db_args):
+        arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update(db_args)
+        settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
+        self._settings = settings
+        self._wsgi_app = get_wsgi_application()
 
-        settings.configure(**d)
-        self.wsgi_application = get_wsgi_application()
+        call_command('migrate')
 
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, \
@@ -32,3 +34,6 @@ class Project(object):
                 PredMaint=Namespace(
 
                 ))
+
+    def _make_migrations(self):
+        call_command('makemigrations')
