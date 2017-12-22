@@ -10,8 +10,7 @@ class Project(object):
     def __init__(self, db_args):
         arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update(db_args)
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
-        self._settings = settings
-        self._wsgi_app = get_wsgi_application()
+        get_wsgi_application()
 
         call_command('migrate')
 
