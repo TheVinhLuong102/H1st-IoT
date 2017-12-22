@@ -2,6 +2,9 @@ branch-defaults:
   default:
     environment: ArimoIoTDataAdmin-env
     group_suffix: null
+  master:
+    environment: ArimoIoTDataAdmin-env
+    group_suffix: null
 global:
   application_name: ArimoIoTDataAdmin-app
   branch: null
