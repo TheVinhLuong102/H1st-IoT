@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 
+import json
 import os
 import sys
 
@@ -103,15 +104,10 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+_DB_DETAILS_FILE_NAME = 'db.json'
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': NotImplemented,
-        'PORT': '5432',
-        'NAME': NotImplemented,
-        'USER': NotImplemented,
-        'PASSWORD': NotImplemented
-    }
+    'default': json.load(open(_DB_DETAILS_FILE_NAME))
 }
 
 
