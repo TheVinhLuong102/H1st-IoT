@@ -13,7 +13,8 @@ _DEFAULT_DB_DETAILS = json.load(open(_DB_DETAILS_FILE_PATH))
 
 arg_parser = argparse.ArgumentParser()
 
-arg_parser.add_argument('--eb-env', default='ArimoIoTDataAdmin-env')
+arg_parser.add_argument('--create', action='store_true')
+arg_parser.add_argument('--env')
 
 arg_parser.add_argument('--db-eng', default='django.db.backends.postgresql')
 arg_parser.add_argument('--db-host')
@@ -36,7 +37,10 @@ json.dump(
     indent=2)
 
 
-os.system('eb create {}'.format(args.eb_env))
+os.system(
+    'eb {} {}'.format(
+        'create' if args.create else 'deploy',
+        args.env))
 
 
 json.dump(_DEFAULT_DB_DETAILS, open(_DB_DETAILS_FILE_PATH, 'w'), indent=2)
