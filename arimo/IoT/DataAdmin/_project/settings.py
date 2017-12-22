@@ -97,7 +97,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
+WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 
 
 # Database
