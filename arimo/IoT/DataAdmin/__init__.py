@@ -12,7 +12,7 @@ class Project(object):
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
 
-        call_command('migrate')
+        self._migrate()
 
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, \
@@ -34,5 +34,14 @@ class Project(object):
 
                 ))
 
+    def _collect_static(self):
+        call_command('collectstatic')
+
+    def _create_super_user(self):
+        call_command('createsuperuser')
+
     def _make_migrations(self):
         call_command('makemigrations')
+
+    def _migrate(self):
+        call_command('migrate')
