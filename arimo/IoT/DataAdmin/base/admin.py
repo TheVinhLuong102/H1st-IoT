@@ -10,9 +10,9 @@ class DataTypeAdmin(ModelAdmin):
     search_fields = 'name',
 
 
-site.register(
-     DataType,
-     admin_class=DataTypeAdmin)
+# site.register(
+#     DataType,
+#     admin_class=DataTypeAdmin)
 
 
 class EquipmentDataFieldTypeAdmin(ModelAdmin):
@@ -21,9 +21,9 @@ class EquipmentDataFieldTypeAdmin(ModelAdmin):
     search_fields = 'name',
 
 
-site.register(
-    EquipmentDataFieldType,
-    admin_class=EquipmentDataFieldTypeAdmin)
+# site.register(
+#     EquipmentDataFieldType,
+#     admin_class=EquipmentDataFieldTypeAdmin)
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
