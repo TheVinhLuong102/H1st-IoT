@@ -16,7 +16,7 @@ _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
 class Project(object):
     def __init__(self, db_args):
-        arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update(db_args)
+        arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
 
