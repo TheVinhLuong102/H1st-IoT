@@ -24,7 +24,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
         model = EquipmentUniqueType
         fields = '__all__'
         widgets = {
-            'equipment_data_fields':
+            'data_fields':
                 autocomplete.ModelSelect2Multiple(
                     url='EquipmentDataField-AutoComplete',
                     attrs={
