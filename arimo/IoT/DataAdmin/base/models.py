@@ -175,13 +175,13 @@ class EquipmentUniqueType(Model):
             blank=False,
             null=False)
 
-    equipment_data_fields = \
-        ManyToManyField(
-            to=EquipmentDataField,
-            through=EquipmentDataField.equipment_unique_types.through,
+    # equipment_data_fields = \
+    #     ManyToManyField(
+    #         to=EquipmentDataField,
+    #         through=EquipmentDataField.equipment_unique_types.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
-            blank=True)
+    #         blank=False)
 
     class Meta:
         ordering = 'equipment_general_type', 'name'
