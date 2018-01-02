@@ -1,29 +1,7 @@
 from django.contrib.admin import ModelAdmin, site
 
 from .forms import EquipmentDataFieldForm, EquipmentUniqueTypeForm
-from .models import DataType, EquipmentDataFieldType, EquipmentGeneralType, EquipmentDataField, EquipmentUniqueType
-
-
-class DataTypeAdmin(ModelAdmin):
-    list_display = 'name',
-    list_filter = 'name',
-    search_fields = 'name',
-
-
-# site.register(
-#     DataType,
-#     admin_class=DataTypeAdmin)
-
-
-class EquipmentDataFieldTypeAdmin(ModelAdmin):
-    list_display = 'name',
-    list_filter = 'name',
-    search_fields = 'name',
-
-
-# site.register(
-#     EquipmentDataFieldType,
-#     admin_class=EquipmentDataFieldTypeAdmin)
+from .models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueType
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
