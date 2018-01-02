@@ -3,6 +3,8 @@ from django.db.models import \
     BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, \
     CASCADE, PROTECT, SET_NULL
 
+from arimo.IoT.DataAdmin.util import clean_lower_str
+
 
 _MAX_CHAR_LEN = 255
 
@@ -22,7 +24,7 @@ class DataType(Model):
         return 'Data Type "{}"'.format(self.name)
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = clean_lower_str(self.name)
         return super(DataType, self).save(*args, **kwargs)
 
 
@@ -41,7 +43,7 @@ class EquipmentDataFieldType(Model):
         return 'Equipment Data Field Type "{}"'.format(self.name)
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = clean_lower_str(self.name)
         return super(EquipmentDataFieldType, self).save(*args, **kwargs)
 
 
@@ -60,7 +62,7 @@ class EquipmentGeneralType(Model):
         return 'Equipment General Type "{}"'.format(self.name)
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = clean_lower_str(self.name)
         return super(EquipmentGeneralType, self).save(*args, **kwargs)
 
 
@@ -152,7 +154,7 @@ class EquipmentDataField(Model):
                 else 'UNTYPED')
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = clean_lower_str(self.name)
         return super(EquipmentDataField, self).save(*args, **kwargs)
 
 
@@ -193,5 +195,5 @@ class EquipmentUniqueType(Model):
             self.name.upper())
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = clean_lower_str(self.name)
         return super(EquipmentUniqueType, self).save(*args, **kwargs)

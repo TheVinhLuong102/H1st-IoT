@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
+from arimo.IoT.DataAdmin.util import clean_lower_str
 
 
 _STR_CLASSES = \
@@ -83,7 +84,7 @@ class Project(object):
 
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.models.base.EquipmentGeneralType.objects.get_or_create(
-            name=equipment_general_type_name.lower(),
+            name=clean_lower_str(equipment_general_type_name),
             defaults=None)[0]
 
     def get_or_create_equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
@@ -91,7 +92,7 @@ class Project(object):
             equipment_general_type=
                 self.get_or_create_equipment_general_type(
                     equipment_general_type_name=equipment_general_type_name),
-            name=equipment_unique_type_name.lower(),
+            name=clean_lower_str(equipment_unique_type_name),
             defaults=None)[0]
 
     def update_or_create_equipment_data_field(
@@ -113,13 +114,13 @@ class Project(object):
                 equipment_general_type=
                     self.get_or_create_equipment_general_type(
                         equipment_general_type_name=equipment_general_type_name),
-                name=equipment_data_field_name.lower(),
+                name=clean_lower_str(equipment_data_field_name),
                 defaults=kwargs)[0]
 
         equipment_unique_type_names_excl = \
-            {equipment_unique_type_names_excl.lower()} \
+            {clean_lower_str(equipment_unique_type_names_excl)} \
             if isinstance(equipment_unique_type_names_excl, _STR_CLASSES) \
-            else {equipment_unique_type_name.lower()
+            else {clean_lower_str(equipment_unique_type_name)
                   for equipment_unique_type_name in equipment_unique_type_names_excl}
 
         equipment_unique_types = []
@@ -132,9 +133,9 @@ class Project(object):
                 equipment_unique_type_names.append(equipment_unique_type_name)
 
         for equipment_unique_type_name in \
-                ({equipment_unique_type_names_incl.lower()}
+                ({clean_lower_str(equipment_unique_type_names_incl)}
                  if isinstance(equipment_unique_type_names_incl, _STR_CLASSES)
-                 else {equipment_unique_type_name.lower()
+                 else {clean_lower_str(equipment_unique_type_name)
                        for equipment_unique_type_name in equipment_unique_type_names_incl}) \
                 .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
             equipment_unique_types.append(
