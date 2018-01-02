@@ -21,6 +21,10 @@ class DataType(Model):
     def __unicode__(self):
         return 'Data Type "{}"'.format(self.name)
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(DataType, self).save(*args, **kwargs)
+
 
 class EquipmentDataFieldType(Model):
     name = \
@@ -36,6 +40,10 @@ class EquipmentDataFieldType(Model):
     def __unicode__(self):
         return 'Equipment Data Field Type "{}"'.format(self.name)
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(EquipmentDataFieldType, self).save(*args, **kwargs)
+
 
 class EquipmentGeneralType(Model):
     name = \
@@ -50,6 +58,10 @@ class EquipmentGeneralType(Model):
 
     def __unicode__(self):
         return 'Equipment General Type "{}"'.format(self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(EquipmentGeneralType, self).save(*args, **kwargs)
 
 
 class EquipmentDataField(Model):
@@ -139,6 +151,10 @@ class EquipmentDataField(Model):
                 if self.data_type
                 else 'UNTYPED')
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(EquipmentDataField, self).save(*args, **kwargs)
+
 
 class EquipmentUniqueType(Model):
     RELATED_NAME = 'equipment_unique_types'
@@ -174,3 +190,7 @@ class EquipmentUniqueType(Model):
         return '{} Unique Type {}'.format(
             self.equipment_general_type.name.upper(),
             self.name.upper())
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super(EquipmentUniqueType, self).save(*args, **kwargs)
