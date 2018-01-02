@@ -95,22 +95,28 @@ class Project(object):
         call_command('migrate')
 
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
-        return self.models.base.EquipmentGeneralType.get_or_create(
+        return self.models.base.EquipmentGeneralType.objects.get_or_create(
             name=equipment_general_type_name.lower(),
             defaults=None)[0]
 
     def get_or_create_equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
-        return self.models.base.EquipmentUniqueType.get_or_create(
+        return self.models.base.EquipmentUniqueType.objects.get_or_create(
             equipment_general_type=
                 self.get_or_create_equipment_general_type(
                     equipment_general_type_name=equipment_general_type_name),
             name=equipment_unique_type_name.lower(),
             defaults=None)[0]
 
-    def get_or_create_equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, **kwargs):
-        return self.models.base.EquipmentUniqueType.get_or_create(
-            equipment_general_type=
-                self.get_or_create_equipment_general_type(
-                    equipment_general_type_name=equipment_general_type_name),
-            name=equipment_data_field_name.lower(),
-            defaults=kwargs)[0]
+    def update_or_create_equipment_data_field(
+            self, equipment_general_type_name, equipment_data_field_name,
+            equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
+            **kwargs):
+        equipment_data_field, created = \
+            self.models.base.EquipmentDataField.objects.update_or_create(
+                equipment_general_type=
+                    self.get_or_create_equipment_general_type(
+                        equipment_general_type_name=equipment_general_type_name),
+                name=equipment_data_field_name.lower(),
+                defaults=kwargs)[0]
+
+        return equipment_data_field.equipment_unique_types
