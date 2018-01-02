@@ -104,5 +104,13 @@ class Project(object):
             equipment_general_type=
                 self.get_or_create_equipment_general_type(
                     equipment_general_type_name=equipment_general_type_name),
-            name=equipment_unique_type_name.lower())[0]
+            name=equipment_unique_type_name.lower(),
+            defaults=None)[0]
 
+    def get_or_create_equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, **kwargs):
+        return self.models.base.EquipmentUniqueType.get_or_create(
+            equipment_general_type=
+                self.get_or_create_equipment_general_type(
+                    equipment_general_type_name=equipment_general_type_name),
+            name=equipment_data_field_name.lower(),
+            defaults=kwargs)[0]
