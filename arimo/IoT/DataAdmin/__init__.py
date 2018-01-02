@@ -1,10 +1,17 @@
 from argparse import Namespace
+import six
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
+
+
+_STR_CLASSES = \
+    (str, unicode) \
+    if six.PY2 \
+    else str
 
 
 _CAT_DATA_TYPE_NAME = 'cat'
@@ -29,22 +36,22 @@ class Project(object):
         self.cat_data_type_obj = \
             DataType.objects.get_or_create(
                 name=_CAT_DATA_TYPE_NAME,
-                defaults=None)
+                defaults=None)[0]
 
         self.num_data_type_obj = \
             DataType.objects.get_or_create(
                 name=_NUM_DATA_TYPE_NAME,
-                defaults=None)
+                defaults=None)[0]
 
         self.control_equipment_data_field_type_obj = \
             EquipmentDataFieldType.objects.get_or_create(
                 name=_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)
+                defaults=None)[0]
 
         self.measure_equipment_data_field_type_obj = \
             EquipmentDataFieldType.objects.get_or_create(
                 name=_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)
+                defaults=None)[0]
 
         # from arimo.IoT.DataAdmin.PredMaint.models import
 
@@ -101,7 +108,7 @@ class Project(object):
             if cat \
             else self.num_data_type_obj
 
-        equipment_data_field, created = \
+        equipment_data_field = \
             self.models.base.EquipmentDataField.objects.update_or_create(
                 equipment_general_type=
                     self.get_or_create_equipment_general_type(
@@ -109,4 +116,34 @@ class Project(object):
                 name=equipment_data_field_name.lower(),
                 defaults=kwargs)[0]
 
-        return equipment_data_field.equipment_unique_types
+        equipment_unique_type_names_excl = \
+            {equipment_unique_type_names_excl.lower()} \
+            if isinstance(equipment_unique_type_names_excl, _STR_CLASSES) \
+            else {equipment_unique_type_name.lower()
+                  for equipment_unique_type_name in equipment_unique_type_names_excl}
+
+        equipment_unique_types = []
+        equipment_unique_type_names = []
+
+        for equipment_unique_type in equipment_data_field.equipment_unique_types.all():
+            equipment_unique_type_name = equipment_unique_type.name
+            if equipment_unique_type_name not in equipment_unique_type_names_excl:
+                equipment_unique_types.append(equipment_unique_type)
+                equipment_unique_type_names.append(equipment_unique_type_name)
+
+        for equipment_unique_type_name in \
+                ({equipment_unique_type_names_incl.lower()}
+                 if isinstance(equipment_unique_type_names_incl, _STR_CLASSES)
+                 else {equipment_unique_type_name.lower()
+                       for equipment_unique_type_name in equipment_unique_type_names_incl}) \
+                .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
+            equipment_unique_types.append(
+                self.get_or_create_equipment_unique_type(
+                    equipment_general_type_name=equipment_general_type_name,
+                    equipment_unique_type_name=equipment_unique_type_name))
+
+        equipment_data_field.equipment_unique_types = equipment_unique_types
+
+        equipment_data_field.save()
+
+        return equipment_data_field
