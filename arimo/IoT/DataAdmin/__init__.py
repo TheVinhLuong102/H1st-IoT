@@ -93,3 +93,16 @@ class Project(object):
 
     def _migrate(self):
         call_command('migrate')
+
+    def get_or_create_equipment_general_type(self, equipment_general_type_name):
+        return self.models.base.EquipmentGeneralType.get_or_create(
+            name=equipment_general_type_name.lower(),
+            defaults=None)[0]
+
+    def get_or_create_equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
+        return self.models.base.EquipmentUniqueType.get_or_create(
+            equipment_general_type=
+                self.get_or_create_equipment_general_type(
+                    equipment_general_type_name=equipment_general_type_name),
+            name=equipment_unique_type_name.lower())[0]
+
