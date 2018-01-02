@@ -26,45 +26,25 @@ class Project(object):
             DataType, EquipmentDataFieldType, EquipmentDataField, \
             EquipmentGeneralType, EquipmentUniqueType
 
-        _cat_data_type_objs = DataType.objects.filter(name=_CAT_DATA_TYPE_NAME)
+        self.cat_data_type_obj = \
+            DataType.objects.get_or_create(
+                name=_CAT_DATA_TYPE_NAME,
+                defaults=None)
 
-        if _cat_data_type_objs:
-            assert len(_cat_data_type_objs) == 1
-            self.cat_data_type_obj = _cat_data_type_objs[0]
+        self.num_data_type_obj = \
+            DataType.objects.get_or_create(
+                name=_NUM_DATA_TYPE_NAME,
+                defaults=None)
 
-        else:
-            self.cat_data_type_obj = DataType(name=_CAT_DATA_TYPE_NAME)
-            self.cat_data_type_obj.save()
+        self.control_equipment_data_field_type_obj = \
+            EquipmentDataFieldType.objects.get_or_create(
+                name=_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
+                defaults=None)
 
-        _num_data_type_objs = DataType.objects.filter(name=_NUM_DATA_TYPE_NAME)
-
-        if _num_data_type_objs:
-            assert len(_num_data_type_objs) == 1
-            self.num_data_type_obj = _num_data_type_objs[0]
-
-        else:
-            self.num_data_type_obj = DataType(name=_NUM_DATA_TYPE_NAME)
-            self.num_data_type_obj.save()
-
-        _control_equipment_data_field_type_objs = EquipmentDataFieldType.objects.filter(name=_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME)
-
-        if _control_equipment_data_field_type_objs:
-            assert len(_control_equipment_data_field_type_objs) == 1
-            self.control_equipment_data_field_type_obj = _control_equipment_data_field_type_objs[0]
-
-        else:
-            self.control_equipment_data_field_type_obj = EquipmentDataFieldType(name=_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME)
-            self.control_equipment_data_field_type_obj.save()
-
-        _measure_equipment_data_field_type_objs = EquipmentDataFieldType.objects.filter(name=_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME)
-
-        if _measure_equipment_data_field_type_objs:
-            assert len(_measure_equipment_data_field_type_objs) == 1
-            self.measure_equipment_data_field_type_obj = _measure_equipment_data_field_type_objs[0]
-
-        else:
-            self.measure_equipment_data_field_type_obj = EquipmentDataFieldType(name=_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME)
-            self.measure_equipment_data_field_type_obj.save()
+        self.measure_equipment_data_field_type_obj = \
+            EquipmentDataFieldType.objects.get_or_create(
+                name=_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
+                defaults=None)
 
         # from arimo.IoT.DataAdmin.PredMaint.models import
 
@@ -108,9 +88,19 @@ class Project(object):
             defaults=None)[0]
 
     def update_or_create_equipment_data_field(
-            self, equipment_general_type_name, equipment_data_field_name,
+            self, equipment_general_type_name, equipment_data_field_name, control=False, cat=False,
             equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
             **kwargs):
+        kwargs['equipment_data_field_type'] = \
+            self.control_equipment_data_field_type_obj \
+            if control \
+            else self.measure_equipment_data_field_type_obj
+
+        kwargs['data_type'] = \
+            self.cat_data_type_obj \
+            if cat \
+            else self.num_data_type_obj
+
         equipment_data_field, created = \
             self.models.base.EquipmentDataField.objects.update_or_create(
                 equipment_general_type=
