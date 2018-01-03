@@ -3,6 +3,8 @@ from django.db.models import \
     BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, \
     CASCADE, PROTECT, SET_NULL
 
+from arimo.IoT.DataAdmin.util import clean_lower_str
+
 
 _MAX_CHAR_LEN = 255
 
@@ -21,6 +23,10 @@ class DataType(Model):
     def __unicode__(self):
         return 'Data Type "{}"'.format(self.name)
 
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(DataType, self).save(*args, **kwargs)
+
 
 class EquipmentDataFieldType(Model):
     name = \
@@ -36,6 +42,10 @@ class EquipmentDataFieldType(Model):
     def __unicode__(self):
         return 'Equipment Data Field Type "{}"'.format(self.name)
 
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentDataFieldType, self).save(*args, **kwargs)
+
 
 class EquipmentGeneralType(Model):
     name = \
@@ -50,6 +60,10 @@ class EquipmentGeneralType(Model):
 
     def __unicode__(self):
         return 'Equipment General Type "{}"'.format(self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentGeneralType, self).save(*args, **kwargs)
 
 
 class EquipmentDataField(Model):
@@ -139,6 +153,10 @@ class EquipmentDataField(Model):
                 if self.data_type
                 else 'UNTYPED')
 
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentDataField, self).save(*args, **kwargs)
+
 
 class EquipmentUniqueType(Model):
     RELATED_NAME = 'equipment_unique_types'
@@ -159,13 +177,14 @@ class EquipmentUniqueType(Model):
             blank=False,
             null=False)
 
-    # equipment_data_fields = \
-    #     ManyToManyField(
-    #         to=EquipmentDataField,
-    #         through=EquipmentDataField.equipment_unique_types.through,
+    # *** USING 'equipment_data_fields' (corresponding to EquipmentDataField above) LEADS TO BUG ***
+    data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            through=EquipmentDataField.equipment_unique_types.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
-    #         blank=False)
+            blank=True)
 
     class Meta:
         ordering = 'equipment_general_type', 'name'
@@ -174,3 +193,57 @@ class EquipmentUniqueType(Model):
         return '{} Unique Type {}'.format(
             self.equipment_general_type.name.upper(),
             self.name.upper())
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentUniqueType, self).save(*args, **kwargs)
+
+
+class EquipmentInstance(Model):
+    RELATED_NAME = 'equipment_instances'
+    RELATED_QUERY_NAME = 'equipment_instance'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type = \
+        ForeignKey(
+            to=EquipmentUniqueType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
+    name = \
+        CharField(
+            max_length=_MAX_CHAR_LEN,
+            blank=False,
+            null=False)
+
+    data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    class Meta:
+        ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
+
+    def __unicode__(self):
+        return '{} Instance "{}"'.format(
+            self.equipment_unique_type
+            if self.equipment_unique_type
+            else self.equipment_general_type,
+            self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentInstance, self).save(*args, **kwargs)

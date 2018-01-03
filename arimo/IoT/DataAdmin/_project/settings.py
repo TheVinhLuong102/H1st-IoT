@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 
+import json
 import os
 import sys
 
@@ -20,7 +21,9 @@ _ON_LINUX_CLUSTER = sys.platform.startswith('linux')
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+BASE_DIR = os.path.dirname(_PROJECT_DIR)
 
 
 # Quick-start development settings - unsuitable for production
@@ -103,15 +106,11 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+_DB_DETAILS_FILE_NAME = 'db.json'
+_DB_DETAILS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_DETAILS_FILE_NAME)
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': NotImplemented,
-        'USER': NotImplemented,
-        'PASSWORD': NotImplemented,
-        'HOST': NotImplemented,
-        'PORT': '5432'
-    }
+    'default': json.load(open(_DB_DETAILS_FILE_PATH))
 }
 
 
