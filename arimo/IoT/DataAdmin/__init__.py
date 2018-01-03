@@ -171,63 +171,132 @@ class Project(object):
                 name=clean_lower_str(name),
                 defaults=kwargs)[0]
 
-        control_data_field_names_excl = \
-            {clean_lower_str(control_data_field_names_excl)} \
-            if isinstance(control_data_field_names_excl, _STR_CLASSES) \
-            else {clean_lower_str(control_equipment_data_field_name)
-                  for control_equipment_data_field_name in control_data_field_names_excl}
+        if equipment_unique_type_name or \
+                control_data_field_names_incl or control_data_field_names_excl or \
+                measure_data_field_names_incl or measure_data_field_names_excl:
+            _clean_lower_equipment_general_type_name = \
+                clean_lower_str(equipment_general_type_name)
 
-        measure_data_field_names_excl = \
-            {clean_lower_str(measure_data_field_names_excl)} \
-            if isinstance(measure_data_field_names_excl, _STR_CLASSES) \
-            else {clean_lower_str(measure_equipment_data_field_name)
-                  for measure_equipment_data_field_name in measure_data_field_names_excl}
+            _clean_lower_equipment_unique_type_name = \
+                clean_lower_str(equipment_unique_type_name) \
+                if equipment_unique_type_name \
+                else None
 
-        equipment_data_fields = []
-        control_equipment_data_field_names = []
-        measure_equipment_data_field_names = []
+            control_data_field_names_excl = \
+                {clean_lower_str(control_data_field_names_excl)} \
+                if isinstance(control_data_field_names_excl, _STR_CLASSES) \
+                else {clean_lower_str(control_equipment_data_field_name)
+                      for control_equipment_data_field_name in control_data_field_names_excl}
 
-        for equipment_data_field in \
-                equipment_instance.data_fields.filter(
-                    equipment_general_type__name=clean_lower_str(equipment_general_type_name)):
-            equipment_data_field_name = equipment_data_field.name
+            measure_data_field_names_excl = \
+                {clean_lower_str(measure_data_field_names_excl)} \
+                if isinstance(measure_data_field_names_excl, _STR_CLASSES) \
+                else {clean_lower_str(measure_equipment_data_field_name)
+                      for measure_equipment_data_field_name in measure_data_field_names_excl}
 
-            if equipment_data_field.equipment_data_field_type.name == _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME:
-                if equipment_data_field_name not in control_data_field_names_excl:
-                    equipment_data_fields.append(equipment_data_field)
-                    control_equipment_data_field_names.append(equipment_data_field_name)
+            equipment_data_fields = []
+            control_equipment_data_field_names = []
+            measure_equipment_data_field_names = []
 
-            elif equipment_data_field.equipment_data_field_type.name == _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME:
-                if equipment_data_field_name not in measure_data_field_names_excl:
-                    equipment_data_fields.append(equipment_data_field)
-                    measure_equipment_data_field_names.append(equipment_data_field_name)
+            for equipment_data_field in \
+                    equipment_instance.data_fields.filter(
+                        equipment_general_type__name=_clean_lower_equipment_general_type_name):
+                equipment_data_field_name = equipment_data_field.name
 
-        for control_equipment_data_field_name in \
-                ({clean_lower_str(control_data_field_names_incl)}
-                 if isinstance(control_data_field_names_incl, _STR_CLASSES)
-                 else {clean_lower_str(control_equipment_data_field_name)
-                       for control_equipment_data_field_name in control_data_field_names_incl}) \
-                .difference(control_data_field_names_excl, control_equipment_data_field_names):
-            equipment_data_fields.append(
-                self.update_or_create_equipment_data_field(
-                    equipment_general_type_name=equipment_general_type_name,
-                    equipment_data_field_name=control_equipment_data_field_name,
-                    control=True))
+                if equipment_data_field.equipment_data_field_type.name == _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME:
+                    if equipment_data_field_name not in control_data_field_names_excl:
+                        if equipment_unique_type_name:
+                            insert_equipment_type = True
+                            equipment_unique_types = []
 
-        for measure_equipment_data_field_name in \
-                ({clean_lower_str(measure_data_field_names_incl)}
-                 if isinstance(measure_data_field_names_incl, _STR_CLASSES)
-                 else {clean_lower_str(measure_equipment_data_field_name)
-                       for measure_equipment_data_field_name in measure_data_field_names_incl}) \
-                .difference(measure_data_field_names_excl, measure_equipment_data_field_names):
-            equipment_data_fields.append(
-                self.update_or_create_equipment_data_field(
-                    equipment_general_type_name=equipment_general_type_name,
-                    equipment_data_field_name=measure_equipment_data_field_name,
-                    control=False))
+                            for equipment_unique_type in \
+                                    equipment_data_field.equipment_unique_types.filter(
+                                        equipment_general_type__name=_clean_lower_equipment_general_type_name):
+                                if equipment_unique_type.name == _clean_lower_equipment_unique_type_name:
+                                    insert_equipment_type = False
+                                    break
 
-        equipment_instance.data_fields = equipment_data_fields
+                                else:
+                                    equipment_unique_types.append(equipment_unique_type)
 
-        equipment_instance.save()
+                            if insert_equipment_type:
+                                equipment_unique_types.append(
+                                    self.get_or_create_equipment_unique_type(
+                                        equipment_general_type_name=equipment_general_type_name,
+                                        equipment_unique_type_name=equipment_unique_type_name))
+
+                                equipment_data_field.equipment_unique_types = equipment_unique_types
+
+                                equipment_data_field.save()
+
+                        equipment_data_fields.append(equipment_data_field)
+
+                        control_equipment_data_field_names.append(equipment_data_field_name)
+
+                elif equipment_data_field.equipment_data_field_type.name == _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME:
+                    if equipment_data_field_name not in measure_data_field_names_excl:
+                        if equipment_unique_type_name:
+                            insert_equipment_type = True
+                            equipment_unique_types = []
+
+                            for equipment_unique_type in \
+                                    equipment_data_field.equipment_unique_types.filter(
+                                        equipment_general_type__name=_clean_lower_equipment_general_type_name):
+                                if equipment_unique_type.name == _clean_lower_equipment_unique_type_name:
+                                    insert_equipment_type = False
+                                    break
+
+                                else:
+                                    equipment_unique_types.append(equipment_unique_type)
+
+                            if insert_equipment_type:
+                                equipment_unique_types.append(
+                                    self.get_or_create_equipment_unique_type(
+                                        equipment_general_type_name=equipment_general_type_name,
+                                        equipment_unique_type_name=equipment_unique_type_name))
+
+                                equipment_data_field.equipment_unique_types = equipment_unique_types
+
+                                equipment_data_field.save()
+
+                        equipment_data_fields.append(equipment_data_field)
+                        
+                        measure_equipment_data_field_names.append(equipment_data_field_name)
+
+            for control_equipment_data_field_name in \
+                    ({clean_lower_str(control_data_field_names_incl)}
+                     if isinstance(control_data_field_names_incl, _STR_CLASSES)
+                     else {clean_lower_str(control_equipment_data_field_name)
+                           for control_equipment_data_field_name in control_data_field_names_incl}) \
+                    .difference(control_data_field_names_excl, control_equipment_data_field_names):
+                equipment_data_fields.append(
+                    self.update_or_create_equipment_data_field(
+                        equipment_general_type_name=equipment_general_type_name,
+                        equipment_data_field_name=control_equipment_data_field_name,
+                        control=True,
+                        equipment_unique_type_names_incl=
+                            {equipment_unique_type_name}
+                            if equipment_unique_type_name
+                            else set()))
+
+            for measure_equipment_data_field_name in \
+                    ({clean_lower_str(measure_data_field_names_incl)}
+                     if isinstance(measure_data_field_names_incl, _STR_CLASSES)
+                     else {clean_lower_str(measure_equipment_data_field_name)
+                           for measure_equipment_data_field_name in measure_data_field_names_incl}) \
+                    .difference(measure_data_field_names_excl, measure_equipment_data_field_names):
+                equipment_data_fields.append(
+                    self.update_or_create_equipment_data_field(
+                        equipment_general_type_name=equipment_general_type_name,
+                        equipment_data_field_name=measure_equipment_data_field_name,
+                        control=False,
+                        equipment_unique_type_names_incl=
+                            {equipment_unique_type_name}
+                            if equipment_unique_type_name
+                            else set()))
+
+            equipment_instance.data_fields = equipment_data_fields
+
+            equipment_instance.save()
 
         return equipment_instance
