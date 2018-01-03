@@ -197,3 +197,53 @@ class EquipmentUniqueType(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         return super(EquipmentUniqueType, self).save(*args, **kwargs)
+
+
+class EquipmentInstance(Model):
+    RELATED_NAME = 'equipment_instances'
+    RELATED_QUERY_NAME = 'equipment_instance'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type = \
+        ForeignKey(
+            to=EquipmentUniqueType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
+    name = \
+        CharField(
+            max_length=_MAX_CHAR_LEN,
+            blank=False,
+            null=False)
+
+    data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    class Meta:
+        ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
+
+    def __unicode__(self):
+        return '{} Instance "{}"'.format(
+            self.equipment_unique_type
+            if self.equipment_unique_type
+            else self.equipment_general_type,
+            self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentInstance, self).save(*args, **kwargs)
