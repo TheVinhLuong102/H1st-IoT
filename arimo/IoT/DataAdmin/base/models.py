@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, \
+    BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 
 from arimo.IoT.DataAdmin.util import clean_lower_str
@@ -233,6 +233,69 @@ class EquipmentInstance(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
+
+    data_db_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    data_db_tbl = \
+        CharField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    data_file_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    control_data_db_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    control_data_db_tbl = \
+        CharField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    control_data_file_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    measure_data_db_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    measure_data_db_tbl = \
+        CharField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
+
+    measure_data_file_url = \
+        URLField(
+            max_length=_MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            default=None)
 
     class Meta:
         ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
