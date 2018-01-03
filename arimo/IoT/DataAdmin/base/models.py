@@ -114,7 +114,7 @@ class EquipmentDataField(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=True)
 
     lower_numeric_null = \
         FloatField(
