@@ -117,37 +117,38 @@ class Project(object):
                 name=clean_lower_str(equipment_data_field_name),
                 defaults=kwargs)[0]
 
-        equipment_unique_type_names_excl = \
-            {clean_lower_str(equipment_unique_type_names_excl)} \
-            if isinstance(equipment_unique_type_names_excl, _STR_CLASSES) \
-            else {clean_lower_str(equipment_unique_type_name)
-                  for equipment_unique_type_name in equipment_unique_type_names_excl}
+        if equipment_unique_type_names_excl or equipment_unique_type_names_incl:
+            equipment_unique_type_names_excl = \
+                {clean_lower_str(equipment_unique_type_names_excl)} \
+                if isinstance(equipment_unique_type_names_excl, _STR_CLASSES) \
+                else {clean_lower_str(equipment_unique_type_name)
+                      for equipment_unique_type_name in equipment_unique_type_names_excl}
 
-        equipment_unique_types = []
-        equipment_unique_type_names = []
+            equipment_unique_types = []
+            equipment_unique_type_names = []
 
-        for equipment_unique_type in \
-                equipment_data_field.equipment_unique_types.filter(
-                    equipment_general_type__name=clean_lower_str(equipment_general_type_name)):
-            equipment_unique_type_name = equipment_unique_type.name
-            if equipment_unique_type_name not in equipment_unique_type_names_excl:
-                equipment_unique_types.append(equipment_unique_type)
-                equipment_unique_type_names.append(equipment_unique_type_name)
+            for equipment_unique_type in \
+                    equipment_data_field.equipment_unique_types.filter(
+                        equipment_general_type__name=clean_lower_str(equipment_general_type_name)):
+                equipment_unique_type_name = equipment_unique_type.name
+                if equipment_unique_type_name not in equipment_unique_type_names_excl:
+                    equipment_unique_types.append(equipment_unique_type)
+                    equipment_unique_type_names.append(equipment_unique_type_name)
 
-        for equipment_unique_type_name in \
-                ({clean_lower_str(equipment_unique_type_names_incl)}
-                 if isinstance(equipment_unique_type_names_incl, _STR_CLASSES)
-                 else {clean_lower_str(equipment_unique_type_name)
-                       for equipment_unique_type_name in equipment_unique_type_names_incl}) \
-                .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
-            equipment_unique_types.append(
-                self.get_or_create_equipment_unique_type(
-                    equipment_general_type_name=equipment_general_type_name,
-                    equipment_unique_type_name=equipment_unique_type_name))
+            for equipment_unique_type_name in \
+                    ({clean_lower_str(equipment_unique_type_names_incl)}
+                     if isinstance(equipment_unique_type_names_incl, _STR_CLASSES)
+                     else {clean_lower_str(equipment_unique_type_name)
+                           for equipment_unique_type_name in equipment_unique_type_names_incl}) \
+                    .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
+                equipment_unique_types.append(
+                    self.get_or_create_equipment_unique_type(
+                        equipment_general_type_name=equipment_general_type_name,
+                        equipment_unique_type_name=equipment_unique_type_name))
 
-        equipment_data_field.equipment_unique_types = equipment_unique_types
+            equipment_data_field.equipment_unique_types = equipment_unique_types
 
-        equipment_data_field.save()
+            equipment_data_field.save()
 
         return equipment_data_field
 
