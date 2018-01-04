@@ -101,11 +101,6 @@ class Project(object):
             self, equipment_general_type_name, equipment_data_field_name, control=False, cat=False,
             equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
             **kwargs):
-        kwargs['equipment_data_field_type'] = \
-            self.control_equipment_data_field_type_obj \
-            if control \
-            else self.measure_equipment_data_field_type_obj
-
         kwargs['data_type'] = \
             self.cat_data_type_obj \
             if cat \
@@ -117,6 +112,10 @@ class Project(object):
                     equipment_general_type=
                         self.get_or_create_equipment_general_type(
                             equipment_general_type_name=equipment_general_type_name),
+                    equipment_data_field_type=
+                        self.control_equipment_data_field_type_obj
+                        if control
+                        else self.measure_equipment_data_field_type_obj,
                     name=clean_lower_str(equipment_data_field_name),
                     defaults=kwargs)[0]
 
