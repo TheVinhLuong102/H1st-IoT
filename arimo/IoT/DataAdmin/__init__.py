@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from argparse import Namespace
 import six
 
@@ -109,13 +111,18 @@ class Project(object):
             if cat \
             else self.num_data_type_obj
 
-        equipment_data_field = \
-            self.models.base.EquipmentDataField.objects.update_or_create(
-                equipment_general_type=
-                    self.get_or_create_equipment_general_type(
-                        equipment_general_type_name=equipment_general_type_name),
-                name=clean_lower_str(equipment_data_field_name),
-                defaults=kwargs)[0]
+        try:
+            equipment_data_field = \
+                self.models.base.EquipmentDataField.objects.update_or_create(
+                    equipment_general_type=
+                        self.get_or_create_equipment_general_type(
+                            equipment_general_type_name=equipment_general_type_name),
+                    name=clean_lower_str(equipment_data_field_name),
+                    defaults=kwargs)[0]
+
+        except Exception as err:
+            print(equipment_general_type_name, equipment_data_field_name)
+            raise err
 
         if equipment_unique_type_names_excl or equipment_unique_type_names_incl:
             equipment_unique_type_names_excl = \
