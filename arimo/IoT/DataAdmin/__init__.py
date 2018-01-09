@@ -421,3 +421,28 @@ class Project(object):
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
                 verbose=verbose)
+
+    def merge_equipment_data_for_equipment_unique_type(
+            self,
+            equipment_general_type_name, equipment_unique_type_name,
+            verbose=True):
+        equipment_unique_type = \
+            self.get_or_create_equipment_unique_type(
+                equipment_general_type_name=equipment_general_type_name,
+                equipment_unique_type_name=equipment_unique_type_name)
+
+        equipment_unique_type_equipment_data_fields = \
+            set(equipment_unique_type.data_fields.all())
+
+        self.merge_equipment_data(
+            from_equipment_ids_or_data_set_names=
+                {equipment_instance.name
+                 for equipment_instance in self.models.base.EquipmentInstance.objects.filter(
+                    equipment_unique_type=equipment_unique_type)
+                 if not equipment_unique_type_equipment_data_fields.difference(equipment_instance.data_fields.all())},
+            to_equipment_data_set_name=
+                '{}-{}{}'.format(
+                    clean_lower_str(equipment_general_type_name),
+                    clean_lower_str(equipment_unique_type_name),
+                    _PARQUET_EXT),
+            verbose=verbose)
