@@ -434,12 +434,21 @@ class Project(object):
         equipment_unique_type_equipment_data_fields = \
             set(equipment_unique_type.data_fields.all())
 
+        equipment_ids = []
+
+        for equipment_instance in \
+                self.models.base.EquipmentInstance.objects.filter(
+                    equipment_unique_type=equipment_unique_type):
+            equipment_id = equipment_instance.name
+
+            assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
+                "*** Equipment Instance #{}'s Data Fields NOT a Subset of Those of {} Unique Type {} ***".format(
+                    equipment_id, equipment_general_type_name, equipment_unique_type_name)
+
+            equipment_ids.append(equipment_id)
+
         self.merge_equipment_data(
-            from_equipment_ids_or_data_set_names=
-                {equipment_instance.name
-                 for equipment_instance in self.models.base.EquipmentInstance.objects.filter(
-                    equipment_unique_type=equipment_unique_type)
-                 if not equipment_unique_type_equipment_data_fields.difference(equipment_instance.data_fields.all())},
+            from_equipment_ids_or_data_set_names=equipment_ids,
             to_equipment_data_set_name=
                 '{}-{}{}'.format(
                     clean_lower_str(equipment_general_type_name),
