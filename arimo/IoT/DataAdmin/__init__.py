@@ -395,7 +395,7 @@ class Project(object):
             aws_secret_access_key=self.aws_secret_access_key,
             verbose=verbose)
 
-    def merge_equipment_data(self, equipment_data_set_name, *equipment_ids, verbose=True):
+    def merge_equipment_data(self, equipment_data_set_name, equipment_ids_or_data_set_names, verbose=True):
         from arimo.util.aws import s3_sync
 
         to_dir_path = \
@@ -403,11 +403,11 @@ class Project(object):
                 self.s3_data_dir_path,
                 clean_lower_str(equipment_data_set_name) + _PARQUET_EXT)
 
-        for equipment_id in equipment_ids:
+        for equipment_id_or_data_set_name in equipment_ids_or_data_set_names:
             s3_sync(
                 from_dir_path=os.path.join(
                     self.s3_data_dir_path,
-                    clean_lower_str(equipment_id) + _PARQUET_EXT),
+                    clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
                 to_dir_path=to_dir_path,
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
@@ -416,7 +416,7 @@ class Project(object):
             s3_sync(
                 from_dir_path=os.path.join(
                     self.s3_data_dir_path,
-                    _clean_upper_str(equipment_id) + _PARQUET_EXT),
+                    _clean_upper_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
                 to_dir_path=to_dir_path,
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
