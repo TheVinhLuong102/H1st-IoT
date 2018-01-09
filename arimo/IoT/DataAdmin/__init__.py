@@ -1,6 +1,8 @@
 from __future__ import print_function
 
 from argparse import Namespace
+import os
+import pandas
 import six
 
 from django.conf import settings
@@ -8,7 +10,7 @@ from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
-from arimo.IoT.DataAdmin.util import clean_lower_str
+from arimo.IoT.DataAdmin.util import clean_lower_str, _clean_upper_str
 
 
 _STR_CLASSES = \
@@ -24,8 +26,16 @@ _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
 _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
 
+_ID_COL_NAME = 'id'
+_EQUIPMENT_ID_COL_NAME = 'equipment_id'
+_DATE_TIME_COL_NAME = 'date_time'
+
+
+_PARQUET_EXT = '.parquet'
+
+
 class Project(object):
-    def __init__(self, db_args):
+    def __init__(self, db_args, s3_data_dir_path, aws_access_key_id=None, aws_secret_access_key=None):
         arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
@@ -71,6 +81,10 @@ class Project(object):
                 PredMaint=Namespace(
 
                 ))
+
+        self.s3_data_dir_path = s3_data_dir_path
+        self.aws_access_key_id = aws_access_key_id
+        self.aws_secret_access_key = aws_secret_access_key
 
     def _collect_static(self):
         call_command('collectstatic')
@@ -306,3 +320,104 @@ class Project(object):
             equipment_instance.save()
 
         return equipment_instance
+
+    def load_equipment_data(self, equipment_id_or_data_set_name, verbose=True):
+        from arimo.df import ADF
+
+        try:
+            adf = ADF.load(
+                path=os.path.join(
+                    self.s3_data_dir_path,
+                    clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+                format='parquet', mergeSchema=True,
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
+
+        except:
+            adf = ADF.load(
+                path=os.path.join(
+                    self.s3_data_dir_path,
+                    _clean_upper_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+                format='parquet', mergeSchema=True,
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
+
+        if _ID_COL_NAME in adf.columns:
+            assert _EQUIPMENT_ID_COL_NAME not in adf.columns
+            adf.rename(
+                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME},
+                iCol=_EQUIPMENT_ID_COL_NAME,
+                inplace=True)
+
+        else:
+            assert _EQUIPMENT_ID_COL_NAME in adf.columns
+            adf.iCol = _EQUIPMENT_ID_COL_NAME
+
+        assert _DATE_TIME_COL_NAME in adf.columns
+        adf.tCol = _DATE_TIME_COL_NAME
+
+        return adf
+
+    def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='append', verbose=True):
+        import pyspark.sql
+        from arimo.df import ADF
+
+        if isinstance(df, pandas.DataFrame):
+            adf = ADF.create(data=df)
+
+        elif isinstance(df, pyspark.sql.DataFrame):
+            adf = ADF(sparkDF=df)
+
+        else:
+            assert isinstance(df, ADF)
+            adf = df
+
+        if _ID_COL_NAME in adf.columns:
+            assert _EQUIPMENT_ID_COL_NAME not in adf.columns
+
+            adf.rename(
+                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME},
+                inplace=True)
+        else:
+            assert _EQUIPMENT_ID_COL_NAME in adf.columns
+
+        assert _DATE_TIME_COL_NAME in adf.columns
+
+        adf.save(
+            path=os.path.join(
+                self.s3_data_dir_path,
+                clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+            format='parquet',
+            mode=mode,
+            aws_access_key_id=self.aws_access_key_id,
+            aws_secret_access_key=self.aws_secret_access_key,
+            verbose=verbose)
+
+    def merge_equipment_data(self, equipment_data_set_name, *equipment_ids, verbose=True):
+        from arimo.util.aws import s3_sync
+
+        to_dir_path = \
+            os.path.join(
+                self.s3_data_dir_path,
+                clean_lower_str(equipment_data_set_name) + _PARQUET_EXT)
+
+        for equipment_id in equipment_ids:
+            s3_sync(
+                from_dir_path=os.path.join(
+                    self.s3_data_dir_path,
+                    clean_lower_str(equipment_id) + _PARQUET_EXT),
+                to_dir_path=to_dir_path,
+                quiet=True, delete=False,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
+
+            s3_sync(
+                from_dir_path=os.path.join(
+                    self.s3_data_dir_path,
+                    _clean_upper_str(equipment_id) + _PARQUET_EXT),
+                to_dir_path=to_dir_path,
+                quiet=True, delete=False,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
