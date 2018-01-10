@@ -347,9 +347,9 @@ class Project(object):
         if _ID_COL_NAME in adf.columns:
             assert _EQUIPMENT_ID_COL_NAME not in adf.columns
             adf.rename(
-                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME},
                 iCol=_EQUIPMENT_ID_COL_NAME,
-                inplace=True)
+                inplace=True,
+                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME})
 
         else:
             assert _EQUIPMENT_ID_COL_NAME in adf.columns
@@ -378,8 +378,9 @@ class Project(object):
             assert _EQUIPMENT_ID_COL_NAME not in adf.columns
 
             adf.rename(
-                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME},
-                inplace=True)
+                inplace=True,
+                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME})
+
         else:
             assert _EQUIPMENT_ID_COL_NAME in adf.columns
 
