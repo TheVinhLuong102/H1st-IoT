@@ -435,7 +435,7 @@ class Project(object):
                     clean_lower_str(equipment_general_type_name).upper(),
                     clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
 
-        for equipment_instance_id in equipment_instance_ids:
+        for equipment_instance_id in sorted(equipment_instance_ids):
             to_dir_path = \
                 os.path.join(
                     _to_dir_path,
