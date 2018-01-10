@@ -26,10 +26,8 @@ _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
 _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
 
-_ID_COL_NAME = 'id'
 _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
 _DATE_TIME_COL_NAME = 'date_time'
-
 
 _PARQUET_EXT = '.parquet'
 
@@ -321,14 +319,14 @@ class Project(object):
 
         return equipment_instance
 
-    def load_equipment_data(self, equipment_id_or_data_set_name, verbose=True):
+    def load_equipment_data(self, equipment_instance_id_or_data_set_name, verbose=True):
         from arimo.df import ADF
 
         try:
             adf = ADF.load(
                 path=os.path.join(
                     self.s3_data_dir_path,
-                    clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+                    clean_lower_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
                 format='parquet', mergeSchema=True,
                 aws_access_key_id=self.aws_access_key_id,
                 aws_secret_access_key=self.aws_secret_access_key,
@@ -338,23 +336,23 @@ class Project(object):
             adf = ADF.load(
                 path=os.path.join(
                     self.s3_data_dir_path,
-                    _clean_upper_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+                    _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
                 format='parquet', mergeSchema=True,
                 aws_access_key_id=self.aws_access_key_id,
                 aws_secret_access_key=self.aws_secret_access_key,
                 verbose=verbose)
 
-        if _ID_COL_NAME in adf.columns:
+        if ADF._DEFAULT_I_COL in adf.columns:
             if _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
-                adf('COALESCE({0}, {1}) AS {0}'.format(_EQUIPMENT_INSTANCE_ID_COL_NAME, _ID_COL_NAME),
-                    *set(adf.columns).difference((_EQUIPMENT_INSTANCE_ID_COL_NAME, _ID_COL_NAME)),
+                adf('COALESCE({0}, {1}) AS {0}'.format(_EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
+                    *set(adf.columns).difference((_EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
                     inplace=True)
                                 
             else:
                 adf.rename(
                     iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME,
                     inplace=True,
-                    **{_EQUIPMENT_INSTANCE_ID_COL_NAME: _ID_COL_NAME})
+                    **{_EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
 
         else:
             assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
@@ -379,12 +377,12 @@ class Project(object):
             assert isinstance(df, ADF)
             adf = df
 
-        if _ID_COL_NAME in adf.columns:
+        if ADF._DEFAULT_I_COL in adf.columns:
             assert _EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
 
             adf.rename(
                 inplace=True,
-                **{_EQUIPMENT_INSTANCE_ID_COL_NAME: _ID_COL_NAME})
+                **{_EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
 
         else:
             assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
