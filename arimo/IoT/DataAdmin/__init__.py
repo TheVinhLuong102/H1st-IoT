@@ -27,7 +27,7 @@ _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
 
 _ID_COL_NAME = 'id'
-_EQUIPMENT_ID_COL_NAME = 'equipment_id'
+_EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
 _DATE_TIME_COL_NAME = 'date_time'
 
 
@@ -345,15 +345,20 @@ class Project(object):
                 verbose=verbose)
 
         if _ID_COL_NAME in adf.columns:
-            assert _EQUIPMENT_ID_COL_NAME not in adf.columns
-            adf.rename(
-                iCol=_EQUIPMENT_ID_COL_NAME,
-                inplace=True,
-                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME})
+            if _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
+                adf('COALESCE({0}, {1}) AS {0}'.format(_EQUIPMENT_INSTANCE_ID_COL_NAME, _ID_COL_NAME),
+                    *set(adf.columns).difference((_EQUIPMENT_INSTANCE_ID_COL_NAME, _ID_COL_NAME)),
+                    inplace=True)
+                                
+            else:
+                adf.rename(
+                    iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME,
+                    inplace=True,
+                    **{_EQUIPMENT_INSTANCE_ID_COL_NAME: _ID_COL_NAME})
 
         else:
-            assert _EQUIPMENT_ID_COL_NAME in adf.columns
-            adf.iCol = _EQUIPMENT_ID_COL_NAME
+            assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+            adf.iCol = _EQUIPMENT_INSTANCE_ID_COL_NAME
 
         assert _DATE_TIME_COL_NAME in adf.columns
         adf.tCol = _DATE_TIME_COL_NAME
@@ -375,14 +380,14 @@ class Project(object):
             adf = df
 
         if _ID_COL_NAME in adf.columns:
-            assert _EQUIPMENT_ID_COL_NAME not in adf.columns
+            assert _EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
 
             adf.rename(
                 inplace=True,
-                **{_EQUIPMENT_ID_COL_NAME: _ID_COL_NAME})
+                **{_EQUIPMENT_INSTANCE_ID_COL_NAME: _ID_COL_NAME})
 
         else:
-            assert _EQUIPMENT_ID_COL_NAME in adf.columns
+            assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
 
         assert _DATE_TIME_COL_NAME in adf.columns
 
@@ -396,37 +401,12 @@ class Project(object):
             aws_secret_access_key=self.aws_secret_access_key,
             verbose=verbose)
 
-    def merge_equipment_data(self, from_equipment_ids_or_data_set_names, to_equipment_data_set_name, verbose=True):
-        from arimo.util.aws import s3_sync
-
-        to_dir_path = \
-            os.path.join(
-                self.s3_data_dir_path,
-                clean_lower_str(to_equipment_data_set_name) + _PARQUET_EXT)
-
-        for equipment_id_or_data_set_name in from_equipment_ids_or_data_set_names:
-            s3_sync(
-                from_dir_path=os.path.join(
-                    self.s3_data_dir_path,
-                    clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
-                to_dir_path=to_dir_path,
-                quiet=True, delete=False,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                verbose=verbose)
-
-            s3_sync(
-                from_dir_path=os.path.join(
-                    self.s3_data_dir_path,
-                    _clean_upper_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
-                to_dir_path=to_dir_path,
-                quiet=True, delete=False,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                verbose=verbose)
-
     def merge_equipment_data_for_equipment_unique_type(
             self,
             equipment_general_type_name, equipment_unique_type_name,
             verbose=True):
+        from arimo.util.aws import s3_sync
+
         equipment_unique_type = \
             self.get_or_create_equipment_unique_type(
                 equipment_general_type_name=equipment_general_type_name,
@@ -435,23 +415,78 @@ class Project(object):
         equipment_unique_type_equipment_data_fields = \
             set(equipment_unique_type.data_fields.all())
 
-        equipment_ids = []
+        equipment_instance_ids = set()
 
         for equipment_instance in \
                 self.models.base.EquipmentInstance.objects.filter(
                     equipment_unique_type=equipment_unique_type):
-            equipment_id = equipment_instance.name
+            equipment_id = clean_lower_str(equipment_instance.name)
 
             assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
                 "*** Equipment Instance #{}'s Data Fields NOT a Subset of Those of {} Unique Type {} ***".format(
                     equipment_id, equipment_general_type_name, equipment_unique_type_name)
 
-            equipment_ids.append(equipment_id)
+            equipment_instance_ids.add(equipment_id)
 
-        self.merge_equipment_data(
-            from_equipment_ids_or_data_set_names=equipment_ids,
-            to_equipment_data_set_name=
+        _to_dir_path = \
+            os.path.join(
+                self.s3_data_dir_path,
+                '{}---{}'.format(
+                    clean_lower_str(equipment_general_type_name).upper(),
+                    clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
+
+        for equipment_instance_id in equipment_instance_ids:
+            to_dir_path = \
+                os.path.join(
+                    _to_dir_path,
+                    '{}={}'.format(
+                        _EQUIPMENT_INSTANCE_ID_COL_NAME,
+                        equipment_instance_id))
+
+            s3_sync(
+                from_dir_path=os.path.join(
+                    self.s3_data_dir_path,
+                    equipment_instance_id + _PARQUET_EXT),
+                to_dir_path=to_dir_path,
+                quiet=True, delete=False,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
+
+            s3_sync(
+                from_dir_path=os.path.join(
+                    self.s3_data_dir_path,
+                    _clean_upper_str(equipment_instance_id) + _PARQUET_EXT),
+                to_dir_path=to_dir_path,
+                quiet=True, delete=False,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
+
+    def merge_equipment_data_for_multi_equipment_unique_types(
+            self,
+            equipment_general_type_name, *equipment_unique_type_names,
+            verbose=True):
+        from arimo.util.aws import s3_sync
+
+        equipment_general_type_name = \
+            clean_lower_str(equipment_general_type_name).upper()
+
+        equipment_unique_type_names = \
+            sorted(clean_lower_str(equipment_unique_type_name)
+                   for equipment_unique_type_name in equipment_unique_type_names)
+
+        to_dir_path = \
+            os.path.join(
+                self.s3_data_dir_path,
                 '{}___{}'.format(
-                    clean_lower_str(equipment_general_type_name),
-                    clean_lower_str(equipment_unique_type_name)),
-            verbose=verbose)
+                    equipment_general_type_name,
+                    '___'.join(equipment_unique_type_names)) + _PARQUET_EXT)
+
+        for equipment_unique_type_name in equipment_unique_type_names:
+            s3_sync(
+                from_dir_path=os.path.join(
+                    self.s3_data_dir_path,
+                    equipment_unique_type_name + _PARQUET_EXT),
+                to_dir_path=to_dir_path,
+                quiet=True, delete=False,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
