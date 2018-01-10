@@ -464,8 +464,10 @@ class Project(object):
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
             equipment_general_type_name, *equipment_unique_type_names,
-            verbose=True):
+            **kwargs):
         from arimo.util.aws import s3_sync
+
+        verbose = kwargs.pop('verbose', True)
 
         equipment_general_type_name = \
             clean_lower_str(equipment_general_type_name).upper()
