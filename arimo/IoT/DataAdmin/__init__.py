@@ -451,8 +451,7 @@ class Project(object):
         self.merge_equipment_data(
             from_equipment_ids_or_data_set_names=equipment_ids,
             to_equipment_data_set_name=
-                '{}-{}{}'.format(
+                '{}___{}'.format(
                     clean_lower_str(equipment_general_type_name),
-                    clean_lower_str(equipment_unique_type_name),
-                    _PARQUET_EXT),
+                    clean_lower_str(equipment_unique_type_name)),
             verbose=verbose)
