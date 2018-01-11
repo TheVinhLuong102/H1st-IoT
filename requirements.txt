@@ -9,7 +9,7 @@ Django-Taggit >= 0.22.1
 
 Django-Grappelli >= 2.10.1
 
-Django-Extensions >= 1.9.8
+Django-Extensions >= 1.9.9
 
 Django-Nested-InLines >= 0.1
 
