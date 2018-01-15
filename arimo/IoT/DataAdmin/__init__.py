@@ -413,7 +413,7 @@ class Project(object):
         equipment_unique_type_equipment_data_fields = \
             set(equipment_unique_type.data_fields.all())
 
-        equipment_instance_ids = set()
+        equipment_instances_data_file_urls = {}
 
         for equipment_instance in \
                 self.models.base.EquipmentInstance.objects.filter(
@@ -425,7 +425,8 @@ class Project(object):
                 "*** Equipment Instance #{}'s Data Fields NOT a Subset of Those of {} Unique Type {} ***".format(
                     equipment_id, equipment_general_type_name, equipment_unique_type_name)
 
-            equipment_instance_ids.add(equipment_id)
+            equipment_instances_data_file_urls[equipment_id] = \
+                equipment_instance.data_file_url
 
         _to_dir_path = \
             os.path.join(
@@ -434,7 +435,7 @@ class Project(object):
                     clean_lower_str(equipment_general_type_name).upper(),
                     clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
 
-        for equipment_instance_id in sorted(equipment_instance_ids):
+        for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
             to_dir_path = \
                 os.path.join(
                     _to_dir_path,
@@ -443,7 +444,7 @@ class Project(object):
                         equipment_instance_id))
 
             s3_sync(
-                from_dir_path=equipment_instance.data_file_url,
+                from_dir_path=equipment_data_file_url,
                 to_dir_path=to_dir_path,
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
