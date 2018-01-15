@@ -417,7 +417,8 @@ class Project(object):
 
         for equipment_instance in \
                 self.models.base.EquipmentInstance.objects.filter(
-                    equipment_unique_type=equipment_unique_type):
+                    equipment_unique_type=equipment_unique_type,
+                    data_file_url__isnull=False):
             equipment_id = clean_lower_str(equipment_instance.name)
 
             assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
@@ -442,18 +443,7 @@ class Project(object):
                         equipment_instance_id))
 
             s3_sync(
-                from_dir_path=os.path.join(
-                    self.s3_data_dir_path,
-                    equipment_instance_id + _PARQUET_EXT),
-                to_dir_path=to_dir_path,
-                quiet=True, delete=False,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                verbose=verbose)
-
-            s3_sync(
-                from_dir_path=os.path.join(
-                    self.s3_data_dir_path,
-                    _clean_upper_str(equipment_instance_id) + _PARQUET_EXT),
+                from_dir_path=equipment_instance.data_file_url,
                 to_dir_path=to_dir_path,
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
