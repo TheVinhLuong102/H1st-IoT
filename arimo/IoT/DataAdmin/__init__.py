@@ -419,9 +419,7 @@ class Project(object):
                 self.models.base.EquipmentInstance.objects \
                     .filter(
                         equipment_unique_type=equipment_unique_type,
-                        data_file_url__isnull=False) \
-                    .exclude(
-                        data_file_url__startswith='_'):
+                        data_file_url__startswith='s3://'):
             equipment_id = clean_lower_str(equipment_instance.name)
 
             assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
