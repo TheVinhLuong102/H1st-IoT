@@ -20,5 +20,3 @@ SQLAlchemy-Migrate >= 0.11.0
 PsycoPG2 >= 2.7.3.2
 
 AWSEBCLI >= 3.12.1
-
-Pandas >= 0.22.0
