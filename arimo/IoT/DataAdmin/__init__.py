@@ -2,7 +2,6 @@ from __future__ import print_function
 
 from argparse import Namespace
 import os
-import pandas
 import six
 
 from django.conf import settings
@@ -364,6 +363,7 @@ class Project(object):
         return adf
 
     def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='append', verbose=True):
+        import pandas
         import pyspark.sql
         from arimo.df import ADF
 
