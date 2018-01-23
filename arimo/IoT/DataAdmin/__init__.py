@@ -447,16 +447,9 @@ class Project(object):
             print('done!')
 
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
-            to_dir_path = \
-                os.path.join(
-                    _to_dir_path,
-                    '{}={}'.format(
-                        _EQUIPMENT_INSTANCE_ID_COL_NAME,
-                        equipment_instance_id))
-
             s3_sync(
                 from_dir_path=equipment_data_file_url,
-                to_dir_path=to_dir_path,
+                to_dir_path=_to_dir_path,
                 quiet=True, delete=False,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
                 verbose=verbose)
