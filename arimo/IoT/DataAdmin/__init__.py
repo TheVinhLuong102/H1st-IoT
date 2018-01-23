@@ -437,14 +437,10 @@ class Project(object):
                     clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
 
         if mode == 'OVERWRITE':
-            print('Deleting Existing {}... '.format(_to_dir_path), end='')
-
             s3_rm(
                 path=_to_dir_path, dir=True, quiet=True,
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
                 verbose=verbose)
-            
-            print('done!')
 
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
             s3_sync(
