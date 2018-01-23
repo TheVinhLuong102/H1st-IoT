@@ -402,8 +402,8 @@ class Project(object):
     def merge_equipment_data_for_equipment_unique_type(
             self,
             equipment_general_type_name, equipment_unique_type_name,
-            verbose=True):
-        from arimo.util.aws import s3_sync
+            mode='append', verbose=True):
+        from arimo.util.aws import s3_rm, s3_sync
 
         equipment_unique_type = \
             self.get_or_create_equipment_unique_type(
@@ -435,6 +435,12 @@ class Project(object):
                 '{}---{}'.format(
                     clean_lower_str(equipment_general_type_name).upper(),
                     clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
+
+        if mode == 'OVERWRITE':
+            s3_rm(
+                path=_to_dir_path, dir=True, quiet=True,
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                verbose=verbose)
 
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
             to_dir_path = \
