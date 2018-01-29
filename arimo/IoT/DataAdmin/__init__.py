@@ -464,7 +464,7 @@ class Project(object):
 
                 _prefix_len = len(_prefix) + 1
 
-                for _subdir in \
+                for _sub_prefix in \
                         [i['Prefix']
                          for i in self.s3_client.list_objects_v2(
                             Bucket=self.s3_bucket,
@@ -473,8 +473,8 @@ class Project(object):
                             Prefix=_prefix + '/',
                             FetchOwner=False)['CommonPrefixes']]:
                     s3_sync(
-                        from_dir_path=_subdir,
-                        to_dir_path=os.path.join(_to_dir_path, _subdir[_prefix_len:]),
+                        from_dir_path=os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix),
+                        to_dir_path=os.path.join(_to_dir_path, _sub_prefix[_prefix_len:]),
                         quiet=True, delete=False,
                         access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
                         verbose=verbose)
