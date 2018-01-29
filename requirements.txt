@@ -20,3 +20,6 @@ SQLAlchemy-Migrate >= 0.11.0
 PsycoPG2 >= 2.7.3.2
 
 AWSEBCLI >= 3.12.1
+
+AWSCLI >= 1.14.32
+Boto3 >= 1.5.22
