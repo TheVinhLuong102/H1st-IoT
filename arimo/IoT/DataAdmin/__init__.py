@@ -1,6 +1,8 @@
 from __future__ import print_function
 
 from argparse import Namespace
+import botocore
+import boto3
 import os
 import six
 
@@ -80,8 +82,19 @@ class Project(object):
                 ))
 
         self.s3_data_dir_path = s3_data_dir_path
+        self.s3_bucket = s3_data_dir_path.split('//', 1)[1].split('/', 1)[0]
+
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
+
+        self.s3_client = \
+            boto3.client(
+                's3',
+                aws_access_key_id=aws_access_key_id,
+                aws_secret_access_key=aws_secret_access_key,
+                config=botocore.client.Config(
+                    connect_timeout=9,
+                    read_timeout=9))
 
     def _collect_static(self):
         call_command('collectstatic')
@@ -443,12 +456,28 @@ class Project(object):
                 verbose=verbose)
 
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
-            s3_sync(
-                from_dir_path=equipment_data_file_url,
-                to_dir_path=_to_dir_path,
-                quiet=True, delete=False,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                verbose=verbose)
+            if equipment_data_file_url.startswith('s3://'):
+                _bucket, _prefix = equipment_data_file_url.split('//', 1)[1].split('/', 1)
+                assert (_bucket == self.s3_bucket) \
+                   and (not _prefix.endswith('/')), \
+                    '*** INVALID PATH: {} ***'.format(equipment_data_file_url)
+
+                _prefix_len = len(_prefix) + 1
+
+                for _subdir in \
+                        [i['Prefix']
+                         for i in self.s3_client.list_objects_v2(
+                            Bucket=self.s3_bucket,
+                            Delimiter='/',
+                            MaxKeys=1000000,
+                            Prefix=_prefix + '/',
+                            FetchOwner=False)['CommonPrefixes']]:
+                    s3_sync(
+                        from_dir_path=_subdir,
+                        to_dir_path=os.path.join(_to_dir_path, _subdir[_prefix_len:]),
+                        quiet=True, delete=False,
+                        access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                        verbose=verbose)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
