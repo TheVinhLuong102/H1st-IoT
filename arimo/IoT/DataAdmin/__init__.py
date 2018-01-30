@@ -416,6 +416,7 @@ class Project(object):
             self,
             equipment_general_type_name, equipment_unique_type_name,
             mode='append', verbose=True):
+        from arimo.df import ADF
         from arimo.util.aws import s3_rm, s3_sync
 
         equipment_unique_type = \
@@ -455,6 +456,8 @@ class Project(object):
                 access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
                 verbose=verbose)
 
+        _date_str_to_urls_map = {}
+
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
             if equipment_data_file_url.startswith('s3://'):
                 _bucket, _prefix = equipment_data_file_url.split('//', 1)[1].split('/', 1)
@@ -472,12 +475,26 @@ class Project(object):
                             MaxKeys=1000000,
                             Prefix=_prefix + '/',
                             FetchOwner=False)['CommonPrefixes']]:
-                    s3_sync(
-                        from_dir_path=os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix),
-                        to_dir_path=os.path.join(_to_dir_path, _sub_prefix[_prefix_len:]),
-                        quiet=True, delete=False,
-                        access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                        verbose=verbose)
+                    _date_str = _sub_prefix[_prefix_len:]
+                    _path = os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix)
+
+                    if _date_str in _date_str_to_urls_map:
+                        _date_str_to_urls_map[_date_str].append(_path)
+                    else:
+                        _date_str_to_urls_map[_date_str] = [_path]
+
+        for _date_str in sorted(_date_str_to_urls_map):
+            adf = ADF.load(
+                path=_date_str_to_urls_map[_date_str],
+                aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
+                format='parquet', mergeSchema=True,
+                verbose=verbose)
+
+            adf.repartition(1).save(
+                path=os.path.join(_to_dir_path, _date_str),
+                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                format='parquet',
+                verbose=verbose)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
