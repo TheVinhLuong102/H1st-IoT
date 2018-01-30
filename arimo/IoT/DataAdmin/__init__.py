@@ -492,7 +492,7 @@ class Project(object):
 
             adf.repartition(1).save(
                 path=os.path.join(_to_dir_path, _date_str),
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
                 format='parquet',
                 verbose=verbose)
 
