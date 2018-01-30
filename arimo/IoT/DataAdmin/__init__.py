@@ -459,29 +459,31 @@ class Project(object):
         _date_str_to_urls_map = {}
 
         for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
-            if equipment_data_file_url.startswith('s3://'):
-                _bucket, _prefix = equipment_data_file_url.split('//', 1)[1].split('/', 1)
-                assert (_bucket == self.s3_bucket) \
-                   and (not _prefix.endswith('/')), \
-                    '*** INVALID PATH: {} ***'.format(equipment_data_file_url)
+            _bucket, _prefix = equipment_data_file_url.split('//', 1)[1].split('/', 1)
+            assert (_bucket == self.s3_bucket) \
+                and (not _prefix.endswith('/')), \
+                '*** INVALID PATH: {} ***'.format(equipment_data_file_url)
 
-                _prefix_len = len(_prefix) + 1
+            _prefix_len = len(_prefix) + 1
 
-                for _sub_prefix in \
-                        [i['Prefix']
-                         for i in self.s3_client.list_objects_v2(
+            for _sub_prefix in \
+                    [i['Prefix']
+                     for i in
+                        self.s3_client.list_objects_v2(
                             Bucket=self.s3_bucket,
                             Delimiter='/',
                             MaxKeys=1000000,
                             Prefix=_prefix + '/',
                             FetchOwner=False)['CommonPrefixes']]:
-                    _date_str = _sub_prefix[_prefix_len:]
-                    _path = os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix)
+                _date_str = _sub_prefix[_prefix_len:]
+                assert _date_str.startswith('date=')
+                
+                _path = os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix)
 
-                    if _date_str in _date_str_to_urls_map:
-                        _date_str_to_urls_map[_date_str].append(_path)
-                    else:
-                        _date_str_to_urls_map[_date_str] = [_path]
+                if _date_str in _date_str_to_urls_map:
+                    _date_str_to_urls_map[_date_str].append(_path)
+                else:
+                    _date_str_to_urls_map[_date_str] = [_path]
 
         for _date_str in sorted(_date_str_to_urls_map):
             adf = ADF.load(
