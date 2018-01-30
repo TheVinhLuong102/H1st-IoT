@@ -415,9 +415,13 @@ class Project(object):
     def merge_equipment_data_for_equipment_unique_type(
             self,
             equipment_general_type_name, equipment_unique_type_name,
-            mode='append', verbose=True):
+            sparkConf={},
+            verbose=True):
+        import arimo.backend
         from arimo.df import ADF
-        from arimo.util.aws import s3_rm, s3_sync
+
+        if arimo.backend.spark is None:
+            arimo.backend.init(sparkConf=sparkConf)
 
         equipment_unique_type = \
             self.get_or_create_equipment_unique_type(
@@ -427,7 +431,7 @@ class Project(object):
         equipment_unique_type_equipment_data_fields = \
             set(equipment_unique_type.data_fields.all())
 
-        equipment_instances_data_file_urls = {}
+        equipment_instances_data_file_urls = []
 
         for equipment_instance in \
                 self.models.base.EquipmentInstance.objects \
@@ -440,62 +444,21 @@ class Project(object):
                 "*** Equipment Instance #{}'s Data Fields NOT a Subset of Those of {} Unique Type {} ***".format(
                     equipment_id, equipment_general_type_name, equipment_unique_type_name)
 
-            equipment_instances_data_file_urls[equipment_id] = \
-                equipment_instance.data_file_url
+            equipment_instances_data_file_urls.append(equipment_instance.data_file_url)
 
-        _to_dir_path = \
-            os.path.join(
-                self.s3_data_dir_path,
-                '{}---{}'.format(
-                    clean_lower_str(equipment_general_type_name).upper(),
-                    clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT)
-
-        if mode == 'OVERWRITE':
-            s3_rm(
-                path=_to_dir_path, dir=True, quiet=True,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
-                verbose=verbose)
-
-        _date_str_to_urls_map = {}
-
-        for equipment_instance_id, equipment_data_file_url in sorted(equipment_instances_data_file_urls.items()):
-            _bucket, _prefix = equipment_data_file_url.split('//', 1)[1].split('/', 1)
-            assert (_bucket == self.s3_bucket) \
-                and (not _prefix.endswith('/')), \
-                '*** INVALID PATH: {} ***'.format(equipment_data_file_url)
-
-            _prefix_len = len(_prefix) + 1
-
-            for _sub_prefix in \
-                    [i['Prefix']
-                     for i in
-                        self.s3_client.list_objects_v2(
-                            Bucket=self.s3_bucket,
-                            Delimiter='/',
-                            MaxKeys=1000000,
-                            Prefix=_prefix + '/',
-                            FetchOwner=False)['CommonPrefixes']]:
-                _date_str = _sub_prefix[_prefix_len:]
-                assert _date_str.startswith('date=')
-                
-                _path = os.path.join('s3://{}'.format(self.s3_bucket), _sub_prefix)
-
-                if _date_str in _date_str_to_urls_map:
-                    _date_str_to_urls_map[_date_str].append(_path)
-                else:
-                    _date_str_to_urls_map[_date_str] = [_path]
-
-        for _date_str in sorted(_date_str_to_urls_map):
-            adf = ADF.load(
-                path=_date_str_to_urls_map[_date_str],
+        ADF.load(
+                path=equipment_instances_data_file_urls,
                 aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
                 format='parquet', mergeSchema=True,
-                verbose=verbose)
-
-            adf.repartition(1).save(
-                path=os.path.join(_to_dir_path, _date_str),
+                verbose=verbose) \
+            .save(
+                path=os.path.join(
+                    self.s3_data_dir_path,
+                    '{}---{}'.format(
+                        clean_lower_str(equipment_general_type_name).upper(),
+                        clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
                 aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
-                format='parquet',
+                format='parquet', partitionBy='date',
                 verbose=verbose)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
