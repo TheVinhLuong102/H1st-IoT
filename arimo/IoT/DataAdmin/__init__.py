@@ -34,7 +34,9 @@ _PARQUET_EXT = '.parquet'
 
 
 class Project(object):
-    def __init__(self, db_args, s3_data_dir_path, aws_access_key_id=None, aws_secret_access_key=None):
+    def __init__(
+            self, db_args,
+            s3_data_dir_path, aws_access_key_id, aws_secret_access_key):
         arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
