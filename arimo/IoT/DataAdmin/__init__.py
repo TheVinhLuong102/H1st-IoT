@@ -340,45 +340,45 @@ class Project(object):
         try:
             adf = ADF.load(
                 path=os.path.join(
-                    self.s3_data_dir_path,
-                    clean_lower_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
+                    self.params.s3.equipment_data_dir_path,
+                    equipment_instance_id_or_data_set_name + _PARQUET_EXT),
                 format='parquet', mergeSchema=True,
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
 
         except:
             adf = ADF.load(
                 path=os.path.join(
-                    self.s3_data_dir_path,
+                    self.params.s3.equipment_data_dir_path,
                     _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
                 format='parquet', mergeSchema=True,
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
 
         if ADF._DEFAULT_I_COL in adf.columns:
-            if _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
-                adf('COALESCE({0}, {1}) AS {0}'.format(_EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
-                    *set(adf.columns).difference((_EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
+            if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
+                adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
+                    *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
                     inplace=True)
                                 
             else:
                 adf.rename(
-                    iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME,
+                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
                     inplace=True,
-                    **{_EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
+                    **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
 
         else:
-            assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-            adf.iCol = _EQUIPMENT_INSTANCE_ID_COL_NAME
+            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+            adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
-        assert _DATE_TIME_COL_NAME in adf.columns
-        adf.tCol = _DATE_TIME_COL_NAME
+        assert self._DATE_TIME_COL_NAME in adf.columns
+        adf.tCol = self._DATE_TIME_COL_NAME
 
         return adf
 
-    def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='append', verbose=True):
+    def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
         import pyspark.sql
         from arimo.df import ADF
@@ -394,37 +394,38 @@ class Project(object):
             adf = df
 
         if ADF._DEFAULT_I_COL in adf.columns:
-            assert _EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
+            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
 
             adf.rename(
                 inplace=True,
-                **{_EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
+                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
 
         else:
-            assert _EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
 
-        assert _DATE_TIME_COL_NAME in adf.columns
+        assert self._DATE_TIME_COL_NAME in adf.columns
+        adf.tCol = self._DATE_TIME_COL_NAME
 
         adf.save(
             path=os.path.join(
-                self.s3_data_dir_path,
-                clean_lower_str(equipment_id_or_data_set_name) + _PARQUET_EXT),
+                self.params.s3.equipment_data_dir_path,
+                equipment_id_or_data_set_name + _PARQUET_EXT),
             format='parquet',
             mode=mode,
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
+            aws_access_key_id=self.params.s3.access_key_id,
+            aws_secret_access_key=self.params.s3.secret_access_key,
             verbose=verbose)
 
     def merge_equipment_data_for_equipment_unique_type(
             self,
             equipment_general_type_name, equipment_unique_type_name,
-            sparkConf={},
+            _spark_conf={},
             verbose=True):
         import arimo.backend
         from arimo.df import ADF
 
         if arimo.backend.spark is None:
-            arimo.backend.init(sparkConf=sparkConf)
+            arimo.backend.init(sparkConf=_spark_conf)
 
         equipment_unique_type = \
             self.equipment_unique_type(
@@ -437,10 +438,9 @@ class Project(object):
         equipment_instances_data_file_urls = []
 
         for equipment_instance in \
-                self.models.base.EquipmentInstance.objects \
-                    .filter(
-                        equipment_unique_type=equipment_unique_type,
-                        data_file_url__startswith='s3://'):
+                self.data.EquipmentInstances.filter(
+                    equipment_unique_type=equipment_unique_type,
+                    data_file_url__startswith='s3://'):
             equipment_id = clean_lower_str(equipment_instance.name)
 
             assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
@@ -449,20 +449,25 @@ class Project(object):
 
             equipment_instances_data_file_urls.append(equipment_instance.data_file_url)
 
-        ADF.load(
-                path=equipment_instances_data_file_urls,
-                aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
-                format='parquet', mergeSchema=True,
-                verbose=verbose) \
-            .save(
-                path=os.path.join(
-                    self.s3_data_dir_path,
-                    '{}---{}'.format(
-                        clean_lower_str(equipment_general_type_name).upper(),
-                        clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
-                aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.aws_secret_access_key,
-                format='parquet', partitionBy='date',
-                verbose=verbose)
+        adf = ADF.load(
+            path=equipment_instances_data_file_urls,
+            format='parquet', mergeSchema=True,
+            aws_access_key_id=self.params.s3.access_key_id,
+            aws_secret_access_key=self.params.s3.secret_access_key,
+            verbose=verbose)
+
+        assert adf.type(ADF._DEFAULT_D_COL) == 'date'
+
+        adf.save(
+            path=os.path.join(
+                self.params.s3.equipment_data_dir_path,
+                '{}---{}'.format(
+                    clean_lower_str(equipment_general_type_name).upper(),
+                    clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
+            format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+            aws_access_key_id=self.params.s3.access_key_id,
+            aws_secret_access_key=self.params.s3.secret_access_key,
+            verbose=verbose)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
