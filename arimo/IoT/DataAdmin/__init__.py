@@ -486,7 +486,7 @@ class Project(object):
 
         to_dir_path = \
             os.path.join(
-                self.s3_data_dir_path,
+                self.params.s3.equipment_data_dir_path,
                 '{}---{}'.format(
                     equipment_general_type_name,
                     '---'.join(equipment_unique_type_names)) + _PARQUET_EXT)
@@ -494,11 +494,12 @@ class Project(object):
         for equipment_unique_type_name in equipment_unique_type_names:
             s3_sync(
                 from_dir_path=os.path.join(
-                    self.s3_data_dir_path,
+                    self.params.s3.equipment_data_dir_path,
                     '{}---{}'.format(
                         equipment_general_type_name,
                         equipment_unique_type_name + _PARQUET_EXT)),
                 to_dir_path=to_dir_path,
                 quiet=True, delete=False,
-                access_key_id=self.aws_access_key_id, secret_access_key=self.aws_secret_access_key,
+                access_key_id=self.params.s3.access_key_id,
+                secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
