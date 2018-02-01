@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-from argparse import Namespace
 import botocore
 import boto3
 import os
@@ -20,23 +19,25 @@ _STR_CLASSES = \
     else str
 
 
-_CAT_DATA_TYPE_NAME = 'cat'
-_NUM_DATA_TYPE_NAME = 'num'
-
-_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
-_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
-
-
-_EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
-_DATE_TIME_COL_NAME = 'date_time'
-
 _PARQUET_EXT = '.parquet'
 
 
 class Project(object):
+    _CAT_DATA_TYPE_NAME = 'cat'
+    _NUM_DATA_TYPE_NAME = 'num'
+
+    _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
+    _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
+
+    _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
+    _DATE_TIME_COL_NAME = 'date_time'
+
     def __init__(
             self, db_args,
-            s3_data_dir_path, aws_access_key_id, aws_secret_access_key):
+            s3_bucket, s3_equipment_data_dir_prefix,
+            aws_access_key_id, aws_secret_access_key):
+        from arimo.util import Namespace
+
         arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
@@ -47,49 +48,49 @@ class Project(object):
             DataType, EquipmentDataFieldType, EquipmentDataField, \
             EquipmentGeneralType, EquipmentUniqueType, EquipmentInstance
 
-        self.cat_data_type_obj = \
-            DataType.objects.get_or_create(
-                name=_CAT_DATA_TYPE_NAME,
-                defaults=None)[0]
-
-        self.num_data_type_obj = \
-            DataType.objects.get_or_create(
-                name=_NUM_DATA_TYPE_NAME,
-                defaults=None)[0]
-
-        self.control_equipment_data_field_type_obj = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=_CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
-
-        self.measure_equipment_data_field_type_obj = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=_MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
-
         # from arimo.IoT.DataAdmin.PredMaint.models import
 
-        self.models = \
+        self.data = \
             Namespace(
-                base=Namespace(
-                    DataType=DataType,
-                    EquipmentDataFieldType=EquipmentDataFieldType,
-                    EquipmentDataField=EquipmentDataField,
-                    EquipmentGeneralType=EquipmentGeneralType,
-                    EquipmentUniqueType=EquipmentUniqueType,
-                    EquipmentInstance=EquipmentInstance),
+                DataTypes=DataType.objects,
+                EquipmentDataFieldTypes=EquipmentDataFieldType.objects,
+                EquipmentDataFields=EquipmentDataField.objects,
+                EquipmentGeneralTypes=EquipmentGeneralType.objects,
+                EquipmentUniqueTypes=EquipmentUniqueType.objects,
+                EquipmentInstances=EquipmentInstance.objects)
 
-                PredMaint=Namespace(
+        self.CAT_DATA_TYPE = \
+            self.data.DataTypes.get_or_create(
+                name=self._CAT_DATA_TYPE_NAME,
+                defaults=None)[0]
 
-                ))
+        self.NUM_DATA_TYPE = \
+            self.data.DataTypes.get_or_create(
+                name=self._NUM_DATA_TYPE_NAME,
+                defaults=None)[0]
 
-        self.s3_data_dir_path = s3_data_dir_path
-        self.s3_bucket = s3_data_dir_path.split('//', 1)[1].split('/', 1)[0]
+        self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE = \
+            self.data.EquipmentDataFieldTypes.get_or_create(
+                name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
+                defaults=None)[0]
 
-        self.aws_access_key_id = aws_access_key_id
-        self.aws_secret_access_key = aws_secret_access_key
+        self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
+            self.data.EquipmentDataFieldTypes.get_or_create(
+                name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
+                defaults=None)[0]
 
-        self.s3_client = \
+        self.params = \
+            Namespace(
+                s3=Namespace(
+                    bucket=s3_bucket,
+
+                    access_key_id=aws_access_key_id,
+                    secret_access_key=aws_secret_access_key,
+
+                    equipment_data_dir_prefix=s3_equipment_data_dir_prefix,
+                    equipment_data_dir_path='s3://{}/{}'.format(s3_bucket, s3_equipment_data_dir_prefix)))
+
+        self.S3_CLIENT = \
             boto3.client(
                 's3',
                 aws_access_key_id=aws_access_key_id,
@@ -110,15 +111,15 @@ class Project(object):
     def _migrate(self):
         call_command('migrate')
 
-    def get_or_create_equipment_general_type(self, equipment_general_type_name):
-        return self.models.base.EquipmentGeneralType.objects.get_or_create(
+    def equipment_general_type(self, equipment_general_type_name):
+        return self.data.EquipmentGeneralTypes.get_or_create(
             name=clean_lower_str(equipment_general_type_name),
             defaults=None)[0]
 
-    def get_or_create_equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
-        return self.models.base.EquipmentUniqueType.objects.get_or_create(
+    def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
+        return self.data.EquipmentUniqueTypes.get_or_create(
             equipment_general_type=
-                self.get_or_create_equipment_general_type(
+                self.equipment_general_type(
                     equipment_general_type_name=equipment_general_type_name),
             name=clean_lower_str(equipment_unique_type_name),
             defaults=None)[0]
@@ -128,20 +129,20 @@ class Project(object):
             equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
             **kwargs):
         kwargs['data_type'] = \
-            self.cat_data_type_obj \
+            self.CAT_DATA_TYPE \
             if cat \
-            else self.num_data_type_obj
+            else self.NUM_DATA_TYPE
 
         try:
             equipment_data_field = \
-                self.models.base.EquipmentDataField.objects.update_or_create(
+                self.data.EquipmentDataFields.update_or_create(
                     equipment_general_type=
-                        self.get_or_create_equipment_general_type(
+                        self.equipment_general_type(
                             equipment_general_type_name=equipment_general_type_name),
                     equipment_data_field_type=
-                        self.control_equipment_data_field_type_obj
+                        self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
                         if control
-                        else self.measure_equipment_data_field_type_obj,
+                        else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
                     name=clean_lower_str(equipment_data_field_name),
                     defaults=kwargs)[0]
 
@@ -174,7 +175,7 @@ class Project(object):
                            for equipment_unique_type_name in equipment_unique_type_names_incl}) \
                     .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
                 equipment_unique_types.append(
-                    self.get_or_create_equipment_unique_type(
+                    self.equipment_unique_type(
                         equipment_general_type_name=equipment_general_type_name,
                         equipment_unique_type_name=equipment_unique_type_name))
 
@@ -191,14 +192,14 @@ class Project(object):
             **kwargs):
         if equipment_unique_type_name:
             kwargs['equipment_unique_type'] = \
-                self.get_or_create_equipment_unique_type(
+                self.equipment_unique_type(
                     equipment_general_type_name=equipment_general_type_name,
                     equipment_unique_type_name=equipment_unique_type_name)
 
         equipment_instance = \
-            self.models.base.EquipmentInstance.objects.update_or_create(
+            self.data.EquipmentInstances.update_or_create(
                 equipment_general_type=
-                    self.get_or_create_equipment_general_type(
+                    self.equipment_general_type(
                         equipment_general_type_name=equipment_general_type_name),
                 name=clean_lower_str(name),
                 defaults=kwargs)[0]
@@ -235,7 +236,7 @@ class Project(object):
                         equipment_general_type__name=_clean_lower_equipment_general_type_name):
                 equipment_data_field_name = equipment_data_field.name
 
-                if equipment_data_field.equipment_data_field_type.name == _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME:
+                if equipment_data_field.equipment_data_field_type.name == self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME:
                     if equipment_data_field_name not in control_data_field_names_excl:
                         if equipment_unique_type_name:
                             insert_equipment_type = True
@@ -253,7 +254,7 @@ class Project(object):
 
                             if insert_equipment_type:
                                 equipment_unique_types.append(
-                                    self.get_or_create_equipment_unique_type(
+                                    self.equipment_unique_type(
                                         equipment_general_type_name=equipment_general_type_name,
                                         equipment_unique_type_name=equipment_unique_type_name))
 
@@ -265,7 +266,7 @@ class Project(object):
 
                         control_equipment_data_field_names.append(equipment_data_field_name)
 
-                elif equipment_data_field.equipment_data_field_type.name == _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME:
+                elif equipment_data_field.equipment_data_field_type.name == self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME:
                     if equipment_data_field_name not in measure_data_field_names_excl:
                         if equipment_unique_type_name:
                             insert_equipment_type = True
@@ -283,7 +284,7 @@ class Project(object):
 
                             if insert_equipment_type:
                                 equipment_unique_types.append(
-                                    self.get_or_create_equipment_unique_type(
+                                    self.equipment_unique_type(
                                         equipment_general_type_name=equipment_general_type_name,
                                         equipment_unique_type_name=equipment_unique_type_name))
 
@@ -426,7 +427,7 @@ class Project(object):
             arimo.backend.init(sparkConf=sparkConf)
 
         equipment_unique_type = \
-            self.get_or_create_equipment_unique_type(
+            self.equipment_unique_type(
                 equipment_general_type_name=equipment_general_type_name,
                 equipment_unique_type_name=equipment_unique_type_name)
 
