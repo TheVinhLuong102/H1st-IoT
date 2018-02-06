@@ -1,4 +1,4 @@
-Django >= 1.11.9, < 2
+Django >= 1.11.10, < 2
 
 Django-AutoComplete-Light >= 3.2.10
 Django-Generic-M2M >= 0.3.1
@@ -7,7 +7,7 @@ Django-QuerySetSequence >= 0.8
 Django-Tagging >= 0.4.6
 Django-Taggit >= 0.22.2
 
-Django-Grappelli >= 2.10.1
+Django-Grappelli >= 2.11.1
 
 Django-Extensions >= 1.9.9
 
