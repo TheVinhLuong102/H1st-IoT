@@ -394,12 +394,16 @@ class Project(object):
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
             adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
-        assert ADF._DEFAULT_D_COL in adf.columns
-        _date_col_type = adf.type(ADF._DEFAULT_D_COL)
-        if _date_col_type != _DATE_TYPE:
-            assert _date_col_type == _STR_TYPE
+        if ADF._DEFAULT_D_COL in adf.columns:
+            _date_col_type = adf.type(ADF._DEFAULT_D_COL)
+
+            if _date_col_type != _DATE_TYPE:
+                assert _date_col_type == _STR_TYPE
+                _resave = True
+                adf.rm(ADF._DEFAULT_D_COL, inplace=True)
+
+        else:
             _resave = True
-            adf.rm(ADF._DEFAULT_D_COL, inplace=True)
 
         assert self._DATE_TIME_COL_NAME in adf.columns
         adf.tCol = self._DATE_TIME_COL_NAME
