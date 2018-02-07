@@ -419,13 +419,11 @@ class Project(object):
     def merge_equipment_data_for_equipment_unique_type(
             self,
             equipment_general_type_name, equipment_unique_type_name,
+            _max_n_equipment_instances_at_same_time=100,
             _spark_conf={},
             verbose=True):
         import arimo.backend
         from arimo.df import ADF
-
-        if arimo.backend.spark is None:
-            arimo.backend.init(sparkConf=_spark_conf)
 
         equipment_unique_type = \
             self.equipment_unique_type(
@@ -438,9 +436,11 @@ class Project(object):
         equipment_instances_data_file_urls = []
 
         for equipment_instance in \
-                self.data.EquipmentInstances.filter(
-                    equipment_unique_type=equipment_unique_type,
-                    data_file_url__startswith='s3://'):
+                self.data.EquipmentInstances\
+                    .filter(
+                        equipment_unique_type=equipment_unique_type,
+                        data_file_url__startswith='s3://')\
+                    .order_by('name'):
             equipment_id = clean_lower_str(equipment_instance.name)
 
             assert equipment_unique_type_equipment_data_fields.issuperset(equipment_instance.data_fields.all()), \
@@ -449,25 +449,84 @@ class Project(object):
 
             equipment_instances_data_file_urls.append(equipment_instance.data_file_url)
 
-        adf = ADF.load(
-            path=equipment_instances_data_file_urls,
-            format='parquet', mergeSchema=True,
-            aws_access_key_id=self.params.s3.access_key_id,
-            aws_secret_access_key=self.params.s3.secret_access_key,
-            verbose=verbose)
+        n_equipment_instances = len(equipment_instances_data_file_urls)
 
-        assert adf.type(ADF._DEFAULT_D_COL) == 'date'
+        if n_equipment_instances <= _max_n_equipment_instances_at_same_time:
+            if arimo.backend.spark is None:
+                arimo.backend.init(sparkConf=_spark_conf)
 
-        adf.save(
-            path=os.path.join(
-                self.params.s3.equipment_data_dir_path,
-                '{}---{}'.format(
-                    clean_lower_str(equipment_general_type_name).upper(),
-                    clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
-            format='parquet', partitionBy=ADF._DEFAULT_D_COL,
-            aws_access_key_id=self.params.s3.access_key_id,
-            aws_secret_access_key=self.params.s3.secret_access_key,
-            verbose=verbose)
+            adf = ADF.load(
+                path=equipment_instances_data_file_urls,
+                format='parquet', mergeSchema=True,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                verbose=verbose)
+
+            assert adf.type(ADF._DEFAULT_D_COL) == 'date'
+
+            adf.save(
+                path=os.path.join(
+                    self.params.s3.equipment_data_dir_path,
+                    '{}---{}'.format(
+                        clean_lower_str(equipment_general_type_name).upper(),
+                        clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
+                format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                verbose=verbose)
+
+        else:
+            _tmp_paths = []
+
+            for i in range(0, n_equipment_instances, _max_n_equipment_instances_at_same_time):
+                _source_paths = equipment_instances_data_file_urls[i:(i + _max_n_equipment_instances_at_same_time)]
+
+                _tmp_path = \
+                    '/tmp/PanaCC-Data-{}-from-{}-to-{}'.format(
+                        i,
+                        _source_paths[0].rsplit('/', 1)[1],
+                        _source_paths[-1].rsplit('/', 1)[1])
+
+                _tmp_paths.append(_tmp_path)
+
+                if (not i) and (arimo.backend.spark is None):
+                    arimo.backend.init(sparkConf=_spark_conf)
+                else:
+                    arimo.backend.init(sparkApp=_tmp_path, sparkConf=_spark_conf)
+
+                _adf = ADF.load(
+                    path=_source_paths,
+                    format='parquet', mergeSchema=True,
+                    verbose=verbose)
+
+                assert _adf.type(ADF._DEFAULT_D_COL) == 'date'
+
+                _adf.save(
+                    path=_tmp_path,
+                    format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+                    verbose=verbose)
+
+                arimo.backend.spark.stop()
+
+            arimo.backend.init(sparkConf=_spark_conf)
+
+            adf = ADF.load(
+                path=_tmp_paths,
+                format='parquet', mergeSchema=True,
+                verbose=verbose)
+
+            assert adf.type(ADF._DEFAULT_D_COL) == 'date'
+
+            adf.save(
+                path=os.path.join(
+                    self.params.s3.equipment_data_dir_path,
+                    '{}---{}'.format(
+                        clean_lower_str(equipment_general_type_name).upper(),
+                        clean_lower_str(equipment_unique_type_name)) + _PARQUET_EXT),
+                format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                verbose=verbose)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
