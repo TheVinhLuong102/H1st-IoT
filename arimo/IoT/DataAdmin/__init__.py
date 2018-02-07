@@ -493,19 +493,28 @@ class Project(object):
                 if i or (arimo.backend.spark is None):
                     arimo.backend.init(sparkApp=_tmp_path, sparkConf=_spark_conf)
 
-                _adf = ADF.load(
-                    path=_source_paths,
-                    format='parquet', mergeSchema=True,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    verbose=verbose)
+                try:
+                    _adf = ADF.load(
+                        path=_tmp_path,
+                        format='parquet',
+                        verbose=verbose)
 
-                assert _adf.type(ADF._DEFAULT_D_COL) == 'date'
+                    print('\n*** {} ALREADY EXISTS ***\n'.format(_tmp_path))
 
-                _adf.save(
-                    path=_tmp_path,
-                    format='parquet', partitionBy=ADF._DEFAULT_D_COL,
-                    verbose=verbose)
+                except:
+                    _adf = ADF.load(
+                        path=_source_paths,
+                        format='parquet', mergeSchema=True,
+                        aws_access_key_id=self.params.s3.access_key_id,
+                        aws_secret_access_key=self.params.s3.secret_access_key,
+                        verbose=verbose)
+
+                    assert _adf.type(ADF._DEFAULT_D_COL) == 'date'
+
+                    _adf.save(
+                        path=_tmp_path,
+                        format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+                        verbose=verbose)
 
                 arimo.backend.spark.stop()
 
