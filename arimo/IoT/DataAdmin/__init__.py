@@ -336,12 +336,17 @@ class Project(object):
 
     def load_equipment_data(self, equipment_instance_id_or_data_set_name, verbose=True):
         from arimo.df import ADF
+        from arimo.util.spark_sql_types import _DATE_TYPE
+
+        _resave = False
+
+        path = os.path.join(
+            self.params.s3.equipment_data_dir_path,
+            equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
         try:
             adf = ADF.load(
-                path=os.path.join(
-                    self.params.s3.equipment_data_dir_path,
-                    equipment_instance_id_or_data_set_name + _PARQUET_EXT),
+                path=path,
                 format='parquet', mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
@@ -357,7 +362,11 @@ class Project(object):
                 aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
 
+            _resave = True
+
         if ADF._DEFAULT_I_COL in adf.columns:
+            _resave = True
+
             if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
                 adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
                     *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
@@ -373,8 +382,22 @@ class Project(object):
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
             adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
+        assert ADF._DEFAULT_D_COL in adf.columns
+        if adf.type(ADF._DEFAULT_D_COL) != _DATE_TYPE:
+            _resave = True
+            adf.rm(ADF._DEFAULT_D_COL, inplace=True)
+
         assert self._DATE_TIME_COL_NAME in adf.columns
         adf.tCol = self._DATE_TIME_COL_NAME
+
+        if _resave:
+            adf.save(
+                path=path,
+                format='parquet',
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                switch=True,
+                verbose=verbose)
 
         return adf
 
