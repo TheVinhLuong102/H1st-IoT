@@ -336,7 +336,7 @@ class Project(object):
 
     def load_equipment_data(self, equipment_instance_id_or_data_set_name, verbose=True):
         from arimo.df import ADF
-        from arimo.util.spark_sql_types import _DATE_TYPE
+        from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
         _resave = False
 
@@ -383,7 +383,9 @@ class Project(object):
             adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
         assert ADF._DEFAULT_D_COL in adf.columns
-        if adf.type(ADF._DEFAULT_D_COL) != _DATE_TYPE:
+        _date_col_type = adf.type(ADF._DEFAULT_D_COL)
+        if _date_col_type != _DATE_TYPE:
+            assert _date_col_type == _STR_TYPE
             _resave = True
             adf.rm(ADF._DEFAULT_D_COL, inplace=True)
 
