@@ -424,6 +424,7 @@ class Project(object):
             verbose=True):
         import arimo.backend
         from arimo.df import ADF
+        from arimo.util import fs
 
         equipment_unique_type = \
             self.equipment_unique_type(
@@ -527,6 +528,12 @@ class Project(object):
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
+
+            for _tmp_path in _tmp_paths:
+                fs.rm(
+                    path=_tmp_path,
+                    hdfs=fs._ON_LINUX_CLUSTER_WITH_HDFS,
+                    is_dir=True)
 
     def merge_equipment_data_for_multi_equipment_unique_types(
             self,
