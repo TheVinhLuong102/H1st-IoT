@@ -489,9 +489,7 @@ class Project(object):
 
                 _tmp_paths.append(_tmp_path)
 
-                if (not i) and (arimo.backend.spark is None):
-                    arimo.backend.init(sparkConf=_spark_conf)
-                else:
+                if i or (arimo.backend.spark is None):
                     arimo.backend.init(sparkApp=_tmp_path, sparkConf=_spark_conf)
 
                 _adf = ADF.load(
