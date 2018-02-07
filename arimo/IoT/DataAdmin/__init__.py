@@ -364,6 +364,18 @@ class Project(object):
 
             _resave = True
 
+        _complex_col_names = []
+
+        for col in adf.columns:
+            _col_type = adf.type(col)
+            if _col_type.startswith('array<') or _col_type.startswith('map<') \
+                    or _col_type.startswith('struct<') or _col_type.startswith('vector'):
+                _complex_col_names.append(col)
+
+        if _complex_col_names:
+            _resave = True
+            adf.rm(*_complex_col_names, inplace=True)
+
         if ADF._DEFAULT_I_COL in adf.columns:
             _resave = True
 
