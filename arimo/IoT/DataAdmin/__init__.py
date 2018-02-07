@@ -482,8 +482,8 @@ class Project(object):
                 _source_paths = equipment_instances_data_file_urls[i:(i + _max_n_equipment_instances_at_same_time)]
 
                 _tmp_path = \
-                    '/tmp/PanaCC-Data-{}-from-{}-to-{}'.format(
-                        i,
+                    '/tmp/PanaCC-Data---{}-{}---{}-from-{}-to-{}'.format(
+                        equipment_general_type_name, equipment_unique_type_name, i,
                         _source_paths[0].rsplit('/', 1)[1],
                         _source_paths[-1].rsplit('/', 1)[1])
 
