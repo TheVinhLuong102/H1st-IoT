@@ -589,7 +589,7 @@ class Project(object):
             self,
             equipment_general_type_name, *equipment_unique_type_names,
             **kwargs):
-        from arimo.util.aws import s3_sync
+        from arimo.util.aws import s3_sync, s3_rm
 
         verbose = kwargs.pop('verbose', True)
 
@@ -607,6 +607,14 @@ class Project(object):
                     equipment_general_type_name,
                     '---'.join(equipment_unique_type_names)) + _PARQUET_EXT)
 
+        s3_rm(
+            path=to_dir_path,
+            dir=True,
+            quiet=True,
+            access_key_id=self.params.s3.access_key_id,
+            secret_access_key=self.params.s3.secret_access_key,
+            verbose=verbose)
+
         for equipment_unique_type_name in equipment_unique_type_names:
             s3_sync(
                 from_dir_path=os.path.join(
@@ -614,7 +622,9 @@ class Project(object):
                     '{}---{}'.format(
                         equipment_general_type_name,
                         equipment_unique_type_name + _PARQUET_EXT)),
-                to_dir_path=to_dir_path,
+                to_dir_path=os.path.join(
+                    to_dir_path,
+                    '__equipment_unique_type__={}'.format(equipment_unique_type_name)),
                 quiet=True, delete=False,
                 access_key_id=self.params.s3.access_key_id,
                 secret_access_key=self.params.s3.secret_access_key,
