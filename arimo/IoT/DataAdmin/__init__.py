@@ -462,7 +462,8 @@ class Project(object):
             equipment_general_type_name, equipment_unique_type_name,
             _max_n_equipment_instances_at_same_time=100,
             _spark_conf={},
-            verbose=True):
+            verbose=True,
+            _min_i=0):
         import arimo.backend
         from arimo.df import ADF
         from arimo.util import fs
@@ -531,33 +532,34 @@ class Project(object):
 
                 _tmp_paths.append(_tmp_path)
 
-                if i or (arimo.backend.spark is None):
-                    arimo.backend.init(sparkApp=_tmp_path, sparkConf=_spark_conf)
+                if i >= _min_i:
+                    if i or (arimo.backend.spark is None):
+                        arimo.backend.init(sparkApp=_tmp_path, sparkConf=_spark_conf)
 
-                try:
-                    _adf = ADF.load(
-                        path=_tmp_path,
-                        format='parquet',
-                        verbose=verbose)
+                    try:
+                        _adf = ADF.load(
+                            path=_tmp_path,
+                            format='parquet',
+                            verbose=verbose)
 
-                    print('\n*** {} ALREADY EXISTS ***\n'.format(_tmp_path))
+                        print('\n*** {} ALREADY EXISTS ***\n'.format(_tmp_path))
 
-                except:
-                    _adf = ADF.load(
-                        path=_source_paths,
-                        format='parquet', mergeSchema=True,
-                        aws_access_key_id=self.params.s3.access_key_id,
-                        aws_secret_access_key=self.params.s3.secret_access_key,
-                        verbose=verbose)
+                    except:
+                        _adf = ADF.load(
+                            path=_source_paths,
+                            format='parquet', mergeSchema=True,
+                            aws_access_key_id=self.params.s3.access_key_id,
+                            aws_secret_access_key=self.params.s3.secret_access_key,
+                            verbose=verbose)
 
-                    assert _adf.type(ADF._DEFAULT_D_COL) == 'date'
+                        assert _adf.type(ADF._DEFAULT_D_COL) == 'date'
 
-                    _adf.save(
-                        path=_tmp_path,
-                        format='parquet', partitionBy=ADF._DEFAULT_D_COL,
-                        verbose=verbose)
+                        _adf.save(
+                            path=_tmp_path,
+                            format='parquet', partitionBy=ADF._DEFAULT_D_COL,
+                            verbose=verbose)
 
-                arimo.backend.spark.stop()
+                    arimo.backend.spark.stop()
 
             arimo.backend.init(sparkConf=_spark_conf)
 
