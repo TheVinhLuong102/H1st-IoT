@@ -145,13 +145,25 @@ class EquipmentDataField(Model):
         ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
 
     def __unicode__(self):
-        return '{} [{}] {} [{}]'.format(
+        return '{} [{}] {} [{}{}{}{}{}]'.format(
             self.equipment_general_type.name.upper(),
             self.equipment_data_field_type.name,
             self.name,
             self.data_type.name
                 if self.data_type
-                else 'UNTYPED')
+                else 'UNTYPED',
+            ('' if self.upper_numeric_null is None
+                else ', null {}'.format(self.upper_numeric_null))
+                if self.lower_numeric_null is None
+                else (', null {}'.format(self.lower_numeric_null)
+                      if self.upper_numeric_null is None
+                      else 'nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
+            '' if self.default_val is None
+               else ', default {}'.format(self.default_val),
+            '' if self.min_val is None
+               else ', min {}'.format(self.min_val),
+            '' if self.max_val is None
+               else ', max {}'.format(self.max_val))
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
