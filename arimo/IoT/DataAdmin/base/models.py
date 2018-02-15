@@ -157,7 +157,7 @@ class EquipmentDataField(Model):
                 if self.lower_numeric_null is None
                 else (', null {}'.format(self.lower_numeric_null)
                       if self.upper_numeric_null is None
-                      else 'nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
+                      else ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
             '' if self.default_val is None
                else ', default {}'.format(self.default_val),
             '' if self.min_val is None
