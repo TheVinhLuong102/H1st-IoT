@@ -335,7 +335,7 @@ class Project(object):
         return equipment_instance
 
     def load_equipment_data(self, equipment_instance_id_or_data_set_name, verbose=True):
-        from arimo.df import ADF
+        from arimo.df.spark import ADF
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
         _resave = False
@@ -422,7 +422,7 @@ class Project(object):
     def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
         import pyspark.sql
-        from arimo.df import ADF
+        from arimo.df.spark import ADF
 
         if isinstance(df, pandas.DataFrame):
             adf = ADF.create(data=df)
@@ -465,7 +465,7 @@ class Project(object):
             verbose=True,
             _min_i=0):
         import arimo.backend
-        from arimo.df import ADF
+        from arimo.df.spark import ADF
         from arimo.util import fs
 
         equipment_unique_type = \
