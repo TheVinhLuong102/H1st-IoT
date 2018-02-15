@@ -591,7 +591,7 @@ class Project(object):
             self,
             equipment_general_type_name, *equipment_unique_type_names,
             **kwargs):
-        from arimo.util.aws import s3_sync, s3_rm
+        from arimo.util.aws import s3
 
         verbose = kwargs.pop('verbose', True)
 
@@ -609,7 +609,7 @@ class Project(object):
                     equipment_general_type_name,
                     '---'.join(equipment_unique_type_names)) + _PARQUET_EXT)
 
-        s3_rm(
+        s3.rm(
             path=to_dir_path,
             dir=True,
             quiet=True,
@@ -618,7 +618,7 @@ class Project(object):
             verbose=verbose)
 
         for equipment_unique_type_name in equipment_unique_type_names:
-            s3_sync(
+            s3.sync(
                 from_dir_path=os.path.join(
                     self.params.s3.equipment_data_dir_path,
                     '{}---{}'.format(
