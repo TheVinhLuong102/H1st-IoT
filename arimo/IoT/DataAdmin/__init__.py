@@ -334,90 +334,100 @@ class Project(object):
 
         return equipment_instance
 
-    def load_equipment_data(self, equipment_instance_id_or_data_set_name, verbose=True):
+    def load_equipment_data(self, equipment_instance_id_or_data_set_name, as_s3df=False, verbose=True):
+        from arimo.df.s3 import S3DF
         from arimo.df.spark import ADF
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
-
-        _resave = False
 
         path = os.path.join(
             self.params.s3.equipment_data_dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        try:
-            adf = ADF.load(
-                path=path,
-                format='parquet', mergeSchema=True,
+        if as_s3df:
+            return S3DF(
+                paths=path,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
+                i_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME, t_col=self._DATE_TIME_COL_NAME,
                 verbose=verbose)
-
-        except:
-            adf = ADF.load(
-                path=os.path.join(
-                    self.params.s3.equipment_data_dir_path,
-                    _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
-                format='parquet', mergeSchema=True,
-                aws_access_key_id=self.params.s3.access_key_id,
-                aws_secret_access_key=self.params.s3.secret_access_key,
-                verbose=verbose)
-
-            _resave = True
-
-        _complex_col_names = []
-
-        for col in adf.columns:
-            _col_type = adf.type(col)
-            if _col_type.startswith('array<') or _col_type.startswith('map<') \
-                    or _col_type.startswith('struct<') or _col_type.startswith('vector'):
-                _complex_col_names.append(col)
-
-        if _complex_col_names:
-            _resave = True
-            adf.rm(*_complex_col_names, inplace=True)
-
-        if ADF._DEFAULT_I_COL in adf.columns:
-            _resave = True
-
-            if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
-                adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
-                    *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
-                    inplace=True)
-                                
-            else:
-                adf.rename(
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
-                    inplace=True,
-                    **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
 
         else:
-            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-            adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
+            _resave = False
 
-        if ADF._DEFAULT_D_COL in adf.columns:
-            _date_col_type = adf.type(ADF._DEFAULT_D_COL)
+            try:
+                adf = ADF.load(
+                    path=path,
+                    format='parquet', mergeSchema=True,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    verbose=verbose)
 
-            if _date_col_type != _DATE_TYPE:
-                assert _date_col_type == _STR_TYPE
+            except:
+                adf = ADF.load(
+                    path=os.path.join(
+                        self.params.s3.equipment_data_dir_path,
+                        _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
+                    format='parquet', mergeSchema=True,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    verbose=verbose)
+
                 _resave = True
-                adf.rm(ADF._DEFAULT_D_COL, inplace=True)
 
-        else:
-            _resave = True
+            _complex_col_names = []
 
-        assert self._DATE_TIME_COL_NAME in adf.columns
-        adf.tCol = self._DATE_TIME_COL_NAME
+            for col in adf.columns:
+                _col_type = adf.type(col)
+                if _col_type.startswith('array<') or _col_type.startswith('map<') \
+                        or _col_type.startswith('struct<') or _col_type.startswith('vector'):
+                    _complex_col_names.append(col)
 
-        if _resave:
-            adf.save(
-                path=path,
-                format='parquet',
-                aws_access_key_id=self.params.s3.access_key_id,
-                aws_secret_access_key=self.params.s3.secret_access_key,
-                switch=True,
-                verbose=verbose)
+            if _complex_col_names:
+                _resave = True
+                adf.rm(*_complex_col_names, inplace=True)
 
-        return adf
+            if ADF._DEFAULT_I_COL in adf.columns:
+                _resave = True
+
+                if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
+                    adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
+                        *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
+                        inplace=True)
+
+                else:
+                    adf.rename(
+                        iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                        inplace=True,
+                        **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
+
+            else:
+                assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+                adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
+
+            if ADF._DEFAULT_D_COL in adf.columns:
+                _date_col_type = adf.type(ADF._DEFAULT_D_COL)
+
+                if _date_col_type != _DATE_TYPE:
+                    assert _date_col_type == _STR_TYPE
+                    _resave = True
+                    adf.rm(ADF._DEFAULT_D_COL, inplace=True)
+
+            else:
+                _resave = True
+
+            assert self._DATE_TIME_COL_NAME in adf.columns
+            adf.tCol = self._DATE_TIME_COL_NAME
+
+            if _resave:
+                adf.save(
+                    path=path,
+                    format='parquet',
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    switch=True,
+                    verbose=verbose)
+
+            return adf
 
     def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
