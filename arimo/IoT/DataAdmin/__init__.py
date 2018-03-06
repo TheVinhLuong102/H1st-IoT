@@ -334,22 +334,33 @@ class Project(object):
 
         return equipment_instance
 
-    def load_equipment_data(self, equipment_instance_id_or_data_set_name, as_s3df=False, verbose=True):
-        from arimo.df.s3 import S3DF
+    def load_equipment_data(
+            self, equipment_instance_id_or_data_set_name,
+            _files_based=True, _spark=True,
+            verbose=True):
+        from arimo.df.files_based import FilesBasedDF
         from arimo.df.spark import ADF
+        from arimo.df.spark_on_files import FilesBasedADF
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
         path = os.path.join(
             self.params.s3.equipment_data_dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        if as_s3df:
-            return S3DF(
-                paths=path,
-                aws_access_key_id=self.params.s3.access_key_id,
-                aws_secret_access_key=self.params.s3.secret_access_key,
-                i_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME, t_col=self._DATE_TIME_COL_NAME,
-                verbose=verbose)
+        if _files_based:
+            return FilesBasedADF(
+                    path=path,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=self._DATE_TIME_COL_NAME,
+                    verbose=verbose) \
+                if _spark \
+                else FilesBasedDF(
+                    paths=path,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    i_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME, t_col=self._DATE_TIME_COL_NAME,
+                    verbose=verbose)
 
         else:
             _resave = False
