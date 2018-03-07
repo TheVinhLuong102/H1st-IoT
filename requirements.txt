@@ -23,3 +23,5 @@ AWSEBCLI >= 3.12.3
 
 AWSCLI >= 1.14.51
 Boto3 >= 1.6.4
+
+Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
