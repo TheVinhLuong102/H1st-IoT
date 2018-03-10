@@ -336,7 +336,8 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _files_based=True, _spark=True, tCol=_DATE_TIME_COL_NAME,
+            _files_based=True, _spark=True,
+            iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
         from arimo.df.files_based import FilesBasedDF
         from arimo.df.spark import ADF
@@ -352,7 +353,7 @@ class Project(object):
                     path=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=tCol,
+                    iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs) \
                 if _spark \
                 else FilesBasedDF(
@@ -371,7 +372,7 @@ class Project(object):
                     format='parquet', mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=tCol,
+                    iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs)
 
             except:
@@ -382,7 +383,7 @@ class Project(object):
                     format='parquet', mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=tCol,
+                    iCol=iCol, tCol=tCol,
                     verbose=verbose)
 
                 _resave = True
