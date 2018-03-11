@@ -336,27 +336,27 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _files_based=True, _spark=True,
+            _on_files=True, _spark=True,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
-        from arimo.df.files_based import FilesBasedDF
+        from arimo.df.on_files import FileDF
         from arimo.df.spark import ADF
-        from arimo.df.spark_on_files import FilesBasedADF
+        from arimo.df.spark_on_files import FileADF
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
         path = os.path.join(
             self.params.s3.equipment_data_dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        if _files_based:
-            return FilesBasedADF(
+        if _on_files:
+            return FileADF(
                     path=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs) \
                 if _spark \
-                else FilesBasedDF(
+                else FileDF(
                     paths=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
