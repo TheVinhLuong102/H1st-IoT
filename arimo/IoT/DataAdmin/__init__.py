@@ -360,7 +360,7 @@ class Project(object):
                     paths=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    i_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME, t_col=tCol,
+                    i_col=iCol, t_col=tCol,
                     verbose=verbose, **kwargs)
 
         else:
