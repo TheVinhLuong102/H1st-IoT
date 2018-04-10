@@ -2,7 +2,7 @@ Django >= 1.11.12, < 2
 
 Django-AutoComplete-Light >= 3.2.10
 Django-Generic-M2M >= 0.3.1
-Django-GM2M >= 0.5
+Django-GM2M >= 0.6
 Django-QuerySetSequence >= 0.8
 Django-Tagging >= 0.4.6
 Django-Taggit >= 0.22.2
