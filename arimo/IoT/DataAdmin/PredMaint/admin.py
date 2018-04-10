@@ -4,9 +4,9 @@ from .models import Blueprint
 
 
 class BlueprintAdmin(ModelAdmin):
-    list_display = 'url', 'timestamp', 'active'
+    list_display = 'uuid', 'timestamp', 'active'
     list_filter = 'active', 'timestamp'
-    search_fields = 'url',
+    search_fields = 'uuid',
 
 
 site.register(

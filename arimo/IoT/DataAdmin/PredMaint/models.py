@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, DateTimeField, URLField
+    BooleanField, CharField, DateTimeField, URLField
 
 from django.contrib.postgres.fields import JSONField
 
@@ -8,6 +8,13 @@ from ..util import MAX_CHAR_LEN
 
 
 class Blueprint(Model):
+    uuid = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=True,
+            null=True,
+            unique=False)
+
     url = \
         URLField(
             max_length=MAX_CHAR_LEN,
@@ -35,7 +42,7 @@ class Blueprint(Model):
             encoder=None)
 
     class Meta:
-        ordering = 'url', 'timestamp'
+        ordering = 'uuid', 'timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}"'.format(self.url)
