@@ -48,7 +48,7 @@ class Project(object):
             DataType, EquipmentDataFieldType, EquipmentDataField, \
             EquipmentGeneralType, EquipmentUniqueType, EquipmentInstance
 
-        # from arimo.IoT.DataAdmin.PredMaint.models import
+        from arimo.IoT.DataAdmin.PredMaint.models import Blueprint
 
         self.data = \
             Namespace(
@@ -57,7 +57,8 @@ class Project(object):
                 EquipmentDataFields=EquipmentDataField.objects,
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
-                EquipmentInstances=EquipmentInstance.objects)
+                EquipmentInstances=EquipmentInstance.objects,
+                PredMaintBlueprints=Blueprint.objects)
 
         self.CAT_DATA_TYPE = \
             self.data.DataTypes.get_or_create(
