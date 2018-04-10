@@ -11,9 +11,9 @@ class Blueprint(Model):
     uuid = \
         CharField(
             max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            unique=False)
+            blank=False,
+            null=False,
+            unique=True)
 
     url = \
         URLField(
