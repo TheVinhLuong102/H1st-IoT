@@ -41,22 +41,22 @@ class Blueprint(Model):
             to=EquipmentUniqueType,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=True,
-            null=True,
+            blank=False,
+            null=False,
             on_delete=PROTECT)
 
     trained_to_date = \
         DateField(
-            blank=True,
-            null=True,
+            blank=False,
+            null=False,
             auto_now=False,
             auto_created=False,
             default=None)
 
     timestamp = \
         DateTimeField(
-            blank=True,
-            null=True,
+            blank=False,
+            null=False,
             auto_now=False,
             auto_created=False,
             default=None)
