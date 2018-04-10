@@ -4,7 +4,7 @@ from .models import Blueprint
 
 
 class BlueprintAdmin(ModelAdmin):
-    list_display = 'url',
+    list_display = 'url', 'active'
     list_filter = 'active',
     search_fields = 'url',
 
