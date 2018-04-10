@@ -21,7 +21,7 @@ class DataType(Model):
         ordering = 'name',
 
     def __unicode__(self):
-        return 'Data Type "{}"'.format(self.name)
+        return 'DataTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -40,7 +40,7 @@ class EquipmentDataFieldType(Model):
         ordering = 'name',
 
     def __unicode__(self):
-        return 'Equipment Data Field Type "{}"'.format(self.name)
+        return 'EqDataFldTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -59,7 +59,7 @@ class EquipmentGeneralType(Model):
         ordering = 'name',
 
     def __unicode__(self):
-        return 'Equipment General Type "{}"'.format(self.name)
+        return 'EqGenTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -202,7 +202,7 @@ class EquipmentUniqueType(Model):
         ordering = 'equipment_general_type', 'name'
 
     def __unicode__(self):
-        return '{} Unique Type {}'.format(
+        return '{} UnqTp {}'.format(
             self.equipment_general_type.name.upper(),
             self.name.upper())
 

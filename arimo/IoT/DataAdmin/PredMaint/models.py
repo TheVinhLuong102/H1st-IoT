@@ -75,4 +75,4 @@ class Blueprint(Model):
         ordering = 'equipment_general_type', 'equipment_unique_type', 'uuid', 'timestamp'
 
     def __unicode__(self):
-        return 'Blueprint "{}"'.format(self.url)
+        return 'Blueprint "{}"'.format(self.uuid)
