@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateTimeField, ForeignKey, ManyToManyField, URLField, \
+    BooleanField, CharField, DateField, DateTimeField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 
 from django.contrib.postgres.fields import JSONField
@@ -45,12 +45,13 @@ class Blueprint(Model):
             null=True,
             on_delete=PROTECT)
 
-    # equipment_unique_types = \
-    #      ManyToManyField(
-    #         to=EquipmentUniqueType,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
-    #         blank=True)
+    trained_to_date = \
+        DateField(
+            blank=True,
+            null=True,
+            auto_now=False,
+            auto_created=False,
+            default=None)
 
     timestamp = \
         DateTimeField(
@@ -72,7 +73,7 @@ class Blueprint(Model):
             encoder=None)
 
     class Meta:
-        ordering = 'equipment_general_type', 'equipment_unique_type', 'uuid', 'timestamp'
+        ordering = 'equipment_general_type', 'equipment_unique_type', 'trained_to_date', 'timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}"'.format(self.uuid)

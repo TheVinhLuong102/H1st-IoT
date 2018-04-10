@@ -5,8 +5,8 @@ from .models import Blueprint
 
 
 class BlueprintAdmin(ModelAdmin):
-    list_display = 'equipment_general_type', 'equipment_unique_type', 'uuid', 'timestamp', 'active'
-    list_filter = 'equipment_general_type', 'equipment_unique_type', 'active', 'timestamp'
+    list_display = 'equipment_general_type', 'equipment_unique_type', 'trained_to_date', 'timestamp', 'uuid', 'active'
+    list_filter = 'equipment_general_type', 'equipment_unique_type', 'trained_to_date', 'timestamp', 'active'
     search_fields = 'equipment_general_type', 'equipment_unique_type', 'uuid',
 
     form = BlueprintForm
