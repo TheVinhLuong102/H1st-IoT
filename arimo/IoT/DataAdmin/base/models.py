@@ -6,13 +6,13 @@ from django.db.models import \
 from arimo.IoT.DataAdmin.util import clean_lower_str
 
 
-_MAX_CHAR_LEN = 255
+from ..util import MAX_CHAR_LEN
 
 
 class DataType(Model):
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True)
@@ -31,7 +31,7 @@ class DataType(Model):
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True)
@@ -50,7 +50,7 @@ class EquipmentDataFieldType(Model):
 class EquipmentGeneralType(Model):
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True)
@@ -97,7 +97,7 @@ class EquipmentDataField(Model):
 
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False)
 
@@ -185,7 +185,7 @@ class EquipmentUniqueType(Model):
 
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False)
 
@@ -235,7 +235,7 @@ class EquipmentInstance(Model):
 
     name = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False)
 
@@ -248,63 +248,63 @@ class EquipmentInstance(Model):
 
     data_db_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     data_db_tbl = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     data_file_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     control_data_db_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     control_data_db_tbl = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     control_data_file_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     measure_data_db_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     measure_data_db_tbl = \
         CharField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
 
     measure_data_file_url = \
         URLField(
-            max_length=_MAX_CHAR_LEN,
+            max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
             default=None)
