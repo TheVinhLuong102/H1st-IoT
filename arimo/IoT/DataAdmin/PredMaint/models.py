@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    URLField
+    BooleanField, URLField
 
 from django.contrib.postgres.fields import JSONField
 
@@ -14,6 +14,12 @@ class Blueprint(Model):
             blank=False,
             null=False,
             unique=True)
+
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
 
     benchmark_metrics = \
         JSONField(

@@ -5,7 +5,7 @@ from .models import Blueprint
 
 class BlueprintAdmin(ModelAdmin):
     list_display = 'url',
-    list_filter = 'url',
+    list_filter = 'active',
     search_fields = 'url',
 
 
