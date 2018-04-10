@@ -32,8 +32,8 @@ class Blueprint(Model):
             to=EquipmentGeneralType,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=True,
-            null=True,
+            blank=False,
+            null=False,
             on_delete=PROTECT)
 
     equipment_unique_types = \
@@ -41,7 +41,7 @@ class Blueprint(Model):
             to=EquipmentUniqueType,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=True)
+            blank=False)
 
     timestamp = \
         DateTimeField(
