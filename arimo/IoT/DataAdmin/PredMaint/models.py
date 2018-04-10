@@ -76,4 +76,7 @@ class Blueprint(Model):
         ordering = 'equipment_general_type', 'equipment_unique_type', 'trained_to_date', 'timestamp'
 
     def __unicode__(self):
-        return 'Blueprint "{}"'.format(self.uuid)
+        return 'Blueprint "{}"{}'.format(
+            self.uuid,
+            '' if self.active
+               else ' (INACTIVE)')
