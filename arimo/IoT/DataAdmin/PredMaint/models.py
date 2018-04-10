@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, URLField
+    BooleanField, DateTimeField, URLField
 
 from django.contrib.postgres.fields import JSONField
 
@@ -15,6 +15,14 @@ class Blueprint(Model):
             null=False,
             unique=True)
 
+    timestamp = \
+        DateTimeField(
+            blank=True,
+            null=True,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
     active = \
         BooleanField(
             blank=False,
@@ -27,7 +35,7 @@ class Blueprint(Model):
             encoder=None)
 
     class Meta:
-        ordering = 'url',
+        ordering = 'url', 'timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}"'.format(self.url)
