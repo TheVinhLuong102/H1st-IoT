@@ -13,20 +13,6 @@ class Blueprint(Model):
     RELATED_NAME = 'blueprints'
     RELATED_QUERY_NAME = 'blueprint'
 
-    uuid = \
-        CharField(
-            max_length=MAX_CHAR_LEN,
-            blank=False,
-            null=False,
-            unique=True)
-
-    url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=False,
-            null=False,
-            unique=True)
-
     equipment_general_type = \
         ForeignKey(
             to=EquipmentGeneralType,
@@ -60,6 +46,20 @@ class Blueprint(Model):
             auto_now=False,
             auto_created=False,
             default=None)
+
+    uuid = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
+
+    url = \
+        URLField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
 
     active = \
         BooleanField(
