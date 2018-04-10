@@ -36,12 +36,21 @@ class Blueprint(Model):
             null=False,
             on_delete=PROTECT)
 
+    equipment_unique_type = \
+        ForeignKey(
+            to=EquipmentUniqueType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
     equipment_unique_types = \
         ManyToManyField(
             to=EquipmentUniqueType,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=False)
+            blank=True)
 
     timestamp = \
         DateTimeField(
@@ -63,7 +72,7 @@ class Blueprint(Model):
             encoder=None)
 
     class Meta:
-        ordering = 'equipment_general_type', 'uuid', 'timestamp'
+        ordering = 'equipment_general_type', 'equipment_unique_type', 'uuid', 'timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}"'.format(self.url)
