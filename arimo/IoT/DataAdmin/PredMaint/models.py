@@ -45,12 +45,12 @@ class Blueprint(Model):
             null=True,
             on_delete=PROTECT)
 
-    equipment_unique_types = \
-        ManyToManyField(
-            to=EquipmentUniqueType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=True)
+    # equipment_unique_types = \
+    #      ManyToManyField(
+    #         to=EquipmentUniqueType,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+    #         blank=True)
 
     timestamp = \
         DateTimeField(
