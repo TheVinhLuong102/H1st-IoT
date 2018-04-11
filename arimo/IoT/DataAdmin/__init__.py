@@ -46,7 +46,7 @@ class Project(object):
 
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, \
-            EquipmentGeneralType, EquipmentUniqueType, EquipmentInstance
+            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentInstance
 
         from arimo.IoT.DataAdmin.PredMaint.models import Blueprint
 
@@ -56,6 +56,7 @@ class Project(object):
                 EquipmentDataFieldTypes=EquipmentDataFieldType.objects,
                 EquipmentDataFields=EquipmentDataField.objects,
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
+                EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
                 EquipmentInstances=EquipmentInstance.objects,
                 PredMaintBlueprints=Blueprint.objects)
@@ -115,6 +116,14 @@ class Project(object):
     def equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
             name=clean_lower_str(equipment_general_type_name),
+            defaults=None)[0]
+
+    def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
+        return self.data.EquipmentUniqueTypeGroups.get_or_create(
+            equipment_general_type=
+                self.equipment_general_type(
+                    equipment_general_type_name=equipment_general_type_name),
+            name=clean_lower_str(equipment_unique_type_group_name),
             defaults=None)[0]
 
     def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
