@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin, site
 
-from .forms import EquipmentDataFieldForm, EquipmentUniqueTypeForm, EquipmentInstanceForm
-from .models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueType, EquipmentInstance
+from .forms import EquipmentDataFieldForm, EquipmentUniqueTypeGroupForm, EquipmentUniqueTypeForm, EquipmentInstanceForm
+from .models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentInstance
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
@@ -58,6 +58,19 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 site.register(
     EquipmentDataField,
     admin_class=EquipmentDataFieldAdmin)
+
+
+class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
+    list_display = 'equipment_general_type', 'name'
+    list_filter = 'equipment_general_type', 'name'
+    search_fields = 'equipment_general_type', 'name'
+
+    form = EquipmentUniqueTypeGroupForm
+
+
+site.register(
+    EquipmentUniqueTypeGroup,
+    admin_class=EquipmentUniqueTypeGroupAdmin)
 
 
 class EquipmentUniqueTypeAdmin(ModelAdmin):

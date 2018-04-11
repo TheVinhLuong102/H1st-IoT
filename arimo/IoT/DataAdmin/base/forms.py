@@ -1,11 +1,27 @@
 from dal import autocomplete
 
-from .models import EquipmentDataField, EquipmentUniqueType, EquipmentInstance
+from .models import EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentInstance
 
 
 class EquipmentDataFieldForm(autocomplete.FutureModelForm):
     class Meta:
         model = EquipmentDataField
+        fields = '__all__'
+        widgets = {
+            'equipment_unique_types':
+                autocomplete.ModelSelect2Multiple(
+                    url='EquipmentUniqueType-AutoComplete',
+                    attrs={
+                        # Only trigger autocompletion after characters have been typed
+                        'data-minimum-input-length': 1
+                    }
+                )
+        }
+
+
+class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
+    class Meta:
+        model = EquipmentUniqueTypeGroup
         fields = '__all__'
         widgets = {
             'equipment_unique_types':
@@ -31,7 +47,16 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
                         # Only trigger autocompletion after characters have been typed
                         'data-minimum-input-length': 1
                     }
-                )
+                ),
+
+            'groups':
+                autocomplete.ModelSelect2Multiple(
+                    url='EquipmentUniqueTypeGroup-AutoComplete',
+                    attrs={
+                        # Only trigger autocompletion after characters have been typed
+                        'data-minimum-input-length': 1
+                    }
+                ),
         }
 
 
