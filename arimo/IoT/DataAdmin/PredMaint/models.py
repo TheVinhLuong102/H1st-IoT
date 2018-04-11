@@ -5,7 +5,7 @@ from django.db.models import \
 
 from django.contrib.postgres.fields import JSONField
 
-from ..base.models import EquipmentGeneralType, EquipmentUniqueType
+from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup
 from ..util import MAX_CHAR_LEN
 
 
@@ -22,13 +22,13 @@ class Blueprint(Model):
             null=False,
             on_delete=PROTECT)
 
-    equipment_unique_type = \
+    equipment_unique_type_group = \
         ForeignKey(
-            to=EquipmentUniqueType,
+            to=EquipmentUniqueTypeGroup,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
+            blank=True,
+            null=True,
             on_delete=PROTECT)
 
     trained_to_date = \
@@ -73,7 +73,7 @@ class Blueprint(Model):
             encoder=None)
 
     class Meta:
-        ordering = 'equipment_general_type', 'equipment_unique_type', 'trained_to_date', 'timestamp'
+        ordering = 'equipment_general_type', 'equipment_unique_type_group', 'trained_to_date', 'timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}"{}'.format(
