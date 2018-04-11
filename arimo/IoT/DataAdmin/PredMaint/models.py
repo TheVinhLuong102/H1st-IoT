@@ -27,8 +27,8 @@ class Blueprint(Model):
             to=EquipmentUniqueTypeGroup,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=True,
-            null=True,
+            blank=False,
+            null=False,
             on_delete=PROTECT)
 
     trained_to_date = \
