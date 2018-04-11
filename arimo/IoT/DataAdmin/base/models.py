@@ -66,6 +66,45 @@ class EquipmentGeneralType(Model):
         return super(EquipmentGeneralType, self).save(*args, **kwargs)
 
 
+class EquipmentUniqueTypeGroup(Model):
+    RELATED_NAME = 'equipment_unique_type_groups'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False)
+
+    equipment_unique_types = \
+        ManyToManyField(
+            to='EquipmentUniqueType',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    class Meta:
+        ordering = 'equipment_general_type', 'name'
+
+    def __unicode__(self):
+        return '{} UnqTpGrp {}'.format(
+            self.equipment_general_type.name.upper(),
+            self.name.upper())
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
+
+
 class EquipmentDataField(Model):
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
@@ -194,6 +233,15 @@ class EquipmentUniqueType(Model):
         ManyToManyField(
             to=EquipmentDataField,
             through=EquipmentDataField.equipment_unique_types.through,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    # *** USING 'equipment_unique_type_groups' (corresponding to EquipmentUniqueTypeGroup above) LEADS TO BUG ***
+    groups = \
+        ManyToManyField(
+            to=EquipmentUniqueTypeGroup,
+            through=EquipmentUniqueTypeGroup.equipment_unique_types.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
             blank=True)
