@@ -61,16 +61,16 @@ class Blueprint(Model):
             null=False,
             unique=True)
 
+    benchmark_metrics = \
+        JSONField(
+            default=dict,
+            encoder=None)
+
     active = \
         BooleanField(
             blank=False,
             null=False,
             default=True)
-
-    benchmark_metrics = \
-        JSONField(
-            default=dict,
-            encoder=None)
 
     class Meta:
         ordering = 'equipment_general_type', 'equipment_unique_type_group', 'trained_to_date', 'timestamp'
