@@ -70,7 +70,7 @@ class Blueprint(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=True)
+            default=False)
 
     class Meta:
         ordering = 'equipment_general_type', 'equipment_unique_type_group', 'trained_to_date', 'timestamp'
