@@ -506,7 +506,7 @@ class Project(object):
 
             return adf
 
-    def save_equipment_data(self, df, equipment_id_or_data_set_name, mode='overwrite', verbose=True):
+    def save_equipment_data(self, df, equipment_instance_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
         import pyspark.sql
         from arimo.df.spark import ADF
@@ -537,7 +537,7 @@ class Project(object):
         adf.save(
             path=os.path.join(
                 self.params.s3.equipment_data_dir_path,
-                equipment_id_or_data_set_name + _PARQUET_EXT),
+                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
             format='parquet',
             mode=mode,
             aws_access_key_id=self.params.s3.access_key_id,
