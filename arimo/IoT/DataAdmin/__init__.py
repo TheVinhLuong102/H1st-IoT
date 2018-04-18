@@ -110,12 +110,21 @@ class Project(object):
     def _migrate(self):
         call_command('migrate')
 
-    def equipment_general_type(self, equipment_general_type_name):
+    def create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
             name=clean_lower_str(equipment_general_type_name),
             defaults=None)[0]
 
-    def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
+    def equipment_general_type(self, equipment_general_type_name):
+        equipment_general_types = \
+            self.data.EquipmentGeneralTypes.filter(
+                name=equipment_general_type_name)
+
+        assert len(equipment_general_types) == 1
+
+        return equipment_general_types[0]
+
+    def create_equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
         return self.data.EquipmentUniqueTypeGroups.get_or_create(
             equipment_general_type=
                 self.equipment_general_type(
@@ -123,13 +132,33 @@ class Project(object):
             name=clean_lower_str(equipment_unique_type_group_name),
             defaults=None)[0]
 
-    def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
+    def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
+        equipment_general_type_groups = \
+            self.data.EquipmentUniqueTypeGroups.filter(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
+
+        assert len(equipment_general_type_groups) == 1
+
+        return equipment_general_type_groups[0]
+
+    def create_equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
         return self.data.EquipmentUniqueTypes.get_or_create(
             equipment_general_type=
                 self.equipment_general_type(
                     equipment_general_type_name=equipment_general_type_name),
             name=clean_lower_str(equipment_unique_type_name),
             defaults=None)[0]
+
+    def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
+        equipment_unique_types = \
+            self.data.EquipmentUniqueTypes.filter(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_name)
+
+        assert len(equipment_unique_types) == 1
+
+        return equipment_unique_types[0]
 
     def update_or_create_equipment_data_field(
             self, equipment_general_type_name, equipment_data_field_name, control=False, cat=False,
