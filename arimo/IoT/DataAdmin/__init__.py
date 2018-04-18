@@ -221,6 +221,20 @@ class Project(object):
 
         return equipment_data_field
 
+    def equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, control=False):
+        equipment_data_fields = \
+            self.data.EquipmentDataFields.filter(
+                equipment_general_type__name=equipment_general_type_name,
+                equipment_data_field_type=
+                    self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
+                    if control
+                    else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                name=equipment_data_field_name)
+
+        assert len(equipment_data_fields) == 1
+
+        return equipment_data_fields[0]
+
     def update_or_create_equipment_instance(
             self, equipment_general_type_name, name, equipment_unique_type_name=None,
             control_data_field_names_incl=set(), control_data_field_names_excl=set(),
