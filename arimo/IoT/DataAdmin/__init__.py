@@ -1,7 +1,3 @@
-from __future__ import print_function
-
-import botocore
-import boto3
 import os
 import six
 
@@ -169,22 +165,17 @@ class Project(object):
             if cat \
             else self.NUM_DATA_TYPE
 
-        try:
-            equipment_data_field = \
-                self.data.EquipmentDataFields.update_or_create(
-                    equipment_general_type=
-                        self.equipment_general_type(
-                            equipment_general_type_name=equipment_general_type_name),
-                    equipment_data_field_type=
-                        self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
-                        if control
-                        else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
-                    name=clean_lower_str(equipment_data_field_name),
-                    defaults=kwargs)[0]
-
-        except Exception as err:
-            print(equipment_general_type_name, equipment_data_field_name)
-            raise err
+        equipment_data_field = \
+            self.data.EquipmentDataFields.update_or_create(
+                equipment_general_type=
+                    self.equipment_general_type(
+                        equipment_general_type_name=equipment_general_type_name),
+                equipment_data_field_type=
+                    self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
+                    if control
+                    else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                name=clean_lower_str(equipment_data_field_name),
+                defaults=kwargs)[0]
 
         if equipment_unique_type_names_excl or equipment_unique_type_names_incl:
             equipment_unique_type_names_excl = \
