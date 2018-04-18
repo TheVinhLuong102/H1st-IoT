@@ -37,6 +37,7 @@ class Project(object):
             s3_bucket, s3_equipment_data_dir_prefix,
             aws_access_key_id, aws_secret_access_key):
         from arimo.util import Namespace
+        from arimo.util.aws import s3
 
         arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
@@ -92,14 +93,10 @@ class Project(object):
                     equipment_data_dir_prefix=s3_equipment_data_dir_prefix,
                     equipment_data_dir_path='s3://{}/{}'.format(s3_bucket, s3_equipment_data_dir_prefix)))
 
-        self.S3_CLIENT = \
-            boto3.client(
-                's3',
-                aws_access_key_id=aws_access_key_id,
-                aws_secret_access_key=aws_secret_access_key,
-                config=botocore.client.Config(
-                    connect_timeout=9,
-                    read_timeout=9))
+        self.s3_client = \
+            s3.client(
+                access_key_id=aws_access_key_id,
+                secret_access_key=aws_secret_access_key)
 
     def _collect_static(self):
         call_command('collectstatic')
