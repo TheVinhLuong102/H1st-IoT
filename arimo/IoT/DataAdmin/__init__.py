@@ -384,6 +384,16 @@ class Project(object):
 
         return equipment_instance
 
+    def equipment_instance(self, equipment_general_type_name, name):
+        equipment_instances = \
+            self.data.EquipmentInstances.filter(
+                equipment_general_type__name=equipment_general_type_name,
+                name=name)
+
+        assert len(equipment_instances) == 1
+
+        return equipment_instances[0]
+
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
             _on_files=True, _spark=True,
