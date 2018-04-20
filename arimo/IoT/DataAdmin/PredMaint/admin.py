@@ -16,10 +16,10 @@ site.register(
 
 class AlertAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name', #\
+        'equipment_general_type', #\
+        #'equipment_unique_type_group', \
+        #'equipment_instance', \
+        #'risk_score_name', #\
         #'threshold', \
         #'from_date', \
         #'to_date', \
@@ -27,10 +27,10 @@ class AlertAdmin(ModelAdmin):
         #'active'
 
     list_filter = \
-        'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name'#, \
+        'equipment_general_type', #\
+        # 'equipment_unique_type_group', \
+        # 'equipment_instance', \
+        # 'risk_score_name'#, \
         #'threshold', \
         #'from_date', \
         #'to_date', \
