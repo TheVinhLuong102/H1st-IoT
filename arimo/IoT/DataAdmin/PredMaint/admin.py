@@ -27,7 +27,9 @@ class AlertAdmin(ModelAdmin):
         #'active'
 
     list_select_related = \
-        'equipment_general_type',
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance'
 
     list_filter = \
         'equipment_general_type', #\
