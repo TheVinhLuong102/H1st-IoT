@@ -7,6 +7,7 @@ Django-QuerySetSequence >= 0.8
 Django-Tagging >= 0.4.6
 Django-Taggit >= 0.22.2
 
+Django-Debug-Toolbar >= 1.9.1
 Django-Grappelli >= 2.11.1
 
 Django-Extensions >= 1.9.9, < 2

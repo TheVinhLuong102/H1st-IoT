@@ -35,6 +35,10 @@ SECRET_KEY = '_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not _ON_LINUX_CLUSTER
 
+
+INTERNAL_IPS = ['127.0.0.1']
+
+
 ALLOWED_HOSTS = \
     ['.arimo.com', '.elasticbeanstalk.com'] \
     if _ON_LINUX_CLUSTER \
@@ -68,6 +72,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
+
     'arimo.IoT.DataAdmin.base',
     'arimo.IoT.DataAdmin.PredMaint'
 ]
@@ -79,7 +85,11 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
+        # You should include the Debug Toolbar middleware as early as possible in the list.
+        # However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware
 ]
 
 ROOT_URLCONF = 'arimo.IoT.DataAdmin._project.urls'
