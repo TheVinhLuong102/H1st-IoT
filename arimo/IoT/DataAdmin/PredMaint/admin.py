@@ -4,8 +4,6 @@ from .models import Blueprint, Alert
 
 
 class BlueprintAdmin(ModelAdmin):
-    list_select_related = True
-
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
@@ -20,6 +18,13 @@ class BlueprintAdmin(ModelAdmin):
         'trained_to_date', \
         'timestamp', \
         'active'
+
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'trained_to_date'
+
+    show_full_result_count = False
 
     search_fields = \
         'equipment_general_type', \
@@ -58,6 +63,8 @@ class AlertAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'active'
+
+    show_full_result_count = False
 
     search_fields = \
         'equipment_general_type', \

@@ -6,7 +6,11 @@ from .models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTyp
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
     list_display = 'name',
+
     list_filter = 'name',
+
+    show_full_result_count = False
+
     search_fields = 'name',
 
 
@@ -16,8 +20,6 @@ site.register(
 
 
 class EquipmentDataFieldAdmin(ModelAdmin):
-    list_select_related = True
-
     list_display = \
         'equipment_general_type', \
         'equipment_data_field_type', \
@@ -42,6 +44,13 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'min_val', \
         'max_val'
 
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_data_field_type', \
+        'data_type'
+
+    show_full_result_count = False
+
     search_fields = \
         'equipment_general_type', \
         'equipment_data_field_type', \
@@ -63,10 +72,14 @@ site.register(
 
 
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
-    list_select_related = True
-
     list_display = 'equipment_general_type', 'name'
+
     list_filter = 'equipment_general_type', 'name'
+
+    list_select_related = 'equipment_general_type',
+
+    show_full_result_count = False
+
     search_fields = 'equipment_general_type', 'name'
 
     form = EquipmentUniqueTypeGroupForm
@@ -78,10 +91,14 @@ site.register(
 
 
 class EquipmentUniqueTypeAdmin(ModelAdmin):
-    list_select_related = True
-
     list_display = 'equipment_general_type', 'name'
+
     list_filter = 'equipment_general_type', 'name'
+
+    list_select_related = 'equipment_general_type',
+
+    show_full_result_count = False
+
     search_fields = 'equipment_general_type', 'name'
 
     form = EquipmentUniqueTypeForm
@@ -93,10 +110,14 @@ site.register(
 
 
 class EquipmentInstanceAdmin(ModelAdmin):
-    list_select_related = True
-    
     list_display = 'equipment_general_type', 'equipment_unique_type', 'name'
+
     list_filter = 'equipment_general_type', 'equipment_unique_type', 'name'
+
+    list_select_related = 'equipment_general_type', 'equipment_unique_type'
+
+    show_full_result_count = False
+
     search_fields = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     form = EquipmentInstanceForm
