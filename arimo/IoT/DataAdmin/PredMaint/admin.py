@@ -19,22 +19,22 @@ class AlertAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
-        'risk_score_name', \
-        'threshold', \
-        'from_date', \
-        'to_date', \
-        'quantified_risk_degree', \
-        'active'
+        'risk_score_name', #\
+        #'threshold', \
+        #'from_date', \
+        #'to_date', \
+       # 'quantified_risk_degree', \
+        #'active'
 
     list_filter = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
-        'risk_score_name', \
-        'threshold', \
-        'from_date', \
-        'to_date', \
-        'active'
+        'risk_score_name'#, \
+        #'threshold', \
+        #'from_date', \
+        #'to_date', \
+        #'active'
 
     search_fields = 'equipment_general_type', 'equipment_unique_type_group', 'equipment_instance'
 
