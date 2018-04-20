@@ -21,8 +21,7 @@ class BlueprintAdmin(ModelAdmin):
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'trained_to_date'
+        'equipment_unique_type_group'
 
     show_full_result_count = False
 
