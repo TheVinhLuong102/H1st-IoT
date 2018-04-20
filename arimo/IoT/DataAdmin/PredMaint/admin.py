@@ -4,9 +4,27 @@ from .models import Blueprint, Alert
 
 
 class BlueprintAdmin(ModelAdmin):
-    list_display = 'equipment_general_type', 'equipment_unique_type_group', 'trained_to_date', 'timestamp', 'uuid', 'active'
-    list_filter = 'equipment_general_type', 'equipment_unique_type_group', 'trained_to_date', 'timestamp', 'active'
-    search_fields = 'equipment_general_type', 'equipment_unique_type_group', 'uuid',
+    list_select_related = True
+
+    list_display = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'trained_to_date', \
+        'timestamp', \
+        'uuid', \
+        'active'
+
+    list_filter = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'trained_to_date', \
+        'timestamp', \
+        'active'
+
+    search_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'uuid'
 
 
 site.register(
@@ -15,33 +33,34 @@ site.register(
 
 
 class AlertAdmin(ModelAdmin):
-    list_display = \
-        'equipment_general_type', #\
-        #'equipment_unique_type_group', \
-        #'equipment_instance', \
-        #'risk_score_name', #\
-        #'threshold', \
-        #'from_date', \
-        #'to_date', \
-       # 'quantified_risk_degree', \
-        #'active'
+    list_select_related = True
 
-    list_select_related = \
+    list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
-        'equipment_instance'
+        'equipment_instance', \
+        'risk_score_name', \
+        'threshold', \
+        'from_date', \
+        'to_date', \
+        'quantified_risk_degree', \
+        'active'
 
     list_filter = \
-        'equipment_general_type', #\
-        # 'equipment_unique_type_group', \
-        # 'equipment_instance', \
-        # 'risk_score_name'#, \
-        #'threshold', \
-        #'from_date', \
-        #'to_date', \
-        #'active'
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        'threshold', \
+        'from_date', \
+        'to_date', \
+        'active'
 
-    # search_fields = 'equipment_general_type', 'equipment_unique_type_group', 'equipment_instance'
+    search_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name'
 
 
 site.register(
