@@ -153,7 +153,7 @@ class Alert(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=True)
 
     class Meta:
         ordering = \
