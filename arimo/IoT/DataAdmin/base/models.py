@@ -200,8 +200,8 @@ class EquipmentUniqueTypeGroup(Model):
         ordering = 'equipment_general_type', 'name'
 
     def __unicode__(self):
-        return '{} UnqTpGrp {}'.format(
-            self.equipment_general_type.name.upper(),
+        return 'UnqTpGrp {}'.format(
+            # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
             self.name.upper())
 
     def save(self, *args, **kwargs):
@@ -250,8 +250,8 @@ class EquipmentUniqueType(Model):
         ordering = 'equipment_general_type', 'name'
 
     def __unicode__(self):
-        return '{} UnqTp {}'.format(
-            self.equipment_general_type.name.upper(),
+        return 'UnqTp {}'.format(
+            # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
             self.name.upper())
 
     def save(self, *args, **kwargs):
