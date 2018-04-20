@@ -361,10 +361,10 @@ class EquipmentInstance(Model):
         ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     def __unicode__(self):
-        return '{} Instance "{}"'.format(
-            self.equipment_unique_type
-            if self.equipment_unique_type
-            else self.equipment_general_type,
+        return 'Equipment Instance "{}"'.format(
+            # self.equipment_unique_type
+            # if self.equipment_unique_type
+            # else self.equipment_general_type,   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
             self.name)
 
     def save(self, *args, **kwargs):
