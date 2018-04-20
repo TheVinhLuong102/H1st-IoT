@@ -1,11 +1,11 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, ForeignKey, ManyToManyField, URLField, \
+    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 
 from django.contrib.postgres.fields import JSONField
 
-from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup
+from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentInstance
 from ..util import MAX_CHAR_LEN
 
 
@@ -81,3 +81,99 @@ class Blueprint(Model):
             self.timestamp,
             '' if self.active
                else ' (INACTIVE)')
+
+
+class Alert(Model):
+    RELATED_NAME = 'alerts'
+    RELATED_QUERY_NAME = 'alert'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    risk_score_name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
+
+    threshold = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
+    from_date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
+    to_date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
+    quantified_risk_degree = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
+
+    class Meta:
+        ordering = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_instance', \
+            'risk_score_name', \
+            'threshold', \
+            'from_date', \
+            'to_date', \
+            'quantified_risk_degree', \
+            'active'
+
+    def __unicode__(self):
+        return '{}Alert on "{}" ({}: {}) from {} to {} with Quantified Risk Degree {}'.format(
+            '' if self.active
+               else '(INACTIVE) ',
+            self.equipment_instance.name,
+            self.equipment_general_type.name,
+            self.equipment_unique_type_group.name,
+            self.from_date,
+            self.to_date,
+            self.quantified_risk_degree)
