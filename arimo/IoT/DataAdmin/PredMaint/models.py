@@ -76,9 +76,8 @@ class Blueprint(Model):
         ordering = \
             'equipment_general_type', \
             'equipment_unique_type_group', \
-            'trained_to_date', \
-            'uuid', \
-            'active'
+            '-trained_to_date', \
+            '-timestamp'
 
     def __unicode__(self):
         return 'Blueprint "{}" ({}){}'.format(
@@ -162,20 +161,16 @@ class Alert(Model):
 
     class Meta:
         ordering = \
-            'equipment_general_type', \
-            'equipment_unique_type_group', \
-            'equipment_instance', \
             'risk_score_name', \
-            'threshold', \
-            'from_date', \
-            'to_date', \
-            'active'
+            '-threshold', \
+            '-quantified_risk_degree'
 
     def __unicode__(self):
-        return '{}Alert on {} {} from {} to {} with Quantd Risk Deg {} based on {} > {}'.format(
+        return '{}Alert on {} {} Instance {} from {} to {} with Quantfd Risk Deg {:,.1f} based on {} > {}'.format(
             '' if self.active
                else '(INACTIVE) ',
             self.equipment_general_type.name.upper(),
+            self.equipment_unique_type_group.name,
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
