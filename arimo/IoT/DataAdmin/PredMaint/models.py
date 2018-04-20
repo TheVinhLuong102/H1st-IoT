@@ -168,12 +168,13 @@ class Alert(Model):
             'active'
 
     def __unicode__(self):
-        return '{}Alert on "{}" ({}: {}) from {} to {} with Quantified Risk Degree {}'.format(
+        return '{}Alert on {} {} from {} to {} with Quantd Risk Deg {} based on {} > {}'.format(
             '' if self.active
                else '(INACTIVE) ',
+            self.equipment_general_type.name.upper(),
             self.equipment_instance.name,
-            self.equipment_general_type.name,
-            self.equipment_unique_type_group.name,
             self.from_date,
             self.to_date,
-            self.quantified_risk_degree)
+            self.quantified_risk_degree,
+            self.risk_score_name,
+            self.threshold)
