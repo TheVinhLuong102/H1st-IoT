@@ -33,8 +33,6 @@ site.register(
 
 
 class AlertAdmin(ModelAdmin):
-    list_select_related = True
-
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
@@ -45,6 +43,11 @@ class AlertAdmin(ModelAdmin):
         'to_date', \
         'quantified_risk_degree', \
         'active'
+
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance'
 
     list_filter = \
         'equipment_general_type', \
