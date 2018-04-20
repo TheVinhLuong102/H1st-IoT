@@ -89,7 +89,7 @@ MIDDLEWARE = [
 
     'debug_toolbar.middleware.DebugToolbarMiddleware'
         # You should include the Debug Toolbar middleware as early as possible in the list.
-        # However, it must come after any other middleware that encodes the response’s content, such as GZipMiddleware
+        # However, it must come after any other middleware that encodes the response's content, such as GZipMiddleware
 ]
 
 ROOT_URLCONF = 'arimo.IoT.DataAdmin._project.urls'
