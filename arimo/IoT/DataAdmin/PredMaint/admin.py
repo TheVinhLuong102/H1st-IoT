@@ -36,7 +36,7 @@ class AlertAdmin(ModelAdmin):
         #'to_date', \
         #'active'
 
-    search_fields = 'equipment_general_type', 'equipment_unique_type_group', 'equipment_instance'
+    # search_fields = 'equipment_general_type', 'equipment_unique_type_group', 'equipment_instance'
 
 
 site.register(

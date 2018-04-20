@@ -161,11 +161,11 @@ class Alert(Model):
             'equipment_unique_type_group', \
             'equipment_instance', \
             'risk_score_name', \
-            'threshold', \
-            'from_date', \
-            'to_date', \
-            'quantified_risk_degree', \
-            'active'
+            'threshold', #\
+            #'from_date', \
+            #'to_date', \
+            #'quantified_risk_degree', \
+            #'active'
 
     def __unicode__(self):
         return '{}Alert on {} {} from {} to {} with Quantd Risk Deg {} based on {} > {}'.format(
