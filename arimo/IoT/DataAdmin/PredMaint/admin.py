@@ -26,6 +26,9 @@ class AlertAdmin(ModelAdmin):
        # 'quantified_risk_degree', \
         #'active'
 
+    list_select_related = \
+        'equipment_general_type',
+
     list_filter = \
         'equipment_general_type', #\
         # 'equipment_unique_type_group', \
