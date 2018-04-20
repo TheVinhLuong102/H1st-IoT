@@ -119,7 +119,7 @@ class Alert(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=False)
 
     threshold = \
         FloatField(
