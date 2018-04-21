@@ -9,7 +9,7 @@ class EquipmentProblemPeriodForm(autocomplete.FutureModelForm):
         fields = '__all__'
         widgets = {
             'equipment_instance':
-                autocomplete.ModelSelect2Multiple(
+                autocomplete.ModelSelect2(
                     url='EquipmentInstance-AutoComplete',
                     attrs={
                         # Only trigger autocompletion after characters have been typed
@@ -34,7 +34,7 @@ class AlertForm(autocomplete.FutureModelForm):
         fields = '__all__'
         widgets = {
             'equipment_instance':
-                autocomplete.ModelSelect2Multiple(
+                autocomplete.ModelSelect2(
                     url='EquipmentInstance-AutoComplete',
                     attrs={
                         # Only trigger autocompletion after characters have been typed

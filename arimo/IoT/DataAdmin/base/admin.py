@@ -40,7 +40,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
-        'name', \
         'min_val', \
         'max_val'
 
@@ -74,7 +73,7 @@ site.register(
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
     list_display = 'equipment_general_type', 'name'
 
-    list_filter = 'equipment_general_type', 'name'
+    list_filter = 'equipment_general_type',
 
     list_select_related = 'equipment_general_type',
 
@@ -93,7 +92,7 @@ site.register(
 class EquipmentUniqueTypeAdmin(ModelAdmin):
     list_display = 'equipment_general_type', 'name'
 
-    list_filter = 'equipment_general_type', 'name'
+    list_filter = 'equipment_general_type',
 
     list_select_related = 'equipment_general_type',
 
@@ -112,7 +111,7 @@ site.register(
 class EquipmentInstanceAdmin(ModelAdmin):
     list_display = 'equipment_general_type', 'equipment_unique_type', 'name'
 
-    list_filter = 'equipment_general_type', 'equipment_unique_type', 'name'
+    list_filter = 'equipment_general_type', 'equipment_unique_type'
 
     list_select_related = 'equipment_general_type', 'equipment_unique_type'
 

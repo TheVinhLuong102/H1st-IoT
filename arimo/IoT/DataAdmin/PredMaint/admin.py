@@ -55,7 +55,7 @@ site.register(
 class EquipmentProblemPeriodAdmin(ModelAdmin):
     list_display = 'equipment_instance', 'from_date', 'to_date'
 
-    list_filter = 'equipment_instance', 'from_date', 'to_date'
+    list_filter = 'from_date', 'to_date'
 
     list_select_related = 'equipment_instance',
 
@@ -95,8 +95,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'active', \
-        'equipment_instance'
+        'active'
 
     show_full_result_count = False
 
