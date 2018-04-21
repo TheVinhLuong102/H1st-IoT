@@ -57,6 +57,8 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     list_filter = 'equipment_instance', 'from_date', 'to_date'
 
+    list_select_related = 'equipment_instance',
+
     show_full_result_count = False
 
     search_fields = 'equipment_instance',
