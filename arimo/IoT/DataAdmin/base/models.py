@@ -3,10 +3,7 @@ from django.db.models import \
     BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 
-from arimo.IoT.DataAdmin.util import clean_lower_str
-
-
-from ..util import MAX_CHAR_LEN
+from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
 class DataType(Model):
