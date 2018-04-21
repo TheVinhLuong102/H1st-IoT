@@ -1,6 +1,6 @@
 from django.contrib.admin import ModelAdmin, site
 
-from .forms import EquipmentProblemPeriodForm
+from .forms import EquipmentProblemPeriodForm, AlertForm
 from .models import Blueprint, EquipmentProblemType, EquipmentProblemPeriod, Alert
 
 
@@ -105,6 +105,8 @@ class AlertAdmin(ModelAdmin):
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name'
+
+    form = AlertForm
 
 
 site.register(
