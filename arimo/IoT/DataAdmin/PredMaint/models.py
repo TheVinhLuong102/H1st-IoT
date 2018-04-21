@@ -6,7 +6,7 @@ from django.db.models import \
 from django.contrib.postgres.fields import JSONField
 
 from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentInstance
-from ..util import MAX_CHAR_LEN
+from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
 class Blueprint(Model):
@@ -85,6 +85,68 @@ class Blueprint(Model):
             self.timestamp,
             '' if self.active
                else ' (INACTIVE)')
+
+
+class EquipmentProblemType(Model):
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
+
+    class Meta:
+        ordering = 'name',
+
+    def __unicode__(self):
+        return 'EqProbTp {}'.format(self.name.upper())
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentProblemType, self).save(*args, **kwargs)
+
+
+class EquipmentProblemPeriod(Model):
+    RELATED_NAME = 'equipment_problem_instances'
+    RELATED_QUERY_NAME = 'equipment_problem_instance'
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    from_date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
+    to_date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
+    equipment_problem_types = \
+        ManyToManyField(
+            to=EquipmentProblemType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    def __unicode__(self):
+        return 'EqInst {}: Probs from {} to {}'.format(
+            self.equipment_instance.name,
+            self.from_date,
+            self.to_date)
 
 
 class Alert(Model):

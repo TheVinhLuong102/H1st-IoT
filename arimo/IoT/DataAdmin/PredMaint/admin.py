@@ -1,6 +1,7 @@
 from django.contrib.admin import ModelAdmin, site
 
-from .models import Blueprint, Alert
+from .forms import EquipmentProblemPeriodForm
+from .models import Blueprint, EquipmentProblemType, EquipmentProblemPeriod, Alert
 
 
 class BlueprintAdmin(ModelAdmin):
@@ -34,6 +35,38 @@ class BlueprintAdmin(ModelAdmin):
 site.register(
     Blueprint,
     admin_class=BlueprintAdmin)
+
+
+class EquipmentProblemTypeAdmin(ModelAdmin):
+    list_display = 'name',
+
+    list_filter = 'name',
+
+    show_full_result_count = False
+
+    search_fields = 'name',
+
+
+site.register(
+    EquipmentProblemType,
+    admin_class=EquipmentProblemTypeAdmin)
+
+
+class EquipmentProblemPeriodAdmin(ModelAdmin):
+    list_display = 'equipment_instance', 'from_date', 'to_date'
+
+    list_filter = 'equipment_instance', 'from_date', 'to_date'
+
+    show_full_result_count = False
+
+    search_fields = 'equipment_instance',
+
+    form = EquipmentProblemPeriodForm
+
+
+site.register(
+    EquipmentProblemPeriod,
+    admin_class=EquipmentProblemPeriodAdmin)
 
 
 class AlertAdmin(ModelAdmin):

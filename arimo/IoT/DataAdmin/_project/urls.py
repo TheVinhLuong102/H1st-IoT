@@ -21,6 +21,7 @@ from django.views.generic.base import RedirectView
 
 from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentDataFieldAutoComplete, EquipmentUniqueTypeGroupAutoComplete, EquipmentUniqueTypeAutoComplete
+from arimo.IoT.DataAdmin.PredMaint.autocompletes import EquipmentProblemTypeAutoComplete
 
 
 urlpatterns = [
@@ -40,7 +41,11 @@ urlpatterns = [
 
     url(r'^{}/$'.format(EquipmentUniqueTypeAutoComplete.name),
         EquipmentUniqueTypeAutoComplete.as_view(),
-        name=EquipmentUniqueTypeAutoComplete.name)
+        name=EquipmentUniqueTypeAutoComplete.name),
+
+    url(r'^{}/$'.format(EquipmentProblemTypeAutoComplete.name),
+        EquipmentProblemTypeAutoComplete.as_view(),
+        name=EquipmentProblemTypeAutoComplete.name)
 ]
 
 
