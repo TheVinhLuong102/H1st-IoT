@@ -166,7 +166,7 @@ class Alert(Model):
             '-quantified_risk_degree'
 
     def __unicode__(self):
-        return '{}Alert on {} {} Instance {} from {} to {} with Quantfd Risk Deg {:,.1f} based on {} > {}'.format(
+        return '{}Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
             '' if self.active
                else '(INACTIVE) ',
             self.equipment_general_type.name.upper(),
