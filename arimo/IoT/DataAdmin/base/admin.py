@@ -35,12 +35,12 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     list_filter = \
         'equipment_general_type', \
         'equipment_data_field_type', \
-        'name', \
         'data_type', \
         'nullable', \
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
+        'name', \
         'min_val', \
         'max_val'
 

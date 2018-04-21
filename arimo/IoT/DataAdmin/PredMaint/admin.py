@@ -56,12 +56,12 @@ class AlertAdmin(ModelAdmin):
     list_filter = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
-        'equipment_instance', \
         'risk_score_name', \
         'threshold', \
         'from_date', \
         'to_date', \
-        'active'
+        'active', \
+        'equipment_instance'
 
     show_full_result_count = False
 
