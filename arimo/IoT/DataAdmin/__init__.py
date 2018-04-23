@@ -1,3 +1,4 @@
+from collections import Counter
 import os
 import six
 
@@ -498,6 +499,47 @@ class Project(object):
                     verbose=verbose)
 
             return adf
+
+    def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
+        from arimo.df.spark_on_files import FileADF
+        from arimo.util.date_time import DATE_COL
+        from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
+
+        file_adf = FileADF(
+            path=os.path.join(
+                self.params.s3.equipment_data_dir_path,
+                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
+            mergeSchema=True,
+            aws_access_key_id=self.params.s3.access_key_id,
+            aws_secret_access_key=self.params.s3.secret_access_key,
+            iCol=None, tCol=None,
+            verbose=True)
+
+        assert file_adf.type(DATE_COL) == _DATE_TYPE, \
+            '*** Date Col not of Date Type (likely because of NULL Date-Times) ***'
+
+        equipment_instance_ids = \
+            file_adf('SELECT DISTINCT {} FROM this'
+                .format(self._EQUIPMENT_INSTANCE_ID_COL_NAME)) \
+            .toPandas().iloc[:, 0]
+
+        non_compliant_equipment_instance_ids = \
+            {equipment_instance_id
+             for equipment_instance_id in equipment_instance_ids
+             if clean_lower_str(equipment_instance_id) != equipment_instance_id}
+
+        if non_compliant_equipment_instance_ids:
+            print('*** NON-COMPLIANT EQUIPMENT INSTANCE IDs: {} ***'.format(non_compliant_equipment_instance_ids))
+
+        equipment_instance_ids_w_dups = \
+            {equipment_instance_id
+             for equipment_instance_id, count in
+                Counter([clean_lower_str(equipment_instance_id)
+                         for equipment_instance_id in equipment_instance_ids]).items()
+             if count > 1}
+
+        if equipment_instance_ids_w_dups:
+            print('*** DUPLICATED EQUIPMENT INSTANCE IDs: {} ***'.format(equipment_instance_ids_w_dups))
 
     def save_equipment_data(self, df, equipment_instance_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
