@@ -14,7 +14,7 @@ Django-Extensions >= 1.9.9, < 2
 
 Django-Nested-InLines >= 0.1
 
-SQLAlchemy >= 1.2.6
+SQLAlchemy >= 1.2.7
 Alembic >= 0.9.9
 SQLAlchemy-Migrate >= 0.11.0
 
