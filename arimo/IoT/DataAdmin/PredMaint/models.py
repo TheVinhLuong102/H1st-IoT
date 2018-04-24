@@ -54,13 +54,6 @@ class Blueprint(Model):
             null=False,
             unique=True)
 
-    url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=False,
-            null=False,
-            unique=True)
-
     benchmark_metrics = \
         JSONField(
             default=dict,
