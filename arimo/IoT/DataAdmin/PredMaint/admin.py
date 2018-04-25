@@ -95,8 +95,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'active', \
-        'equipment_instace'
+        'active'
 
     show_full_result_count = False
 
