@@ -96,7 +96,7 @@ class AlertAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'active', \
-        'equipment_instace'
+        'equipment_instance'
 
     show_full_result_count = False
 
