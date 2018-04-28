@@ -390,12 +390,12 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _on_files=True, _spark=True,
+            _from_files=True, _spark=True,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
-        from arimo.df.on_files import FileDF
+        from arimo.df.from_files import FileDF
         from arimo.df.spark import ADF
-        from arimo.df.spark_on_files import FileADF
+        from arimo.df.spark_from_files import FileADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
@@ -403,7 +403,7 @@ class Project(object):
             self.params.s3.equipment_data_dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        if _on_files:
+        if _from_files:
             return FileADF(
                     path=path, mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
@@ -501,7 +501,7 @@ class Project(object):
             return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
-        from arimo.df.spark_on_files import FileADF
+        from arimo.df.spark_from_files import FileADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
