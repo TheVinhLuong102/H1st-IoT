@@ -393,9 +393,9 @@ class Project(object):
             _from_files=True, _spark=True,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
-        from arimo.df.from_files import FileDF
+        from arimo.df.from_files import ArrowDF
         from arimo.df.spark import ADF
-        from arimo.df.spark_from_files import FileADF
+        from arimo.df.spark_from_files import ArrowADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
@@ -404,14 +404,14 @@ class Project(object):
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
         if _from_files:
-            return FileADF(
+            return ArrowADF(
                     path=path, mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs) \
                 if _spark \
-                else FileDF(
+                else ArrowDF(
                     paths=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
@@ -501,11 +501,11 @@ class Project(object):
             return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
-        from arimo.df.spark_from_files import FileADF
+        from arimo.df.spark_from_files import ArrowADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
-        file_adf = FileADF(
+        file_adf = ArrowADF(
             path=os.path.join(
                 self.params.s3.equipment_data_dir_path,
                 equipment_instance_id_or_data_set_name + _PARQUET_EXT),
