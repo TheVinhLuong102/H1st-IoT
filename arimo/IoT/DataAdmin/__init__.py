@@ -393,9 +393,9 @@ class Project(object):
             _from_files=True, _spark=True,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
-        from arimo.df.from_files import ArrowDF
-        from arimo.df.spark import ADF
-        from arimo.df.spark_from_files import ArrowADF
+        from arimo.df.from_files import ArrowADF
+        from arimo.df.spark import SparkADF
+        from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
@@ -404,14 +404,14 @@ class Project(object):
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
         if _from_files:
-            return ArrowADF(
+            return ArrowSparkADF(
                     path=path, mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs) \
                 if _spark \
-                else ArrowDF(
+                else ArrowADF(
                     paths=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
@@ -422,7 +422,7 @@ class Project(object):
             _resave = False
 
             try:
-                adf = ADF.load(
+                adf = SparkADF.load(
                     path=path,
                     format='parquet', mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
@@ -431,7 +431,7 @@ class Project(object):
                     verbose=verbose, **kwargs)
 
             except:   # for legacy non-standardized equipment instance names
-                adf = ADF.load(
+                adf = SparkADF.load(
                     path=os.path.join(
                         self.params.s3.equipment_data_dir_path,
                         _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
@@ -455,18 +455,18 @@ class Project(object):
                 _resave = True
                 adf.rm(*_complex_col_names, inplace=True)
 
-            if ADF._DEFAULT_I_COL in adf.columns:
+            if SparkADF._DEFAULT_I_COL in adf.columns:
                 _resave = True
 
                 if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
-                    adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL),
-                        *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, ADF._DEFAULT_I_COL)),
+                    adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, SparkADF._DEFAULT_I_COL),
+                        *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, SparkADF._DEFAULT_I_COL)),
                         inplace=True)
 
                 else:
                     adf.rename(
                         inplace=True,
-                        **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
+                        **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
 
             else:
                 assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
@@ -501,11 +501,11 @@ class Project(object):
             return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
-        from arimo.df.spark_from_files import ArrowADF
+        from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
         from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
 
-        file_adf = ArrowADF(
+        file_adf = ArrowSparkADF(
             path=os.path.join(
                 self.params.s3.equipment_data_dir_path,
                 equipment_instance_id_or_data_set_name + _PARQUET_EXT),
@@ -544,24 +544,24 @@ class Project(object):
     def save_equipment_data(self, df, equipment_instance_id_or_data_set_name, mode='overwrite', verbose=True):
         import pandas
         import pyspark.sql
-        from arimo.df.spark import ADF
+        from arimo.df.spark import SparkADF
 
         if isinstance(df, pandas.DataFrame):
-            adf = ADF.create(data=df)
+            adf = SparkADF.create(data=df)
 
         elif isinstance(df, pyspark.sql.DataFrame):
-            adf = ADF(sparkDF=df)
+            adf = SparkADF(sparkDF=df)
 
         else:
-            assert isinstance(df, ADF)
+            assert isinstance(df, SparkADF)
             adf = df
 
-        if ADF._DEFAULT_I_COL in adf.columns:
+        if SparkADF._DEFAULT_I_COL in adf.columns:
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
 
             adf.rename(
                 inplace=True,
-                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: ADF._DEFAULT_I_COL})
+                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
 
         else:
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
