@@ -415,7 +415,7 @@ class Project(object):
                     path=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    i_col=iCol, t_col=tCol,
+                    iCol=iCol, tCol=tCol,
                     verbose=verbose, **kwargs)
 
         else:
