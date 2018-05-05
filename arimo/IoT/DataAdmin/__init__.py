@@ -412,7 +412,7 @@ class Project(object):
                     verbose=verbose, **kwargs) \
                 if _spark \
                 else ArrowADF(
-                    paths=path,
+                    path=path,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     i_col=iCol, t_col=tCol,
