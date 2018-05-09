@@ -46,4 +46,5 @@ os.system(
 json.dump(
     _DEFAULT_DB_DETAILS,
     open(_DB_DETAILS_FILE_PATH, 'w'),
-    indent=2)
+    indent=2,
+    sort_keys=True)
