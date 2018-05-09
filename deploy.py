@@ -17,11 +17,11 @@ arg_parser.add_argument('--create', action='store_true')
 arg_parser.add_argument('--env')
 
 arg_parser.add_argument('--db-eng', default=_DEFAULT_DB_DETAILS['ENGINE'])
-arg_parser.add_argument('--db-host')
+arg_parser.add_argument('--db-host', default=_DEFAULT_DB_DETAILS['HOST'])
 arg_parser.add_argument('--db-port', default=_DEFAULT_DB_DETAILS['PORT'])
-arg_parser.add_argument('--db-name')
-arg_parser.add_argument('--db-usr')
-arg_parser.add_argument('--db-pw')
+arg_parser.add_argument('--db-name', default=_DEFAULT_DB_DETAILS['NAME'])
+arg_parser.add_argument('--db-usr', default=_DEFAULT_DB_DETAILS['USER'])
+arg_parser.add_argument('--db-pw', default=_DEFAULT_DB_DETAILS['PASSWORD'])
 
 args = arg_parser.parse_args()
 
