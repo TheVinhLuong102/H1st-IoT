@@ -1,4 +1,5 @@
 from collections import Counter
+import json
 import os
 import six
 
@@ -578,3 +579,10 @@ class Project(object):
             aws_access_key_id=self.params.s3.access_key_id,
             aws_secret_access_key=self.params.s3.secret_access_key,
             verbose=verbose)
+
+
+def test_project():
+    return Project(
+        db_args=json.load(open(arimo.IoT.DataAdmin._project.settings._DB_DETAILS_FILE_PATH, 'r')),
+        s3_bucket=None, s3_equipment_data_dir_prefix=None,
+        aws_access_key_id=None, aws_secret_access_key=None)
