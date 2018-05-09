@@ -397,7 +397,7 @@ class Project(object):
         from arimo.df.spark import SparkADF
         from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
-        from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
+        from arimo.util.types.spark_sql import _DATE_TYPE, _STR_TYPE
 
         path = os.path.join(
             self.params.s3.equipment_data_dir_path,
@@ -503,7 +503,7 @@ class Project(object):
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
         from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
-        from arimo.util.spark_sql_types import _DATE_TYPE, _STR_TYPE
+        from arimo.util.types.spark_sql import _DATE_TYPE, _STR_TYPE
 
         file_adf = ArrowSparkADF(
             path=os.path.join(
