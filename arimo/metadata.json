@@ -1,7 +1,8 @@
 {
   "PACKAGE": "Arimo-IoT-DataAdmin",
-  "AUTHOR": "Arimo, LLC (a Panasonic compay)",
-  "AUTHOR_EMAIL": "info@arimo.com",
+  "VERSION": "1.0.0b33",
+  "AUTHOR": "Arimo, LLC (a Panasonic company)",
+  "AUTHOR_EMAIL": "DSAR@Arimo.com",
   "URL": "https://github.com/adatao/IoT-DataAdmin",
   "DESCRIPTION": "Arimo IoT Data Admin"
 }

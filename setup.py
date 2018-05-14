@@ -17,19 +17,13 @@ _metadata = \
             _PACKAGE_NAMESPACE_NAME,
             _METADATA_FILE_NAME)))
 
-try:
-    import arimo.metadata
-    _metadata['VERSION'] = arimo.metadata.VERSION
-except ImportError:
-    pass
-
 
 setup(
     name=_metadata['PACKAGE'],
     author=_metadata['AUTHOR'],
     author_email=_metadata['AUTHOR_EMAIL'],
     url=_metadata['URL'],
-    version=_metadata.get('VERSION'),
+    version=_metadata['VERSION'],
     description=_metadata['DESCRIPTION'],
     long_description=_metadata['DESCRIPTION'],
     keywords=_metadata['DESCRIPTION'],
