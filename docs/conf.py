@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
-#
+
 # Configuration file for the Sphinx documentation builder.
-#
-# This file does only contain a selection of the most common options. For a
-# full list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
+# This file does only contain a selection of the most common options.
+# For a full list see the documentation: http://www.sphinx-doc.org/en/master/config
+
+
+import datetime
+import json
+import os
+from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
+
 
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
@@ -19,35 +25,67 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'Arimo-IoT-DataAdmin'
-copyright = u'2018, Arimo LLC (a Panasonic company)'
-author = u'Arimo LLC (a Panasonic company)'
+_PACKAGE_NAMESPACE_NAME = 'arimo'
 
-# The short X.Y version
-version = u''
-# The full version, including alpha/beta/rc tags
-release = u'0.0.0'
+_METADATA_FILE_NAME = 'metadata.json'
+
+_metadata = \
+    json.load(
+        open(os.path.join(
+            os.path.dirname(
+                os.path.dirname(
+                    os.path.abspath(__file__))),
+            _PACKAGE_NAMESPACE_NAME,
+            _METADATA_FILE_NAME)))
+
+
+project = _metadata['PACKAGE']
+author = _metadata['AUTHOR']
+copyright = '{}, {}'.format(datetime.date.today().year, author)
+description = _metadata['DESCRIPTION']
+
+
+# The short X.Y version.
+version = _metadata['VERSION']
+
+# The full version, including alpha/beta/rc tags.
+release = version
 
 
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#
-# needs_sphinx = '1.0'
+needs_sphinx = '1.5.6'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
+    'sphinx.ext.autodoc',   # Include documentation from docstrings
+    'sphinx.ext.autosectionlabel',   # Allow reference sections using its title
+    'sphinx.ext.autosummary',   # Generate autodoc summaries
+    'sphinx.ext.coverage',   # Collect doc coverage stats
+    'sphinx.ext.doctest',   # Test snippets in the documentation
+    'sphinx.ext.extlinks',   # Markup to shorten external links
+    'sphinx.ext.githubpages',   # Publish HTML docs in GitHub Pages
+    'sphinx.ext.graphviz',   # Add Graphviz graphs
+    'sphinx.ext.ifconfig',   # Include content based on configuration
+    'sphinx.ext.inheritance_diagram',   # Include inheritance diagrams
+    'sphinx.ext.intersphinx',   # Link to other projects’ documentation
+    # 'sphinx.ext.linkcode',   # Add external links to source code
+
+    # math support
+    # 'sphinx.ext.imgmath',   # Render math as images
+    # 'sphinx.ext.jsmath',   # Render math via JavaScript
+    'sphinx.ext.mathjax',   # Render math via JavaScript
+
+    'sphinx.ext.napoleon',   # Support for NumPy and Google style docstrings
+    'sphinx.ext.todo',   # Support for todo items
+    # 'sphinx.ext.viewcode'   # Add links to highlighted source code
+
+    'nbsphinx',   # parse iPython Notebooks
+    # 'IPython.lib.lexers',   # explicitly add this to avoid NbSphinx warnings
+    'sphinxcontrib.fulltoc'   # full TOC
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -55,9 +93,8 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+source_parsers = {'.md': CommonMarkParser}
 
 # The master toctree document.
 master_doc = 'index'
@@ -72,7 +109,13 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = [u'_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = [
+    '.DS_Store', 'Thumbs.db',   # Mac OS X files
+    '_build',   # documentation build files
+    '**.ipynb_checkpoints',   # iPython notebook checkpoints
+    '*derby.log*', '*metastore_db*', '*spark-warehouse*',   # Spark files
+    '*tmp/*'   # temp dirs
+]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -82,13 +125,12 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
-html_theme = 'alabaster'
+html_theme = 'nature'   # 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#
+
 # html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -98,38 +140,40 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
-#
 # The default sidebars (for documents that don't match any pattern) are
 # defined by theme itself.  Builtin themes are using these templates by
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
-#
-# html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'globaltoc.html',
+        # 'localtoc.html',
+        # 'relations.html',
+        # 'sourcelink.html',
+        'searchbox.html'
+    ]
+}
 
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Arimo-IoT-DataAdmindoc'
+htmlhelp_basename = '{}-doc'.format(project)
 
 
 # -- Options for LaTeX output ------------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #
     # 'papersize': 'letterpaper',
 
     # The font size ('10pt', '11pt' or '12pt').
-    #
     # 'pointsize': '10pt',
 
     # Additional stuff for the LaTeX preamble.
-    #
     # 'preamble': '',
 
     # Latex figure (float) alignment
-    #
     # 'figure_align': 'htbp',
 }
 
@@ -137,8 +181,11 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Arimo-IoT-DataAdmin.tex', u'Arimo-IoT-DataAdmin Documentation',
-     u'Arimo LLC (a Panasonic company)', 'manual'),
+    (master_doc,
+     '{}.tex'.format(project),
+     u'{} Documentation'.format(description),
+     author,
+     'manual'),
 ]
 
 
@@ -147,8 +194,11 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'arimo-iot-dataadmin', u'Arimo-IoT-DataAdmin Documentation',
-     [author], 1)
+    (master_doc,
+     project,
+     u'{} Documentation'.format(description),
+     [author],
+     1)
 ]
 
 
@@ -158,20 +208,78 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Arimo-IoT-DataAdmin', u'Arimo-IoT-DataAdmin Documentation',
-     author, 'Arimo-IoT-DataAdmin', 'One line description of project.',
+    (master_doc,
+     project,
+     u'{} Documentation'.format(description),
+     author,
+     project,
+     u'{} Documentation'.format(description),
      'Miscellaneous'),
 ]
 
 
 # -- Extension configuration -------------------------------------------------
 
-# -- Options for intersphinx extension ---------------------------------------
+
+# -- Options for AutoDoc extension ----------------------------------------------
+
+autoclass_content = 'both'
+
+autodoc_default_flags = [
+    'members',
+    # 'undoc-members',   # methods with empty docstrings
+    # 'private-members',   # _private / __private
+    # 'special-members',   # __special__
+    # 'inherited-members',   # *** BUG: enabling this makes private members appear!!! ***
+    # 'show-inheritance'
+]
+
+autodoc_docstring_signature = True
+
+autodoc_member_order = 'bysource'   # alternative: 'groupwise'
+
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    return False if name in ('__call__', '__len__') else skip
+
+
+# -- Options for InterSphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
 
-# -- Options for todo extension ----------------------------------------------
+
+# -- Options for Napoleon extension ----------------------------------------------
+
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = True
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True   # enable this so that __call__ and __len__ docs are shown
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_use_keyword = True
+
+
+# -- Options for ToDo extension ----------------------------------------------
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+# -- App Setup Hook ----------------------------------------------
+# ref: http://recommonmark.readthedocs.io/en/latest
+def setup(app):
+    app.add_config_value(
+        'recommonmark_config',
+        dict(auto_toc_tree_section='Contents',
+             enable_auto_toc_tree=False),
+        True)
+
+    app.add_transform(AutoStructify)
+
+    app.connect("autodoc-skip-member", autodoc_skip_member)
