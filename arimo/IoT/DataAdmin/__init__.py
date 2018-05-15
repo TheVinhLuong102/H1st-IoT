@@ -1,4 +1,5 @@
 from collections import Counter
+import copy
 import os
 from ruamel import yaml
 import six
@@ -22,6 +23,8 @@ _YAML_EXT = '.yaml'
 
 
 class Project(object):
+    from arimo.util import Namespace
+
     CONFIG_DIR_PATH = os.path.expanduser('~/.arimo/IoT')
 
     _CAT_DATA_TYPE_NAME = 'cat'
@@ -33,14 +36,33 @@ class Project(object):
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
     _DATE_TIME_COL_NAME = 'date_time'
 
-    def __init__(
-            self, db_args,
-            s3_bucket, s3_equipment_data_dir_prefix,
-            aws_access_key_id, aws_secret_access_key):
+    _DEFAULT_PARAMS = \
+        Namespace(
+            db=Namespace(
+                admin=dict(
+                    host=None, db_name=None,
+                    user=None, password=None),
+
+            s3=Namespace(
+                bucket=None,
+
+                access_key_id=None,
+                secret_access_key=None,
+
+                equipment_data_dir_prefix='.arimo/PredMaint/EquipmentData')))
+
+    def __init__(self, params, **kwargs):
         from arimo.util import Namespace
         from arimo.util.aws import s3
 
-        arimo.IoT.DataAdmin._project.settings.DATABASES['default'].update({k.upper(): v for k, v in db_args.items()})
+        self.params = copy.deepcopy(self._DEFAULT_PARAMS)
+        self.params.update(params, **kwargs)
+
+        django_db_settings = arimo.IoT.DataAdmin._project.settings.DATABASES['default']
+        django_db_settings['HOST'] = self.params.db.admin.host
+        django_db_settings['NAME'] = self.params.db.admin.db_name
+        django_db_settings['USER'] = self.params.db.admin.user
+        django_db_settings['PASSWORD'] = self.params.db.admin.password
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
 
@@ -85,21 +107,15 @@ class Project(object):
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
-        self.params = \
-            Namespace(
-                s3=Namespace(
-                    bucket=s3_bucket,
-
-                    access_key_id=aws_access_key_id,
-                    secret_access_key=aws_secret_access_key,
-
-                    equipment_data_dir_prefix=s3_equipment_data_dir_prefix,
-                    equipment_data_dir_path='s3://{}/{}'.format(s3_bucket, s3_equipment_data_dir_prefix)))
+        self.params.s3.equipment_data_dir_path = \
+            's3://{}/{}'.format(
+                self.params.s3.bucket,
+                self.params.s3.equipment_data_dir_prefix)
 
         self.s3_client = \
             s3.client(
-                access_key_id=aws_access_key_id,
-                secret_access_key=aws_secret_access_key)
+                access_key_id=self.params.s3.access_key_id,
+                secret_access_key=self.params.s3.secret_access_key)
 
     def _collect_static(self):
         call_command('collectstatic')
@@ -586,6 +602,8 @@ class Project(object):
 
 def project(name=None):
     return Project(
-        db_args=yaml.safe_load(open(arimo.IoT.DataAdmin._project.settings._DB_DETAILS_FILE_PATH, 'r')),
-        s3_bucket=None, s3_equipment_data_dir_prefix=None,
-        aws_access_key_id=None, aws_secret_access_key=None)
+        params=yaml.safe_load(
+            open(os.path.join(Project.CONFIG_DIR_PATH, name + _YAML_EXT)
+                    if name
+                    else arimo.IoT.DataAdmin._project.settings._DB_DETAILS_FILE_PATH,
+                 'r')))
