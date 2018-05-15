@@ -120,7 +120,7 @@ _DB_DETAILS_FILE_NAME = 'db.yaml'
 _DB_DETAILS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_DETAILS_FILE_NAME)
 
 DATABASES = {
-    'default': yaml.load(open(_DB_DETAILS_FILE_PATH, 'r'))
+    'default': yaml.safe_load(open(_DB_DETAILS_FILE_PATH, 'r'))
 }
 
 

@@ -8,7 +8,7 @@ from ruamel import yaml
 from arimo.IoT.DataAdmin._project.settings import _DB_DETAILS_FILE_PATH
 
 
-_DEFAULT_DB_DETAILS = yaml.load(open(_DB_DETAILS_FILE_PATH, 'r'))
+_DEFAULT_DB_DETAILS = yaml.safe_load(open(_DB_DETAILS_FILE_PATH, 'r'))
 
 
 arg_parser = argparse.ArgumentParser()
@@ -26,7 +26,7 @@ arg_parser.add_argument('--db-pw', default=_DEFAULT_DB_DETAILS['PASSWORD'])
 args = arg_parser.parse_args()
 
 
-yaml.dump(
+yaml.safe_dump(
     data=dict(
         ENGINE=args.db_eng,
         HOST=args.db_host,
@@ -56,7 +56,7 @@ os.system(
         args.env))
 
 
-yaml.dump(
+yaml.safe_dump(
     data=_DEFAULT_DB_DETAILS,
     stream=open(_DB_DETAILS_FILE_PATH, 'w'),
     default_style=None,
