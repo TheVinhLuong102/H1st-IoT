@@ -58,6 +58,11 @@ class Project(object):
         self.params = copy.deepcopy(self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
 
+        assert self.params.db.admin.host \
+           and self.params.db.admin.db_name \
+           and self.params.db.admin.user \
+           and self.params.db.admin.password
+
         django_db_settings = arimo.IoT.DataAdmin._project.settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.admin.host
         django_db_settings['NAME'] = self.params.db.admin.db_name
