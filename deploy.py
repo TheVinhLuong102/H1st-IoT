@@ -55,6 +55,6 @@ shutil.copyfile(
     src=IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH,
     dst=_DB_DETAILS_FILE_PATH)
 
-os.remove(path=IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+os.remove(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
 
 assert not os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
