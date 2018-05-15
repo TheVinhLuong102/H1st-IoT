@@ -1,0 +1,6 @@
+ENGINE: django.db.backends.postgresql
+HOST: test-iotdataadmin.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
+NAME: TEST_IoTDataAdmin
+PASSWORD: arimoiscool
+PORT: 5432
+USER: arimo

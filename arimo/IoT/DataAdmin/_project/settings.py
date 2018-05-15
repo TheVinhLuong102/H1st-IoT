@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 
-import json
 import os
+from ruamel import yaml
 import sys
 
 
@@ -116,11 +116,11 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-_DB_DETAILS_FILE_NAME = 'db.json'
+_DB_DETAILS_FILE_NAME = 'db.yaml'
 _DB_DETAILS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_DETAILS_FILE_NAME)
 
 DATABASES = {
-    'default': json.load(open(_DB_DETAILS_FILE_PATH))
+    'default': yaml.load(open(_DB_DETAILS_FILE_PATH, 'r'))
 }
 
 

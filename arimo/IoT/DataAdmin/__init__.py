@@ -1,6 +1,6 @@
 from collections import Counter
-import json
 import os
+from ruamel import yaml
 import six
 
 from django.conf import settings
@@ -581,8 +581,8 @@ class Project(object):
             verbose=verbose)
 
 
-def test_project():
+def project(name=None):
     return Project(
-        db_args=json.load(open(arimo.IoT.DataAdmin._project.settings._DB_DETAILS_FILE_PATH, 'r')),
+        db_args=yaml.load(open(arimo.IoT.DataAdmin._project.settings._DB_DETAILS_FILE_PATH, 'r')),
         s3_bucket=None, s3_equipment_data_dir_prefix=None,
         aws_access_key_id=None, aws_secret_access_key=None)
