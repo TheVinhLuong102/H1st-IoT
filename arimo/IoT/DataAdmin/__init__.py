@@ -107,15 +107,16 @@ class Project(object):
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
-        self.params.s3.equipment_data_dir_path = \
-            's3://{}/{}'.format(
-                self.params.s3.bucket,
-                self.params.s3.equipment_data_dir_prefix)
+        if 's3' in self.params:
+            self.params.s3.equipment_data_dir_path = \
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
+                    self.params.s3.equipment_data_dir_prefix)
 
-        self.s3_client = \
-            s3.client(
-                access_key_id=self.params.s3.access_key_id,
-                secret_access_key=self.params.s3.secret_access_key)
+            self.s3_client = \
+                s3.client(
+                    access_key_id=self.params.s3.access_key_id,
+                    secret_access_key=self.params.s3.secret_access_key)
 
     def _collect_static(self):
         call_command('collectstatic')
