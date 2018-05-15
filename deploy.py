@@ -53,7 +53,7 @@ yaml.safe_dump(
 os.system(
     'eb {} {}'.format(
         'create' if args.create else 'deploy',
-        args.env))
+        args.project))
 
 
 yaml.safe_dump(
