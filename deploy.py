@@ -1,39 +1,39 @@
-#!/usr/bin/env python
-
-
 import argparse
 import os
 from ruamel import yaml
 
+from arimo.IoT.DataAdmin import Project, _YAML_EXT
 from arimo.IoT.DataAdmin._project.settings import _DB_DETAILS_FILE_PATH
 
 
-_DEFAULT_DB_DETAILS = yaml.safe_load(open(_DB_DETAILS_FILE_PATH, 'r'))
+_DEFAULT_IoT_DATA_ADMIN_DB_DETAILS = \
+    yaml.safe_load(open(_DB_DETAILS_FILE_PATH, 'r'))
 
 
 arg_parser = argparse.ArgumentParser()
 
 arg_parser.add_argument('--create', action='store_true')
-arg_parser.add_argument('--env')
-
-arg_parser.add_argument('--db-eng', default=_DEFAULT_DB_DETAILS['ENGINE'])
-arg_parser.add_argument('--db-host', default=_DEFAULT_DB_DETAILS['HOST'])
-arg_parser.add_argument('--db-port', default=_DEFAULT_DB_DETAILS['PORT'])
-arg_parser.add_argument('--db-name', default=_DEFAULT_DB_DETAILS['NAME'])
-arg_parser.add_argument('--db-usr', default=_DEFAULT_DB_DETAILS['USER'])
-arg_parser.add_argument('--db-pw', default=_DEFAULT_DB_DETAILS['PASSWORD'])
+arg_parser.add_argument('--project', default='TEST')
 
 args = arg_parser.parse_args()
 
 
+iot_dataadmin_db_details = \
+    yaml.safe_load(
+        open(os.path.join(
+                Project.CONFIG_DIR_PATH,
+                args.project + _YAML_EXT),
+             'r'))['db']['admin']
+
+
 yaml.safe_dump(
     data=dict(
-        ENGINE=args.db_eng,
-        HOST=args.db_host,
-        PORT=args.db_port,
-        NAME=args.db_name,
-        USER=args.db_usr,
-        PASSWORD=args.db_pw),
+        ENGINE=_DEFAULT_IoT_DATA_ADMIN_DB_DETAILS['ENGINE'],
+        HOST=iot_dataadmin_db_details['host'],
+        PORT=_DEFAULT_IoT_DATA_ADMIN_DB_DETAILS['PORT'],
+        NAME=iot_dataadmin_db_details['name'],
+        USER=iot_dataadmin_db_details['user'],
+        PASSWORD=iot_dataadmin_db_details['password']),
     stream=open(_DB_DETAILS_FILE_PATH, 'w'),
     default_style=None,
     default_flow_style=False,   # collections to be always serialized in the block style
@@ -57,7 +57,7 @@ os.system(
 
 
 yaml.safe_dump(
-    data=_DEFAULT_DB_DETAILS,
+    data=_DEFAULT_IoT_DATA_ADMIN_DB_DETAILS,
     stream=open(_DB_DETAILS_FILE_PATH, 'w'),
     default_style=None,
     default_flow_style=False,   # collections to be always serialized in the block style

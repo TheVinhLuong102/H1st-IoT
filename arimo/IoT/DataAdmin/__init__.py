@@ -18,9 +18,12 @@ _STR_CLASSES = \
 
 
 _PARQUET_EXT = '.parquet'
+_YAML_EXT = '.yaml'
 
 
 class Project(object):
+    CONFIG_DIR_PATH = os.path.expanduser('~/.arimo/IoT')
+
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
 
