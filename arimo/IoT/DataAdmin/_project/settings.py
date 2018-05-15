@@ -119,9 +119,13 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 _DB_DETAILS_FILE_NAME = 'db.yaml'
 _DB_DETAILS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_DETAILS_FILE_NAME)
 
-DATABASES = {
-    'default': yaml.safe_load(open(_DB_DETAILS_FILE_PATH, 'r'))
-}
+_db_details = yaml.safe_load(stream=open(_DB_DETAILS_FILE_PATH, 'r'))['db']['admin']
+
+DATABASES = \
+    dict(default=
+        dict(ENGINE='django.db.backends.postgresql', PORT='5432',
+             HOST=_db_details['host'], NAME=_db_details['db_name'],
+             USER=_db_details['user'], PASSWORD=_db_details['password']))
 
 
 # Password validation
