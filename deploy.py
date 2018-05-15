@@ -26,7 +26,7 @@ iot_dataadmin_db_details_file_path = \
         args.project + _YAML_EXT)
 
 iot_dataadmin_db_details = \
-    yaml.safe_load(stream=os.path.isfile(iot_dataadmin_db_details_file_path))['db']['admin']
+    yaml.safe_load(stream=open(iot_dataadmin_db_details_file_path, 'r'))['db']['admin']
 
 assert iot_dataadmin_db_details['host'] \
    and iot_dataadmin_db_details['db_name'] \
