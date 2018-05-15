@@ -31,4 +31,5 @@ setup(
     install_requires=
         [s.strip()
          for s in open(_REQUIREMENTS_FILE_NAME).readlines()
-         if s.startswith('#')])
+         if s.startswith('#')],
+    scripts=['bin/arimo-iot'])
