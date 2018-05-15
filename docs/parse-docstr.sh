@@ -13,7 +13,8 @@ DOCS_DIR=docs
 sphinx-apidoc --force --maxdepth 4 --module-first --output-dir $DOCS_DIR --separate $MODULE \
     $MODULE/IoT/DataAdmin/_project \
     $MODULE/IoT/DataAdmin/base \
-    $MODULE/IoT/DataAdmin/PredMaint
+    $MODULE/IoT/DataAdmin/PredMaint \
+    $MODULE/IoT/DataAdmin/util.py
 
 
 # get rid of undocumented members
