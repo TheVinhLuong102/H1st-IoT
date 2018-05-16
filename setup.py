@@ -18,6 +18,9 @@ _metadata = \
             _METADATA_FILE_NAME)))
 
 
+_SCRIPT_REL_PATH_TO_INSTALL = 'bin/arimo-iot-data'
+
+
 setup(
     name=_metadata['PACKAGE'],
     author=_metadata['AUTHOR'],
@@ -32,4 +35,9 @@ setup(
         [s.strip()
          for s in open(_REQUIREMENTS_FILE_NAME).readlines()
          if s.startswith('#')],
-    scripts=['bin/arimo-iot-data'])
+    scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
+
+
+os.symlink(
+    os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
+    os.path.join('/usr', _SCRIPT_REL_PATH_TO_INSTALL))
