@@ -10,16 +10,16 @@ from ruamel import yaml
 from arimo.util import Namespace
 
 from arimo.IoT.DataAdmin import project
-from arimo.IoT.DataAdmin.util import _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
+from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
 OBJ_CLASS_ARG_NAME = 'obj_class'
 CMD_ARG_NAME = 'cmd'
 
 
-CREATE_CMD = 'create'
 COUNT_CMD = 'count'
 LIST_CMD = 'list'
+CREATE_CMD = 'create'
 UPDATE_CMD = 'update'
 
 
@@ -149,37 +149,6 @@ eq_gen_tp___cmd_sub_parsers = \
     )
 
 
-# Equipment General Types: CREATE
-parser___eq_gen_tp___create = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
-        prog=None,   # The name of the program (default: sys.argv[0])
-        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
-        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
-        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
-        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
-        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
-        add_help=True,   # Add a -h/--help option to the parser (default: True)
-        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
-    )
-
-parser___eq_gen_tp___create.add_argument(
-    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
-    const=None,   # A constant value required by some action and nargs selections.
-    # default=None,   # The value produced if the argument is absent from the command line.
-    type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-    required=True)
-
-
 # Equipment General Types: COUNT
 parser___eq_gen_tp___count = \
     eq_gen_tp___cmd_sub_parsers.add_parser(
@@ -216,6 +185,80 @@ parser___eq_gen_tp___list = \
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
+
+
+# Equipment General Types: CREATE
+parser___eq_gen_tp___create = \
+    eq_gen_tp___cmd_sub_parsers.add_parser(
+        name=CREATE_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+parser___eq_gen_tp___create.add_argument(
+    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=True)
+
+
+# Equipment General Types: UPDATE
+parser___eq_gen_tp___update = \
+    eq_gen_tp___cmd_sub_parsers.add_parser(
+        name=UPDATE_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+parser___eq_gen_tp___update.add_argument(
+    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=True)
+
+parser___eq_gen_tp___update.add_argument(
+    '--new-name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=True)
 
 
 # Equipment Data Fields
@@ -256,16 +299,48 @@ PROJECT = project(name=args.project)
 
 
 # work
-if args[OBJ_CLASS_ARG_NAME] == EQ_GEN_TP_OBJ_CLASS:
-    pass
+obj_class = args[OBJ_CLASS_ARG_NAME]
+cmd = args[CMD_ARG_NAME]
+
+if obj_class == EQ_GEN_TP_OBJ_CLASS:
+    if cmd == COUNT_CMD:
+        results = \
+            PROJECT.data.EquipmentGeneralTypes.count()
+
+    elif cmd == LIST_CMD:
+        results = \
+            [str(eq_gen_tp)
+             for eq_gen_tp in PROJECT.data.EquipmentGeneralTypes.all()]
+
+        print('{:,} Equipment General Types'.format(len(results)))
+
+    elif cmd == CREATE_CMD:
+        results = \
+            str(PROJECT.create_equipment_general_type(
+                equipment_general_type_name=args.name))
+
+    else:
+        assert cmd == UPDATE_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD)
+
+        eq_gen_tp = \
+            PROJECT.equipment_general_type(
+                equipment_general_type_name=args.name)
+
+        new_name = clean_lower_str(args.new_name)
+
+        if new_name != eq_gen_tp.name:
+            eq_gen_tp.name = new_name
+            eq_gen_tp.save()
+
+        results = str(eq_gen_tp)
 
 else:
     raise ValueError(
-        '*** FIRST SUB-COMMAND MUST BE AMONG: {} ***'
+        '*** 1st SUB-COMMAND MUST BE AMONG: {} ***'
         .format(EQ_GEN_TP_OBJ_CLASS))
 
-
-results = []
 
 if args.out:
     if args.fmt == _JSON_FMT:
@@ -303,8 +378,8 @@ if args.out:
                 data=results,
                 stream=None,
                 default_style=None,
-                default_flow_style=False,
-                encoding='utf-8',   # encoding=None (Python 3)
+                default_flow_style=False,   # collections to be always serialized in the block style
+                encoding='utf-8',
                 explicit_start=None,
                 explicit_end=None,
                 version=None,
@@ -319,8 +394,8 @@ if args.out:
             data=results,
             stream=None,
             default_style=None,
-            default_flow_style=False,
-            encoding='utf-8',   # encoding=None (Python 3)
+            default_flow_style=False,   # collections to be always serialized in the block style
+            encoding='utf-8',
             explicit_start=None,
             explicit_end=None,
             version=None,
@@ -351,8 +426,8 @@ else:
             data=results,
             stream=None,
             default_style=None,
-            default_flow_style=False,
-            encoding='utf-8',   # encoding=None (Python 3)
+            default_flow_style=False,   # collections to be always serialized in the block style
+            encoding='utf-8',
             explicit_start=None,
             explicit_end=None,
             version=None,
