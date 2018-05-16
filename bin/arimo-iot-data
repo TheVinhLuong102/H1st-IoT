@@ -9,17 +9,17 @@ from ruamel import yaml
 
 from arimo.util import Namespace
 
-from arimo.IoT.DataAdmin import project
+from arimo.IoT.DataAdmin import Project, project
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
-OBJ_CLASS_ARG_NAME = 'obj_class'
+ROM_CLASS_ARG_NAME = 'rom_class'
 
-EQ_GEN_TP_OBJ_CLASS = 'eq-gen-tp'
-EQ_DATA_FLD_OBJ_CLASS = 'eq-data-fld'
-EQ_UNQ_TP_GRP_OBJ_CLASS = 'eq-unq-tp-grp'
-EQ_UNQ_TP_OBJ_CLASS = 'eq-unq-tp'
-EQ_INST_OBJ_CLASS = 'eq'
+EQ_GEN_TP_ROM_CLASS = 'eq-gen-tp'
+EQ_DATA_FLD_ROM_CLASS = 'eq-data-fld'
+EQ_UNQ_TP_GRP_ROM_CLASS = 'eq-unq-tp-grp'
+EQ_UNQ_TP_ROM_CLASS = 'eq-unq-tp'
+EQ_INST_ROM_CLASS = 'eq'
 
 
 CMD_ARG_NAME = 'cmd'
@@ -57,7 +57,9 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='arimo.IoT.DataAdmin.Project name, associated with a "{}/<ProjectName>{}" config file (default: None, corresponding to default TEST project)'
+        .format(Project.CONFIG_DIR_PATH, _YAML_EXT),
+        # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -71,7 +73,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=_YAML_FMT,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='output format (default: {})'.format(_YAML_FMT.upper()),   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -85,7 +87,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='path of file to dump output   (default: None)',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -99,14 +101,14 @@ parser.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='whether to print verbose info',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
-# OBJ-CLASS SUB-PARSERS
-obj_class_sub_parsers = \
+# ROM-CLASS SUB-PARSERS
+rom_class_sub_parsers = \
     parser.add_subparsers(
         title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
@@ -114,16 +116,16 @@ obj_class_sub_parsers = \
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=OBJ_CLASS_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help=None,   # help for sub-parser group in help output, by default None
+        dest=ROM_CLASS_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='Relational Object Model (ROM) Classes',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment General Types
 parser___eq_gen_tp = \
-    obj_class_sub_parsers.add_parser(
-        name=EQ_GEN_TP_OBJ_CLASS,
+    rom_class_sub_parsers.add_parser(
+        name=EQ_GEN_TP_ROM_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -145,7 +147,7 @@ parser___eq_gen_tp.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='Equipment General Type Name',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -161,7 +163,7 @@ eq_gen_tp___cmd_sub_parsers = \
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
         dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help=None,   # help for sub-parser group in help output, by default None
+        help='Database Commands',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
@@ -229,7 +231,7 @@ parser___eq_gen_tp___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='Equipment General Type Names to Create',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
@@ -263,7 +265,7 @@ parser___eq_gen_tp___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
+    help='New Equipment General Type Name to Update',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     dest='new_name',   # The name of the attribute to be added to the object returned by parse_args().
     required=True)
@@ -271,8 +273,8 @@ parser___eq_gen_tp___update.add_argument(
 
 # Equipment Data Fields
 parser___eq_data_fld = \
-    obj_class_sub_parsers.add_parser(
-        name=EQ_DATA_FLD_OBJ_CLASS,
+    rom_class_sub_parsers.add_parser(
+        name=EQ_DATA_FLD_ROM_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -380,8 +382,8 @@ parser___eq_data_fld___update = \
 
 # Equipment Unique Type Groups
 parser___eq_unq_tp_grp = \
-    obj_class_sub_parsers.add_parser(
-        name=EQ_UNQ_TP_GRP_OBJ_CLASS,
+    rom_class_sub_parsers.add_parser(
+        name=EQ_UNQ_TP_GRP_ROM_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -489,8 +491,8 @@ parser___eq_unq_tp_grp___update = \
 
 # Equipment Unique Types
 parser___eq_unq_tp = \
-    obj_class_sub_parsers.add_parser(
-        name=EQ_UNQ_TP_OBJ_CLASS,
+    rom_class_sub_parsers.add_parser(
+        name=EQ_UNQ_TP_ROM_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -598,8 +600,8 @@ parser___eq_unq_tp___update = \
 
 # Equipment Instances
 parser___eq = \
-    obj_class_sub_parsers.add_parser(
-        name=EQ_INST_OBJ_CLASS,
+    rom_class_sub_parsers.add_parser(
+        name=EQ_INST_ROM_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -730,10 +732,10 @@ PROJECT = project(name=args.project)
 
 
 # work
-obj_class = args[OBJ_CLASS_ARG_NAME]
+rom_class = args[ROM_CLASS_ARG_NAME]
 cmd = args[CMD_ARG_NAME]
 
-if obj_class == EQ_GEN_TP_OBJ_CLASS:
+if rom_class == EQ_GEN_TP_ROM_CLASS:
     if cmd == COUNT_CMD:
         results = \
             PROJECT.data.EquipmentGeneralTypes.filter(
@@ -781,19 +783,19 @@ if obj_class == EQ_GEN_TP_OBJ_CLASS:
 
         results = str(eq_gen_tp)
 
-elif obj_class == EQ_DATA_FLD_OBJ_CLASS:
+elif rom_class == EQ_DATA_FLD_ROM_CLASS:
     results = None
 
-elif obj_class == EQ_UNQ_TP_GRP_OBJ_CLASS:
+elif rom_class == EQ_UNQ_TP_GRP_ROM_CLASS:
     results = None
 
-elif obj_class == EQ_UNQ_TP_OBJ_CLASS:
+elif rom_class == EQ_UNQ_TP_ROM_CLASS:
     results = None
 
 else:
-    assert obj_class == EQ_INST_OBJ_CLASS, \
+    assert rom_class == EQ_INST_ROM_CLASS, \
         '*** 1st SUB-COMMAND MUST BE AMONG: {}, {}, {}, {} & {}  ***'.format(
-            EQ_GEN_TP_OBJ_CLASS, EQ_DATA_FLD_OBJ_CLASS, EQ_UNQ_TP_GRP_OBJ_CLASS, EQ_UNQ_TP_OBJ_CLASS, EQ_INST_OBJ_CLASS)
+            EQ_GEN_TP_ROM_CLASS, EQ_DATA_FLD_ROM_CLASS, EQ_UNQ_TP_GRP_ROM_CLASS, EQ_UNQ_TP_ROM_CLASS, EQ_INST_ROM_CLASS)
 
     results = None
 
