@@ -259,7 +259,23 @@ parser___eq_gen_tp___update = \
     )
 
 parser___eq_gen_tp___update.add_argument(
-    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'curr_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='current Equipment General Type name to update',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
+
+
+parser___eq_gen_tp___update.add_argument(
+    'new_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -267,8 +283,11 @@ parser___eq_gen_tp___update.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help='new Equipment General Type name to update',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest='new_name',   # The name of the attribute to be added to the object returned by parse_args().
-    required=True)
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
 
 
 # Equipment Data Fields
@@ -773,7 +792,7 @@ if rom_class == EQ_GEN_TP_ROM_CLASS:
 
         eq_gen_tp = \
             PROJECT.equipment_general_type(
-                equipment_general_type_name=args.name)
+                equipment_general_type_name=args.curr_name)
 
         new_name = clean_lower_str(args.new_name)
 
