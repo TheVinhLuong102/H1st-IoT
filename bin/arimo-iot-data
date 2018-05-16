@@ -270,6 +270,112 @@ parser___eq_gen_tp___update.add_argument(
 
 
 # Equipment Data Fields
+parser___eq_data_fld = \
+    obj_class_sub_parsers.add_parser(
+        name=EQ_DATA_FLD_OBJ_CLASS,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+# Equipment Data Fields: command sub-parsers
+eq_data_fld___cmd_sub_parsers = \
+    parser___eq_data_fld.add_subparsers(
+        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description=None,  # description for the sub-parser group in help output, by default None
+        prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
+        parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
+        # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
+            # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
+        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help=None,   # help for sub-parser group in help output, by default None
+        metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
+    )
+
+
+# Equipment Data Fields: COUNT
+parser___eq_data_fld___count = \
+    eq_data_fld___cmd_sub_parsers.add_parser(
+        name=COUNT_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
+# Equipment Data Fields: LIST
+parser___eq_data_fld___list = \
+    eq_data_fld___cmd_sub_parsers.add_parser(
+        name=LIST_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
+# Equipment Data Fields: CREATE
+parser___eq_data_fld___create = \
+    eq_data_fld___cmd_sub_parsers.add_parser(
+        name=CREATE_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
+# Equipment Data Fields: UPDATE
+parser___eq_data_fld___update = \
+    eq_data_fld___cmd_sub_parsers.add_parser(
+        name=UPDATE_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
 
 
 # Equipment Unique Type Groups
