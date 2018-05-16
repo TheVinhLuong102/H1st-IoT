@@ -206,16 +206,19 @@ parser___eq_gen_tp___create = \
     )
 
 parser___eq_gen_tp___create.add_argument(
-    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'names',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    # default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-    required=True)
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
 
 
 # Equipment General Types: UPDATE
@@ -315,12 +318,12 @@ if obj_class == EQ_GEN_TP_OBJ_CLASS:
         print('{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
-        eq_gen_tp_names = args.name.split(',')
-
         results = \
             [str(PROJECT.create_equipment_general_type(
                 equipment_general_type_name=eq_gen_tp_name))
-             for eq_gen_tp_name in eq_gen_tp_names]
+             for eq_gen_tp_name in args.names]
+
+        print('{:,} Equipment General Type(s)'.format(len(results)))
 
     else:
         assert cmd == UPDATE_CMD, \
