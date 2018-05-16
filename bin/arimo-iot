@@ -105,7 +105,7 @@ parser___eq_gen_tp = \
 
 # Equipment General Types: command sub-parsers
 eq_gen_tp___cmd_sub_parsers = \
-    parser.add_subparsers(
+    parser___eq_gen_tp.add_subparsers(
         title=None,   # title for the sub-parser group in help output; by default “subcommands” if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
@@ -120,7 +120,7 @@ eq_gen_tp___cmd_sub_parsers = \
 
 # Equipment General Types: CREATE
 parser___eq_gen_tp___create = \
-    obj_class_sub_parsers.add_parser(
+    eq_gen_tp___cmd_sub_parsers.add_parser(
         name=CREATE_CMD,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
@@ -151,7 +151,7 @@ parser___eq_gen_tp___create.add_argument(
 
 # Equipment General Types: COUNT
 parser___eq_gen_tp___count = \
-    obj_class_sub_parsers.add_parser(
+    eq_gen_tp___cmd_sub_parsers.add_parser(
         name=COUNT_CMD,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
@@ -170,7 +170,7 @@ parser___eq_gen_tp___count = \
 
 # Equipment General Types: LIST
 parser___eq_gen_tp___list = \
-    obj_class_sub_parsers.add_parser(
+    eq_gen_tp___cmd_sub_parsers.add_parser(
         name=LIST_CMD,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
