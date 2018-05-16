@@ -315,9 +315,12 @@ if obj_class == EQ_GEN_TP_OBJ_CLASS:
         print('{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
+        eq_gen_tp_names = args.name.split(',')
+
         results = \
-            str(PROJECT.create_equipment_general_type(
-                equipment_general_type_name=args.name))
+            [str(PROJECT.create_equipment_general_type(
+                equipment_general_type_name=eq_gen_tp_name))
+             for eq_gen_tp_name in eq_gen_tp_names]
 
     else:
         assert cmd == UPDATE_CMD, \
