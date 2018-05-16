@@ -138,7 +138,6 @@ parser___eq_gen_tp = \
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
 
-
 # Equipment General Types: command sub-parsers
 eq_gen_tp___cmd_sub_parsers = \
     parser___eq_gen_tp.add_subparsers(
@@ -270,7 +269,6 @@ parser___eq_gen_tp___update.add_argument(
 
 
 # Equipment Data Fields
-# EQ_DATA_FLD_CMD = 'eq-data-fld'
 
 
 # Equipment Unique Type Groups
