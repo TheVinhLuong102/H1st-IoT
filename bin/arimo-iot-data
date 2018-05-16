@@ -312,7 +312,7 @@ if obj_class == EQ_GEN_TP_OBJ_CLASS:
             [str(eq_gen_tp)
              for eq_gen_tp in PROJECT.data.EquipmentGeneralTypes.all()]
 
-        print('{:,} Equipment General Types'.format(len(results)))
+        print('{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         results = \
