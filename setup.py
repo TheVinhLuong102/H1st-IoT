@@ -40,4 +40,4 @@ setup(
 
 os.symlink(
     os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
-    os.path.join('/usr', _SCRIPT_REL_PATH_TO_INSTALL))
+    os.path.join('/usr/local', _SCRIPT_REL_PATH_TO_INSTALL))
