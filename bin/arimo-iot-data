@@ -3,11 +3,14 @@
 
 from __future__ import print_function
 import argparse
+import json
+import os
+from ruamel import yaml
 
 from arimo.util import Namespace
 
 from arimo.IoT.DataAdmin import project
-from arimo.IoT.DataAdmin.CLI import *
+from arimo.IoT.DataAdmin.util import _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
 OBJ_CLASS_ARG_NAME = 'obj_class'
@@ -42,6 +45,34 @@ parser = \
 # project name
 parser.add_argument(
     '--project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None   # The name of the attribute to be added to the object returned by parse_args().
+)
+
+
+# output format
+parser.add_argument(
+    '--fmt',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=_YAML_FMT,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None   # The name of the attribute to be added to the object returned by parse_args().
+)
+
+
+# output file
+parser.add_argument(
+    '-o', '--out',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -203,6 +234,19 @@ parser___eq_gen_tp___list = \
 # parse args
 args = Namespace(**parser.parse_args().__dict__)
 
+
+assert args.fmt in (_JSON_FMT, _YAML_FMT)
+
+if args.out:
+    _ext = os.path.splitext(args.out)
+
+    if (_ext == _JSON_EXT) and (args.fmt == _YAML_FMT):
+        args.fmt = _JSON_FMT
+
+    elif (_ext == _YAML_EXT) and (args.fmt == _JSON_FMT):
+        args.fmt = _YAML_FMT
+
+
 if args.verbose:
     print(args)
 
@@ -219,3 +263,102 @@ else:
     raise ValueError(
         '*** FIRST SUB-COMMAND MUST BE AMONG: {} ***'
         .format(EQ_GEN_TP_OBJ_CLASS))
+
+
+results = []
+
+if args.out:
+    if args.fmt == _JSON_FMT:
+        if args.verbose:
+            print(json.dumps(
+                obj=results,
+                skipkeys=False,
+                ensure_ascii=True,
+                check_circular=True,
+                allow_nan=True,
+                cls=None,
+                indent=2,
+                separators=None,
+                encoding='utf-8',
+                default=None,
+                sort_keys=True))
+
+        json.dump(
+            obj=results,
+            fp=args.out,
+            skipkeys=False,
+            ensure_ascii=True,
+            check_circular=True,
+            allow_nan=True,
+            cls=None,
+            indent=2,
+            separators=None,
+            encoding='utf-8',
+            default=None,
+            sort_keys=True)
+
+    else:
+        if args.verbose:
+            print(yaml.safe_dump(
+                data=results,
+                stream=None,
+                default_style=None,
+                default_flow_style=False,
+                encoding='utf-8',   # encoding=None (Python 3)
+                explicit_start=None,
+                explicit_end=None,
+                version=None,
+                tags=None,
+                canonical=None,
+                indent=2,
+                width=None,
+                allow_unicode=True,
+                line_break=None))
+
+        print(yaml.safe_dump(
+            data=results,
+            stream=None,
+            default_style=None,
+            default_flow_style=False,
+            encoding='utf-8',   # encoding=None (Python 3)
+            explicit_start=None,
+            explicit_end=None,
+            version=None,
+            tags=None,
+            canonical=None,
+            indent=2,
+            width=None,
+            allow_unicode=True,
+            line_break=None))
+
+else:
+    if args.fmt == _JSON_FMT:
+        print(json.dumps(
+            obj=results,
+            skipkeys=False,
+            ensure_ascii=True,
+            check_circular=True,
+            allow_nan=True,
+            cls=None,
+            indent=2,
+            separators=None,
+            encoding='utf-8',
+            default=None,
+            sort_keys=True))
+
+    else:
+        print(yaml.safe_dump(
+            data=results,
+            stream=None,
+            default_style=None,
+            default_flow_style=False,
+            encoding='utf-8',   # encoding=None (Python 3)
+            explicit_start=None,
+            explicit_end=None,
+            version=None,
+            tags=None,
+            canonical=None,
+            indent=2,
+            width=None,
+            allow_unicode=True,
+            line_break=None))

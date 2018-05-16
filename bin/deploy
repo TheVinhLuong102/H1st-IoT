@@ -6,8 +6,9 @@ import os
 from ruamel import yaml
 import shutil
 
-from arimo.IoT.DataAdmin import Project, _YAML_EXT
+from arimo.IoT.DataAdmin import Project
 from arimo.IoT.DataAdmin._project.settings import _DB_DETAILS_FILE_PATH
+from arimo.IoT.DataAdmin.util import _YAML_EXT
 
 
 IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'

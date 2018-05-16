@@ -9,17 +9,13 @@ from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._project.settings
-from arimo.IoT.DataAdmin.util import clean_lower_str, _clean_upper_str
+from arimo.IoT.DataAdmin.util import clean_lower_str, _clean_upper_str, _JSON_EXT, _PARQUET_EXT, _YAML_EXT
 
 
 _STR_CLASSES = \
     (str, unicode) \
     if six.PY2 \
     else str
-
-
-_PARQUET_EXT = '.parquet'
-_YAML_EXT = '.yaml'
 
 
 class Project(object):
