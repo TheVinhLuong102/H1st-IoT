@@ -1,13 +1,26 @@
 #!/usr/bin/env python
 
 
+from __future__ import print_function
 import argparse
-from pprint import pprint
+
+from arimo.util import Namespace
 
 from arimo.IoT.DataAdmin import project
 from arimo.IoT.DataAdmin.CLI import *
 
 
+OBJ_CLASS_ARG_NAME = 'obj_class'
+CMD_ARG_NAME = 'cmd'
+
+
+CREATE_CMD = 'create'
+COUNT_CMD = 'count'
+LIST_CMD = 'list'
+UPDATE_CMD = 'update'
+
+
+# MASTER PARSER
 parser = \
     argparse.ArgumentParser(
         prog=None,   # The name of the program (default: sys.argv[0])
@@ -54,8 +67,8 @@ parser.add_argument(
 )
 
 
-# SUB-PARSERS
-sub_parsers = \
+# OBJ-CLASS SUB-PARSERS
+obj_class_sub_parsers = \
     parser.add_subparsers(
         title=None,   # title for the sub-parser group in help output; by default “subcommands” if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
@@ -63,16 +76,18 @@ sub_parsers = \
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest='cmd',   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        dest=OBJ_CLASS_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
         help=None,   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment General Types
+EQ_GEN_TP_OBJ_CLASS = 'eq-gen-tp'
+
 parser___eq_gen_tp = \
-    sub_parsers.add_parser(
-        name='eq-gen-tp',
+    obj_class_sub_parsers.add_parser(
+        name=EQ_GEN_TP_OBJ_CLASS,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -83,28 +98,102 @@ parser___eq_gen_tp = \
         fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
-        add_help=False,   # Add a -h/--help option to the parser (default: True)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
 
-parser___eq_gen_tp.add_argument(
+
+# Equipment General Types: command sub-parsers
+eq_gen_tp___cmd_sub_parsers = \
+    parser.add_subparsers(
+        title=None,   # title for the sub-parser group in help output; by default “subcommands” if description is provided, otherwise uses title for positional arguments
+        description=None,  # description for the sub-parser group in help output, by default None
+        prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
+        parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
+        # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
+            # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
+        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help=None,   # help for sub-parser group in help output, by default None
+        metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
+    )
+
+
+# Equipment General Types: CREATE
+parser___eq_gen_tp___create = \
+    obj_class_sub_parsers.add_parser(
+        name=CREATE_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+parser___eq_gen_tp___create.add_argument(
     '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=argparse.SUPPRESS,   # The value produced if the argument is absent from the command line.
+    # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=True)
+
+
+# Equipment General Types: COUNT
+parser___eq_gen_tp___count = \
+    obj_class_sub_parsers.add_parser(
+        name=COUNT_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
+# Equipment General Types: LIST
+parser___eq_gen_tp___list = \
+    obj_class_sub_parsers.add_parser(
+        name=LIST_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
 
 
 # parse args
-args = parser.parse_args()
+args = Namespace(**parser.parse_args().__dict__)
 
 if args.verbose:
-    pprint(args)
+    print(args)
 
 
 # connect to database
