@@ -187,6 +187,17 @@ parser___eq_gen_tp___list = \
     )
 
 
+# Equipment Data Fields
+# EQ_DATA_FLD_CMD = 'eq-data-fld'
+
+
+# Equipment Unique Type Groups
+
+
+# Equipment Unique Types
+
+
+# Equipment Instances
 
 
 # parse args
@@ -198,3 +209,13 @@ if args.verbose:
 
 # connect to database
 PROJECT = project(name=args.project)
+
+
+# work
+if args[OBJ_CLASS_ARG_NAME] == EQ_GEN_TP_OBJ_CLASS:
+    pass
+
+else:
+    raise ValueError(
+        '*** FIRST SUB-COMMAND MUST BE AMONG: {} ***'
+        .format(EQ_GEN_TP_OBJ_CLASS))

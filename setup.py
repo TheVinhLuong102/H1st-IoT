@@ -32,4 +32,4 @@ setup(
         [s.strip()
          for s in open(_REQUIREMENTS_FILE_NAME).readlines()
          if s.startswith('#')],
-    scripts=['bin/arimo-iot'])
+    scripts=['bin/arimo-iot-data'])
