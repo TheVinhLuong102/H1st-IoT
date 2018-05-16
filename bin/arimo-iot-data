@@ -138,6 +138,19 @@ parser___eq_gen_tp = \
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
 
+parser___eq_gen_tp.add_argument(
+    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None   # The name of the attribute to be added to the object returned by parse_args().
+)
+
+
 # Equipment General Types: command sub-parsers
 eq_gen_tp___cmd_sub_parsers = \
     parser___eq_gen_tp.add_subparsers(
@@ -252,19 +265,7 @@ parser___eq_gen_tp___update.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-    required=True)
-
-parser___eq_gen_tp___update.add_argument(
-    '--new-name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
-    const=None,   # A constant value required by some action and nargs selections.
-    # default=None,   # The value produced if the argument is absent from the command line.
-    type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='new_name',   # The name of the attribute to be added to the object returned by parse_args().
     required=True)
 
 
@@ -311,12 +312,23 @@ cmd = args[CMD_ARG_NAME]
 if obj_class == EQ_GEN_TP_OBJ_CLASS:
     if cmd == COUNT_CMD:
         results = \
-            PROJECT.data.EquipmentGeneralTypes.count()
+            PROJECT.data.EquipmentGeneralTypes.filter(
+                name__in=
+                    [clean_lower_str(eq_gen_tp_name)
+                     for eq_gen_tp_name in args.name.split(',')]) \
+            if args.name \
+            else PROJECT.data.EquipmentGeneralTypes.count()
 
     elif cmd == LIST_CMD:
         results = \
             [str(eq_gen_tp)
-             for eq_gen_tp in PROJECT.data.EquipmentGeneralTypes.all()]
+             for eq_gen_tp in
+                (PROJECT.data.EquipmentGeneralTypes.filter(
+                    name__in=
+                        [clean_lower_str(eq_gen_tp_name)
+                         for eq_gen_tp_name in args.name.split(',')])
+                 if args.name
+                 else PROJECT.data.EquipmentGeneralTypes.all())]
 
         print('{:,} Equipment General Type(s)'.format(len(results)))
 
