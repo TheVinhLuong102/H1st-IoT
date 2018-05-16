@@ -14,8 +14,15 @@ from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAM
 
 
 OBJ_CLASS_ARG_NAME = 'obj_class'
-CMD_ARG_NAME = 'cmd'
 
+EQ_GEN_TP_OBJ_CLASS = 'eq-gen-tp'
+EQ_DATA_FLD_OBJ_CLASS = 'eq-data-fld'
+EQ_UNQ_TP_GRP_OBJ_CLASS = 'eq-unq-tp-grp'
+EQ_UNQ_TP_OBJ_CLASS = 'eq-unq-tp'
+EQ_INST_OBJ_CLASS = 'eq'
+
+
+CMD_ARG_NAME = 'cmd'
 
 COUNT_CMD = 'count'
 LIST_CMD = 'list'
@@ -114,8 +121,6 @@ obj_class_sub_parsers = \
 
 
 # Equipment General Types
-EQ_GEN_TP_OBJ_CLASS = 'eq-gen-tp'
-
 parser___eq_gen_tp = \
     obj_class_sub_parsers.add_parser(
         name=EQ_GEN_TP_OBJ_CLASS,
@@ -342,10 +347,21 @@ if obj_class == EQ_GEN_TP_OBJ_CLASS:
 
         results = str(eq_gen_tp)
 
+elif obj_class == EQ_DATA_FLD_OBJ_CLASS:
+    results = None
+
+elif obj_class == EQ_UNQ_TP_GRP_OBJ_CLASS:
+    results = None
+
+elif obj_class == EQ_UNQ_TP_OBJ_CLASS:
+    results = None
+
 else:
-    raise ValueError(
-        '*** 1st SUB-COMMAND MUST BE AMONG: {} ***'
-        .format(EQ_GEN_TP_OBJ_CLASS))
+    assert obj_class == EQ_INST_OBJ_CLASS, \
+        '*** 1st SUB-COMMAND MUST BE AMONG: {}, {}, {}, {} & {}  ***'.format(
+            EQ_GEN_TP_OBJ_CLASS, EQ_DATA_FLD_OBJ_CLASS, EQ_UNQ_TP_GRP_OBJ_CLASS, EQ_UNQ_TP_OBJ_CLASS, EQ_INST_OBJ_CLASS)
+
+    results = None
 
 
 if args.out:
