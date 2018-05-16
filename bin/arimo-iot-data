@@ -59,8 +59,8 @@ parser.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
 
 
 # output format
@@ -73,8 +73,8 @@ parser.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
 
 
 # output file
@@ -87,8 +87,8 @@ parser.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
 
 
 # verbosity
@@ -101,8 +101,8 @@ parser.add_argument(
     # type=None,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
 
 
 # OBJ-CLASS SUB-PARSERS
@@ -147,8 +147,8 @@ parser___eq_gen_tp.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None   # The name of the attribute to be added to the object returned by parse_args().
-)
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
 
 
 # Equipment General Types: command sub-parsers
