@@ -119,6 +119,10 @@ class Project(object):
                     access_key_id=self.params.s3.access_key_id,
                     secret_access_key=self.params.s3.secret_access_key)
 
+    @classmethod
+    def __qual_name__(cls):
+        return '{}.{}'.format(cls.__module__, cls.__name__)
+
     def _collect_static(self):
         call_command('collectstatic')
 
