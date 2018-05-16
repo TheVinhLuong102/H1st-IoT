@@ -70,7 +70,7 @@ parser.add_argument(
 # OBJ-CLASS SUB-PARSERS
 obj_class_sub_parsers = \
     parser.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default “subcommands” if description is provided, otherwise uses title for positional arguments
+        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
@@ -106,7 +106,7 @@ parser___eq_gen_tp = \
 # Equipment General Types: command sub-parsers
 eq_gen_tp___cmd_sub_parsers = \
     parser___eq_gen_tp.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default “subcommands” if description is provided, otherwise uses title for positional arguments
+        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
