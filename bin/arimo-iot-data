@@ -13,19 +13,19 @@ from arimo.IoT.DataAdmin import Project, project
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
-IN_LOOKUP = 'in'
-CONTAINS_LOOKUP = 'contains'
-STARTSWITH_LOOKUP = 'startswith'
-ENDSWITH_LOOKUP = 'endswith'
-REGEX_LOOKUP = 'regex'
+IN_LOOKUP_TYPE = 'in'
+CONTAINS_LOOKUP_TYPE = 'contains'
+STARTSWITH_LOOKUP_TYPE = 'startswith'
+ENDSWITH_LOOKUP_TYPE = 'endswith'
+REGEX_LOOKUP_TYPE = 'regex'
 
 
 ROM_ARG_NAME = 'rom'
 
-EQ_GEN_TP_ROM = 'eq-gen-tp'
-EQ_DATA_FLD_ROM = 'eq-data-fld'
-EQ_UNQ_TP_GRP_ROM = 'eq-unq-tp-grp'
-EQ_UNQ_TP_ROM = 'eq-unq-tp'
+EQ_GEN_TP_ROM = 'gen-tp'
+EQ_DATA_FLD_ROM = 'data-fld'
+EQ_UNQ_TP_GRP_ROM = 'unq-tp-grp'
+EQ_UNQ_TP_ROM = 'unq-tp'
 EQ_INST_ROM = 'eq'
 
 
@@ -68,7 +68,7 @@ parser.add_argument(
         .format(Project.__qual_name__(), Project.CONFIG_DIR_PATH, _YAML_EXT),
         # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='project',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
@@ -82,7 +82,7 @@ parser.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help='output format (default: {})'.format(_YAML_FMT.upper()),   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='output_format',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
@@ -96,7 +96,7 @@ parser.add_argument(
     type=str,   # The type to which the command-line argument should be converted.
     help='path of file to dump output (default: None)',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='output_file_path',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
@@ -110,7 +110,7 @@ parser.add_argument(
     # type=None,   # The type to which the command-line argument should be converted.
     help='whether to print verbose info',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='verbose',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
@@ -124,7 +124,7 @@ parser.add_argument(
     # type=None,   # The type to which the command-line argument should be converted.
     help='whether to exclude looked-up ROM objects',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='excl_lookups',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 parser.add_argument(
@@ -132,18 +132,18 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=IN_LOOKUP,   # The value produced if the argument is absent from the command line.
+    default=IN_LOOKUP_TYPE,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='look-up method, 1 of "{}" (default), "{}", "{}", "{}" and "{}"'
-        .format(IN_LOOKUP, CONTAINS_LOOKUP, STARTSWITH_LOOKUP, ENDSWITH_LOOKUP, REGEX_LOOKUP),
+        .format(IN_LOOKUP_TYPE, CONTAINS_LOOKUP_TYPE, STARTSWITH_LOOKUP_TYPE, ENDSWITH_LOOKUP_TYPE, REGEX_LOOKUP_TYPE),
         # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    dest='lookup_type',   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
 
 
 parser.add_argument(
-    '--eq-gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -155,7 +155,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -167,7 +167,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -179,7 +179,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -814,12 +814,12 @@ parser___eq___update = \
 args = Namespace(**parser.parse_args().__dict__)
 
 
-assert args.lookup \
-    in (IN_LOOKUP,
-        CONTAINS_LOOKUP,
-        STARTSWITH_LOOKUP,
-        ENDSWITH_LOOKUP,
-        REGEX_LOOKUP)
+assert args.lookup_type \
+    in (IN_LOOKUP_TYPE,
+        CONTAINS_LOOKUP_TYPE,
+        STARTSWITH_LOOKUP_TYPE,
+        ENDSWITH_LOOKUP_TYPE,
+        REGEX_LOOKUP_TYPE)
 
 
 args.eq_gen_tp_lookups = \
@@ -848,16 +848,16 @@ args.eq_lookups = \
     else []
 
 
-assert args.fmt in (_JSON_FMT, _YAML_FMT)
+assert args.output_format in (_JSON_FMT, _YAML_FMT)
 
-if args.out:
-    _ext = os.path.splitext(args.out)
+if args.output_file_path:
+    _ext = os.path.splitext(args.output_file_path)
 
-    if (_ext == _JSON_EXT) and (args.fmt == _YAML_FMT):
-        args.fmt = _JSON_FMT
+    if (_ext == _JSON_EXT) and (args.output_format == _YAML_FMT):
+        args.output_format = _JSON_FMT
 
-    elif (_ext == _YAML_EXT) and (args.fmt == _JSON_FMT):
-        args.fmt = _YAML_FMT
+    elif (_ext == _YAML_EXT) and (args.output_format == _JSON_FMT):
+        args.output_format = _YAML_FMT
 
 
 if args.verbose:
@@ -875,21 +875,21 @@ cmd = args[CMD_ARG_NAME]
 if rom == EQ_GEN_TP_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_gen_tp_lookups:
-            if args.lookup == IN_LOOKUP:
+            if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_gen_tps = \
                     (PROJECT.data.EquipmentGeneralTypes.exclude(name=args.eq_gen_tp_lookups[0])
-                     if args.excl
+                     if args.excl_lookups
                      else PROJECT.data.EquipmentGeneralTypes.filter(name=args.eq_gen_tp_lookups[0])) \
                     if len(args.eq_gen_tp_lookups) == 1 \
                     else (PROJECT.data.EquipmentGeneralTypes.exclude(name__in=args.eq_gen_tp_lookups)
-                          if args.excl
+                          if args.excl_lookups
                           else PROJECT.data.EquipmentGeneralTypes.filter(name__in=args.eq_gen_tp_lookups))
 
             else:
                 for i, eq_gen_tp_lookup in enumerate(args.eq_gen_tp_lookups):
                     _eq_gen_tps = \
                         PROJECT.data.EquipmentGeneralTypes.filter(
-                            **{'name__{}'.format(args.lookup): eq_gen_tp_lookup})
+                            **{'name__{}'.format(args.lookup_type): eq_gen_tp_lookup})
 
                     if i:
                         eq_gen_tps |= _eq_gen_tps
@@ -897,7 +897,7 @@ if rom == EQ_GEN_TP_ROM:
                     else:
                         eq_gen_tps = _eq_gen_tps
 
-                if args.excl:
+                if args.excl_lookups:
                     eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.difference(eq_gen_tps)
 
         else:
@@ -939,21 +939,21 @@ if rom == EQ_GEN_TP_ROM:
 elif rom == EQ_DATA_FLD_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_data_fld_lookups:
-            if args.lookup == IN_LOOKUP:
+            if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_data_flds = \
                     (PROJECT.data.EquipmentDataFields.exclude(name=args.eq_data_fld_lookups[0])
-                     if args.excl
+                     if args.excl_lookups
                      else PROJECT.data.EquipmentDataFields.filter(name=args.eq_data_fld_lookups[0])) \
                     if len(args.eq_data_fld_lookups) == 1 \
                     else (PROJECT.data.EquipmentDataFields.exclude(name__in=args.eq_data_fld_lookups)
-                          if args.excl
+                          if args.excl_lookups
                           else PROJECT.data.EquipmentDataFields.filter(name__in=args.eq_data_fld_lookups))
 
             else:
                 for i, eq_data_fld_lookup in enumerate(args.eq_data_fld_lookups):
                     _eq_data_flds = \
                         PROJECT.data.EquipmentDataFields.filter(
-                            **{'name__{}'.format(args.lookup): eq_data_fld_lookup})
+                            **{'name__{}'.format(args.lookup_type): eq_data_fld_lookup})
 
                     if i:
                         eq_data_flds |= _eq_data_flds
@@ -961,7 +961,7 @@ elif rom == EQ_DATA_FLD_ROM:
                     else:
                         eq_data_flds = _eq_data_flds
 
-                if args.excl:
+                if args.excl_lookups:
                     eq_data_flds = PROJECT.data.EquipmentDataFields.difference(eq_data_flds)
 
         else:
@@ -986,21 +986,21 @@ elif rom == EQ_DATA_FLD_ROM:
 elif rom == EQ_UNQ_TP_GRP_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_unq_tp_grp_lookups:
-            if args.lookup == IN_LOOKUP:
+            if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tp_grps = \
                     (PROJECT.data.EquipmentUniqueTypeGroups.exclude(name=args.eq_unq_tp_grp_lookups[0])
-                     if args.excl
+                     if args.excl_lookups
                      else PROJECT.data.EquipmentUniqueTypeGroups.filter(name=args.eq_unq_tp_grp_lookups[0])) \
                     if len(args.eq_unq_tp_grp_lookups) == 1 \
                     else (PROJECT.data.EquipmentUniqueTypeGroups.exclude(name__in=args.eq_unq_tp_grp_lookups)
-                          if args.excl
+                          if args.excl_lookups
                           else PROJECT.data.EquipmentUniqueTypeGroups.filter(name__in=args.eq_unq_tp_grp_lookups))
 
             else:
                 for i, eq_unq_tp_grp_lookup in enumerate(args.eq_unq_tp_grp_lookups):
                     _eq_unq_tp_grps = \
                         PROJECT.data.EquipmentUniqueTypeGroups.filter(
-                            **{'name__{}'.format(args.lookup): eq_unq_tp_grp_lookup})
+                            **{'name__{}'.format(args.lookup_type): eq_unq_tp_grp_lookup})
 
                     if i:
                         eq_unq_tp_grps |= _eq_unq_tp_grps
@@ -1008,7 +1008,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                     else:
                         eq_unq_tp_grps = _eq_unq_tp_grps
 
-                if args.excl:
+                if args.excl_lookups:
                     eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
 
         else:
@@ -1033,21 +1033,21 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
 elif rom == EQ_UNQ_TP_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_unq_tp_lookups:
-            if args.lookup == IN_LOOKUP:
+            if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tps = \
                     (PROJECT.data.EquipmentUniqueTypes.exclude(name=args.eq_unq_tp_lookups[0])
-                     if args.excl
+                     if args.excl_lookups
                      else PROJECT.data.EquipmentUniqueTypes.filter(name=args.eq_unq_tp_lookups[0])) \
                     if len(args.eq_unq_tp_lookups) == 1 \
                     else (PROJECT.data.EquipmentUniqueTypes.exclude(name__in=args.eq_unq_tp_lookups)
-                          if args.excl
+                          if args.excl_lookups
                           else PROJECT.data.EquipmentUniqueTypes.filter(name__in=args.eq_unq_tp_lookups))
 
             else:
                 for i, eq_unq_tp_lookup in enumerate(args.eq_unq_tp_lookups):
                     _eq_unq_tps = \
                         PROJECT.data.EquipmentUniqueTypes.filter(
-                            **{'name__{}'.format(args.lookup): eq_unq_tp_lookup})
+                            **{'name__{}'.format(args.lookup_type): eq_unq_tp_lookup})
 
                     if i:
                         eq_unq_tps |= _eq_unq_tps
@@ -1055,7 +1055,7 @@ elif rom == EQ_UNQ_TP_ROM:
                     else:
                         eq_unq_tps = _eq_unq_tps
 
-                if args.excl:
+                if args.excl_lookups:
                     eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
 
         else:
@@ -1084,21 +1084,21 @@ else:
 
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_lookups:
-            if args.lookup == IN_LOOKUP:
+            if args.lookup_type == IN_LOOKUP_TYPE:
                 eqs = \
                     (PROJECT.data.EquipmentInstances.exclude(name=args.eq_lookups[0])
-                     if args.excl
+                     if args.excl_lookups
                      else PROJECT.data.EquipmentInstances.filter(name=args.eq_lookups[0])) \
                     if len(args.eq_lookups) == 1 \
                     else (PROJECT.data.EquipmentInstances.exclude(name__in=args.eq_lookups)
-                          if args.excl
+                          if args.excl_lookups
                           else PROJECT.data.EquipmentInstances.filter(name__in=args.eq_lookups))
 
             else:
                 for i, eq_lookup in enumerate(args.eq_lookups):
                     _eqs = \
                         PROJECT.data.EquipmentInstances.filter(
-                            **{'name__{}'.format(args.lookup): eq_lookup})
+                            **{'name__{}'.format(args.lookup_type): eq_lookup})
 
                     if i:
                         eqs |= _eqs
@@ -1106,7 +1106,7 @@ else:
                     else:
                         eqs = _eqs
 
-                if args.excl:
+                if args.excl_lookups:
                     eqs = PROJECT.data.EquipmentInstances.difference(eqs)
 
         else:
@@ -1129,8 +1129,8 @@ else:
         results = None
 
 
-if args.out:
-    if args.fmt == _JSON_FMT:
+if args.output_file_path:
+    if args.output_format == _JSON_FMT:
         if args.verbose:
             print(json.dumps(
                 obj=results,
@@ -1147,7 +1147,7 @@ if args.out:
 
         json.dump(
             obj=results,
-            fp=args.out,
+            fp=args.output_file_path,
             skipkeys=False,
             ensure_ascii=True,
             check_circular=True,
@@ -1194,7 +1194,7 @@ if args.out:
             line_break=None))
 
 else:
-    if args.fmt == _JSON_FMT:
+    if args.output_format == _JSON_FMT:
         print(json.dumps(
             obj=results,
             skipkeys=False,
