@@ -109,11 +109,11 @@ parser.add_argument(
 
 # filters
 parser.add_argument(
-    '--eq-gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--eq-gen-tps',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment General Type name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -121,11 +121,11 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--eq-data-flds',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Data Field name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -133,11 +133,11 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--eq-unq-tp-grps',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Unique Type Group name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -145,11 +145,11 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq-unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--eq-unq-tps',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Unique Type name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -157,11 +157,11 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--eqs',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Instance ID(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -790,6 +790,13 @@ parser___eq___update = \
 
 # parse args
 args = Namespace(**parser.parse_args().__dict__)
+
+
+args.eq_gen_tps = args.eq_gen_tps.split(',')
+args.eq_data_flds = args.eq_data_flds.split(',')
+args.eq_unq_tp_grps = args.eq_unq_tp_grps.split(',')
+args.eq_unq_tps = args.eq_unq_tps.split(',')
+args.eqs = args.eqs.split(',')
 
 
 assert args.fmt in (_JSON_FMT, _YAML_FMT)
