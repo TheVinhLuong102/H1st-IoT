@@ -979,10 +979,6 @@ if rom == EQ_GEN_TP_ROM:
             PROJECT.equipment_general_type(
                 equipment_general_type_name=eq_gen_tp_name)
 
-        eq_gen_tp_str = str(eq_gen_tp)
-
-        print(eq_gen_tp_str)
-
         d = {'Equipment Unique Type Groups':
                 map(str,
                     PROJECT.data.EquipmentUniqueTypeGroups.filter(
@@ -991,9 +987,14 @@ if rom == EQ_GEN_TP_ROM:
              'Equipment Unique Types':
                 map(str,
                     PROJECT.data.EquipmentUniqueTypes.filter(
-                        equipment_general_type__name=eq_gen_tp_name))}
+                        equipment_general_type__name=eq_gen_tp_name)),
 
-        results = {eq_gen_tp_str: d}
+             'Equipment Data Fields':
+                 map(str,
+                     PROJECT.data.EquipmentDataFields.filter(
+                         equipment_general_type__name=eq_gen_tp_name))}
+
+        results = {str(eq_gen_tp): d}
 
 
 elif rom == EQ_DATA_FLD_ROM:
