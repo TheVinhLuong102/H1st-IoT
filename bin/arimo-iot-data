@@ -898,7 +898,7 @@ if rom == EQ_GEN_TP_ROM:
                         eq_gen_tps = _eq_gen_tps
 
                 if args.excl:
-                    eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all() - eq_gen_tps
+                    eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all().difference(eq_gen_tps)
 
         else:
             eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all()
