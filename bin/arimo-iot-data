@@ -13,6 +13,13 @@ from arimo.IoT.DataAdmin import Project, project
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
+IN_LOOKUP = 'in'
+CONTAINS_LOOKUP = 'contains'
+STARTSWITH_LOOKUP = 'startswith'
+ENDSWITH_LOOKUP = 'endswith'
+REGEX_LOOKUP = 'regex'
+
+
 ROM_ARG_NAME = 'rom'
 
 EQ_GEN_TP_ROM = 'eq-gen-tp'
@@ -107,7 +114,34 @@ parser.add_argument(
     required=False)
 
 
-# filters
+# lookups
+parser.add_argument(
+    '--excl',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action='store_true',   # The basic type of action to be taken when this argument is encountered at the command line.
+    # nargs=None,   # The number of command-line arguments that should be consumed.
+    # const=None,   # A constant value required by some action and nargs selections.
+    default=False,   # The value produced if the argument is absent from the command line.
+    # type=None,   # The type to which the command-line argument should be converted.
+    help='whether to exclude looked-up ROM objects',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser.add_argument(
+    '--lookup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=IN_LOOKUP,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='look-up method, 1 of "{}" (default), "{}", "{}", "{}" and "{}"'
+        .format(IN_LOOKUP, CONTAINS_LOOKUP, STARTSWITH_LOOKUP, ENDSWITH_LOOKUP, REGEX_LOOKUP),
+        # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+
 parser.add_argument(
     '--eq-gen-tps',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
@@ -115,7 +149,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment General Type name(s) for filtering',   # A brief description of what the argument does.
+    help='Equipment General Type name(s) for look-ups',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -127,7 +161,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment Data Field name(s) for filtering',   # A brief description of what the argument does.
+    help='Equipment Data Field name(s) for look-ups',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -139,7 +173,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment Unique Type Group name(s) for filtering',   # A brief description of what the argument does.
+    help='Equipment Unique Type Group name(s) for look-ups',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -151,7 +185,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment Unique Type name(s) for filtering',   # A brief description of what the argument does.
+    help='Equipment Unique Type name(s) for look-ups',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -163,7 +197,7 @@ parser.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment Instance ID(s) for filtering',   # A brief description of what the argument does.
+    help='Equipment Instance ID(s) for look-ups',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
     dest=None,   # The name of the attribute to be added to the object returned by parse_args().
     required=False)
@@ -201,18 +235,6 @@ parser___eq_gen_tp = \
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
-
-parser___eq_gen_tp.add_argument(
-    '--name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
-    const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
-    type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment General Type name(s) to filter',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
 
 
 # Equipment General Types: command sub-parsers
@@ -287,7 +309,7 @@ parser___eq_gen_tp___create = \
     )
 
 parser___eq_gen_tp___create.add_argument(
-    'names',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_gen_tp_names',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -792,11 +814,38 @@ parser___eq___update = \
 args = Namespace(**parser.parse_args().__dict__)
 
 
-args.eq_gen_tps = args.eq_gen_tps.split(',') if args.eq_gen_tps else []
-args.eq_data_flds = args.eq_data_flds.split(',') if args.eq_data_flds else []
-args.eq_unq_tp_grps = args.eq_unq_tp_grps.split(',') if args.eq_unq_tp_grps else []
-args.eq_unq_tps = args.eq_unq_tps.split(',') if args.eq_unq_tps else []
-args.eqs = args.eqs.split(',') if args.eqs else []
+assert args.lookup \
+    in (IN_LOOKUP,
+        CONTAINS_LOOKUP,
+        STARTSWITH_LOOKUP,
+        ENDSWITH_LOOKUP,
+        REGEX_LOOKUP)
+
+
+args.eq_gen_tps = \
+    map(clean_lower_str, args.eq_gen_tps.split(',')) \
+    if args.eq_gen_tps \
+    else []
+
+args.eq_data_flds = \
+    map(clean_lower_str, args.eq_data_flds.split(',')) \
+    if args.eq_data_flds \
+    else []
+
+args.eq_unq_tp_grps = \
+    map(clean_lower_str, args.eq_unq_tp_grps.split(',')) \
+    if args.eq_unq_tp_grps \
+    else []
+
+args.eq_unq_tps = \
+    map(clean_lower_str, args.eq_unq_tps.split(',')) \
+    if args.eq_unq_tps \
+    else []
+
+args.eqs = \
+    map(clean_lower_str, args.eqs.split(',')) \
+    if args.eqs \
+    else []
 
 
 assert args.fmt in (_JSON_FMT, _YAML_FMT)
@@ -824,27 +873,43 @@ rom = args[ROM_ARG_NAME]
 cmd = args[CMD_ARG_NAME]
 
 if rom == EQ_GEN_TP_ROM:
-    if cmd == COUNT_CMD:
-        results = \
-            PROJECT.data.EquipmentGeneralTypes.filter(
-                name__in=
-                    [clean_lower_str(eq_gen_tp_name)
-                     for eq_gen_tp_name in args.name.split(',')]) \
-            if args.name \
-            else PROJECT.data.EquipmentGeneralTypes.count()
+    if cmd in (COUNT_CMD, LIST_CMD):
+        if args.eq_gen_tps:
+            if args.lookup == IN_LOOKUP:
+                eq_gen_tps = \
+                    (PROJECT.data.EquipmentGeneralTypes.exclude(name=args.eq_gen_tps[0])
+                     if args.excl
+                     else PROJECT.data.EquipmentGeneralTypes.filter(name=args.eq_gen_tps[0])) \
+                    if len(args.eq_gen_tps) == 1 \
+                    else (PROJECT.data.EquipmentGeneralTypes.exclude(name__in=args.eq_gen_tps)
+                          if args.excl
+                          else PROJECT.data.EquipmentGeneralTypes.filter(name__in=args.eq_gen_tps))
 
-    elif cmd == LIST_CMD:
-        results = \
-            [str(eq_gen_tp)
-             for eq_gen_tp in
-                (PROJECT.data.EquipmentGeneralTypes.filter(
-                    name__in=
-                        [clean_lower_str(eq_gen_tp_name)
-                         for eq_gen_tp_name in args.name.split(',')])
-                 if args.name
-                 else PROJECT.data.EquipmentGeneralTypes.all())]
+            else:
+                for i, eq_gen_tp_name in enumerate(args.eq_gen_tps):
+                    _eq_gen_tps = \
+                        PROJECT.data.EquipmentGeneralTypes.filter(
+                            **{'name__{}'.format(args.lookup): eq_gen_tp_name})
 
-        print('{:,} Equipment General Type(s)'.format(len(results)))
+                    if i:
+                        eq_gen_tps |= _eq_gen_tps
+
+                    else:
+                        eq_gen_tps = _eq_gen_tps
+
+                if args.excl:
+                    eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all() - eq_gen_tps
+
+        else:
+            eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all()
+
+        if cmd == COUNT_CMD:
+            results = eq_gen_tps.count()
+
+        elif cmd == LIST_CMD:
+            results = map(str, eq_gen_tps)
+
+            print('{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         results = \
