@@ -628,6 +628,55 @@ parser___eq_unq_tp_grp___update = \
     )
 
 
+# Equipment Unique Type Groups: VIEW
+parser___eq_unq_tp_grp___view = \
+    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
+        name=VIEW_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+parser___eq_unq_tp_grp___view.add_argument(
+    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='name of Equipment General Type',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
+
+parser___eq_unq_tp_grp___view.add_argument(
+    'eq_unq_tp_grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='name of Equipment Unique Type Group to view',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
+
+
 # Equipment Unique Types
 parser___eq_unq_tp = \
     rom_sub_parsers.add_parser(
@@ -735,6 +784,55 @@ parser___eq_unq_tp___update = \
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
+
+
+# Equipment Unique Types: VIEW
+parser___eq_unq_tp___view = \
+    eq_unq_tp___cmd_sub_parsers.add_parser(
+        name=VIEW_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+parser___eq_unq_tp___view.add_argument(
+    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='name of Equipment General Type',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
+
+parser___eq_unq_tp___view.add_argument(
+    'eq_unq_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='name of Equipment Unique Type Group to view',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
 
 
 # Equipment Instances
@@ -979,22 +1077,22 @@ if rom == EQ_GEN_TP_ROM:
             PROJECT.equipment_general_type(
                 equipment_general_type_name=eq_gen_tp_name)
 
-        d = {'Equipment Unique Type Groups':
-                map(str,
-                    PROJECT.data.EquipmentUniqueTypeGroups.filter(
-                        equipment_general_type__name=eq_gen_tp_name)),
+        results = \
+            {str(eq_gen_tp):
+                {'Equipment Unique Type Groups':
+                    map(str,
+                        PROJECT.data.EquipmentUniqueTypeGroups.filter(
+                            equipment_general_type__name=eq_gen_tp_name)),
 
-             'Equipment Unique Types':
-                map(str,
-                    PROJECT.data.EquipmentUniqueTypes.filter(
-                        equipment_general_type__name=eq_gen_tp_name)),
+                 'Equipment Unique Types':
+                    map(str,
+                        PROJECT.data.EquipmentUniqueTypes.filter(
+                            equipment_general_type__name=eq_gen_tp_name)),
 
-             'Equipment Data Fields':
-                 map(str,
-                     PROJECT.data.EquipmentDataFields.filter(
-                         equipment_general_type__name=eq_gen_tp_name))}
-
-        results = {str(eq_gen_tp): d}
+                 'Equipment Data Fields':
+                    map(str,
+                        PROJECT.data.EquipmentDataFields.filter(
+                            equipment_general_type__name=eq_gen_tp_name))}}
 
 
 elif rom == EQ_DATA_FLD_ROM:
@@ -1103,9 +1201,32 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
         # TODO
         results = None
 
-    else:
+    elif cmd == UPDATE_CMD:
         # TODO
         results = None
+
+    else:
+        assert cmd == VIEW_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+
+        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
+        eq_unq_tp_grp_name = clean_lower_str(args.eq_unq_tp_grp)
+
+        eq_gen_tp_grp = \
+            PROJECT.equipment_unique_type_group(
+                equipment_general_type_name=eq_gen_tp_name,
+                equipment_unique_type_group_name=eq_unq_tp_grp_name)
+
+        results = \
+            {str(eq_gen_tp_grp):
+                {'Equipment General Type':
+                    str(eq_gen_tp_grp.equipment_general_type),
+
+                 'Equipment Unique Types':
+                     map(str,
+                         eq_gen_tp_grp.equipment_unique_type_groups.all())}}
+
 
 elif rom == EQ_UNQ_TP_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
@@ -1158,9 +1279,31 @@ elif rom == EQ_UNQ_TP_ROM:
         # TODO
         results = None
 
-    else:
+    elif cmd == UPDATE_CMD:
         # TODO
         results = None
+
+    else:
+        assert cmd == VIEW_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+
+        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
+        eq_unq_tp_name = clean_lower_str(args.eq_unq_tp)
+
+        eq_gen_tp = \
+            PROJECT.equipment_unique_type(
+                equipment_general_type_name=eq_gen_tp_name,
+                equipment_unique_type_name=eq_unq_tp_name)
+
+        results = \
+            {str(eq_gen_tp):
+                 {'Equipment General Type':
+                      str(eq_gen_tp.equipment_general_type),
+
+                  'Equipment Unique Type Groups':
+                      map(str,
+                          eq_gen_tp.groups.all())}}
 
 else:
     assert rom == EQ_INST_ROM, \
