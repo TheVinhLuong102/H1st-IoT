@@ -995,7 +995,7 @@ if args.output_file_path:
 
 
 if args.verbose:
-    print(args)
+    print('\n', args, sep='')
 
 
 # connect to database
@@ -1043,7 +1043,7 @@ if rom == EQ_GEN_TP_ROM:
         else:
             results = map(str, eq_gen_tps)
 
-            print('{:,} Equipment General Type(s)'.format(len(results)))
+            print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         results = \
@@ -1051,7 +1051,7 @@ if rom == EQ_GEN_TP_ROM:
                 equipment_general_type_name=eq_gen_tp_name))
              for eq_gen_tp_name in args.names]
 
-        print('{:,} Equipment General Type(s)'.format(len(results)))
+        print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == UPDATE_CMD:
         eq_gen_tp = \
@@ -1140,7 +1140,7 @@ elif rom == EQ_DATA_FLD_ROM:
         else:
             results = map(str, eq_data_flds)
 
-            print('{:,} Equipment Data Field(s)'.format(len(results)))
+            print('\n{:,} Equipment Data Field(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         # TODO
@@ -1195,7 +1195,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
         else:
             results = map(str, eq_unq_tp_grps)
 
-            print('{:,} Equipment Unique Type Group(s)'.format(len(results)))
+            print('\n{:,} Equipment Unique Type Group(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         # TODO
@@ -1273,7 +1273,7 @@ elif rom == EQ_UNQ_TP_ROM:
         else:
             results = map(str, eq_unq_tps)
 
-            print('{:,} Equipment General Type(s)'.format(len(results)))
+            print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         # TODO
@@ -1352,7 +1352,7 @@ else:
         else:
             results = map(str, eqs)
 
-            print('{:,} Equipment Instance(s)'.format(len(results)))
+            print('\n{:,} Equipment Instance(s)'.format(len(results)))
 
     elif cmd == CREATE_CMD:
         # TODO
@@ -1366,18 +1366,20 @@ else:
 if args.output_file_path:
     if args.output_format == _JSON_FMT:
         if args.verbose:
-            print(json.dumps(
-                obj=results,
-                skipkeys=False,
-                ensure_ascii=True,
-                check_circular=True,
-                allow_nan=True,
-                cls=None,
-                indent=2,
-                separators=None,
-                encoding='utf-8',
-                default=None,
-                sort_keys=True))
+            print('\n',
+                json.dumps(
+                    obj=results,
+                    skipkeys=False,
+                    ensure_ascii=True,
+                    check_circular=True,
+                    allow_nan=True,
+                    cls=None,
+                    indent=2,
+                    separators=None,
+                    encoding='utf-8',
+                    default=None,
+                    sort_keys=True),
+                sep='')
 
         json.dump(
             obj=results,
@@ -1395,7 +1397,60 @@ if args.output_file_path:
 
     else:
         if args.verbose:
-            print(yaml.safe_dump(
+            print('\n',
+                yaml.safe_dump(
+                    data=results,
+                    stream=None,
+                    default_style=None,
+                    default_flow_style=False,   # collections to be always serialized in the block style
+                    encoding='utf-8',
+                    explicit_start=None,
+                    explicit_end=None,
+                    version=None,
+                    tags=None,
+                    canonical=None,
+                    indent=2,
+                    width=None,
+                    allow_unicode=True,
+                    line_break=None),
+                sep='')
+
+        yaml.safe_dump(
+            data=results,
+            stream=None,
+            default_style=None,
+            default_flow_style=False,   # collections to be always serialized in the block style
+            encoding='utf-8',
+            explicit_start=None,
+            explicit_end=None,
+            version=None,
+            tags=None,
+            canonical=None,
+            indent=2,
+            width=None,
+            allow_unicode=True,
+            line_break=None)
+
+else:
+    if args.output_format == _JSON_FMT:
+        print('\n',
+            json.dumps(
+                obj=results,
+                skipkeys=False,
+                ensure_ascii=True,
+                check_circular=True,
+                allow_nan=True,
+                cls=None,
+                indent=2,
+                separators=None,
+                encoding='utf-8',
+                default=None,
+                sort_keys=True),
+            sep='')
+
+    else:
+        print('\n',
+            yaml.safe_dump(
                 data=results,
                 stream=None,
                 default_style=None,
@@ -1409,52 +1464,5 @@ if args.output_file_path:
                 indent=2,
                 width=None,
                 allow_unicode=True,
-                line_break=None))
-
-        print(yaml.safe_dump(
-            data=results,
-            stream=None,
-            default_style=None,
-            default_flow_style=False,   # collections to be always serialized in the block style
-            encoding='utf-8',
-            explicit_start=None,
-            explicit_end=None,
-            version=None,
-            tags=None,
-            canonical=None,
-            indent=2,
-            width=None,
-            allow_unicode=True,
-            line_break=None))
-
-else:
-    if args.output_format == _JSON_FMT:
-        print(json.dumps(
-            obj=results,
-            skipkeys=False,
-            ensure_ascii=True,
-            check_circular=True,
-            allow_nan=True,
-            cls=None,
-            indent=2,
-            separators=None,
-            encoding='utf-8',
-            default=None,
-            sort_keys=True))
-
-    else:
-        print(yaml.safe_dump(
-            data=results,
-            stream=None,
-            default_style=None,
-            default_flow_style=False,   # collections to be always serialized in the block style
-            encoding='utf-8',
-            explicit_start=None,
-            explicit_end=None,
-            version=None,
-            tags=None,
-            canonical=None,
-            indent=2,
-            width=None,
-            allow_unicode=True,
-            line_break=None))
+                line_break=None),
+            sep='')
