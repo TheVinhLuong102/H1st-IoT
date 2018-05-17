@@ -968,6 +968,10 @@ elif rom == EQ_DATA_FLD_ROM:
                 else eq_data_flds.filter(
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
+        if args.eq_unq_tp_lookups:
+            # TODO
+            pass
+
         if args.excl_lookups:
             eq_data_flds = PROJECT.data.EquipmentDataFields.difference(eq_data_flds)
 
@@ -1019,6 +1023,10 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                 else eq_unq_tp_grps.filter(
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
+        if args.eq_unq_tp_lookups:
+            # TODO
+            pass
+
         if args.excl_lookups:
             eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
 
@@ -1043,31 +1051,39 @@ elif rom == EQ_UNQ_TP_ROM:
         if args.eq_unq_tp_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tps = \
-                    (PROJECT.data.EquipmentUniqueTypes.exclude(name=args.eq_unq_tp_lookups[0])
-                     if args.excl_lookups
-                     else PROJECT.data.EquipmentUniqueTypes.filter(name=args.eq_unq_tp_lookups[0])) \
+                    PROJECT.data.EquipmentUniqueTypes.filter(name=args.eq_unq_tp_lookups[0]) \
                     if len(args.eq_unq_tp_lookups) == 1 \
-                    else (PROJECT.data.EquipmentUniqueTypes.exclude(name__in=args.eq_unq_tp_lookups)
-                          if args.excl_lookups
-                          else PROJECT.data.EquipmentUniqueTypes.filter(name__in=args.eq_unq_tp_lookups))
+                    else PROJECT.data.EquipmentUniqueTypes.filter(name__in=args.eq_unq_tp_lookups)
 
             else:
                 for i, eq_unq_tp_lookup in enumerate(args.eq_unq_tp_lookups):
-                    _eq_unq_tps = \
+                    _filtered_eq_unq_tps = \
                         PROJECT.data.EquipmentUniqueTypes.filter(
                             **{'name__{}'.format(args.lookup_type): eq_unq_tp_lookup})
 
                     if i:
-                        eq_unq_tps |= _eq_unq_tps
+                        eq_unq_tps |= _filtered_eq_unq_tps
 
                     else:
-                        eq_unq_tps = _eq_unq_tps
-
-                if args.excl_lookups:
-                    eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
+                        eq_unq_tps = _filtered_eq_unq_tps
 
         else:
             eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.all()
+
+        if args.eq_gen_tp_lookups:
+            eq_unq_tps = \
+                eq_unq_tps.filter(
+                    equipment_general_type__name=args.eq_gen_tp_lookups[0]) \
+                if len(args.eq_gen_tp_lookups) == 1 \
+                else eq_unq_tps.filter(
+                    equipment_general_type__name__in=args.eq_gen_tp_lookups)
+
+        if args.eq_unq_tp_grp_lookups:
+            # TODO
+            pass
+
+        if args.excl_lookups:
+            eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
 
         if cmd == COUNT_CMD:
             results = eq_unq_tps.count()
@@ -1093,32 +1109,38 @@ else:
     if cmd in (COUNT_CMD, LIST_CMD):
         if args.eq_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
-                eqs = \
-                    (PROJECT.data.EquipmentInstances.exclude(name=args.eq_lookups[0])
-                     if args.excl_lookups
-                     else PROJECT.data.EquipmentInstances.filter(name=args.eq_lookups[0])) \
+                eqs = PROJECT.data.EquipmentInstances.filter(name=args.eq_lookups[0]) \
                     if len(args.eq_lookups) == 1 \
-                    else (PROJECT.data.EquipmentInstances.exclude(name__in=args.eq_lookups)
-                          if args.excl_lookups
-                          else PROJECT.data.EquipmentInstances.filter(name__in=args.eq_lookups))
+                    else PROJECT.data.EquipmentInstances.filter(name__in=args.eq_lookups)
 
             else:
                 for i, eq_lookup in enumerate(args.eq_lookups):
-                    _eqs = \
+                    _filtered_eqs = \
                         PROJECT.data.EquipmentInstances.filter(
                             **{'name__{}'.format(args.lookup_type): eq_lookup})
 
                     if i:
-                        eqs |= _eqs
+                        eqs |= _filtered_eqs
 
                     else:
-                        eqs = _eqs
-
-                if args.excl_lookups:
-                    eqs = PROJECT.data.EquipmentInstances.difference(eqs)
+                        eqs = _filtered_eqs
 
         else:
             eqs = PROJECT.data.EquipmentInstances.all()
+
+        if args.eq_gen_tp_lookups:
+            eqs = eqs.filter(
+                    equipment_general_type__name=args.eq_gen_tp_lookups[0]) \
+                if len(args.eq_gen_tp_lookups) == 1 \
+                else eqs.filter(
+                    equipment_general_type__name__in=args.eq_gen_tp_lookups)
+
+        if args.eq_unq_tp_lookups:
+            # TODO
+            pass
+
+        if args.excl_lookups:
+            eqs = PROJECT.data.EquipmentInstances.difference(eqs)
 
         if cmd == COUNT_CMD:
             results = eqs.count()
