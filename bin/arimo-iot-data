@@ -107,6 +107,68 @@ parser.add_argument(
     required=False)
 
 
+# filters
+parser.add_argument(
+    '--eq-gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='Equipment General Type name(s) for filtering',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser.add_argument(
+    '--eq-data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='Equipment Data Field name(s) for filtering',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser.add_argument(
+    '--eq-unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='Equipment Unique Type Group name(s) for filtering',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser.add_argument(
+    '--eq-unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='Equipment Unique Type name(s) for filtering',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser.add_argument(
+    '--eq',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='Equipment Instance ID(s) for filtering',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+
 # ROM-CLASS SUB-PARSERS
 rom_class_sub_parsers = \
     parser.add_subparsers(
