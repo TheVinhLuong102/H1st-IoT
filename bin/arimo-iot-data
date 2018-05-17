@@ -1082,7 +1082,51 @@ else:
         '*** 1st SUB-COMMAND MUST BE AMONG: {}, {}, {}, {} & {}  ***'.format(
             EQ_GEN_TP_ROM, EQ_DATA_FLD_ROM, EQ_UNQ_TP_GRP_ROM, EQ_UNQ_TP_ROM, EQ_INST_ROM)
 
-    results = None
+    if cmd in (COUNT_CMD, LIST_CMD):
+        if args.eq_lookups:
+            if args.lookup == IN_LOOKUP:
+                eqs = \
+                    (PROJECT.data.EquipmentInstances.exclude(name=args.eq_lookups[0])
+                     if args.excl
+                     else PROJECT.data.EquipmentInstances.filter(name=args.eq_lookups[0])) \
+                    if len(args.eq_lookups) == 1 \
+                    else (PROJECT.data.EquipmentInstances.exclude(name__in=args.eq_lookups)
+                          if args.excl
+                          else PROJECT.data.EquipmentInstances.filter(name__in=args.eq_lookups))
+
+            else:
+                for i, eq_lookup in enumerate(args.eq_lookups):
+                    _eqs = \
+                        PROJECT.data.EquipmentInstances.filter(
+                            **{'name__{}'.format(args.lookup): eq_lookup})
+
+                    if i:
+                        eqs |= _eqs
+
+                    else:
+                        eqs = _eqs
+
+                if args.excl:
+                    eqs = PROJECT.data.EquipmentInstances.difference(eqs)
+
+        else:
+            eqs = PROJECT.data.EquipmentInstances.all()
+
+        if cmd == COUNT_CMD:
+            results = eqs.count()
+
+        else:
+            results = map(str, eqs)
+
+            print('{:,} Equipment Instance(s)'.format(len(results)))
+
+    elif cmd == CREATE_CMD:
+        # TODO
+        results = None
+
+    else:
+        # TODO
+        results = None
 
 
 if args.out:
