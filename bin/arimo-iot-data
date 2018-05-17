@@ -827,24 +827,24 @@ args.eq_gen_tp_lookups = \
     if args.eq_gen_tp_lookups \
     else []
 
-args.eq_data_flds = \
-    map(clean_lower_str, args.eq_data_flds.split(',')) \
-    if args.eq_data_flds \
+args.eq_data_fld_lookups = \
+    map(clean_lower_str, args.eq_data_fld_lookups.split(',')) \
+    if args.eq_data_fld_lookups \
     else []
 
-args.eq_unq_tp_grps = \
-    map(clean_lower_str, args.eq_unq_tp_grps.split(',')) \
-    if args.eq_unq_tp_grps \
+args.eq_unq_tp_grp_lookups = \
+    map(clean_lower_str, args.eq_unq_tp_grp_lookups.split(',')) \
+    if args.eq_unq_tp_grp_lookups \
     else []
 
-args.eq_unq_tps = \
-    map(clean_lower_str, args.eq_unq_tps.split(',')) \
-    if args.eq_unq_tps \
+args.eq_unq_tp_lookups = \
+    map(clean_lower_str, args.eq_unq_tp_lookups.split(',')) \
+    if args.eq_unq_tp_lookups \
     else []
 
-args.eqs = \
-    map(clean_lower_str, args.eqs.split(',')) \
-    if args.eqs \
+args.eq_lookups = \
+    map(clean_lower_str, args.eq_lookups.split(',')) \
+    if args.eq_lookups \
     else []
 
 
@@ -898,7 +898,7 @@ if rom == EQ_GEN_TP_ROM:
                         eq_gen_tps = _eq_gen_tps
 
                 if args.excl:
-                    eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all().difference(eq_gen_tps)
+                    eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.difference(eq_gen_tps)
 
         else:
             eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all()
@@ -937,7 +937,51 @@ if rom == EQ_GEN_TP_ROM:
         results = str(eq_gen_tp)
 
 elif rom == EQ_DATA_FLD_ROM:
-    results = None
+    if cmd in (COUNT_CMD, LIST_CMD):
+        if args.eq_data_fld_lookups:
+            if args.lookup == IN_LOOKUP:
+                eq_data_flds = \
+                    (PROJECT.data.EquipmentDataFields.exclude(name=args.eq_data_fld_lookups[0])
+                     if args.excl
+                     else PROJECT.data.EquipmentDataFields.filter(name=args.eq_data_fld_lookups[0])) \
+                    if len(args.eq_data_fld_lookups) == 1 \
+                    else (PROJECT.data.EquipmentDataFields.exclude(name__in=args.eq_data_fld_lookups)
+                          if args.excl
+                          else PROJECT.data.EquipmentDataFields.filter(name__in=args.eq_data_fld_lookups))
+
+            else:
+                for i, eq_data_fld_lookup in enumerate(args.eq_data_fld_lookups):
+                    _eq_data_flds = \
+                        PROJECT.data.EquipmentDataFields.filter(
+                            **{'name__{}'.format(args.lookup): eq_data_fld_lookup})
+
+                    if i:
+                        eq_data_flds |= _eq_data_flds
+
+                    else:
+                        eq_data_flds = _eq_data_flds
+
+                if args.excl:
+                    eq_data_flds = PROJECT.data.EquipmentDataFields.difference(eq_data_flds)
+
+        else:
+            eq_data_flds = PROJECT.data.EquipmentDataFields.all()
+
+        if cmd == COUNT_CMD:
+            results = eq_data_flds.count()
+
+        else:
+            results = map(str, eq_data_flds)
+
+            print('{:,} Equipment Data Field(s)'.format(len(results)))
+
+    elif cmd == CREATE_CMD:
+        # TODO
+        results = None
+
+    else:
+        # TODO
+        results = None
 
 elif rom == EQ_UNQ_TP_GRP_ROM:
     results = None
