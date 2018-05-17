@@ -992,31 +992,35 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
         if args.eq_unq_tp_grp_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tp_grps = \
-                    (PROJECT.data.EquipmentUniqueTypeGroups.exclude(name=args.eq_unq_tp_grp_lookups[0])
-                     if args.excl_lookups
-                     else PROJECT.data.EquipmentUniqueTypeGroups.filter(name=args.eq_unq_tp_grp_lookups[0])) \
+                    PROJECT.data.EquipmentUniqueTypeGroups.filter(name=args.eq_unq_tp_grp_lookups[0]) \
                     if len(args.eq_unq_tp_grp_lookups) == 1 \
-                    else (PROJECT.data.EquipmentUniqueTypeGroups.exclude(name__in=args.eq_unq_tp_grp_lookups)
-                          if args.excl_lookups
-                          else PROJECT.data.EquipmentUniqueTypeGroups.filter(name__in=args.eq_unq_tp_grp_lookups))
+                    else PROJECT.data.EquipmentUniqueTypeGroups.filter(name__in=args.eq_unq_tp_grp_lookups)
 
             else:
                 for i, eq_unq_tp_grp_lookup in enumerate(args.eq_unq_tp_grp_lookups):
-                    _eq_unq_tp_grps = \
+                    _filtered_eq_unq_tp_grps = \
                         PROJECT.data.EquipmentUniqueTypeGroups.filter(
                             **{'name__{}'.format(args.lookup_type): eq_unq_tp_grp_lookup})
 
                     if i:
-                        eq_unq_tp_grps |= _eq_unq_tp_grps
+                        eq_unq_tp_grps |= _filtered_eq_unq_tp_grps
 
                     else:
-                        eq_unq_tp_grps = _eq_unq_tp_grps
-
-                if args.excl_lookups:
-                    eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
+                        eq_unq_tp_grps = _filtered_eq_unq_tp_grps
 
         else:
             eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.all()
+
+        if args.eq_gen_tp_lookups:
+            eq_unq_tp_grps = \
+                eq_unq_tp_grps.filter(
+                    equipment_general_type__name=args.eq_gen_tp_lookups[0]) \
+                if len(args.eq_gen_tp_lookups) == 1 \
+                else eq_unq_tp_grps.filter(
+                    equipment_general_type__name__in=args.eq_gen_tp_lookups)
+
+        if args.excl_lookups:
+            eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
 
         if cmd == COUNT_CMD:
             results = eq_unq_tp_grps.count()
