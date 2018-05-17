@@ -1031,7 +1031,51 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
         results = None
 
 elif rom == EQ_UNQ_TP_ROM:
-    results = None
+    if cmd in (COUNT_CMD, LIST_CMD):
+        if args.eq_unq_tp_lookups:
+            if args.lookup == IN_LOOKUP:
+                eq_unq_tps = \
+                    (PROJECT.data.EquipmentUniqueTypes.exclude(name=args.eq_unq_tp_lookups[0])
+                     if args.excl
+                     else PROJECT.data.EquipmentUniqueTypes.filter(name=args.eq_unq_tp_lookups[0])) \
+                    if len(args.eq_unq_tp_lookups) == 1 \
+                    else (PROJECT.data.EquipmentUniqueTypes.exclude(name__in=args.eq_unq_tp_lookups)
+                          if args.excl
+                          else PROJECT.data.EquipmentUniqueTypes.filter(name__in=args.eq_unq_tp_lookups))
+
+            else:
+                for i, eq_unq_tp_lookup in enumerate(args.eq_unq_tp_lookups):
+                    _eq_unq_tps = \
+                        PROJECT.data.EquipmentUniqueTypes.filter(
+                            **{'name__{}'.format(args.lookup): eq_unq_tp_lookup})
+
+                    if i:
+                        eq_unq_tps |= _eq_unq_tps
+
+                    else:
+                        eq_unq_tps = _eq_unq_tps
+
+                if args.excl:
+                    eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
+
+        else:
+            eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.all()
+
+        if cmd == COUNT_CMD:
+            results = eq_unq_tps.count()
+
+        else:
+            results = map(str, eq_unq_tps)
+
+            print('{:,} Equipment General Type(s)'.format(len(results)))
+
+    elif cmd == CREATE_CMD:
+        # TODO
+        results = None
+
+    else:
+        # TODO
+        results = None
 
 else:
     assert rom == EQ_INST_ROM, \
