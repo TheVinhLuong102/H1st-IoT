@@ -35,6 +35,7 @@ COUNT_CMD = 'count'
 LIST_CMD = 'list'
 CREATE_CMD = 'create'
 UPDATE_CMD = 'update'
+VIEW_CMD = 'view'
 
 
 # MASTER PARSER
@@ -366,6 +367,41 @@ parser___eq_gen_tp___update.add_argument(
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='new Equipment General Type name to update',   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument
+    # required=True
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
+
+
+# Equipment General Types: VIEW
+parser___eq_gen_tp___view = \
+    eq_gen_tp___cmd_sub_parsers.add_parser(
+        name=VIEW_CMD,
+        prog=None,   # The name of the program (default: sys.argv[0])
+        usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
+        description=None,   # Text to display before the argument help (default: none)
+        epilog=None,   # Text to display after the argument help (default: none)
+        parents=[],   # A list of ArgumentParser objects whose arguments should also be included
+        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
+        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
+        conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+        add_help=True,   # Add a -h/--help option to the parser (default: True)
+        # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+    )
+
+
+parser___eq_gen_tp___view.add_argument(
+    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    # default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help='name of Equipment General Type to view',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
@@ -933,7 +969,11 @@ if rom == EQ_GEN_TP_ROM:
         results = str(eq_gen_tp)
 
     else:
-        eq_gen_tp_name = clean_lower_str(cmd)
+        assert cmd == VIEW_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+
+        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
 
         eq_gen_tp = \
             PROJECT.equipment_general_type(
