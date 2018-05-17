@@ -113,7 +113,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default='',   # The value produced if the argument is absent from the command line.
+    default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment General Type name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -125,7 +125,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default='',   # The value produced if the argument is absent from the command line.
+    default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Data Field name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -137,7 +137,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default='',   # The value produced if the argument is absent from the command line.
+    default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Unique Type Group name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -149,7 +149,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default='',   # The value produced if the argument is absent from the command line.
+    default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Unique Type name(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -161,7 +161,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default='',   # The value produced if the argument is absent from the command line.
+    default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help='Equipment Instance ID(s) for filtering',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
@@ -792,11 +792,11 @@ parser___eq___update = \
 args = Namespace(**parser.parse_args().__dict__)
 
 
-args.eq_gen_tps = args.eq_gen_tps.split(',')
-args.eq_data_flds = args.eq_data_flds.split(',')
-args.eq_unq_tp_grps = args.eq_unq_tp_grps.split(',')
-args.eq_unq_tps = args.eq_unq_tps.split(',')
-args.eqs = args.eqs.split(',')
+args.eq_gen_tps = args.eq_gen_tps.split(',') if args.eq_gen_tps else []
+args.eq_data_flds = args.eq_data_flds.split(',') if args.eq_data_flds else []
+args.eq_unq_tp_grps = args.eq_unq_tp_grps.split(',') if args.eq_unq_tp_grps else []
+args.eq_unq_tps = args.eq_unq_tps.split(',') if args.eq_unq_tps else []
+args.eqs = args.eqs.split(',') if args.eqs else []
 
 
 assert args.fmt in (_JSON_FMT, _YAML_FMT)
