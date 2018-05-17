@@ -1225,7 +1225,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
 
                  'Equipment Unique Types':
                      map(str,
-                         eq_gen_tp_grp.equipment_unique_type_groups.all())}}
+                         eq_gen_tp_grp.equipment_unique_types.all())}}
 
 
 elif rom == EQ_UNQ_TP_ROM:
