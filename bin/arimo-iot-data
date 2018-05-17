@@ -116,7 +116,7 @@ parser.add_argument(
 
 # lookups
 parser.add_argument(
-    '--excl',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--excl-lkup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action='store_true',   # The basic type of action to be taken when this argument is encountered at the command line.
     # nargs=None,   # The number of command-line arguments that should be consumed.
     # const=None,   # A constant value required by some action and nargs selections.
@@ -128,7 +128,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--lookup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -143,7 +143,7 @@ parser.add_argument(
 
 
 parser.add_argument(
-    '--gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup-gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -155,7 +155,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup-data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -167,7 +167,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup-unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -179,7 +179,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup-unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -191,7 +191,7 @@ parser.add_argument(
     required=False)
 
 parser.add_argument(
-    '--eq',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '--lkup-eq',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
