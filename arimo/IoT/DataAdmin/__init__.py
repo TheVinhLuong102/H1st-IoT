@@ -19,8 +19,6 @@ _STR_CLASSES = \
 
 
 class Project(object):
-    from arimo.util import Namespace
-
     CONFIG_DIR_PATH = os.path.expanduser('~/.arimo/IoT')
 
     _CAT_DATA_TYPE_NAME = 'cat'
@@ -33,13 +31,13 @@ class Project(object):
     _DATE_TIME_COL_NAME = 'date_time'
 
     _DEFAULT_PARAMS = \
-        Namespace(
-            db=Namespace(
+        dict(
+            db=dict(
                 admin=dict(
                     host=None, db_name=None,
                     user=None, password=None),
 
-            s3=Namespace(
+            s3=dict(
                 bucket=None,
 
                 access_key_id=None,
@@ -51,7 +49,7 @@ class Project(object):
         from arimo.util import Namespace
         from arimo.util.aws import s3
 
-        self.params = copy.deepcopy(self._DEFAULT_PARAMS)
+        self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
 
         assert self.params.db.admin.host \
