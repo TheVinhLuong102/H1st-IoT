@@ -919,11 +919,7 @@ if rom == EQ_GEN_TP_ROM:
 
         print('{:,} Equipment General Type(s)'.format(len(results)))
 
-    else:
-        assert cmd == UPDATE_CMD, \
-            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD)
-
+    elif cmd == UPDATE_CMD:
         eq_gen_tp = \
             PROJECT.equipment_general_type(
                 equipment_general_type_name=args.curr_name)
@@ -935,6 +931,30 @@ if rom == EQ_GEN_TP_ROM:
             eq_gen_tp.save()
 
         results = str(eq_gen_tp)
+
+    else:
+        eq_gen_tp_name = clean_lower_str(cmd)
+
+        eq_gen_tp = \
+            PROJECT.equipment_general_type(
+                equipment_general_type_name=eq_gen_tp_name)
+
+        eq_gen_tp_str = str(eq_gen_tp)
+
+        print(eq_gen_tp_str)
+
+        d = {'Equipment Unique Type Groups':
+                map(str,
+                    PROJECT.data.EquipmentUniqueTypeGroups.filter(
+                        equipment_general_type__name=eq_gen_tp_name)),
+
+             'Equipment Unique Types':
+                map(str,
+                    PROJECT.data.EquipmentUniqueTypes.filter(
+                        equipment_general_type__name=eq_gen_tp_name))}
+
+        results = {eq_gen_tp_str: d}
+
 
 elif rom == EQ_DATA_FLD_ROM:
     if cmd in (COUNT_CMD, LIST_CMD):
