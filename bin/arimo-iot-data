@@ -13,13 +13,13 @@ from arimo.IoT.DataAdmin import Project, project
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
-ROM_CLASS_ARG_NAME = 'rom_class'
+ROM_ARG_NAME = 'rom'
 
-EQ_GEN_TP_ROM_CLASS = 'eq-gen-tp'
-EQ_DATA_FLD_ROM_CLASS = 'eq-data-fld'
-EQ_UNQ_TP_GRP_ROM_CLASS = 'eq-unq-tp-grp'
-EQ_UNQ_TP_ROM_CLASS = 'eq-unq-tp'
-EQ_INST_ROM_CLASS = 'eq'
+EQ_GEN_TP_ROM = 'eq-gen-tp'
+EQ_DATA_FLD_ROM = 'eq-data-fld'
+EQ_UNQ_TP_GRP_ROM = 'eq-unq-tp-grp'
+EQ_UNQ_TP_ROM = 'eq-unq-tp'
+EQ_INST_ROM = 'eq'
 
 
 CMD_ARG_NAME = 'cmd'
@@ -169,8 +169,8 @@ parser.add_argument(
     required=False)
 
 
-# ROM-CLASS SUB-PARSERS
-rom_class_sub_parsers = \
+# ROM SUB-PARSERS
+rom_sub_parsers = \
     parser.add_subparsers(
         title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
         description=None,  # description for the sub-parser group in help output, by default None
@@ -178,7 +178,7 @@ rom_class_sub_parsers = \
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=ROM_CLASS_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        dest=ROM_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
         help='1st Sub-Command: a Relational Object Model (ROM) Class',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
@@ -186,8 +186,8 @@ rom_class_sub_parsers = \
 
 # Equipment General Types
 parser___eq_gen_tp = \
-    rom_class_sub_parsers.add_parser(
-        name=EQ_GEN_TP_ROM_CLASS,
+    rom_sub_parsers.add_parser(
+        name=EQ_GEN_TP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -354,8 +354,8 @@ parser___eq_gen_tp___update.add_argument(
 
 # Equipment Data Fields
 parser___eq_data_fld = \
-    rom_class_sub_parsers.add_parser(
-        name=EQ_DATA_FLD_ROM_CLASS,
+    rom_sub_parsers.add_parser(
+        name=EQ_DATA_FLD_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -463,8 +463,8 @@ parser___eq_data_fld___update = \
 
 # Equipment Unique Type Groups
 parser___eq_unq_tp_grp = \
-    rom_class_sub_parsers.add_parser(
-        name=EQ_UNQ_TP_GRP_ROM_CLASS,
+    rom_sub_parsers.add_parser(
+        name=EQ_UNQ_TP_GRP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -572,8 +572,8 @@ parser___eq_unq_tp_grp___update = \
 
 # Equipment Unique Types
 parser___eq_unq_tp = \
-    rom_class_sub_parsers.add_parser(
-        name=EQ_UNQ_TP_ROM_CLASS,
+    rom_sub_parsers.add_parser(
+        name=EQ_UNQ_TP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -681,8 +681,8 @@ parser___eq_unq_tp___update = \
 
 # Equipment Instances
 parser___eq = \
-    rom_class_sub_parsers.add_parser(
-        name=EQ_INST_ROM_CLASS,
+    rom_sub_parsers.add_parser(
+        name=EQ_INST_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description=None,   # Text to display before the argument help (default: none)
@@ -820,10 +820,10 @@ PROJECT = project(name=args.project)
 
 
 # work
-rom_class = args[ROM_CLASS_ARG_NAME]
+rom = args[ROM_ARG_NAME]
 cmd = args[CMD_ARG_NAME]
 
-if rom_class == EQ_GEN_TP_ROM_CLASS:
+if rom == EQ_GEN_TP_ROM:
     if cmd == COUNT_CMD:
         results = \
             PROJECT.data.EquipmentGeneralTypes.filter(
@@ -871,19 +871,19 @@ if rom_class == EQ_GEN_TP_ROM_CLASS:
 
         results = str(eq_gen_tp)
 
-elif rom_class == EQ_DATA_FLD_ROM_CLASS:
+elif rom == EQ_DATA_FLD_ROM:
     results = None
 
-elif rom_class == EQ_UNQ_TP_GRP_ROM_CLASS:
+elif rom == EQ_UNQ_TP_GRP_ROM:
     results = None
 
-elif rom_class == EQ_UNQ_TP_ROM_CLASS:
+elif rom == EQ_UNQ_TP_ROM:
     results = None
 
 else:
-    assert rom_class == EQ_INST_ROM_CLASS, \
+    assert rom == EQ_INST_ROM, \
         '*** 1st SUB-COMMAND MUST BE AMONG: {}, {}, {}, {} & {}  ***'.format(
-            EQ_GEN_TP_ROM_CLASS, EQ_DATA_FLD_ROM_CLASS, EQ_UNQ_TP_GRP_ROM_CLASS, EQ_UNQ_TP_ROM_CLASS, EQ_INST_ROM_CLASS)
+            EQ_GEN_TP_ROM, EQ_DATA_FLD_ROM, EQ_UNQ_TP_GRP_ROM, EQ_UNQ_TP_ROM, EQ_INST_ROM)
 
     results = None
 
