@@ -1707,9 +1707,7 @@ elif rom == EQ_DATA_FLD_ROM:
 
         eq_unq_tp_strs = \
             [str(eq_unq_tp)
-             for eq_unq_tp in
-             PROJECT.data.EquipmentUniqueTypes.filter(
-                 equipment_general_type__name=args.eq_gen_tp_name)]
+             for eq_unq_tp in eq_data_fld.equipment_unique_types]
 
         results = \
             {str(eq_data_fld):
