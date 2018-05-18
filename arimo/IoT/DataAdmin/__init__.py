@@ -143,7 +143,8 @@ class Project(object):
             self.data.EquipmentGeneralTypes.filter(
                 name=clean_lower_str(equipment_general_type_name))
 
-        assert len(equipment_general_types) == 1
+        assert len(equipment_general_types) == 1, \
+            '*** {} ***'.format(equipment_general_types)
 
         return equipment_general_types[0]
 
@@ -199,7 +200,8 @@ class Project(object):
                 equipment_general_type__name=equipment_general_type_name,
                 name=equipment_unique_type_group_name)
 
-        assert len(equipment_general_type_groups) == 1
+        assert len(equipment_general_type_groups) == 1, \
+            '*** {} ***'.format(equipment_general_type_groups)
 
         return equipment_general_type_groups[0]
 
@@ -255,7 +257,8 @@ class Project(object):
                 equipment_general_type__name=equipment_general_type_name,
                 name=equipment_unique_type_name)
 
-        assert len(equipment_unique_types) == 1
+        assert len(equipment_unique_types) == 1, \
+            '*** {} ***'.format(equipment_unique_types)
 
         return equipment_unique_types[0]
 
@@ -325,7 +328,8 @@ class Project(object):
                     else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
                 name=equipment_data_field_name)
 
-        assert len(equipment_data_fields) == 1
+        assert len(equipment_data_fields) == 1, \
+            '*** {} ***'.format(equipment_data_fields)
 
         return equipment_data_fields[0]
 
@@ -484,7 +488,8 @@ class Project(object):
                 equipment_general_type__name=equipment_general_type_name,
                 name=clean_lower_str(equipment_instance_name))
 
-        assert len(equipment_instances) == 1
+        assert len(equipment_instances) == 1, \
+            '*** {} ***'.format(equipment_instances)
 
         return equipment_instances[0]
 
