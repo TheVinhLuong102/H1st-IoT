@@ -1049,7 +1049,7 @@ if rom == EQ_GEN_TP_ROM:
         results = \
             [str(PROJECT.create_equipment_general_type(
                 equipment_general_type_name=eq_gen_tp_name))
-             for eq_gen_tp_name in args.names]
+             for eq_gen_tp_name in args.eq_gen_tp_names]
 
         print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
