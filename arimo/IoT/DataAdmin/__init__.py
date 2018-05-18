@@ -183,7 +183,7 @@ class Project(object):
                            for equipment_unique_type_name in equipment_unique_type_names_incl}) \
                     .difference(equipment_unique_type_names_excl, equipment_unique_type_names):
                 equipment_unique_types.append(
-                    self.equipment_unique_type(
+                    self.update_or_create_equipment_unique_type(
                         equipment_general_type_name=equipment_general_type_name,
                         equipment_unique_type_name=equipment_unique_type_name))
 
@@ -239,7 +239,7 @@ class Project(object):
                            for equipment_unique_type_group_name in equipment_unique_type_group_names_incl}) \
                     .difference(equipment_unique_type_group_names_excl, equipment_unique_type_group_names):
                 equipment_unique_type_groups.append(
-                    self.equipment_unique_type_group(
+                    self.update_or_create_equipment_unique_type_group(
                         equipment_general_type_name=equipment_general_type_name,
                         equipment_unique_type_group_name=equipment_unique_type_group_name))
 
