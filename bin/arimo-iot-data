@@ -1636,15 +1636,15 @@ elif rom == EQ_DATA_FLD_ROM:
                 eq_data_flds.filter(
                     nullable=False)
 
-        if args.eq_data_fld_lwr_num_null:
+        if args.eq_data_fld_lower_num_null:
             eq_data_flds = \
                 eq_data_flds.filter(
-                    lower_numeric_null=args.eq_data_fld_lwr_num_null)
+                    lower_numeric_null=args.eq_data_fld_lower_num_null)
 
-        if args.eq_data_fld_upr_num_null:
+        if args.eq_data_fld_upper_num_null:
             eq_data_flds = \
                 eq_data_flds.filter(
-                    upper_numeric_null=args.eq_data_fld_upr_num_null)
+                    upper_numeric_null=args.eq_data_fld_upper_num_null)
 
         if args.eq_data_fld_default:
             eq_data_flds = \
@@ -1681,11 +1681,11 @@ elif rom == EQ_DATA_FLD_ROM:
         if args.eq_data_fld_non_nullable:
             kwargs['nullable'] = False
 
-        if args.eq_data_fld_lwr_num_null:
-            kwargs['lower_numeric_null'] = args.eq_data_fld_lwr_num_null
+        if args.eq_data_fld_lower_num_null:
+            kwargs['lower_numeric_null'] = args.eq_data_fld_lower_num_null
 
-        if args.eq_data_fld_upr_num_null:
-            kwargs['upper_numeric_null'] = args.eq_data_fld_upr_num_null
+        if args.eq_data_fld_upper_num_null:
+            kwargs['upper_numeric_null'] = args.eq_data_fld_upper_num_null
 
         if args.eq_data_fld_default:
             kwargs['default_val'] = args.eq_data_fld_default
