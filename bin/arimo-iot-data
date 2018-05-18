@@ -1347,14 +1347,14 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                 equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
                 equipment_unique_type_names_incl=args.eq_unq_tp_lookups)
 
-        eq_gen_tp_grp_strs = \
-            [str(eq_gen_tp_grp)
-             for eq_gen_tp_grp in eq_gen_tp_grp.equipment_unique_types.all()]
+        eq_gen_tp_strs = \
+            [str(eq_gen_tp)
+             for eq_gen_tp in eq_gen_tp_grp.equipment_unique_types.all()]
 
         results = \
             {str(eq_gen_tp_grp):
                 {'Equipment General Type': str(eq_gen_tp_grp.equipment_general_type),
-                 '{:,} Equipment Unique Types'.format(len(eq_gen_tp_grp_strs)): eq_gen_tp_grp_strs}}
+                 '{:,} Equipment Unique Types'.format(len(eq_gen_tp_strs)): eq_gen_tp_strs}}
 
     else:
         assert cmd == VIEW_CMD, \
