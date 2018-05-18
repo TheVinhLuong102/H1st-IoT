@@ -1263,8 +1263,12 @@ elif rom == EQ_DATA_FLD_ROM:
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
         if args.eq_unq_tp_lookups:
-            # TODO
-            pass
+            eq_data_flds = \
+                eq_data_flds.filter(
+                    equipment_unique_types__name=args.eq_unq_tp_lookups[0]) \
+                if len(args.eq_unq_tp_lookups) == 1 \
+                else eq_data_flds.filter(
+                    equipment_unique_types__name__in=args.eq_unq_tp_lookups)
 
         if args.excl_lookups:
             eq_data_flds = PROJECT.data.EquipmentDataFields.difference(eq_data_flds)
@@ -1279,11 +1283,15 @@ elif rom == EQ_DATA_FLD_ROM:
 
             print('\n{:,} Equipment Data Field(s)'.format(len(results)))
 
-    elif cmd == CREATE_CMD:
+    elif cmd in (CREATE_CMD, UPDATE_CMD):
         # TODO
         results = None
 
     else:
+        assert cmd == VIEW_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+
         # TODO
         results = None
 
@@ -1505,8 +1513,18 @@ else:
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
         if args.eq_unq_tp_lookups:
-            # TODO
-            pass
+            eqs = eqs.filter(
+                    equipment_unique_type__name=args.eq_unq_tp_lookups[0]) \
+                if len(args.eq_unq_tp_lookups) == 1 \
+                else eqs.filter(
+                    equipment_unique_type__name__in=args.eq_unq_tp_lookups)
+
+        if args.eq_data_fld_lookups:
+            eqs = eqs.filter(
+                    data_fields__name=args.eq_data_fld_lookups[0]) \
+                if len(args.eq_data_fld_lookups) == 1 \
+                else eqs.filter(
+                    data_fields__name__in=args.eq_data_fld_lookups)
 
         if args.excl_lookups:
             eqs = PROJECT.data.EquipmentInstances.difference(eqs)
@@ -1519,11 +1537,15 @@ else:
 
             print('\n{:,} Equipment Instance(s)'.format(len(results)))
 
-    elif cmd == CREATE_CMD:
+    elif cmd in (CREATE_CMD, UPDATE_CMD):
         # TODO
         results = None
 
     else:
+        assert cmd == VIEW_CMD, \
+            '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
+                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+
         # TODO
         results = None
 
