@@ -1077,27 +1077,32 @@ assert args.lookup_type \
 
 
 args.eq_gen_tp_lookups = \
-    map(clean_lower_str, args.eq_gen_tp_lookups.split(',')) \
+    [clean_lower_str(eq_gen_tp_lookup)
+     for eq_gen_tp_lookup in args.eq_gen_tp_lookups.split(',')] \
     if args.eq_gen_tp_lookups \
     else []
 
 args.eq_data_fld_lookups = \
-    map(clean_lower_str, args.eq_data_fld_lookups.split(',')) \
+    [clean_lower_str(eq_data_fld_lookup)
+     for eq_data_fld_lookup in args.eq_data_fld_lookups.split(',')] \
     if args.eq_data_fld_lookups \
     else []
 
 args.eq_unq_tp_grp_lookups = \
-    map(clean_lower_str, args.eq_unq_tp_grp_lookups.split(',')) \
+    [clean_lower_str(eq_unq_tp_grp_lookup)
+     for eq_unq_tp_grp_lookup in args.eq_unq_tp_grp_lookups.split(',')] \
     if args.eq_unq_tp_grp_lookups \
     else []
 
 args.eq_unq_tp_lookups = \
-    map(clean_lower_str, args.eq_unq_tp_lookups.split(',')) \
+    [clean_lower_str(eq_unq_tp_lookup)
+     for eq_unq_tp_lookup in args.eq_unq_tp_lookups.split(',')] \
     if args.eq_unq_tp_lookups \
     else []
 
 args.eq_lookups = \
-    map(clean_lower_str, args.eq_lookups.split(',')) \
+    [clean_lower_str(eq_lookup)
+     for eq_lookup in args.eq_lookups.split(',')] \
     if args.eq_lookups \
     else []
 
@@ -1161,7 +1166,9 @@ if rom == EQ_GEN_TP_ROM:
             results = eq_gen_tps.count()
 
         else:
-            results = map(str, eq_gen_tps)
+            results = \
+                [str(eq_gen_tp)
+                 for eq_gen_tp in eq_gen_tps]
 
             print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
@@ -1198,22 +1205,29 @@ if rom == EQ_GEN_TP_ROM:
             PROJECT.equipment_general_type(
                 equipment_general_type_name=args.eq_gen_tp_name)
 
+        eq_unq_tp_grp_strs = \
+            [str(eq_unq_tp_grp)
+             for eq_unq_tp_grp in
+                PROJECT.data.EquipmentUniqueTypeGroups.filter(
+                    equipment_general_type__name=args.eq_gen_tp_name)]
+
+        eq_unq_tp_strs = \
+            [str(eq_unq_tp)
+             for eq_unq_tp in
+                PROJECT.data.EquipmentUniqueTypes.filter(
+                    equipment_general_type__name=args.eq_gen_tp_name)]
+
+        eq_data_fld_strs = \
+            [str(eq_data_fld)
+             for eq_data_fld in
+                PROJECT.data.EquipmentDataFields.filter(
+                    equipment_general_type__name=args.eq_gen_tp_name)]
+
         results = \
             {str(eq_gen_tp):
-                {'Equipment Unique Type Groups':
-                    map(str,
-                        PROJECT.data.EquipmentUniqueTypeGroups.filter(
-                            equipment_general_type__name=args.eq_gen_tp_name)),
-
-                 'Equipment Unique Types':
-                    map(str,
-                        PROJECT.data.EquipmentUniqueTypes.filter(
-                            equipment_general_type__name=args.eq_gen_tp_name)),
-
-                 'Equipment Data Fields':
-                    map(str,
-                        PROJECT.data.EquipmentDataFields.filter(
-                            equipment_general_type__name=args.eq_gen_tp_name))}}
+                {'{:,} Equipment Unique Type Groups'.format(len(eq_unq_tp_grp_strs)): eq_unq_tp_grp_strs,
+                 '{:,} Equipment Unique Types'.format(len(eq_unq_tp_strs)): eq_unq_tp_strs,
+                 '{:,} Equipment Data Fields'.format(len(eq_data_fld_strs)): eq_data_fld_strs}}
 
 
 elif rom == EQ_DATA_FLD_ROM:
@@ -1259,7 +1273,9 @@ elif rom == EQ_DATA_FLD_ROM:
             results = eq_data_flds.count()
 
         else:
-            results = map(str, eq_data_flds)
+            results = \
+                [str(eq_data_fld)
+                 for eq_data_fld in eq_data_flds]
 
             print('\n{:,} Equipment Data Field(s)'.format(len(results)))
 
@@ -1318,7 +1334,9 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
             results = eq_unq_tp_grps.count()
 
         else:
-            results = map(str, eq_unq_tp_grps)
+            results = \
+                [str(eq_unq_tp_grp)
+                 for eq_unq_tp_grp in eq_unq_tp_grps]
 
             print('\n{:,} Equipment Unique Type Group(s)'.format(len(results)))
 
@@ -1329,14 +1347,14 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                 equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
                 equipment_unique_type_names_incl=args.eq_unq_tp_lookups)
 
+        eq_gen_tp_grp_strs = \
+            [str(eq_gen_tp_grp)
+             for eq_gen_tp_grp in eq_gen_tp_grp.equipment_unique_types.all()]
+
         results = \
             {str(eq_gen_tp_grp):
-                {'Equipment General Type':
-                    str(eq_gen_tp_grp.equipment_general_type),
-
-                'Equipment Unique Types':
-                    map(str,
-                        eq_gen_tp_grp.equipment_unique_types.all())}}
+                {'Equipment General Type': str(eq_gen_tp_grp.equipment_general_type),
+                 '{:,} Equipment Unique Types'.format(len(eq_gen_tp_grp_strs)): eq_gen_tp_grp_strs}}
 
     else:
         assert cmd == VIEW_CMD, \
@@ -1351,14 +1369,14 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                 equipment_general_type_name=eq_gen_tp_name,
                 equipment_unique_type_group_name=eq_unq_tp_grp_name)
 
+        eq_unq_tp_strs = \
+            [str(eq_unq_tp)
+             for eq_unq_tp in eq_gen_tp_grp.equipment_unique_types]
+
         results = \
             {str(eq_gen_tp_grp):
-                {'Equipment General Type':
-                    str(eq_gen_tp_grp.equipment_general_type),
-
-                 'Equipment Unique Types':
-                     map(str,
-                         eq_gen_tp_grp.equipment_unique_types.all())}}
+                {'Equipment General Type': str(eq_gen_tp_grp.equipment_general_type),
+                 '{:,} Equipment Unique Types'.format(len(eq_unq_tp_strs)): eq_unq_tp_strs}}
 
 
 elif rom == EQ_UNQ_TP_ROM:
@@ -1408,9 +1426,11 @@ elif rom == EQ_UNQ_TP_ROM:
             results = eq_unq_tps.count()
 
         else:
-            results = map(str, eq_unq_tps)
+            results = \
+                [str(eq_unq_tp)
+                 for eq_unq_tp in eq_unq_tps]
 
-            print('\n{:,} Equipment General Type(s)'.format(len(results)))
+            print('\n{:,} Equipment Unique Type(s)'.format(len(results)))
 
     elif cmd in (CREATE_CMD, UPDATE_CMD):
         eq_unq_tp = \
@@ -1419,14 +1439,14 @@ elif rom == EQ_UNQ_TP_ROM:
                 equipment_unique_type_name=args.eq_unq_tp_name,
                 equipment_unique_type_group_names_incl=args.eq_unq_tp_grp_lookups)
 
+        eq_unq_grp_strs = \
+            [str(eq_unq_grp)
+             for eq_unq_grp in eq_unq_tp.groups.all()]
+
         results = \
             {str(eq_unq_tp):
-                {'Equipment General Type':
-                    str(eq_unq_tp.equipment_general_type),
-
-                 'Equipment Unique Type Groups':
-                    map(str,
-                        eq_unq_tp.groups.all())}}
+                {'Equipment General Type': str(eq_unq_tp.equipment_general_type),
+                 '{:,} Equipment Unique Type Groups'.format(len(eq_unq_grp_strs)): eq_unq_grp_strs}}
 
     else:
         assert cmd == VIEW_CMD, \
@@ -1441,14 +1461,14 @@ elif rom == EQ_UNQ_TP_ROM:
                 equipment_general_type_name=eq_gen_tp_name,
                 equipment_unique_type_name=eq_unq_tp_name)
 
+        eq_unq_tp_grp_strs = \
+            [str(eq_unq_tp_grp)
+             for eq_unq_tp_grp in eq_unq_tp.groups.all()]
+
         results = \
             {str(eq_unq_tp):
-                 {'Equipment General Type':
-                      str(eq_unq_tp.equipment_general_type),
-
-                  'Equipment Unique Type Groups':
-                      map(str,
-                          eq_unq_tp.groups.all())}}
+                {'Equipment General Type': str(eq_unq_tp.equipment_general_type),
+                 '{:,} Equipment Unique Type Groups'.format(len(eq_unq_tp_grp_strs)): eq_unq_tp_grp_strs}}
 
 else:
     assert rom == EQ_INST_ROM, \
@@ -1495,7 +1515,7 @@ else:
             results = eqs.count()
 
         else:
-            results = map(str, eqs)
+            results = [str(eq) for eq in eqs]
 
             print('\n{:,} Equipment Instance(s)'.format(len(results)))
 
