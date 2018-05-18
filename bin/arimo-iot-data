@@ -1293,12 +1293,20 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
             print('\n{:,} Equipment Unique Type Group(s)'.format(len(results)))
 
     elif cmd in (CREATE_CMD, UPDATE_CMD):
-        results = \
-            [str(PROJECT.update_or_create_equipment_unique_type_group(
-                    equipment_general_type_name=eq_gen_tp_name))
-                for eq_gen_tp_name in args.eq_gen_tp_names]
+        eq_gen_tp_grp = \
+            PROJECT.update_or_create_equipment_unique_type_group(
+                equipment_general_type_name=args.eq_gen_tp_name,
+                equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+                equipment_unique_type_names_incl=args.eq_unq_tp_lookups)
 
-        print('\n{:,} Equipment General Type(s)'.format(len(results)))
+        results = \
+            {str(eq_gen_tp_grp):
+                {'Equipment General Type':
+                    str(eq_gen_tp_grp.equipment_general_type),
+
+                'Equipment Unique Types':
+                    map(str,
+                        eq_gen_tp_grp.equipment_unique_types.all())}}
 
     else:
         assert cmd == VIEW_CMD, \
@@ -1375,8 +1383,20 @@ elif rom == EQ_UNQ_TP_ROM:
             print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
     elif cmd in (CREATE_CMD, UPDATE_CMD):
-        # TODO
-        results = None
+        eq_unq_tp = \
+            PROJECT.update_or_create_equipment_unique_type(
+                equipment_general_type_name=args.eq_gen_tp_name,
+                equipment_unique_type_name=args.eq_unq_tp_name,
+                equipment_unique_type_group_names_incl=args.eq_unq_tp_grp_lookups)
+
+        results = \
+            {str(eq_unq_tp):
+                {'Equipment General Type':
+                    str(eq_unq_tp.equipment_general_type),
+
+                 'Equipment Unique Type Groups':
+                    map(str,
+                        eq_unq_tp.groups.all())}}
 
     else:
         assert cmd == VIEW_CMD, \
@@ -1386,19 +1406,19 @@ elif rom == EQ_UNQ_TP_ROM:
         eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
         eq_unq_tp_name = clean_lower_str(args.eq_unq_tp)
 
-        eq_gen_tp = \
+        eq_unq_tp = \
             PROJECT.equipment_unique_type(
                 equipment_general_type_name=eq_gen_tp_name,
                 equipment_unique_type_name=eq_unq_tp_name)
 
         results = \
-            {str(eq_gen_tp):
+            {str(eq_unq_tp):
                  {'Equipment General Type':
-                      str(eq_gen_tp.equipment_general_type),
+                      str(eq_unq_tp.equipment_general_type),
 
                   'Equipment Unique Type Groups':
                       map(str,
-                          eq_gen_tp.groups.all())}}
+                          eq_unq_tp.groups.all())}}
 
 else:
     assert rom == EQ_INST_ROM, \
