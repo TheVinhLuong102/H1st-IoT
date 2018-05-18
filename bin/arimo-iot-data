@@ -395,7 +395,7 @@ parser___eq_gen_tp___view = \
 
 
 parser___eq_gen_tp___view.add_argument(
-    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_gen_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
@@ -1071,28 +1071,29 @@ if rom == EQ_GEN_TP_ROM:
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
                 COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
 
-        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
+        args.eq_gen_tp_name = \
+            clean_lower_str(args.eq_gen_tp_name)
 
         eq_gen_tp = \
             PROJECT.equipment_general_type(
-                equipment_general_type_name=eq_gen_tp_name)
+                equipment_general_type_name=args.eq_gen_tp_name)
 
         results = \
             {str(eq_gen_tp):
                 {'Equipment Unique Type Groups':
                     map(str,
                         PROJECT.data.EquipmentUniqueTypeGroups.filter(
-                            equipment_general_type__name=eq_gen_tp_name)),
+                            equipment_general_type__name=args.eq_gen_tp_name)),
 
                  'Equipment Unique Types':
                     map(str,
                         PROJECT.data.EquipmentUniqueTypes.filter(
-                            equipment_general_type__name=eq_gen_tp_name)),
+                            equipment_general_type__name=args.eq_gen_tp_name)),
 
                  'Equipment Data Fields':
                     map(str,
                         PROJECT.data.EquipmentDataFields.filter(
-                            equipment_general_type__name=eq_gen_tp_name))}}
+                            equipment_general_type__name=args.eq_gen_tp_name))}}
 
 
 elif rom == EQ_DATA_FLD_ROM:
