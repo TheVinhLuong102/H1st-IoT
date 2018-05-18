@@ -1705,6 +1705,17 @@ elif rom == EQ_DATA_FLD_ROM:
                 equipment_unique_type_names_incl=args.eq_unq_tp_lookups,
                 **kwargs)
 
+        eq_unq_tp_strs = \
+            [str(eq_unq_tp)
+             for eq_unq_tp in
+             PROJECT.data.EquipmentUniqueTypes.filter(
+                 equipment_general_type__name=args.eq_gen_tp_name)]
+
+        results = \
+            {str(eq_data_fld):
+                {'Equipment General Type': str(eq_data_fld.equipment_general_type),
+                 '{:,} Equipment Unique Types'.format(len(eq_unq_tp_strs)): eq_unq_tp_strs}}
+
     else:
         assert cmd == VIEW_CMD, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
