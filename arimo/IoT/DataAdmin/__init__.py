@@ -478,11 +478,11 @@ class Project(object):
 
         return equipment_instance
 
-    def equipment_instance(self, equipment_general_type_name, name):
+    def equipment_instance(self, equipment_general_type_name, equipment_instance_name):
         equipment_instances = \
             self.data.EquipmentInstances.filter(
                 equipment_general_type__name=equipment_general_type_name,
-                name=name)
+                name=clean_lower_str(equipment_instance_name))
 
         assert len(equipment_instances) == 1
 
