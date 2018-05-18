@@ -197,8 +197,8 @@ class Project(object):
     def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
         equipment_general_type_groups = \
             self.data.EquipmentUniqueTypeGroups.filter(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_unique_type_group_name)
+                equipment_general_type__name=clean_lower_str(equipment_general_type_name),
+                name=clean_lower_str(equipment_unique_type_group_name))
 
         assert len(equipment_general_type_groups) == 1, \
             '*** {} ***'.format(equipment_general_type_groups)
@@ -254,8 +254,8 @@ class Project(object):
     def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
         equipment_unique_types = \
             self.data.EquipmentUniqueTypes.filter(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_unique_type_name)
+                equipment_general_type__name=clean_lower_str(equipment_general_type_name),
+                name=clean_lower_str(equipment_unique_type_name))
 
         assert len(equipment_unique_types) == 1, \
             '*** {} ***'.format(equipment_unique_types)
@@ -321,12 +321,12 @@ class Project(object):
     def equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, control=False):
         equipment_data_fields = \
             self.data.EquipmentDataFields.filter(
-                equipment_general_type__name=equipment_general_type_name,
+                equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 equipment_data_field_type=
                     self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
                     if control
                     else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
-                name=equipment_data_field_name)
+                name=clean_lower_str(equipment_data_field_name))
 
         assert len(equipment_data_fields) == 1, \
             '*** {} ***'.format(equipment_data_fields)
@@ -485,7 +485,7 @@ class Project(object):
     def equipment_instance(self, equipment_general_type_name, equipment_instance_name):
         equipment_instances = \
             self.data.EquipmentInstances.filter(
-                equipment_general_type__name=equipment_general_type_name,
+                equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_instance_name))
 
         assert len(equipment_instances) == 1, \
