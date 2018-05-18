@@ -1184,8 +1184,12 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
         if args.eq_unq_tp_lookups:
-            # TODO
-            pass
+            eq_unq_tp_grps = \
+                eq_unq_tp_grps.filter(
+                    equipment_unique_types__name=args.eq_unq_tp_lookups[0]) \
+                if len(args.eq_unq_tp_lookups) == 1 \
+                else eq_unq_tp_grps.filter(
+                    equipment_unique_types__name__in=args.eq_unq_tp_lookups)
 
         if args.excl_lookups:
             eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
@@ -1262,8 +1266,12 @@ elif rom == EQ_UNQ_TP_ROM:
                     equipment_general_type__name__in=args.eq_gen_tp_lookups)
 
         if args.eq_unq_tp_grp_lookups:
-            # TODO
-            pass
+            eq_unq_tps = \
+                eq_unq_tps.filter(
+                    groups__name=args.eq_unq_tp_grp_lookups[0]) \
+                if len(args.eq_unq_tp_grp_lookups) == 1 \
+                else eq_unq_tps.filter(
+                    groups__name__in=args.eq_unq_tp_grp_lookups)
 
         if args.excl_lookups:
             eq_unq_tps = PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
