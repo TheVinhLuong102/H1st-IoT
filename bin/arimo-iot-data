@@ -1700,8 +1700,8 @@ elif rom == EQ_DATA_FLD_ROM:
             PROJECT.update_or_create_equipment_data_field(
                 equipment_general_type_name=args.eq_gen_tp_name,
                 equipment_data_field_name=args.eq_data_fld_name,
-                control=args.eq_data_fld_ctl,
-                cat=args.eq_data_fld_control,
+                control=args.eq_data_fld_control,
+                cat=args.eq_data_fld_cat,
                 equipment_unique_type_names_incl=args.eq_unq_tp_lookups,
                 **kwargs)
 
