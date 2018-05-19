@@ -35,7 +35,7 @@ class Project(object):
             db=dict(
                 admin=dict(
                     host=None, db_name=None,
-                    user=None, password=None),
+                    user=None, password=None)),
 
             s3=dict(
                 bucket=None,
@@ -43,7 +43,7 @@ class Project(object):
                 access_key_id=None,
                 secret_access_key=None,
 
-                equipment_data_dir_prefix='.arimo/PredMaint/EquipmentData')))
+                equipment_data_dir_prefix='.arimo/PredMaint/EquipmentData'))
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
