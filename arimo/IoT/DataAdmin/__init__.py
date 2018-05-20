@@ -495,7 +495,7 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _from_files=True, _spark=True,
+            _from_files=True, _spark=False,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
         from arimo.df.from_files import ArrowADF
