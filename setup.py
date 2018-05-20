@@ -34,7 +34,7 @@ setup(
     install_requires=
         [s.strip()
          for s in open(_REQUIREMENTS_FILE_NAME).readlines()
-         if s.startswith('#')],
+         if not s.startswith('#')],
     scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
 
 
