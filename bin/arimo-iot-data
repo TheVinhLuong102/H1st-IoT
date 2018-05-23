@@ -90,7 +90,7 @@ parser.add_argument(
 
 # project name
 parser.add_argument(
-    '--project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '-p', '--project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
