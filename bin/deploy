@@ -16,12 +16,28 @@ IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
 assert not os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
 
 
-arg_parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser()
 
-arg_parser.add_argument('--create', action='store_true')
-arg_parser.add_argument('--project', default='TEST')
+parser.add_argument(
+    'project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    nargs='?',   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
+    default=None,   # The value produced if the argument is absent from the command line.
+    type=str,   # The type to which the command-line argument should be converted.
+    help=None,   # A brief description of what the argument does.
+    metavar=None,  # A name for the argument in usage messages.
+    # dest='project',   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument ***
+    # required=False
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+)
 
-args = arg_parser.parse_args()
+parser.add_argument(
+    '--create',
+    action='store_true')
+
+args = parser.parse_args()
 
 
 iot_dataadmin_db_details_file_path = \
