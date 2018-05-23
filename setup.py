@@ -13,7 +13,7 @@ _REQUIREMENTS_FILE_NAME = 'requirements.txt'
 _metadata = \
     json.load(
         open(os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
+            os.path.dirname(__file__),
             _PACKAGE_NAMESPACE_NAME,
             _METADATA_FILE_NAME)))
 
