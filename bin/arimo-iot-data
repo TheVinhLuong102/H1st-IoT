@@ -13,6 +13,17 @@ from arimo.IoT.DataAdmin import Project, project
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
+_PACKAGE_NAMESPACE_NAME = 'arimo'
+_METADATA_FILE_NAME = 'metadata.json'
+
+_metadata = \
+    json.load(
+        open(os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            _PACKAGE_NAMESPACE_NAME,
+            _METADATA_FILE_NAME)))
+
+
 IN_LOOKUP_TYPE = 'in'
 CONTAINS_LOOKUP_TYPE = 'contains'
 STARTSWITH_LOOKUP_TYPE = 'startswith'
@@ -55,6 +66,26 @@ parser = \
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     )
+
+# version
+parser.add_argument(
+    '--version',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action='version',   # The basic type of action to be taken when this argument is encountered at the command line.
+    version=_metadata['VERSION'],
+    # nargs=None,   # The number of command-line arguments that should be consumed.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'nargs' ***
+    # const=None,   # A constant value required by some action and nargs selections.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'const' ***
+    default=None,   # The value produced if the argument is absent from the command line.
+    # type=str,   # The type to which the command-line argument should be converted.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'type' ***
+    help='version',   # A brief description of what the argument does.
+    # metavar=None,   # A name for the argument in usage messages.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'metavar' ***
+    dest='version',   # The name of the attribute to be added to the object returned by parse_args().
+    # required=False
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'required' ***
+)
 
 
 # project name
