@@ -135,8 +135,24 @@ parser.add_argument(
     required=False)
 
 
-# verbosity
-parser.add_argument(
+# quiet / verbose
+parser___quiet_verbose_mut_excl_grp = \
+    parser.add_mutually_exclusive_group(
+        required=False)
+
+parser___quiet_verbose_mut_excl_grp.add_argument(
+    '-q', '--quiet',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action='store_true',   # The basic type of action to be taken when this argument is encountered at the command line.
+    # nargs=None,   # The number of command-line arguments that should be consumed.
+    # const=None,   # A constant value required by some action and nargs selections.
+    default=False,   # The value produced if the argument is absent from the command line.
+    # type=None,   # The type to which the command-line argument should be converted.
+    help='whether to run in quiet mode',   # A brief description of what the argument does.
+    # metavar=None,  # A name for the argument in usage messages.
+    dest='quiet',   # The name of the attribute to be added to the object returned by parse_args().
+    required=False)
+
+parser___quiet_verbose_mut_excl_grp.add_argument(
     '-v', '--verbose',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     # nargs=None,   # The number of command-line arguments that should be consumed.
