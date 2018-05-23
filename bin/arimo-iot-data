@@ -54,7 +54,7 @@ parser = \
     argparse.ArgumentParser(
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
+        description='{} CLI'.format(Project.__qual_name__()),   # Text to display before the argument help (default: none)
         epilog=None,   # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
         formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
