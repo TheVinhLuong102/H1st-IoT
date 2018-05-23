@@ -63,13 +63,11 @@ if args.project:
         src=iot_dataadmin_db_details_file_path,
         dst=_DB_DETAILS_FILE_PATH)
 
-os.system(
-    'eb {} {}'.format(
-        'create' if args.create else 'deploy',
-        args.project))
+    os.system(
+        'eb {} {}'.format(
+            'create' if args.create else 'deploy',
+            args.project))
 
-
-if args.project:
     shutil.copyfile(
         src=IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH,
         dst=_DB_DETAILS_FILE_PATH)
@@ -77,3 +75,8 @@ if args.project:
     os.remove(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
 
     assert not os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+
+else:
+    os.system(
+        'eb {} TEST'.format(
+            'create' if args.create else 'deploy'))
