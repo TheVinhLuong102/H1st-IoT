@@ -40,13 +40,13 @@ EQ_UNQ_TP_ROM = 'unq-tp'
 EQ_INST_ROM = 'eq'
 
 
-CMD_ARG_NAME = 'cmd'
+DB_OP_ARG_NAME = 'db_op'
 
-COUNT_CMD = 'count'
-LIST_CMD = 'list'
-CREATE_CMD = 'create'
-UPDATE_CMD = 'update'
-VIEW_CMD = 'view'
+COUNT_DB_OP = 'count'
+LIST_DB_OP = 'list'
+CREATE_DB_OP = 'create'
+UPDATE_DB_OP = 'update'
+VIEW_DB_OP = 'view'
 
 
 # MASTER PARSER
@@ -54,23 +54,26 @@ parser = \
     argparse.ArgumentParser(
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description='{} CLI'.format(Project.__qual_name__()),   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} >>>'.format(Project.__qual_name__()),   # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {}'.format(Project.__qual_name__()),   # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=None,   # The global default value for arguments (default: None)
             # *** SUPPRESS cannot be used with store_true/store_false/store_const actions ***
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 # version
 parser.add_argument(
-    '--version',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    '-v', '--version',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action='version',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     version=_metadata['VERSION'],
     # nargs=None,   # The number of command-line arguments that should be consumed.
         # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'nargs' ***
@@ -79,57 +82,68 @@ parser.add_argument(
     default=None,   # The value produced if the argument is absent from the command line.
     # type=str,   # The type to which the command-line argument should be converted.
         # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'type' ***
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    # required=False,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'required' ***
     help='version',   # A brief description of what the argument does.
     # metavar=None,   # A name for the argument in usage messages.
         # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'metavar' ***
-    dest='version',   # The name of the attribute to be added to the object returned by parse_args().
-    # required=False
-        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'required' ***
+    dest='version'   # The name of the attribute to be added to the object returned by parse_args().
 )
 
 
-# project name
+# Project Name
 parser.add_argument(
     '-p', '--project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='{} <ProjectName> associated with "{}/<ProjectName>{}" config file (default: None, corresponding to default TEST project)'
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
+    help='{} <ProjectName> associated with "{}/<ProjectName>{}" config file'
         .format(Project.__qual_name__(), Project.CONFIG_DIR_PATH, _YAML_EXT),
         # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    dest='project',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='PROJECT_NAME',   # A name for the argument in usage messages.
+    dest='project'   # The name of the attribute to be added to the object returned by parse_args()
+)
 
 
 # output format
 parser.add_argument(
     '--fmt',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     default=_YAML_FMT,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='output format (default: {})'.format(_YAML_FMT.upper()),   # A brief description of what the argument does.
+    choices={_YAML_FMT, _JSON_FMT},   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
+    help='output format',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest='output_format',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    dest='output_format'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
 # output file
 parser.add_argument(
     '-o', '--out',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
-    type=str,   # The type to which the command-line argument should be converted.
-    help='path of file to dump output (default: None)',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    dest='output_file_path',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    type=argparse.FileType(mode='w'),   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
+    help='path of file to dump output',   # A brief description of what the argument does.
+    metavar='OUTPUT_FILE_PATH',  # A name for the argument in usage messages.
+    dest='output_file_path'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
 # quiet / verbose
@@ -140,129 +154,173 @@ parser___quiet_verbose_mut_excl_grp = \
 parser___quiet_verbose_mut_excl_grp.add_argument(
     '-q', '--quiet',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action='store_true',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     # nargs=None,   # The number of command-line arguments that should be consumed.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'nargs' ***
     # const=None,   # A constant value required by some action and nargs selections.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'const' ***
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
-    help='whether to run in quiet mode',   # A brief description of what the argument does.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'type' ***
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
+    help='run in quiet mode',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
-    dest='quiet',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'metavar' ***
+    dest='quiet'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___quiet_verbose_mut_excl_grp.add_argument(
-    '-v', '--verbose',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    # nargs=None,   # The number of command-line arguments that should be consumed.
-    # const=None,   # A constant value required by some action and nargs selections.
+    '-V', '--verbose',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs=None,   # The number of command-line arguments that should be consumed.
+    const=None,   # A constant value required by some action and nargs selections.
     type=int,   # The type to which the command-line argument should be converted.
-    choices={0, 1, 2},
+    choices=range(3),   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     default=0,   # The value produced if the argument is absent from the command line.
     help='verbosity level',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='verbose',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar=None,  # A name for the argument in usage messages.
+    dest='verbose'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
-# lookups
-parser.add_argument(
+# ROM Look-Ups
+parser___lookup_grp = \
+    parser.add_argument_group(
+        title='Relational Object Model (ROM) Look-Ups',
+        description='Relational Object Model (ROM) Look Ups')
+
+parser___lookup_grp.add_argument(
     '--excl-lkup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action='store_true',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     # nargs=None,   # The number of command-line arguments that should be consumed.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'nargs' ***
     # const=None,   # A constant value required by some action and nargs selections.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'const' ***
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'type' ***
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='whether to exclude looked-up ROM objects',   # A brief description of what the argument does.
     # metavar=None,  # A name for the argument in usage messages.
-    dest='excl_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'metavar' ***
+    dest='excl_lookups'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     default=IN_LOOKUP_TYPE,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='look-up method, 1 of "{}" (default), "{}", "{}", "{}" and "{}"'
-        .format(IN_LOOKUP_TYPE, CONTAINS_LOOKUP_TYPE, STARTSWITH_LOOKUP_TYPE, ENDSWITH_LOOKUP_TYPE, REGEX_LOOKUP_TYPE),
-        # A brief description of what the argument does.
+    choices=(IN_LOOKUP_TYPE, CONTAINS_LOOKUP_TYPE, STARTSWITH_LOOKUP_TYPE, ENDSWITH_LOOKUP_TYPE, REGEX_LOOKUP_TYPE),
+        # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
+    help='look-up method',   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
-    dest='lookup_type',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    dest='lookup_type'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup-gen-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment General Type name(s) for look-ups',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_gen_tp_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_GEN_TP_LOOKUP',  # A name for the argument in usage messages.
+    dest='eq_gen_tp_lookups'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup-data-fld',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field name(s) for look-ups',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_LOOKUP',  # A name for the argument in usage messages.
+    dest='eq_data_fld_lookups'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup-unq-tp-grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Unique Type Group name(s) for look-ups',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_unq_tp_grp_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_UNQ_TP_GRP_LOOKUP',  # A name for the argument in usage messages.
+    dest='eq_unq_tp_grp_lookups'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup-unq-tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Unique Type name(s) for look-ups',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_unq_tp_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_UNQ_TP_LOOKUP',  # A name for the argument in usage messages.
+    dest='eq_unq_tp_lookups'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
-parser.add_argument(
+parser___lookup_grp.add_argument(
     '--lkup-eq',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs=None,   # The number of command-line arguments that should be consumed.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
+    nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Instance ID(s) for look-ups',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_LOOKUP',  # A name for the argument in usage messages.
     dest='eq_lookups',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+)
 
 
 # ROM SUB-PARSERS
 rom_sub_parsers = \
     parser.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='1ST SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Relational Object Model (ROM) Class to {}/{}/{}/{}/{}'
+            .format(COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP),
+            # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
         dest=ROM_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='1st Sub-Command: a Relational Object Model (ROM) Class',   # help for sub-parser group in help output, by default None
+        help='name of Relational Object Model (ROM) Class to {}/{}/{}/{}/{}'
+            .format(COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP),
+            # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
@@ -273,172 +331,209 @@ parser___eq_gen_tp = \
         name=EQ_GEN_TP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} Equipment General Types >>>'.format(Project.__qual_name__()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} Equipment General Types'.format(Project.__qual_name__()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # other choice: 'resolve'
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
-# Equipment General Types: command sub-parsers
-eq_gen_tp___cmd_sub_parsers = \
+# Equipment General Types: database operation sub-parsers
+eq_gen_tp___db_op_sub_parsers = \
     parser___eq_gen_tp.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='2ND SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Database Operation on Equipment General Types',   # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='2nd Sub-Command: a Database Command',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
+        dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='database operation on Equipment General Types',   # help for sub-parser group in help output, by default None
     )
 
 
 # Equipment General Types: COUNT
 parser___eq_gen_tp___count = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=COUNT_CMD,
+    eq_gen_tp___db_op_sub_parsers.add_parser(
+        name=COUNT_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # other choice: 'resolve'
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment General Types: LIST
 parser___eq_gen_tp___list = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=LIST_CMD,
+    eq_gen_tp___db_op_sub_parsers.add_parser(
+        name=LIST_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # other choice: 'resolve'
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment General Types: CREATE
 parser___eq_gen_tp___create = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
+    eq_gen_tp___db_op_sub_parsers.add_parser(
+        name=CREATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,  # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_gen_tp___create.add_argument(
     'eq_gen_tp_names',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
+    action='store',   # The basic type of action to be taken when this argument is encountered at the command line.
+        # choices: 'store', 'store_const'/'store_true'/'store_false', 'append'/'append_const', 'count', 'help', 'version'
     nargs='+',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     default=[],   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='Equipment General Type names to create',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='name(s) of Equipment General Type(s) to create',   # A brief description of what the argument does.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment General Types: UPDATE
 parser___eq_gen_tp___update = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=UPDATE_CMD,
+    eq_gen_tp___db_op_sub_parsers.add_parser(
+        name=UPDATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,  # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_gen_tp___update.add_argument(
-    'curr_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'curr_eq_gen_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='current Equipment General Type name to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='current Equipment General Type name',   # A brief description of what the argument does.
+    metavar='CURR_EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
-
 parser___eq_gen_tp___update.add_argument(
-    'new_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'new_eq_gen_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='new Equipment General Type name to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='new Equipment General Type name',   # A brief description of what the argument does.
+    metavar='NEW_EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment General Types: VIEW
 parser___eq_gen_tp___view = \
-    eq_gen_tp___cmd_sub_parsers.add_parser(
-        name=VIEW_CMD,
+    eq_gen_tp___db_op_sub_parsers.add_parser(
+        name=VIEW_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,  # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
@@ -449,12 +544,13 @@ parser___eq_gen_tp___view.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='name of Equipment General Type to view',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='name of Equipment General Type',   # A brief description of what the argument does.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
@@ -464,16 +560,20 @@ parser___eq_data_fld = \
         name=EQ_DATA_FLD_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} Equipment Data Fields >>>'.format(Project.__qual_name__()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} Equipment Data Fields'.format(Project.__qual_name__()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,  # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_data_fld.add_argument(
@@ -483,10 +583,13 @@ parser___eq_data_fld.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Control',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_control',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    # metavar=None,   # A name for the argument in usage messages.
+    dest='eq_data_fld_control'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--msr',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -495,10 +598,13 @@ parser___eq_data_fld.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Measurement',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_measure',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    # metavar=None,   # A name for the argument in usage messages.
+    dest='eq_data_fld_measure'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--cat',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -507,10 +613,13 @@ parser___eq_data_fld.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Categorical',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_cat',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    # metavar=None,   # A name for the argument in usage messages.
+    dest='eq_data_fld_cat'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--num',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -519,10 +628,13 @@ parser___eq_data_fld.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Numerical',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_num',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    # metavar=None,   # A name for the argument in usage messages.
+    dest='eq_data_fld_num'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
 parser___eq_data_fld.add_argument(
@@ -532,10 +644,13 @@ parser___eq_data_fld.add_argument(
     # const=None,   # A constant value required by some action and nargs selections.
     default=False,   # The value produced if the argument is absent from the command line.
     # type=None,   # The type to which the command-line argument should be converted.
+    # choices=None,   # A container of the allowable values for the argument.
+        # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'choices' ***
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Non-Nullable',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_non_nullable',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    # metavar=None,   # A name for the argument in usage messages.
+    dest='eq_data_fld_non_nullable'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--lwr-num-null',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -544,10 +659,12 @@ parser___eq_data_fld.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=float,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Lower Numeric NULL',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_lower_numeric_null',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_LOWER_NUMERIC_NULL',   # A name for the argument in usage messages.
+    dest='eq_data_fld_lower_numeric_null'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--upr-num-null',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -556,10 +673,12 @@ parser___eq_data_fld.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=float,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Upper Numeric NULL',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_upper_numeric_null',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_UPPER_NUMERIC_NULL',   # A name for the argument in usage messages.
+    dest='eq_data_fld_upper_numeric_null'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--default',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -568,10 +687,12 @@ parser___eq_data_fld.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=float,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Default Value',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_default',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_DEFAULT',   # A name for the argument in usage messages.
+    dest='eq_data_fld_default'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--min',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -580,10 +701,12 @@ parser___eq_data_fld.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=float,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Min Value',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_min',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_MIN',   # A name for the argument in usage messages.
+    dest='eq_data_fld_min'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 parser___eq_data_fld.add_argument(
     '--max',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
@@ -592,81 +715,101 @@ parser___eq_data_fld.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     default=None,   # The value produced if the argument is absent from the command line.
     type=float,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    required=False,   # Whether or not the command-line option may be omitted (optionals only).
     help='Equipment Data Field(s): Max Value',   # A brief description of what the argument does.
-    # metavar=None,  # A name for the argument in usage messages.
-    dest='eq_data_fld_max',   # The name of the attribute to be added to the object returned by parse_args().
-    required=False)
+    metavar='EQ_DATA_FLD_MAX',   # A name for the argument in usage messages.
+    dest='eq_data_fld_max'   # The name of the attribute to be added to the object returned by parse_args().
+)
 
 
-# Equipment Data Fields: command sub-parsers
-eq_data_fld___cmd_sub_parsers = \
+# Equipment Data Fields: database operation sub-parsers
+eq_data_fld___db_op_sub_parsers = \
     parser___eq_data_fld.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='2ND SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Database Operation on Equipment Data Fields',  # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='2nd Sub-Command: a Database Command',   # help for sub-parser group in help output, by default None
+        dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='database operation on Equipment Data Fields',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment Data Fields: COUNT
 parser___eq_data_fld___count = \
-    eq_data_fld___cmd_sub_parsers.add_parser(
-        name=COUNT_CMD,
+    eq_data_fld___db_op_sub_parsers.add_parser(
+        name=COUNT_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Data Fields: LIST
 parser___eq_data_fld___list = \
-    eq_data_fld___cmd_sub_parsers.add_parser(
-        name=LIST_CMD,
+    eq_data_fld___db_op_sub_parsers.add_parser(
+        name=LIST_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Data Fields: CREATE
 parser___eq_data_fld___create = \
-    eq_data_fld___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
+    eq_data_fld___db_op_sub_parsers.add_parser(
+        name=CREATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_data_fld___create.add_argument(
@@ -676,12 +819,13 @@ parser___eq_data_fld___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_data_fld___create.add_argument(
@@ -691,31 +835,38 @@ parser___eq_data_fld___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Data Field to create',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_DATA_FLD_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Data Fields: UPDATE
 parser___eq_data_fld___update = \
-    eq_data_fld___cmd_sub_parsers.add_parser(
-        name=UPDATE_CMD,
+    eq_data_fld___db_op_sub_parsers.add_parser(
+        name=UPDATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_data_fld___update.add_argument(
@@ -725,12 +876,13 @@ parser___eq_data_fld___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_data_fld___update.add_argument(
@@ -740,31 +892,38 @@ parser___eq_data_fld___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Data Field to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_DATA_FLD_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Data Fields: VIEW
 parser___eq_data_fld___view = \
-    eq_data_fld___cmd_sub_parsers.add_parser(
-        name=VIEW_CMD,
+    eq_data_fld___db_op_sub_parsers.add_parser(
+        name=VIEW_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_data_fld___view.add_argument(
@@ -774,12 +933,13 @@ parser___eq_data_fld___view.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_data_fld___view.add_argument(
@@ -789,12 +949,13 @@ parser___eq_data_fld___view.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Data Field to view',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_DATA_FLD_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
@@ -804,87 +965,111 @@ parser___eq_unq_tp_grp = \
         name=EQ_UNQ_TP_GRP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
-# Equipment Unique Type Groups: command sub-parsers
-eq_unq_tp_grp___cmd_sub_parsers = \
+# Equipment Unique Type Groups: database operation sub-parsers
+eq_unq_tp_grp___db_op_sub_parsers = \
     parser___eq_unq_tp_grp.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='2ND SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Database Operation on Equipment Unique Type Groups',   # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='2nd Sub-Command: a Database Command',   # help for sub-parser group in help output, by default None
+        dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='database operation on Equipment Unique Type Groups',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment Unique Type Groups: COUNT
 parser___eq_unq_tp_grp___count = \
-    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
-        name=COUNT_CMD,
+    eq_unq_tp_grp___db_op_sub_parsers.add_parser(
+        name=COUNT_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Unique Type Groups: LIST
 parser___eq_unq_tp_grp___list = \
-    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
-        name=LIST_CMD,
+    eq_unq_tp_grp___db_op_sub_parsers.add_parser(
+        name=LIST_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Unique Type Groups: CREATE
 parser___eq_unq_tp_grp___create = \
-    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
+    eq_unq_tp_grp___db_op_sub_parsers.add_parser(
+        name=CREATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp_grp___create.add_argument(
@@ -894,12 +1079,13 @@ parser___eq_unq_tp_grp___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_unq_tp_grp___create.add_argument(
@@ -909,31 +1095,38 @@ parser___eq_unq_tp_grp___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Unique Type Group to create',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_UNQ_TP_GRP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Unique Type Groups: UPDATE
 parser___eq_unq_tp_grp___update = \
-    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
-        name=UPDATE_CMD,
+    eq_unq_tp_grp___db_op_sub_parsers.add_parser(
+        name=UPDATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp_grp___update.add_argument(
@@ -943,12 +1136,13 @@ parser___eq_unq_tp_grp___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_unq_tp_grp___update.add_argument(
@@ -958,61 +1152,70 @@ parser___eq_unq_tp_grp___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Unique Type Group to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_UNQ_TP_GRP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Unique Type Groups: VIEW
 parser___eq_unq_tp_grp___view = \
-    eq_unq_tp_grp___cmd_sub_parsers.add_parser(
-        name=VIEW_CMD,
+    eq_unq_tp_grp___db_op_sub_parsers.add_parser(
+        name=VIEW_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp_grp___view.add_argument(
-    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_gen_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='name of Equipment General Type',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-        # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
         # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='name of Equipment General Type',   # A brief description of what the argument does.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument ***
 )
 
 parser___eq_unq_tp_grp___view.add_argument(
-    'eq_unq_tp_grp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_unq_tp_grp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
-    help='name of Equipment Unique Type Group to view',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
-        # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
         # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
+    help='name of Equipment Unique Type Group to view',   # A brief description of what the argument does.
+    metavar='EQ_UNQ_TP_GRP_NAME',   # A name for the argument in usage messages.
+    # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
+        # *** DISABLED: ValueError: dest supplied twice for positional argument ***
 )
 
 
@@ -1022,87 +1225,111 @@ parser___eq_unq_tp = \
         name=EQ_UNQ_TP_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Types'
+            .format(Project.__qual_name__()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
-# Equipment Unique Types: command sub-parsers
-eq_unq_tp___cmd_sub_parsers = \
+# Equipment Unique Types: database operation sub-parsers
+eq_unq_tp___db_op_sub_parsers = \
     parser___eq_unq_tp.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='2ND SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Database Operation on Equipment Unique Types',   # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='2nd Sub-Command: a Database Command',   # help for sub-parser group in help output, by default None
+        dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='database operation on Equipment Unique Type',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment Unique Types: COUNT
 parser___eq_unq_tp___count = \
-    eq_unq_tp___cmd_sub_parsers.add_parser(
-        name=COUNT_CMD,
+    eq_unq_tp___db_op_sub_parsers.add_parser(
+        name=COUNT_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Unique Types: LIST
 parser___eq_unq_tp___list = \
-    eq_unq_tp___cmd_sub_parsers.add_parser(
-        name=LIST_CMD,
+    eq_unq_tp___db_op_sub_parsers.add_parser(
+        name=LIST_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Unique Types: CREATE
 parser___eq_unq_tp___create = \
-    eq_unq_tp___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
+    eq_unq_tp___db_op_sub_parsers.add_parser(
+        name=CREATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp___create.add_argument(
@@ -1112,12 +1339,13 @@ parser___eq_unq_tp___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_unq_tp___create.add_argument(
@@ -1127,31 +1355,38 @@ parser___eq_unq_tp___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Unique Type Group to create',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_UNQ_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Unique Types: UPDATE
 parser___eq_unq_tp___update = \
-    eq_unq_tp___cmd_sub_parsers.add_parser(
-        name=UPDATE_CMD,
+    eq_unq_tp___db_op_sub_parsers.add_parser(
+        name=UPDATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp___update.add_argument(
@@ -1161,12 +1396,13 @@ parser___eq_unq_tp___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_unq_tp___update.add_argument(
@@ -1176,61 +1412,70 @@ parser___eq_unq_tp___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Unique Type to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_UNQ_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Unique Types: VIEW
 parser___eq_unq_tp___view = \
-    eq_unq_tp___cmd_sub_parsers.add_parser(
-        name=VIEW_CMD,
+    eq_unq_tp___db_op_sub_parsers.add_parser(
+        name=VIEW_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq_unq_tp___view.add_argument(
-    'eq_gen_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_gen_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment General Type',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq_unq_tp___view.add_argument(
-    'eq_unq_tp',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
+    'eq_unq_tp_name',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs=None,   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Unique Type Group to view',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_UNQ_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
@@ -1240,87 +1485,111 @@ parser___eq = \
         name=EQ_INST_ROM,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} Equipment Instances >>>'
+            .format(Project.__qual_name__()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} Equipment Instances'
+            .format(Project.__qual_name__()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
-# Equipment Instances: command sub-parsers
-eq___cmd_sub_parsers = \
+# Equipment Instances: database operation sub-parsers
+eq___db_op_sub_parsers = \
     parser___eq.add_subparsers(
-        title=None,   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
-        description=None,  # description for the sub-parser group in help output, by default None
+        title='2ND SUB-COMMAND',   # title for the sub-parser group in help output; by default 'subcommands' if description is provided, otherwise uses title for positional arguments
+        description='Database Operation on Equipment Instances',   # description for the sub-parser group in help output, by default None
         prog=None,   # usage information that will be displayed with sub-command help, by default the name of the program and any positional arguments before the subparser argument
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        dest=CMD_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
-        help='2nd Sub-Command: a Database Command',   # help for sub-parser group in help output, by default None
+        dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
+        help='database operation on Equipment Instances',   # help for sub-parser group in help output, by default None
         metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
 # Equipment Instances: COUNT
 parser___eq___count = \
-    eq___cmd_sub_parsers.add_parser(
-        name=COUNT_CMD,
+    eq___db_op_sub_parsers.add_parser(
+        name=COUNT_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+            .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Instances: LIST
 parser___eq___list = \
-    eq___cmd_sub_parsers.add_parser(
-        name=LIST_CMD,
+    eq___db_op_sub_parsers.add_parser(
+        name=LIST_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+            .format(Project.__qual_name__(), LIST_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 
 # Equipment Instances: CREATE
 parser___eq___create = \
-    eq___cmd_sub_parsers.add_parser(
-        name=CREATE_CMD,
+    eq___db_op_sub_parsers.add_parser(
+        name=CREATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+            .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq___create.add_argument(
@@ -1330,12 +1599,13 @@ parser___eq___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq___create.add_argument(
@@ -1345,31 +1615,38 @@ parser___eq___create.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Instance to create',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Instances: UPDATE
 parser___eq___update = \
-    eq___cmd_sub_parsers.add_parser(
-        name=UPDATE_CMD,
+    eq___db_op_sub_parsers.add_parser(
+        name=UPDATE_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+            .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq___update.add_argument(
@@ -1379,12 +1656,13 @@ parser___eq___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq___update.add_argument(
@@ -1394,31 +1672,38 @@ parser___eq___update.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Instance to update',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
 # Equipment Instances: VIEW
 parser___eq___view = \
-    eq___cmd_sub_parsers.add_parser(
-        name=VIEW_CMD,
+    eq___db_op_sub_parsers.add_parser(
+        name=VIEW_DB_OP,
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
-        description=None,   # Text to display before the argument help (default: none)
-        epilog=None,   # Text to display after the argument help (default: none)
+        description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display before the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+            .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
+            # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
-        formatter_class=argparse.HelpFormatter,  # A class for customizing the help output
+        formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
-        fromfile_prefix_chars=None,   # The set of characters that prefix files from which additional arguments should be read (default: None)
+        fromfile_prefix_chars='@',   # The set of characters that prefix files from which additional arguments should be read (default: None)
         argument_default=argparse.SUPPRESS,   # The global default value for arguments (default: None)
         conflict_handler='error',   # The strategy for resolving conflicting optionals (usually unnecessary)
+            # *** other choice: 'resolve' ***
         add_help=True,   # Add a -h/--help option to the parser (default: True)
         # allow_abbrev=True   # Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
+            # *** ADDED FROM PY3.5 ***
     )
 
 parser___eq___view.add_argument(
@@ -1428,12 +1713,13 @@ parser___eq___view.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='Equipment General Type name',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_GEN_TP_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 parser___eq___view.add_argument(
@@ -1443,12 +1729,13 @@ parser___eq___view.add_argument(
     const=None,   # A constant value required by some action and nargs selections.
     # default=None,   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
+    choices=None,   # A container of the allowable values for the argument.
+    # required=True,   # Whether or not the command-line option may be omitted (optionals only).
+        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
     help='name of Equipment Instance to view',   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
+    metavar='EQ_NAME',   # A name for the argument in usage messages.
     # dest=None,   # The name of the attribute to be added to the object returned by parse_args().
         # *** DISABLED: ValueError: dest supplied twice for positional argument
-    # required=True
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
 )
 
 
@@ -1466,33 +1753,23 @@ assert args.lookup_type \
 
 args.eq_gen_tp_lookups = \
     [clean_lower_str(eq_gen_tp_lookup)
-     for eq_gen_tp_lookup in args.eq_gen_tp_lookups.split(',')] \
-    if args.eq_gen_tp_lookups \
-    else []
+     for eq_gen_tp_lookup in args.eq_gen_tp_lookups]
 
 args.eq_data_fld_lookups = \
     [clean_lower_str(eq_data_fld_lookup)
-     for eq_data_fld_lookup in args.eq_data_fld_lookups.split(',')] \
-    if args.eq_data_fld_lookups \
-    else []
+     for eq_data_fld_lookup in args.eq_data_fld_lookups]
 
 args.eq_unq_tp_grp_lookups = \
     [clean_lower_str(eq_unq_tp_grp_lookup)
-     for eq_unq_tp_grp_lookup in args.eq_unq_tp_grp_lookups.split(',')] \
-    if args.eq_unq_tp_grp_lookups \
-    else []
+     for eq_unq_tp_grp_lookup in args.eq_unq_tp_grp_lookups]
 
 args.eq_unq_tp_lookups = \
     [clean_lower_str(eq_unq_tp_lookup)
-     for eq_unq_tp_lookup in args.eq_unq_tp_lookups.split(',')] \
-    if args.eq_unq_tp_lookups \
-    else []
+     for eq_unq_tp_lookup in args.eq_unq_tp_lookups]
 
 args.eq_lookups = \
     [clean_lower_str(eq_lookup)
-     for eq_lookup in args.eq_lookups.split(',')] \
-    if args.eq_lookups \
-    else []
+     for eq_lookup in args.eq_lookups]
 
 
 assert args.output_format in (_JSON_FMT, _YAML_FMT)
@@ -1517,10 +1794,10 @@ PROJECT = project(name=args.project)
 
 # work
 rom = args[ROM_ARG_NAME]
-cmd = args[CMD_ARG_NAME]
+db_op = args[DB_OP_ARG_NAME]
 
 if rom == EQ_GEN_TP_ROM:
-    if cmd in (COUNT_CMD, LIST_CMD):
+    if db_op in (COUNT_DB_OP, LIST_DB_OP):
         if args.eq_gen_tp_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_gen_tps = \
@@ -1551,7 +1828,7 @@ if rom == EQ_GEN_TP_ROM:
         else:
             eq_gen_tps = PROJECT.data.EquipmentGeneralTypes.all()
 
-        if cmd == COUNT_CMD:
+        if db_op == COUNT_DB_OP:
             results = eq_gen_tps.count()
 
         else:
@@ -1561,7 +1838,7 @@ if rom == EQ_GEN_TP_ROM:
 
             print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
-    elif cmd == CREATE_CMD:
+    elif db_op == CREATE_DB_OP:
         results = \
             [str(PROJECT.create_equipment_general_type(
                 equipment_general_type_name=eq_gen_tp_name))
@@ -1569,23 +1846,23 @@ if rom == EQ_GEN_TP_ROM:
 
         print('\n{:,} Equipment General Type(s)'.format(len(results)))
 
-    elif cmd == UPDATE_CMD:
+    elif db_op == UPDATE_DB_OP:
         eq_gen_tp = \
             PROJECT.equipment_general_type(
-                equipment_general_type_name=args.curr_name)
+                equipment_general_type_name=args.curr_eq_gen_tp_name)
 
-        new_name = clean_lower_str(args.new_name)
+        new_eq_gen_tp_name = clean_lower_str(args.new_eq_gen_tp_name)
 
-        if new_name != eq_gen_tp.name:
-            eq_gen_tp.name = new_name
+        if new_eq_gen_tp_name != eq_gen_tp.name:
+            eq_gen_tp.name = new_eq_gen_tp_name
             eq_gen_tp.save()
 
         results = str(eq_gen_tp)
 
     else:
-        assert cmd == VIEW_CMD, \
+        assert db_op == VIEW_DB_OP, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+                COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
         args.eq_gen_tp_name = \
             clean_lower_str(args.eq_gen_tp_name)
@@ -1620,7 +1897,7 @@ if rom == EQ_GEN_TP_ROM:
 
 
 elif rom == EQ_DATA_FLD_ROM:
-    if cmd in (COUNT_CMD, LIST_CMD):
+    if db_op in (COUNT_DB_OP, LIST_DB_OP):
         if args.eq_data_fld_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_data_flds = \
@@ -1713,7 +1990,7 @@ elif rom == EQ_DATA_FLD_ROM:
             eq_data_flds = \
                 PROJECT.data.EquipmentDataFields.difference(eq_data_flds)
 
-        if cmd == COUNT_CMD:
+        if db_op == COUNT_DB_OP:
             results = eq_data_flds.count()
 
         else:
@@ -1723,7 +2000,7 @@ elif rom == EQ_DATA_FLD_ROM:
 
             print('\n{:,} Equipment Data Field(s)'.format(len(results)))
 
-    elif cmd in (CREATE_CMD, UPDATE_CMD):
+    elif db_op in (CREATE_DB_OP, UPDATE_DB_OP):
         kwargs = {}
 
         if args.eq_data_fld_non_nullable:
@@ -1763,9 +2040,9 @@ elif rom == EQ_DATA_FLD_ROM:
                  '{:,} Equipment Unique Types'.format(len(eq_unq_tp_strs)): eq_unq_tp_strs}}
 
     else:
-        assert cmd == VIEW_CMD, \
+        assert db_op == VIEW_DB_OP, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+                COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
         eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
         eq_data_fld_name = clean_lower_str(args.eq_data_fld_name)
@@ -1786,7 +2063,7 @@ elif rom == EQ_DATA_FLD_ROM:
                   '{:,} Equipment Unique Type Groups'.format(len(eq_unq_tp_strs)): eq_unq_tp_strs}}
 
 elif rom == EQ_UNQ_TP_GRP_ROM:
-    if cmd in (COUNT_CMD, LIST_CMD):
+    if db_op in (COUNT_DB_OP, LIST_DB_OP):
         if args.eq_unq_tp_grp_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tp_grps = \
@@ -1828,7 +2105,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
         if args.excl_lookups:
             eq_unq_tp_grps = PROJECT.data.EquipmentUniqueTypeGroups.difference(eq_unq_tp_grps)
 
-        if cmd == COUNT_CMD:
+        if db_op == COUNT_DB_OP:
             results = eq_unq_tp_grps.count()
 
         else:
@@ -1838,7 +2115,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
 
             print('\n{:,} Equipment Unique Type Group(s)'.format(len(results)))
 
-    elif cmd in (CREATE_CMD, UPDATE_CMD):
+    elif db_op in (CREATE_DB_OP, UPDATE_DB_OP):
         eq_gen_tp_grp = \
             PROJECT.update_or_create_equipment_unique_type_group(
                 equipment_general_type_name=args.eq_gen_tp_name,
@@ -1855,9 +2132,9 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
                  '{:,} Equipment Unique Types'.format(len(eq_gen_tp_strs)): eq_gen_tp_strs}}
 
     else:
-        assert cmd == VIEW_CMD, \
+        assert db_op == VIEW_DB_OP, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+                COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
         eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
         eq_unq_tp_grp_name = clean_lower_str(args.eq_unq_tp_grp)
@@ -1878,7 +2155,7 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
 
 
 elif rom == EQ_UNQ_TP_ROM:
-    if cmd in (COUNT_CMD, LIST_CMD):
+    if db_op in (COUNT_DB_OP, LIST_DB_OP):
         if args.eq_unq_tp_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eq_unq_tps = \
@@ -1921,7 +2198,7 @@ elif rom == EQ_UNQ_TP_ROM:
             eq_unq_tps = \
                 PROJECT.data.EquipmentUniqueTypes.difference(eq_unq_tps)
 
-        if cmd == COUNT_CMD:
+        if db_op == COUNT_DB_OP:
             results = eq_unq_tps.count()
 
         else:
@@ -1931,7 +2208,7 @@ elif rom == EQ_UNQ_TP_ROM:
 
             print('\n{:,} Equipment Unique Type(s)'.format(len(results)))
 
-    elif cmd in (CREATE_CMD, UPDATE_CMD):
+    elif db_op in (CREATE_DB_OP, UPDATE_DB_OP):
         eq_unq_tp = \
             PROJECT.update_or_create_equipment_unique_type(
                 equipment_general_type_name=args.eq_gen_tp_name,
@@ -1948,9 +2225,9 @@ elif rom == EQ_UNQ_TP_ROM:
                  '{:,} Equipment Unique Type Groups'.format(len(eq_unq_grp_strs)): eq_unq_grp_strs}}
 
     else:
-        assert cmd == VIEW_CMD, \
+        assert db_op == VIEW_DB_OP, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+                COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
         eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
         eq_unq_tp_name = clean_lower_str(args.eq_unq_tp)
@@ -1974,7 +2251,7 @@ else:
         '*** 1st SUB-COMMAND MUST BE AMONG: {}, {}, {}, {} & {}  ***'.format(
             EQ_GEN_TP_ROM, EQ_DATA_FLD_ROM, EQ_UNQ_TP_GRP_ROM, EQ_UNQ_TP_ROM, EQ_INST_ROM)
 
-    if cmd in (COUNT_CMD, LIST_CMD):
+    if db_op in (COUNT_DB_OP, LIST_DB_OP):
         if args.eq_lookups:
             if args.lookup_type == IN_LOOKUP_TYPE:
                 eqs = PROJECT.data.EquipmentInstances.filter(name=args.eq_lookups[0]) \
@@ -2020,7 +2297,7 @@ else:
         if args.excl_lookups:
             eqs = PROJECT.data.EquipmentInstances.difference(eqs)
 
-        if cmd == COUNT_CMD:
+        if db_op == COUNT_DB_OP:
             results = eqs.count()
 
         else:
@@ -2028,7 +2305,7 @@ else:
 
             print('\n{:,} Equipment Instance(s)'.format(len(results)))
 
-    elif cmd in (CREATE_CMD, UPDATE_CMD):
+    elif db_op in (CREATE_DB_OP, UPDATE_DB_OP):
         eq = PROJECT.update_or_create_equipment_instance(
             equipment_general_type_name=args.eq_gen_tp_name,
             name=args.eq_name,
@@ -2040,9 +2317,9 @@ else:
                   'Equipment Unique Type': str(eq.equipment_unique_type)}}
 
     else:
-        assert cmd == VIEW_CMD, \
+        assert db_op == VIEW_DB_OP, \
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
-                COUNT_CMD, LIST_CMD, CREATE_CMD, UPDATE_CMD, VIEW_CMD)
+                COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
         eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
         eq_name = clean_lower_str(args.eq_name)
