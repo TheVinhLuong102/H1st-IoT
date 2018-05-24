@@ -357,9 +357,9 @@ eq_gen_tp___db_op_sub_parsers = \
         parser_class=argparse.ArgumentParser,   # class which will be used to create sub-parser instances, by default the class of the current parser (e.g. ArgumentParser)
         # action=None,   # the basic type of action to be taken when this argument is encountered at the command line
             # *** DISABLED: TypeError: __init__() got an unexpected keyword argument 'prog' ***
-        metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
         dest=DB_OP_ARG_NAME,   # name of the attribute under which sub-command name will be stored; by default None and no value is stored
         help='database operation on Equipment General Types',   # help for sub-parser group in help output, by default None
+        metavar=None   # string presenting available sub-commands in help; by default it is None and presents sub-commands in form {cmd1, cmd2, ..}
     )
 
 
