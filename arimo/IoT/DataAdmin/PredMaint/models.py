@@ -2,13 +2,14 @@ from django.db.models import \
     Model, \
     BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
-
 from django.contrib.postgres.fields import JSONField
+from django.utils.encoding import python_2_unicode_compatible
 
 from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentInstance
 from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
+@python_2_unicode_compatible
 class Blueprint(Model):
     RELATED_NAME = 'blueprints'
     RELATED_QUERY_NAME = 'blueprint'
@@ -72,7 +73,7 @@ class Blueprint(Model):
             '-trained_to_date', \
             '-timestamp'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'Blueprint "{}" ({}){}'.format(
             self.uuid,
             self.timestamp,
@@ -80,6 +81,7 @@ class Blueprint(Model):
                else ' (INACTIVE)')
 
 
+@python_2_unicode_compatible
 class EquipmentProblemType(Model):
     name = \
         CharField(
@@ -91,7 +93,7 @@ class EquipmentProblemType(Model):
     class Meta:
         ordering = 'name',
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqProbTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
@@ -99,6 +101,7 @@ class EquipmentProblemType(Model):
         return super(EquipmentProblemType, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentProblemPeriod(Model):
     RELATED_NAME = 'equipment_problem_instances'
     RELATED_QUERY_NAME = 'equipment_problem_instance'
@@ -135,13 +138,14 @@ class EquipmentProblemPeriod(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqInst {}: Probs from {} to {}'.format(
             self.equipment_instance.name,
             self.from_date,
             self.to_date)
 
 
+@python_2_unicode_compatible
 class Alert(Model):
     RELATED_NAME = 'alerts'
     RELATED_QUERY_NAME = 'alert'
@@ -220,7 +224,7 @@ class Alert(Model):
             '-threshold', \
             '-quantified_risk_degree'
 
-    def __unicode__(self):
+    def __str__(self):
         return '{}Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
             '' if self.active
                else '(INACTIVE) ',

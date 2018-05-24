@@ -2,10 +2,12 @@ from django.db.models import \
     Model, \
     BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
+from django.utils.encoding import python_2_unicode_compatible
 
 from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
+@python_2_unicode_compatible
 class DataType(Model):
     name = \
         CharField(
@@ -17,7 +19,7 @@ class DataType(Model):
     class Meta:
         ordering = 'name',
 
-    def __unicode__(self):
+    def __str__(self):
         return 'DataTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
@@ -25,6 +27,7 @@ class DataType(Model):
         return super(DataType, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
@@ -36,7 +39,7 @@ class EquipmentDataFieldType(Model):
     class Meta:
         ordering = 'name',
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqDataFldTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
@@ -44,6 +47,7 @@ class EquipmentDataFieldType(Model):
         return super(EquipmentDataFieldType, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentGeneralType(Model):
     name = \
         CharField(
@@ -55,7 +59,7 @@ class EquipmentGeneralType(Model):
     class Meta:
         ordering = 'name',
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqGenTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
@@ -63,6 +67,7 @@ class EquipmentGeneralType(Model):
         return super(EquipmentGeneralType, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentDataField(Model):
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
@@ -141,7 +146,7 @@ class EquipmentDataField(Model):
     class Meta:
         ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
 
-    def __unicode__(self):
+    def __str__(self):
         return '{} [{}] {} [{}{}{}{}{}]'.format(
             self.equipment_general_type.name.upper(),
             self.equipment_data_field_type.name,
@@ -167,6 +172,7 @@ class EquipmentDataField(Model):
         return super(EquipmentDataField, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentUniqueTypeGroup(Model):
     RELATED_NAME = 'equipment_unique_type_groups'
     RELATED_QUERY_NAME = 'equipment_unique_type_group'
@@ -196,7 +202,7 @@ class EquipmentUniqueTypeGroup(Model):
     class Meta:
         ordering = 'equipment_general_type', 'name'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqUnqTpGrp {}'.format(
             # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
             self.name.upper())
@@ -206,6 +212,7 @@ class EquipmentUniqueTypeGroup(Model):
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentUniqueType(Model):
     RELATED_NAME = 'equipment_unique_types'
     RELATED_QUERY_NAME = 'equipment_unique_type'
@@ -246,7 +253,7 @@ class EquipmentUniqueType(Model):
     class Meta:
         ordering = 'equipment_general_type', 'name'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqUnqTp {}'.format(
             # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
             self.name.upper())
@@ -256,6 +263,7 @@ class EquipmentUniqueType(Model):
         return super(EquipmentUniqueType, self).save(*args, **kwargs)
 
 
+@python_2_unicode_compatible
 class EquipmentInstance(Model):
     RELATED_NAME = 'equipment_instances'
     RELATED_QUERY_NAME = 'equipment_instance'
@@ -357,7 +365,7 @@ class EquipmentInstance(Model):
     class Meta:
         ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EqInst #{}'.format(
             # self.equipment_unique_type
             # if self.equipment_unique_type
