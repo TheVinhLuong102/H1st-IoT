@@ -9,7 +9,7 @@ from ruamel import yaml
 
 from arimo.util import Namespace
 
-from arimo.IoT.DataAdmin import Project, project
+from arimo.IoT.DataAdmin import Project, project, __path__
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _JSON_FMT, _YAML_EXT, _YAML_FMT
 
 
@@ -19,7 +19,9 @@ _METADATA_FILE_NAME = 'metadata.json'
 _metadata = \
     json.load(
         open(os.path.join(
-            os.path.dirname(os.path.dirname(__file__)),
+            os.path.dirname(
+                os.path.dirname(
+                    os.path.dirname(__path__[0]))),
             _PACKAGE_NAMESPACE_NAME,
             _METADATA_FILE_NAME)))
 
