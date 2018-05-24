@@ -57,7 +57,7 @@ parser = \
         prog=None,   # The name of the program (default: sys.argv[0])
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description='%(prog)s: CLI for {} >>>'.format(Project.__qual_name__()),   # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {}'.format(Project.__qual_name__()),   # Text to display after the argument help (default: none)
+        epilog='^^^ %(prog)s: CLI for {}\n'.format(Project.__qual_name__()),   # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,   # A class for customizing the help output
         prefix_chars='-',   # The set of characters that prefix optional arguments (default: '-')
@@ -335,7 +335,7 @@ parser___eq_gen_tp = \
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description='%(prog)s: CLI for {} Equipment General Types >>>'.format(Project.__qual_name__()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} Equipment General Types'.format(Project.__qual_name__()),
+        epilog='^^^ %(prog)s: CLI for {} Equipment General Types\n'.format(Project.__qual_name__()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
         formatter_class=argparse.RawDescriptionHelpFormatter,   # A class for customizing the help output
@@ -374,7 +374,7 @@ parser___eq_gen_tp___count = \
         description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types\n'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -399,7 +399,7 @@ parser___eq_gen_tp___list = \
         description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types\n'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -424,7 +424,7 @@ parser___eq_gen_tp___create = \
         description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types\n'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -466,7 +466,7 @@ parser___eq_gen_tp___update = \
         description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types\n'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -523,7 +523,7 @@ parser___eq_gen_tp___view = \
         description='%(prog)s: CLI for {} to {} Equipment General Types >>>'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment General Types\n'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -564,7 +564,7 @@ parser___eq_data_fld = \
         usage=None,   # The string describing the program usage (default: generated from arguments added to parser)
         description='%(prog)s: CLI for {} Equipment Data Fields >>>'.format(Project.__qual_name__()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} Equipment Data Fields'.format(Project.__qual_name__()),
+        epilog='^^^ %(prog)s: CLI for {} Equipment Data Fields\n'.format(Project.__qual_name__()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
         formatter_class=argparse.RawDescriptionHelpFormatter,  # A class for customizing the help output
@@ -749,7 +749,7 @@ parser___eq_data_fld___count = \
         description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields\n'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -774,7 +774,7 @@ parser___eq_data_fld___list = \
         description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields\n'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -799,7 +799,7 @@ parser___eq_data_fld___create = \
         description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields\n'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -856,7 +856,7 @@ parser___eq_data_fld___update = \
         description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields\n'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -913,7 +913,7 @@ parser___eq_data_fld___view = \
         description='%(prog)s: CLI for {} to {} Equipment Data Fields >>>'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Data Fields\n'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -970,7 +970,7 @@ parser___eq_unq_tp_grp = \
         description='%(prog)s: CLI for {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1009,7 +1009,7 @@ parser___eq_unq_tp_grp___count = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1034,7 +1034,7 @@ parser___eq_unq_tp_grp___list = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1059,7 +1059,7 @@ parser___eq_unq_tp_grp___create = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1116,7 +1116,7 @@ parser___eq_unq_tp_grp___update = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1173,7 +1173,7 @@ parser___eq_unq_tp_grp___view = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Type Groups >>>'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Type Groups\n'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1230,7 +1230,7 @@ parser___eq_unq_tp = \
         description='%(prog)s: CLI for {} Equipment Unique Types >>>'
             .format(Project.__qual_name__()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} Equipment Unique Types\n'
             .format(Project.__qual_name__()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1269,7 +1269,7 @@ parser___eq_unq_tp___count = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types\n'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1294,7 +1294,7 @@ parser___eq_unq_tp___list = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types\n'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1319,7 +1319,7 @@ parser___eq_unq_tp___create = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types\n'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1376,7 +1376,7 @@ parser___eq_unq_tp___update = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types\n'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1433,7 +1433,7 @@ parser___eq_unq_tp___view = \
         description='%(prog)s: CLI for {} to {} Equipment Unique Types >>>'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Unique Types\n'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1490,7 +1490,7 @@ parser___eq = \
         description='%(prog)s: CLI for {} Equipment Instances >>>'
             .format(Project.__qual_name__()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} Equipment Instances\n'
             .format(Project.__qual_name__()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1529,7 +1529,7 @@ parser___eq___count = \
         description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances\n'
             .format(Project.__qual_name__(), COUNT_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1554,7 +1554,7 @@ parser___eq___list = \
         description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances\n'
             .format(Project.__qual_name__(), LIST_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1579,7 +1579,7 @@ parser___eq___create = \
         description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances\n'
             .format(Project.__qual_name__(), CREATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1636,7 +1636,7 @@ parser___eq___update = \
         description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances\n'
             .format(Project.__qual_name__(), UPDATE_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
@@ -1693,7 +1693,7 @@ parser___eq___view = \
         description='%(prog)s: CLI for {} to {} Equipment Instances >>>'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display before the argument help (default: none)
-        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances'
+        epilog='^^^ %(prog)s: CLI for {} to {} Equipment Instances\n'
             .format(Project.__qual_name__(), VIEW_DB_OP.upper()),
             # Text to display after the argument help (default: none)
         parents=[],   # A list of ArgumentParser objects whose arguments should also be included
