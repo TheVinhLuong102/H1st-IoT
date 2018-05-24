@@ -2138,8 +2138,8 @@ elif rom == EQ_UNQ_TP_GRP_ROM:
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
                 COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
-        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
-        eq_unq_tp_grp_name = clean_lower_str(args.eq_unq_tp_grp)
+        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp_name)
+        eq_unq_tp_grp_name = clean_lower_str(args.eq_unq_tp_grp_name)
 
         eq_gen_tp_grp = \
             PROJECT.equipment_unique_type_group(
@@ -2231,8 +2231,8 @@ elif rom == EQ_UNQ_TP_ROM:
             '*** 2nd SUB-COMMENT MUST BE AMONG: {}, {}, {}, {} & {} ***'.format(
                 COUNT_DB_OP, LIST_DB_OP, CREATE_DB_OP, UPDATE_DB_OP, VIEW_DB_OP)
 
-        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp)
-        eq_unq_tp_name = clean_lower_str(args.eq_unq_tp)
+        eq_gen_tp_name = clean_lower_str(args.eq_gen_tp_name)
+        eq_unq_tp_name = clean_lower_str(args.eq_unq_tp_name)
 
         eq_unq_tp = \
             PROJECT.equipment_unique_type(
