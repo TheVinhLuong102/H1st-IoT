@@ -691,6 +691,6 @@ def project(name='TEST'):
     params = yaml.safe_load(open(os.path.join(Project.CONFIG_DIR_PATH, name + _YAML_EXT), 'r'))
 
     if 's3' in params:
-        params.s3.access_key_id, params.s3.secret_access_key = key_pair(profile=Name)
+        params.s3.access_key_id, params.s3.secret_access_key = key_pair(profile=name)
 
     return Project(params=params)
