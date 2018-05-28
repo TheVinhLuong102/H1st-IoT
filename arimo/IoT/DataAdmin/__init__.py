@@ -501,115 +501,51 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _from_files=True, _spark=False,
+            _monthly=False, _from_files=True, _spark=False,
             iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
             verbose=True, **kwargs):
         from arimo.df.from_files import ArrowADF
         from arimo.df.spark import SparkADF
         from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
-        from arimo.util.types.spark_sql import _DATE_TYPE, _STR_TYPE
 
         path = os.path.join(
-            self.params.s3.equipment_data_dir_path,
+            self.params.s3.monthly_equipment_data_dir_path
+                if _monthly
+                else self.params.s3.equipment_data_dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        if _from_files:
-            return ArrowSparkADF(
-                    path=path, mergeSchema=True,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=iCol, tCol=tCol,
-                    verbose=verbose, **kwargs) \
-                if _spark \
-                else ArrowADF(
-                    path=path,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=iCol, tCol=tCol,
-                    verbose=verbose, **kwargs)
+        adf = (ArrowSparkADF(
+                path=path, mergeSchema=True,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                iCol=iCol, tCol=tCol,
+                verbose=verbose, **kwargs)
+               if _spark
+               else ArrowADF(
+                path=path,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                iCol=iCol, tCol=tCol,
+                verbose=verbose, **kwargs)) \
+            if _from_files \
+            else SparkADF.load(
+                path=path,
+                format='parquet', mergeSchema=True,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                iCol=iCol, tCol=tCol,
+                verbose=verbose, **kwargs)
 
-        else:
-            _resave = False
+        assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+        if iCol:
+            adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
-            try:
-                adf = SparkADF.load(
-                    path=path,
-                    format='parquet', mergeSchema=True,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=iCol, tCol=tCol,
-                    verbose=verbose, **kwargs)
+        assert DATE_COL in adf.columns
+        assert self._DATE_TIME_COL_NAME in adf.columns
+        adf.tCol = self._DATE_TIME_COL_NAME
 
-            except:   # for legacy non-standardized equipment instance names
-                adf = SparkADF.load(
-                    path=os.path.join(
-                        self.params.s3.equipment_data_dir_path,
-                        _clean_upper_str(equipment_instance_id_or_data_set_name) + _PARQUET_EXT),
-                    format='parquet', mergeSchema=True,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=None, tCol=tCol,
-                    verbose=verbose)
-
-                _resave = True
-
-            _complex_col_names = []
-
-            for col in adf.columns:
-                _col_type = adf.type(col)
-                if _col_type.startswith('array<') or _col_type.startswith('map<') \
-                        or _col_type.startswith('struct<') or _col_type.startswith('vector'):
-                    _complex_col_names.append(col)
-
-            if _complex_col_names:
-                _resave = True
-                adf.rm(*_complex_col_names, inplace=True)
-
-            if SparkADF._DEFAULT_I_COL in adf.columns:
-                _resave = True
-
-                if self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns:
-                    adf('COALESCE({0}, {1}) AS {0}'.format(self._EQUIPMENT_INSTANCE_ID_COL_NAME, SparkADF._DEFAULT_I_COL),
-                        *set(adf.columns).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, SparkADF._DEFAULT_I_COL)),
-                        inplace=True)
-
-                else:
-                    adf.rename(
-                        inplace=True,
-                        **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
-
-            else:
-                assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-
-            if DATE_COL in adf.columns:
-                _date_col_type = adf.type(DATE_COL)
-
-                if _date_col_type != _DATE_TYPE:
-                    assert _date_col_type == _STR_TYPE
-                    _resave = True
-                    adf.rm(DATE_COL, inplace=True)
-
-            else:
-                _resave = True
-
-            if iCol:
-                assert iCol in adf.columns
-                adf.iCol = iCol
-
-            assert self._DATE_TIME_COL_NAME in adf.columns
-            adf.tCol = self._DATE_TIME_COL_NAME
-
-            if _resave:
-                adf.save(
-                    path=path,
-                    format='parquet',
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    switch=True,
-                    verbose=verbose)
-
-            return adf
+        return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
         from arimo.df.spark_from_files import ArrowSparkADF
