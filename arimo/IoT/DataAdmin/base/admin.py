@@ -51,16 +51,10 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     show_full_result_count = False
 
     search_fields = \
-        'equipment_general_type', \
-        'equipment_data_field_type', \
+        'equipment_general_type__name', \
+        'equipment_data_field_type__name', \
         'name', \
-        'data_type', \
-        'nullable', \
-        'lower_numeric_null', \
-        'upper_numeric_null', \
-        'default_val', \
-        'min_val', \
-        'max_val'
+        'data_type__name'
 
     form = EquipmentDataFieldForm
 
@@ -79,7 +73,9 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'equipment_general_type', 'name'
+    search_fields = \
+        'equipment_general_type__name', \
+        'name'
 
     form = EquipmentUniqueTypeGroupForm
 
@@ -98,7 +94,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'equipment_general_type', 'name'
+    search_fields = \
+        'equipment_general_type__name', \
+        'name'
 
     form = EquipmentUniqueTypeForm
 
@@ -117,7 +115,10 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'equipment_general_type', 'equipment_unique_type', 'name'
+    search_fields = \
+        'equipment_general_type__name', \
+        'equipment_unique_type__name', \
+        'name'
 
     form = EquipmentInstanceForm
 

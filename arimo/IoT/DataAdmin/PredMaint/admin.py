@@ -27,8 +27,8 @@ class BlueprintAdmin(ModelAdmin):
     show_full_result_count = False
 
     search_fields = \
-        'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
         'uuid'
 
 
@@ -61,7 +61,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'equipment_instance',
+    search_fields = 'equipment_instance__name',
 
     form = EquipmentProblemPeriodForm
 
@@ -100,9 +100,9 @@ class AlertAdmin(ModelAdmin):
     show_full_result_count = False
 
     search_fields = \
-        'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
+        'equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_instance__name', \
         'risk_score_name'
 
     form = AlertForm
