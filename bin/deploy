@@ -18,7 +18,7 @@ parser.add_argument(
     action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
     nargs='?',   # The number of command-line arguments that should be consumed.
     const=None,   # A constant value required by some action and nargs selections.
-    default=None,   # The value produced if the argument is absent from the command line.
+    default='TEST',   # The value produced if the argument is absent from the command line.
     type=str,   # The type to which the command-line argument should be converted.
     help=None,   # A brief description of what the argument does.
     metavar=None,  # A name for the argument in usage messages.
