@@ -38,11 +38,15 @@ setup(
     scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
 
 
-for _executable_script_path in \
-        (os.path.join(
-            os.path.expanduser('~/.local'),
-            _SCRIPT_REL_PATH_TO_INSTALL),
-         os.path.join('/usr/local', _SCRIPT_REL_PATH_TO_INSTALL)):
+for _dir_path in (os.path.expanduser('~/.local'), '/usr/local'):
+    if not os.path.isdir(_dir_path):
+        os.makedirs(_dir_path)
+
+    _executable_script_path = \
+        os.path.join(
+            _dir_path,
+            _SCRIPT_REL_PATH_TO_INSTALL)
+
     if not os.path.isfile(_executable_script_path):
         os.symlink(
             os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
