@@ -49,7 +49,7 @@ for _dir_path in (os.path.expanduser('~/.local'), '/usr/local'):
             _dir_path,
             _SCRIPT_REL_PATH_TO_INSTALL)
 
-    if not os.path.isfile(_executable_script_path):
+    if not (os.path.isfile(_executable_script_path) or os.path.islink(_executable_script_path)):
         os.symlink(
             os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
             _executable_script_path)
