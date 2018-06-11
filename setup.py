@@ -39,8 +39,10 @@ setup(
 
 
 for _dir_path in (os.path.expanduser('~/.local'), '/usr/local'):
-    if not os.path.isdir(_dir_path):
-        os.makedirs(_dir_path)
+    _bin_dir_path = os.path.join(_dir_path, 'bin')
+
+    if not os.path.isdir(_bin_dir_path):
+        os.makedirs(_bin_dir_path)
 
     _executable_script_path = \
         os.path.join(
