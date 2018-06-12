@@ -502,7 +502,7 @@ class Project(object):
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
             _monthly=False, _from_files=True, _spark=False,
-            iCol=_EQUIPMENT_INSTANCE_ID_COL_NAME, tCol=_DATE_TIME_COL_NAME,
+            set_i_col=True, set_t_col=True,
             verbose=True, **kwargs):
         from arimo.df.from_files import ArrowADF
         from arimo.df.spark import SparkADF
@@ -519,14 +519,24 @@ class Project(object):
                 path=path, mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
-                iCol=iCol, tCol=tCol,
+                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                    if set_i_col
+                    else None,
+                tCol=self._DATE_TIME_COL_NAME
+                    if set_t_col
+                    else None,
                 verbose=verbose, **kwargs)
                if _spark
                else ArrowADF(
                 path=path,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
-                iCol=iCol, tCol=tCol,
+                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                    if set_i_col
+                    else None,
+                tCol=self._DATE_TIME_COL_NAME
+                    if set_t_col
+                    else None,
                 verbose=verbose, **kwargs)) \
             if _from_files \
             else SparkADF.load(
@@ -534,16 +544,15 @@ class Project(object):
                 format='parquet', mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
-                iCol=iCol, tCol=tCol,
+                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                    if set_i_col
+                    else None,
+                tCol=self._DATE_TIME_COL_NAME
+                    if set_t_col
+                    else None,
                 verbose=verbose, **kwargs)
 
-        assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-        if iCol:
-            adf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
-
-        assert DATE_COL in adf.columns
-        assert self._DATE_TIME_COL_NAME in adf.columns
-        adf.tCol = self._DATE_TIME_COL_NAME
+        assert {self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL, self._DATE_TIME_COL_NAME}.issubset(adf.columns)
 
         return adf
 
