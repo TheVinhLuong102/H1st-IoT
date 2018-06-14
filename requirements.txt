@@ -1,4 +1,4 @@
-Django >= 1.11.13, <2   # *** Django2 bug in Py3: 'Options' object has no attribute 'virtual_fields' ***
+Django >= 1.11.13, <2   # Django2 bug in Py3: 'Options' object has no attribute 'virtual_fields': https://github.com/klen/mixer/issues/81
 
 Django-AutoComplete-Light >= 3.2.10
 Django-Generic-M2M >= 0.3.1
