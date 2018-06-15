@@ -40,6 +40,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
+        'name', \
         'min_val', \
         'max_val'
 
