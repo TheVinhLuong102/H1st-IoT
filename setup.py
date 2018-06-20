@@ -54,4 +54,4 @@ for _dir_path in (os.path.expanduser('~/.local'), '/usr/local'):
             os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
             _executable_script_path)
 
-    assert os.path.isfile(_executable_script_path)
+    assert os.path.isfile(_executable_script_path) or os.path.islink(_executable_script_path)
