@@ -269,13 +269,14 @@ class Project(object):
         return equipment_unique_types[0]
 
     def update_or_create_equipment_data_field(
-            self, equipment_general_type_name, equipment_data_field_name, control=False, cat=False,
+            self, equipment_general_type_name, equipment_data_field_name, control=False, cat=None,
             equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
             **kwargs):
-        kwargs['data_type'] = \
-            self.CAT_DATA_TYPE \
-            if cat \
-            else self.NUM_DATA_TYPE
+        if cat is not None:
+            kwargs['data_type'] = \
+                self.CAT_DATA_TYPE \
+                if cat \
+                else self.NUM_DATA_TYPE
 
         equipment_data_field = \
             self.data.EquipmentDataFields.update_or_create(
