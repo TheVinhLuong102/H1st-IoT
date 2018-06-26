@@ -1,5 +1,4 @@
 from collections import Counter
-import copy
 import os
 from ruamel import yaml
 import six
