@@ -43,8 +43,8 @@ class Project(object):
                 access_key_id=None,
                 secret_access_key=None,
 
-                equipment_data_dir_prefix='.arimo/PredMaint/EquipmentData',
-                monthly_equipment_data_dir_prefix='.arimo/PredMaint/MonthlyEquipmentData'))
+                equipment_data=dict(
+                    dir_prefix='.arimo/PredMaint/EquipmentData')))
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
@@ -108,15 +108,10 @@ class Project(object):
                 defaults=None)[0]
 
         if 's3' in self.params:
-            self.params.s3.equipment_data_dir_path = \
+            self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
-                    self.params.s3.equipment_data_dir_prefix)
-
-            self.params.s3.monthly_equipment_data_dir_path = \
-                's3://{}/{}'.format(
-                    self.params.s3.bucket,
-                    self.params.s3.monthly_equipment_data_dir_prefix)
+                    self.params.s3.equipment_data.dir_prefix)
 
             self.s3_client = \
                 s3.client(
@@ -502,7 +497,7 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
-            _monthly=False, _from_files=True, _spark=False,
+            _from_files=True, _spark=False,
             set_i_col=True, set_t_col=True,
             verbose=True, **kwargs):
         from arimo.df.from_files import ArrowADF
@@ -511,9 +506,7 @@ class Project(object):
         from arimo.util.date_time import DATE_COL
 
         path = os.path.join(
-            self.params.s3.monthly_equipment_data_dir_path
-                if _monthly
-                else self.params.s3.equipment_data_dir_path,
+            self.params.s3.equipment_data.dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
         adf = (ArrowSparkADF(
@@ -564,7 +557,7 @@ class Project(object):
 
         file_adf = ArrowSparkADF(
             path=os.path.join(
-                self.params.s3.equipment_data_dir_path,
+                self.params.s3.equipment_data.dir_path,
                 equipment_instance_id_or_data_set_name + _PARQUET_EXT),
             mergeSchema=True,
             aws_access_key_id=self.params.s3.access_key_id,
@@ -628,7 +621,7 @@ class Project(object):
 
         adf.save(
             path=os.path.join(
-                self.params.s3.equipment_data_dir_path,
+                self.params.s3.equipment_data.dir_path,
                 equipment_instance_id_or_data_set_name + _PARQUET_EXT),
             format='parquet',
             mode=mode,
