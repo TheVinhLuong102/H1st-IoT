@@ -14,8 +14,8 @@ Django-Extensions >= 1.9.9, < 2
 
 Django-Nested-InLines >= 0.1
 
-SQLAlchemy >= 1.2.8
-Alembic >= 0.9.9
+SQLAlchemy >= 1.2.9
+Alembic >= 0.9.10
 SQLAlchemy-Migrate >= 0.11.0
 
 PsycoPG2-binary >= 2.7.5
@@ -26,6 +26,6 @@ AWSCLI >= 1.14.51
 Boto3 >= 1.6.4
 
 PyYAML >= 3.12
-Ruamel.YAML >= 0.15.40
+Ruamel.YAML >= 0.15.42
 
 Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
