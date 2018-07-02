@@ -628,6 +628,21 @@ class Project(object):
             aws_secret_access_key=self.params.s3.secret_access_key,
             verbose=verbose)
 
+    def equipment_unique_type_names(self, equipment_general_type_name):
+        return sorted(
+            equipment_unique_type.name
+            for equipment_unique_type in
+                self.data.EquipmentUniqueTypes.filter(
+                    equipment_general_type__name=clean_lower_str(equipment_general_type_name)))
+
+    def equipment_unique_type_names_and_equipment_data_field_names(self, equipment_general_type_name):
+        return {equipment_unique_type.name:
+                    {equipment_data_field.name
+                     for equipment_data_field in equipment_unique_type.data_fields.all()}
+                for equipment_unique_type in
+                    self.data.EquipmentUniqueTypes.filter(
+                        equipment_general_type__name=clean_lower_str(equipment_general_type_name))}
+
 
 def project(name='TEST'):
     from arimo.util.aws import key_pair
