@@ -72,6 +72,9 @@ class EquipmentDataField(Model):
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
 
+    DEFAULT_UPPER_NUMERIC_NULL = 2 ** 30   # << MaxInt = 2 ** 31 - 1
+    DEFAULT_LOWER_NUMERIC_NULL = -DEFAULT_UPPER_NUMERIC_NULL
+
     equipment_general_type = \
         ForeignKey(
             to=EquipmentGeneralType,
@@ -120,13 +123,15 @@ class EquipmentDataField(Model):
 
     lower_numeric_null = \
         FloatField(
-            blank=True,
-            null=True)
+            blank=False,
+            null=False,
+            default=DEFAULT_LOWER_NUMERIC_NULL)
 
     upper_numeric_null = \
         FloatField(
-            blank=True,
-            null=True)
+            blank=False,
+            null=False,
+            default=DEFAULT_UPPER_NUMERIC_NULL)
 
     default_val = \
         FloatField(
