@@ -53,7 +53,12 @@ site.register(
 
 
 class EquipmentProblemPeriodAdmin(ModelAdmin):
-    list_display = 'equipment_instance', 'from_date', 'to_date', 'comments'
+    list_display = \
+        'equipment_instance', \
+        'from_date', \
+        'to_date', \
+        'equipment_problem_type_names', \
+        'comments'
 
     list_filter = 'from_date', 'to_date'
 
@@ -64,6 +69,10 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
     search_fields = 'equipment_instance__name',
 
     form = EquipmentProblemPeriodForm
+
+    def equipment_problem_type_names(self, obj):
+        return '\n'.join(equipment_problem_type.name
+                         for equipment_problem_type in obj.equipment_problem_types.all())
 
 
 site.register(

@@ -146,12 +146,12 @@ class EquipmentProblemPeriod(Model):
         ordering = '-from_date', '-to_date', 'equipment_instance'
 
     def __str__(self):
-        return 'EqInst {}: {} from {} to {}'.format(
+        return 'EqInst {} from {} to {}: {}'.format(
             self.equipment_instance.name,
-            ', '.join(equipment_problem_type.name.upper()
-                      for equipment_problem_type in self.equipment_problem_types.all()),
             self.from_date,
-            self.to_date)
+            self.to_date,
+            ', '.join(equipment_problem_type.name.upper()
+                      for equipment_problem_type in self.equipment_problem_types.all()))
 
 
 @python_2_unicode_compatible
