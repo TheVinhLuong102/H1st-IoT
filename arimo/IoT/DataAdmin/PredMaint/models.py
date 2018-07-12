@@ -138,20 +138,30 @@ class EquipmentProblemPeriod(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    dismissed = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
+
     comments = \
         TextField(
+            blank=True,
             null=True)
 
     class Meta:
-        ordering = '-from_date', '-to_date', 'equipment_instance'
+        ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
 
     def __str__(self):
-        return 'EqInst {} from {} to {}: {}'.format(
+        return 'EqInst {} from {} to {}: {}{}'.format(
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
             ', '.join(equipment_problem_type.name.upper()
-                      for equipment_problem_type in self.equipment_problem_types.all()))
+                      for equipment_problem_type in self.equipment_problem_types.all()),
+            ' (DISMISSED)'
+                if self.dismissed
+                else '')
 
 
 @python_2_unicode_compatible

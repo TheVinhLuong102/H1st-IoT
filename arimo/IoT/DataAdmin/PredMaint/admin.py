@@ -58,9 +58,10 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'equipment_problem_type_names', \
+        'dismissed', \
         'comments'
 
-    list_filter = 'from_date', 'to_date'
+    list_filter = 'from_date', 'to_date', 'dismissed'
 
     list_select_related = 'equipment_instance',
 
