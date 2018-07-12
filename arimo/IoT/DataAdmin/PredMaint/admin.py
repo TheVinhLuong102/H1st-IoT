@@ -57,7 +57,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'equipment_instance', \
         'from_date', \
         'to_date', \
-        'equipment_problem_types', \
+        'equipment_problem_type_names', \
         'comments'
 
     list_filter = 'from_date', 'to_date'
@@ -71,7 +71,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
     form = EquipmentProblemPeriodForm
 
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
-    def equipment_problem_types(self, obj):
+    def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
                          for equipment_problem_type in obj.equipment_problem_types.all())
 
