@@ -148,7 +148,7 @@ class EquipmentProblemPeriod(Model):
     def __str__(self):
         return 'EqInst {}: {} from {} to {}'.format(
             self.equipment_instance.name,
-            ', '.join(equipment_problem_type.name
+            ', '.join(equipment_problem_type.name.upper()
                       for equipment_problem_type in self.equipment_problem_types.all()),
             self.from_date,
             self.to_date)
