@@ -57,7 +57,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'equipment_instance', \
         'from_date', \
         'to_date', \
-        'equipment_problem_type_names', \
+        'equipment_problem_types', \
         'comments'
 
     list_filter = 'from_date', 'to_date'
@@ -70,8 +70,8 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     form = EquipmentProblemPeriodForm
 
-    def equipment_problem_type_names(self, obj):
-        return '\n'.join(equipment_problem_type.name
+    def equipment_problem_types(self, obj):
+        return ', '.join(equipment_problem_type.name
                          for equipment_problem_type in obj.equipment_problem_types.all())
 
 
