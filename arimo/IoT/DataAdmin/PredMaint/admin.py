@@ -53,7 +53,7 @@ site.register(
 
 
 class EquipmentProblemPeriodAdmin(ModelAdmin):
-    list_display = 'equipment_instance', 'from_date', 'to_date'
+    list_display = 'equipment_instance', 'from_date', 'to_date', 'comments'
 
     list_filter = 'from_date', 'to_date'
 
