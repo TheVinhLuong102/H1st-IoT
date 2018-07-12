@@ -55,6 +55,8 @@ site.register(
 class EquipmentProblemPeriodAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
+        'equipment_general_type', \
+        'equipment_unique_type_groups', \
         'from_date', \
         'to_date', \
         'equipment_problem_type_names', \
@@ -67,9 +69,19 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'equipment_instance__name',
+    search_fields = \
+        'equipment_instance__name', \
+        'equipment_general_type', \
+        'equipment_unique_type_groups'
 
     form = EquipmentProblemPeriodForm
+
+    def equipment_general_type(self, obj):
+        return obj.equipment_general_type.name
+
+    def equipment_unique_type_groups(self, obj):
+        return ', '.join(equipment_unique_type_group.name
+                         for equipment_unique_type_group in obj.equipment_unique_type.groups.all())
 
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
