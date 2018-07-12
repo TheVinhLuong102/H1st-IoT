@@ -31,6 +31,7 @@ setup(
     long_description=_metadata['DESCRIPTION'],
     keywords=_metadata['DESCRIPTION'],
     packages=find_packages(),
+    include_package_data=True,
     install_requires=
         [s.strip()
          for s in open(_REQUIREMENTS_FILE_NAME).readlines()
