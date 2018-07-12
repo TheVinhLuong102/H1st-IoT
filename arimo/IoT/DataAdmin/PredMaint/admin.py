@@ -70,6 +70,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     form = EquipmentProblemPeriodForm
 
+    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_types(self, obj):
         return ', '.join(equipment_problem_type.name
                          for equipment_problem_type in obj.equipment_problem_types.all())
