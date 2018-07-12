@@ -142,6 +142,9 @@ class EquipmentProblemPeriod(Model):
         TextField(
             null=True)
 
+    class Meta:
+        ordering = '-from_date', '-to_date', 'equipment_instance'
+
     def __str__(self):
         return 'EqInst {}: {} from {} to {}'.format(
             self.equipment_instance.name,
