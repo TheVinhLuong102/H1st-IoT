@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
+    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
@@ -138,9 +138,15 @@ class EquipmentProblemPeriod(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    comments = \
+        TextField(
+            null=True)
+
     def __str__(self):
-        return 'EqInst {}: Probs from {} to {}'.format(
+        return 'EqInst {}: {} from {} to {}'.format(
             self.equipment_instance.name,
+            ', '.join(equipment_problem_type.name
+                      for equipment_problem_type in self.equipment_problem_types.all()),
             self.from_date,
             self.to_date)
 
