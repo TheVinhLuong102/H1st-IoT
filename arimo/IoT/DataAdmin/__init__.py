@@ -69,7 +69,8 @@ class Project(object):
 
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, \
-            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentInstance
+            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
+            EquipmentInstance, EquipmentInstanceAssociation
 
         from arimo.IoT.DataAdmin.PredMaint.models import Blueprint, Alert
 
@@ -82,6 +83,7 @@ class Project(object):
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
                 EquipmentInstances=EquipmentInstance.objects,
+                EquipmentInstanceAssociations=EquipmentInstanceAssociation.objects,
 
                 PredMaintBlueprints=Blueprint.objects,
                 PredMaintAlerts=Alert.objects)
