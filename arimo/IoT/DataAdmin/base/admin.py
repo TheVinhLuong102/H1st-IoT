@@ -1,7 +1,19 @@
 from django.contrib.admin import ModelAdmin, site
 
-from .forms import EquipmentDataFieldForm, EquipmentUniqueTypeGroupForm, EquipmentUniqueTypeForm, EquipmentInstanceForm
-from .models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentInstance
+from .forms import \
+    EquipmentDataFieldForm, \
+    EquipmentUniqueTypeGroupForm, \
+    EquipmentUniqueTypeForm, \
+    EquipmentInstanceForm, \
+    EquipmentInstanceAssociationForm
+
+from .models import \
+    EquipmentGeneralType, \
+    EquipmentDataField, \
+    EquipmentUniqueTypeGroup, \
+    EquipmentUniqueType, \
+    EquipmentInstance, \
+    EquipmentInstanceAssociation
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
@@ -127,3 +139,20 @@ class EquipmentInstanceAdmin(ModelAdmin):
 site.register(
     EquipmentInstance,
     admin_class=EquipmentInstanceAdmin)
+
+
+class EquipmentInstanceAssociationAdmin(ModelAdmin):
+    list_display = 'name', 'date'
+
+    list_filter = 'name', 'date'
+
+    show_full_result_count = False
+
+    search_fields = 'name',
+
+    form = EquipmentInstanceAssociationForm
+
+
+site.register(
+    EquipmentInstanceAssociation,
+    admin_class=EquipmentInstanceAssociationAdmin)

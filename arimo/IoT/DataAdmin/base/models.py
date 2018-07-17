@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, FloatField, ForeignKey, ManyToManyField, URLField, \
+    BooleanField, CharField, DateField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -380,3 +380,40 @@ class EquipmentInstance(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         return super(EquipmentInstance, self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
+class EquipmentInstanceAssociation(Model):
+    RELATED_NAME = 'equipment_instance_associations'
+    RELATED_QUERY_NAME = 'equipment_instance_association'
+
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            default=None)
+
+    date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_now_add=False)
+
+    equipment_instances = \
+        ManyToManyField(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    class Meta:
+        ordering = 'name', 'date'
+
+    def __str__(self):
+        return '{} on {}'.format(self.name, self.date)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentInstanceAssociation, self).save(*args, **kwargs)
