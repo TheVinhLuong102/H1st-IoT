@@ -48,6 +48,7 @@ ALLOWED_HOSTS = \
 # Application definition
 
 INSTALLED_APPS = [
+    # Django-AutoComplete-Light: add to INSTALLED_APPS BEFORE django.contrib.admin
     'dal',
     'dal_select2',
 
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'debug_toolbar',
+    'rest_framework',
 
     'arimo.IoT.DataAdmin.base',
     'arimo.IoT.DataAdmin.PredMaint'

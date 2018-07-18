@@ -14,6 +14,11 @@ Django-Extensions >= 1.9.9, < 2
 
 Django-Nested-InLines >= 0.1
 
+# Django REST Framework
+DjangoRESTFramework >= 3.8.2
+Markdown >= 2.6.11   # Markdown support for the browsable API.
+Django-Filter >= 2.0.0   # Filtering support
+
 SQLAlchemy >= 1.2.10
 Alembic >= 0.9.10
 SQLAlchemy-Migrate >= 0.11.0
