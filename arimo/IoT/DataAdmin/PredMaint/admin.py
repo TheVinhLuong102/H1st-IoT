@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin, site
 
 from .forms import EquipmentProblemPeriodForm, AlertForm
-from .models import Blueprint, EquipmentProblemType, EquipmentProblemPeriod, Alert
+from .models import Blueprint, EquipmentProblemType, EquipmentProblemPeriod, AlertDiagnosisStatus, Alert
 
 
 class BlueprintAdmin(ModelAdmin):
@@ -92,6 +92,23 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 site.register(
     EquipmentProblemPeriod,
     admin_class=EquipmentProblemPeriodAdmin)
+
+
+class AlertDiagnosisStatusAdmin(ModelAdmin):
+    list_display = \
+        'index', \
+        'name'
+
+    list_filter = 'name',
+
+    show_full_result_count = True   # only a few
+
+    search_fields = 'name',
+
+
+site.register(
+    AlertDiagnosisStatus,
+    admin_class=AlertDiagnosisStatusAdmin)
 
 
 class AlertAdmin(ModelAdmin):

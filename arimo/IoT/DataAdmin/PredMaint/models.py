@@ -1,6 +1,7 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, TextField, URLField, \
+    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, \
+    ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
@@ -165,6 +166,37 @@ class EquipmentProblemPeriod(Model):
 
 
 @python_2_unicode_compatible
+class AlertDiagnosisStatus(Model):
+    RELATED_NAME = 'alert_diagnosis_statuses'
+    RELATED_QUERY_NAME = 'alert_diagnosis_status'
+
+    index = \
+        PositiveSmallIntegerField(
+            blank=False,
+            null=False,
+            unique=True,
+            default=0)
+
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True,
+            default='to_diagnose')
+
+    class Meta:
+        ordering = 'index',
+
+    def __str__(self):
+        return '{}. {}'.format(self.index, self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(AlertDiagnosisStatus, self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
 class Alert(Model):
     RELATED_NAME = 'alerts'
     RELATED_QUERY_NAME = 'alert'
@@ -231,22 +263,22 @@ class Alert(Model):
             null=False,
             default=0)
 
-    active = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=True)
+    diagnosis_status = \
+        ForeignKey(
+            to=AlertDiagnosisStatus,
+            blank=True,
+            null=True)
 
     class Meta:
         ordering = \
+            'diagnosis_status', \
             'risk_score_name', \
             '-threshold', \
             '-quantified_risk_degree'
 
     def __str__(self):
-        return '{}Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
-            '' if self.active
-               else '(INACTIVE) ',
+        return '{}: Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
+            self.diagnosis_status.name.upper(),
             self.equipment_general_type.name.upper(),
             self.equipment_unique_type_group.name,
             self.equipment_instance.name,
@@ -255,3 +287,8 @@ class Alert(Model):
             self.quantified_risk_degree,
             self.risk_score_name,
             self.threshold)
+
+    def save(self, *args, **kwargs):
+        if self.diagnosis_status is None:
+            self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)
+        return super(Alert, self).save(*args, **kwargs)
