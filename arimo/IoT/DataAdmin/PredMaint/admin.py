@@ -24,7 +24,7 @@ class BlueprintAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type_group'
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \
@@ -42,7 +42,7 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = False
+    show_full_result_count = True   # only a few
 
     search_fields = 'name',
 
@@ -67,7 +67,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     list_select_related = 'equipment_instance',
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_instance__name', \
@@ -137,7 +137,7 @@ class AlertAdmin(ModelAdmin):
         'to_date', \
         'active'
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \

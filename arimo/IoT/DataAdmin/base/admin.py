@@ -21,7 +21,7 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = False
+    show_full_result_count = True   # only a few
 
     search_fields = 'name',
 
@@ -61,7 +61,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_data_field_type', \
         'data_type'
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \
@@ -84,7 +84,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     list_select_related = 'equipment_general_type',
 
-    show_full_result_count = False
+    show_full_result_count = True   # only a few
 
     search_fields = \
         'equipment_general_type__name', \
@@ -105,7 +105,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     list_select_related = 'equipment_general_type',
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \
@@ -126,7 +126,7 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     list_select_related = 'equipment_general_type', 'equipment_unique_type'
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \
@@ -146,7 +146,7 @@ class EquipmentInstanceAssociationAdmin(ModelAdmin):
 
     list_filter = 'name', 'date'
 
-    show_full_result_count = False
+    show_full_result_count = False   # too many
 
     search_fields = 'name',
 
