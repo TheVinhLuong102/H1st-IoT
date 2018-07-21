@@ -277,6 +277,9 @@ class Alert(Model):
             '-quantified_risk_degree'
 
     def __str__(self):
+        if self.diagnosis_status is None:
+            self.save()
+            
         return '{}: Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
             self.diagnosis_status.name.upper(),
             self.equipment_general_type.name.upper(),
