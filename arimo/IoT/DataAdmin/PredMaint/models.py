@@ -293,5 +293,5 @@ class Alert(Model):
 
     def save(self, *args, **kwargs):
         if self.diagnosis_status is None:
-            self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)
+            self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
         return super(Alert, self).save(*args, **kwargs)
