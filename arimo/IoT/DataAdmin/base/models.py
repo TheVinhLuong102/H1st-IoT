@@ -371,10 +371,10 @@ class EquipmentInstance(Model):
         ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     def __str__(self):
-        return '{} #{}'.format(
-                self.equipment_unique_type
-                    if self.equipment_unique_type
-                    else self.equipment_general_type,   # *** THIS CAN MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
+        return 'EqInst #{}'.format(
+                # self.equipment_unique_type
+                #     if self.equipment_unique_type
+                #     else self.equipment_general_type,   # *** THIS CAN MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
                 self.name)
 
     def save(self, *args, **kwargs):
