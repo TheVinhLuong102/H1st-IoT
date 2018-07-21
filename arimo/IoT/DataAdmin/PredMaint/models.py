@@ -150,6 +150,13 @@ class EquipmentProblemPeriod(Model):
             blank=True,
             null=True)
 
+    alerts = \
+        ManyToManyField(
+            to='Alert',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     class Meta:
         ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
 
@@ -268,6 +275,14 @@ class Alert(Model):
             to=AlertDiagnosisStatus,
             blank=True,
             null=True)
+
+    equipment_problem_periods = \
+        ManyToManyField(
+            to=EquipmentProblemPeriod,
+            through=EquipmentProblemPeriod.alerts.through,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+            blank=True)
 
     class Meta:
         ordering = \
