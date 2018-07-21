@@ -21,7 +21,7 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = True   # only a few
+    show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = 'name',
 
@@ -84,7 +84,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     list_select_related = 'equipment_general_type',
 
-    show_full_result_count = True   # only a few
+    show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = \
         'equipment_general_type__name', \

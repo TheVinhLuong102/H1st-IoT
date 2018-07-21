@@ -42,7 +42,7 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = True   # only a few
+    show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = 'name',
 
@@ -101,7 +101,7 @@ class AlertDiagnosisStatusAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = True   # only a few
+    show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = 'name',
 
