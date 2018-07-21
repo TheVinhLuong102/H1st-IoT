@@ -276,7 +276,7 @@ class Alert(Model):
             blank=True,
             null=True)
 
-    equipment_problem_periods = \
+    problems = \
         ManyToManyField(
             to=EquipmentProblemPeriod,
             through=EquipmentProblemPeriod.alerts.through,
