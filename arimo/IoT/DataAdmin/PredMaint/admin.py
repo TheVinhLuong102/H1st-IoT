@@ -121,7 +121,7 @@ class AlertAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'quantified_risk_degree', \
-        'active'
+        'diagnosis_status'
 
     list_select_related = \
         'equipment_general_type', \
@@ -135,7 +135,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'active'
+        'diagnosis_status'
 
     show_full_result_count = False   # too many
 
