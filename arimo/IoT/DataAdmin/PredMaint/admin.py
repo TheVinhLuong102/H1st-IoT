@@ -61,9 +61,14 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'dismissed', \
         'comments'
 
-    list_filter = 'from_date', 'to_date', 'dismissed'
+    list_filter = \
+        'from_date', \
+        'to_date', \
+        'dismissed'
 
     list_select_related = 'equipment_instance',
+
+    readonly_fields = 'alerts',   # too many alerts, so Select box would freeze
 
     show_full_result_count = False   # too many
 

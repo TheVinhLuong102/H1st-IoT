@@ -161,7 +161,7 @@ class EquipmentProblemPeriod(Model):
         ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
 
     def __str__(self):
-        return 'EqInst {} from {} to {}: {}{}'.format(
+        return 'EqInst #{} from {} to {}: {}{}'.format(
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
@@ -276,6 +276,16 @@ class Alert(Model):
             blank=True,
             null=True)
 
+    equipment_problem_periods = \
+        ManyToManyField(
+            to=EquipmentProblemPeriod,
+            through=EquipmentProblemPeriod.alerts.through,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+                # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_periods: (fields.E302) Reverse accessor for 'Alert.equipment_problem_periods' clashes with field name 'EquipmentProblemPeriod.alerts'.
+                # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_problem_periods'.
+            blank=True)
+
     class Meta:
         ordering = \
             'diagnosis_status', \
@@ -287,7 +297,7 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: Alert on {} {} Instance {} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
+        return '{}: Alert on {} {} #{} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
             self.diagnosis_status.name.upper(),
             self.equipment_general_type.name.upper(),
             self.equipment_unique_type_group.name,
