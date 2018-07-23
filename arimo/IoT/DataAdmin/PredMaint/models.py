@@ -1,3 +1,5 @@
+import dateutil
+
 from django.db.models import \
     Model, \
     BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, \
@@ -171,6 +173,15 @@ class EquipmentProblemPeriod(Model):
                 if self.dismissed
                 else '')
 
+    def save(self, *args, **kwargs):
+        self.alerts = \
+            Alert.objects.filter(
+                equipment_instance=self.equipment_instance,
+                from_date__lte=self.to_date,
+                to_date__gte=(self.from_date + dateutil.relativedelta.relativedelta(months=-1)).date())
+
+        return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
+
 
 @python_2_unicode_compatible
 class AlertDiagnosisStatus(Model):
@@ -311,4 +322,11 @@ class Alert(Model):
     def save(self, *args, **kwargs):
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
+
+        self.equipment_problem_periods = \
+            EquipmentProblemPeriod.objects.filter(
+                equipment_instance=self.equipment_instance,
+                from_date__lte=(self.to_date + dateutil.relativedelta.relativedelta(months=1)).date(),
+                to_date__gte=self.from_date)
+
         return super(Alert, self).save(*args, **kwargs)
