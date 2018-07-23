@@ -174,11 +174,12 @@ class EquipmentProblemPeriod(Model):
                 else '')
 
     def save(self, *args, **kwargs):
-        self.alerts = \
-            Alert.objects.filter(
-                equipment_instance=self.equipment_instance,
-                from_date__lte=self.to_date,
-                to_date__gte=self.from_date + relativedelta(months=-1))
+        # *** AVOID INFINITE RECURSION ***
+        # self.alerts = \
+        #     Alert.objects.filter(
+        #         equipment_instance=self.equipment_instance,
+        #         from_date__lte=self.to_date,
+        #        to_date__gte=self.from_date + relativedelta(months=-1))
 
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
@@ -323,10 +324,11 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
-        self.equipment_problem_periods = \
-            EquipmentProblemPeriod.objects.filter(
-                equipment_instance=self.equipment_instance,
-                from_date__lte=self.to_date + relativedelta(months=1),
-                to_date__gte=self.from_date)
+        # *** AVOID INFINITE RECURSION ***
+        # self.equipment_problem_periods = \
+        #     EquipmentProblemPeriod.objects.filter(
+        #         equipment_instance=self.equipment_instance,
+        #         from_date__lte=self.to_date + relativedelta(months=1),
+        #         to_date__gte=self.from_date)
 
         return super(Alert, self).save(*args, **kwargs)
