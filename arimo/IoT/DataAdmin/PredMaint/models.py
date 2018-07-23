@@ -178,7 +178,7 @@ class EquipmentProblemPeriod(Model):
             Alert.objects.filter(
                 equipment_instance=self.equipment_instance,
                 from_date__lte=self.to_date,
-                to_date__gte=(self.from_date + dateutil.relativedelta.relativedelta(months=-1)).date())
+                to_date__gte=self.from_date + dateutil.relativedelta.relativedelta(months=-1))
 
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
@@ -326,7 +326,7 @@ class Alert(Model):
         self.equipment_problem_periods = \
             EquipmentProblemPeriod.objects.filter(
                 equipment_instance=self.equipment_instance,
-                from_date__lte=(self.to_date + dateutil.relativedelta.relativedelta(months=1)).date(),
+                from_date__lte=self.to_date + dateutil.relativedelta.relativedelta(months=1),
                 to_date__gte=self.from_date)
 
         return super(Alert, self).save(*args, **kwargs)
