@@ -5,6 +5,7 @@ from django.db.models import \
     BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, \
     ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
+from django.db.models.signals import post_save
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -173,15 +174,22 @@ class EquipmentProblemPeriod(Model):
                 if self.dismissed
                 else '')
 
-    def save(self, *args, **kwargs):
-        # *** AVOID INFINITE RECURSION ***
-        # self.alerts = \
-        #     Alert.objects.filter(
-        #         equipment_instance=self.equipment_instance,
-        #         from_date__lte=self.to_date,
-        #        to_date__gte=self.from_date + relativedelta(months=-1))
 
-        return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
+def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
+    instance.alerts = \
+        Alert.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            from_date__lte=instance.to_date,
+            to_date__gte=instance.from_date + relativedelta(months=-1))
+
+    # instance.save()
+
+
+post_save.connect(
+    receiver=equipment_problem_period_post_save,
+    sender=EquipmentProblemPeriod,
+    weak=True,
+    dispatch_uid=None)
 
 
 @python_2_unicode_compatible
@@ -324,11 +332,21 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
-        # *** AVOID INFINITE RECURSION ***
-        # self.equipment_problem_periods = \
-        #     EquipmentProblemPeriod.objects.filter(
-        #         equipment_instance=self.equipment_instance,
-        #         from_date__lte=self.to_date + relativedelta(months=1),
-        #         to_date__gte=self.from_date)
-
         return super(Alert, self).save(*args, **kwargs)
+
+
+def alert_post_save(sender, instance, *args, **kwargs):
+    instance.equipment_problem_periods = \
+        EquipmentProblemPeriod.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            from_date__lte=instance.to_date + relativedelta(months=1),
+            to_date__gte=instance.from_date)
+
+    # instance.save()
+
+
+post_save.connect(
+    receiver=alert_post_save,
+    sender=Alert,
+    weak=True,
+    dispatch_uid=None)
