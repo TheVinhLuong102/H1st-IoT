@@ -72,7 +72,10 @@ class Project(object):
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentInstance, EquipmentInstanceAssociation
 
-        from arimo.IoT.DataAdmin.PredMaint.models import Blueprint, Alert
+        from arimo.IoT.DataAdmin.PredMaint.models import \
+            Blueprint, \
+            EquipmentProblemPeriod, EquipmentProblemType, \
+            AlertDiagnosisStatus, Alert
 
         self.data = \
             Namespace(
@@ -86,6 +89,9 @@ class Project(object):
                 EquipmentInstanceAssociations=EquipmentInstanceAssociation.objects,
 
                 PredMaintBlueprints=Blueprint.objects,
+                EquipmentProblemTypes=EquipmentProblemType.objects,
+                EquipmentProblemPeriods=EquipmentProblemPeriod.objects,
+                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
                 PredMaintAlerts=Alert.objects)
 
         self.CAT_DATA_TYPE = \
