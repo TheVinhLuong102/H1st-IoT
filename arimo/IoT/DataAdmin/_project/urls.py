@@ -57,8 +57,12 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
 
+    # wire up our API using automatic URL routing
+    # note that the URL path can be whatever you want
     url(r'^rest/', include(router.urls)),
 
+    # if you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views
+    # include login URLs for the browsable API
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^{}/$'.format(EquipmentDataFieldAutoComplete.name),

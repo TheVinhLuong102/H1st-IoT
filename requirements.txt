@@ -1,7 +1,12 @@
+# Py3
 Python-DateUtil
 
+
+# Django
 Django >= 1.11.14, <2   # Django2 bug in Py3: 'Options' object has no attribute 'virtual_fields': https://github.com/klen/mixer/issues/81
 
+
+# Django Auto-Complete
 Django-AutoComplete-Light >= 3.2.10
 Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
@@ -16,11 +21,17 @@ Django-Extensions >= 1.9.9, < 2
 
 Django-Nested-InLines >= 0.1
 
+
 # Django REST Framework
 DjangoRESTFramework >= 3.8.2
+CoreAPI >= 2.3.3   # schema generation support
 Markdown >= 2.6.11   # Markdown support for the browsable API.
-Django-Filter >= 2.0.0   # Filtering support
+Django-Filter >= 2.0.0   # filtering support
+Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
+Django-Guardian >= 1.4.9   # object-level permissions support
 
+
+# misc
 SQLAlchemy >= 1.2.10
 Alembic >= 0.9.10
 SQLAlchemy-Migrate >= 0.11.0
