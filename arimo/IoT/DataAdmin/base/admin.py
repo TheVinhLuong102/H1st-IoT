@@ -54,6 +54,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'name', \
         'data_type', \
         'nullable', \
+        'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
@@ -65,6 +66,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_data_field_type', \
         'data_type', \
         'nullable', \
+        'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
@@ -75,7 +77,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     list_select_related = \
         'equipment_general_type', \
         'equipment_data_field_type', \
-        'data_type'
+        'data_type', \
+        'numeric_measurement_unit'
 
     show_full_result_count = False   # too many
 
@@ -83,7 +86,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
         'name', \
-        'data_type__name'
+        'data_type__name', \
+        'numeric_measurement_unit__name'
 
     form = EquipmentDataFieldForm
 
