@@ -498,7 +498,9 @@ class Project(object):
                 name=clean_lower_str(equipment_instance_name))
 
         assert len(equipment_instances) == 1, \
-            '*** {} ***'.format(equipment_instances)
+            '*** MULTIPLE {} ***'.format(equipment_instances) \
+            if bool(equipment_instances) \
+            else '*** {} #{} DOES NOT EXIST ***'.format(equipment_general_type_name, equipment_instance_name)
 
         return equipment_instances[0]
 
