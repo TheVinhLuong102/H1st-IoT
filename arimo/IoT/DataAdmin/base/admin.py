@@ -8,12 +8,28 @@ from .forms import \
     EquipmentInstanceAssociationForm
 
 from .models import \
+    NumericMeasurementUnit, \
     EquipmentGeneralType, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
     EquipmentInstance, \
     EquipmentInstanceAssociation
+
+
+class NumericMeasurementUnitAdmin(ModelAdmin):
+    list_display = 'name',
+
+    list_filter = 'name',
+
+    show_full_result_count = False   # only a few, but skip counting anyway
+
+    search_fields = 'name',
+
+
+site.register(
+    NumericMeasurementUnit,
+    admin_class=NumericMeasurementUnitAdmin)
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):

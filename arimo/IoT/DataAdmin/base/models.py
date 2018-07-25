@@ -28,6 +28,26 @@ class DataType(Model):
 
 
 @python_2_unicode_compatible
+class NumericMeasurementUnit(Model):
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
+
+    class Meta:
+        ordering = 'name',
+
+    def __str__(self):
+        return 'NumMeasureUnit "{}"'.format(self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(NumericMeasurementUnit, self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
@@ -121,6 +141,15 @@ class EquipmentDataField(Model):
             null=False,
             default=True)
 
+    numeric_measurement_unit = \
+        ForeignKey(
+            to=NumericMeasurementUnit,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
     lower_numeric_null = \
         FloatField(
             blank=False,
@@ -152,13 +181,15 @@ class EquipmentDataField(Model):
         ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
 
     def __str__(self):
-        return '{} [{}] {} [{}{}{}{}{}]'.format(
+        return '{} [{}] {} [{}{}{}{}{}{}]'.format(
             self.equipment_general_type.name.upper(),
             self.equipment_data_field_type.name,
             self.name,
             self.data_type.name
                 if self.data_type
                 else 'UNTYPED',
+            ('' if self.numeric_measurement_unit is None
+                else ', unit {}'.format(self.numeric_measurement_unit.name.upper())),
             ('' if self.upper_numeric_null is None
                 else ', null {}'.format(self.upper_numeric_null))
                 if self.lower_numeric_null is None
