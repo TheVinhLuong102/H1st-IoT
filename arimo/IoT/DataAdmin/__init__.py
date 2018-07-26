@@ -353,13 +353,18 @@ class Project(object):
                     equipment_general_type_name=equipment_general_type_name,
                     equipment_unique_type_name=equipment_unique_type_name)
 
-        equipment_instance = \
-            self.data.EquipmentInstances.update_or_create(
-                equipment_general_type=
-                    self.equipment_general_type(
-                        equipment_general_type_name=equipment_general_type_name),
-                name=clean_lower_str(name),
-                defaults=kwargs)[0]
+        try:
+            equipment_instance = \
+                self.data.EquipmentInstances.update_or_create(
+                    equipment_general_type=
+                        self.equipment_general_type(
+                            equipment_general_type_name=equipment_general_type_name),
+                    name=clean_lower_str(name),
+                    defaults=kwargs)[0]
+            
+        except Exception as err:
+            print('*** {} #{} ***'.format(equipment_general_type_name, name))
+            raise err
 
         if equipment_unique_type_name or \
                 control_data_field_names_incl or control_data_field_names_excl or \
