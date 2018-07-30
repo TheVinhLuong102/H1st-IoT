@@ -152,7 +152,7 @@ class Project(object):
                 name=clean_lower_str(equipment_general_type_name))
 
         assert len(equipment_general_types) == 1, \
-            '*** {} ***'.format(equipment_general_types)
+            '*** {}: {} ***'.format(equipment_general_type_name, equipment_general_types)
 
         return equipment_general_types[0]
 
