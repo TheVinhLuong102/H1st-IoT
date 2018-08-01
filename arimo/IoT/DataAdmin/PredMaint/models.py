@@ -176,13 +176,13 @@ class EquipmentProblemPeriod(Model):
 
 
 def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
-    instance.alerts = \
+    instance.alerts.set(
         Alert.objects.filter(
             equipment_instance=instance.equipment_instance,
             from_date__lte=instance.to_date,
-            to_date__gte=instance.from_date + relativedelta(months=-1))
-
-    # instance.save()
+            to_date__gte=instance.from_date + relativedelta(months=-1)),
+        bulk=True,
+        clear=False)
 
 
 post_save.connect(
@@ -336,13 +336,13 @@ class Alert(Model):
 
 
 def alert_post_save(sender, instance, *args, **kwargs):
-    instance.equipment_problem_periods = \
+    instance.equipment_problem_periods.set(
         EquipmentProblemPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
             from_date__lte=instance.to_date + relativedelta(months=1),
-            to_date__gte=instance.from_date)
-
-    # instance.save()
+            to_date__gte=instance.from_date),
+        bulk=True,
+        clear=False)
 
 
 post_save.connect(
