@@ -688,8 +688,8 @@ class Project(object):
                 equipment_instances__name=clean_lower_str(equipment_instance_name))
 
         if equipment_instance_associations:
-            return equipment_instance_associations[0].equipment_instances.union(
-                    *(equipment_instance_association.equipment_instances
+            return equipment_instance_associations[0].equipment_instances.all().union(
+                    *(equipment_instance_association.equipment_instances.all()
                       for equipment_instance_association in equipment_instance_associations[1:]),
                     all=False)
 
