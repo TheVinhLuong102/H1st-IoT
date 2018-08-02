@@ -1,4 +1,5 @@
 from collections import Counter
+import datetime
 import os
 from ruamel import yaml
 import six
@@ -672,6 +673,29 @@ class Project(object):
             equipment_data_fields.update(equipment_unique_type.data_fields.all())
 
         return equipment_data_fields
+
+    def associated_equipment_instances(self, equipment_instance_name, from_date=None, to_date=None):
+        kwargs = {}
+
+        if from_date:
+            kwargs['date__gte'] = datetime.datetime.strptime(from_date, "%Y-%m-%d").date()
+
+        if to_date:
+            kwargs['date__lte'] = datetime.datetime.strptime(to_date, "%Y-%m-%d").date()
+
+        equipment_instance_associations = \
+            self.data.EquipmentInstanceAssociations.filter(
+                equipment_instances__name=clean_lower_str(equipment_instance_name))
+
+        if equipment_instance_associations:
+            return equipment_instance_associations[0].equipment_instances.union(
+                    *(equipment_instance_association.equipment_instances
+                      for equipment_instance_association in equipment_instance_associations[1:]),
+                    all=False)
+
+        else:
+            return self.data.EquipmentInstances.filter(
+                    name=clean_lower_str(equipment_instance_name))
 
 
 def project(name='TEST'):
