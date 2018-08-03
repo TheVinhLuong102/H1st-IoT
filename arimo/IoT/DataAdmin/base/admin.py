@@ -5,7 +5,7 @@ from .forms import \
     EquipmentUniqueTypeGroupForm, \
     EquipmentUniqueTypeForm, \
     EquipmentInstanceForm, \
-    EquipmentEnsembleForm
+    EquipmentSystemForm
 
 from .models import \
     NumericMeasurementUnit, \
@@ -15,7 +15,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
-    EquipmentEnsemble
+    EquipmentSystem
 
 
 class NumericMeasurementUnitAdmin(ModelAdmin):
@@ -99,7 +99,9 @@ site.register(
 
 
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
-    list_display = 'equipment_general_type', 'name'
+    list_display = \
+        'equipment_general_type', \
+        'name'
 
     list_filter = 'equipment_general_type',
 
@@ -120,7 +122,9 @@ site.register(
 
 
 class EquipmentUniqueTypeAdmin(ModelAdmin):
-    list_display = 'equipment_general_type', 'name'
+    list_display = \
+        'equipment_general_type', \
+        'name'
 
     list_filter = 'equipment_general_type',
 
@@ -201,7 +205,7 @@ site.register(
     admin_class=EquipmentInstanceAdmin)
 
 
-class EquipmentEnsembleAdmin(ModelAdmin):
+class EquipmentSystemAdmin(ModelAdmin):
     list_display = \
         'equipment_facility', \
         'name', \
@@ -220,9 +224,9 @@ class EquipmentEnsembleAdmin(ModelAdmin):
         'equipment_facility__name', \
         'name',
 
-    form = EquipmentEnsembleForm
+    form = EquipmentSystemForm
 
 
 site.register(
-    EquipmentEnsemble,
-    admin_class=EquipmentEnsembleAdmin)
+    EquipmentSystem,
+    admin_class=EquipmentSystemAdmin)

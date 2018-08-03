@@ -446,9 +446,9 @@ class EquipmentInstance(Model):
 
 
 @python_2_unicode_compatible
-class EquipmentEnsemble(Model):
-    RELATED_NAME = 'equipment_instance_associations'
-    RELATED_QUERY_NAME = 'equipment_instance_association'
+class EquipmentSystem(Model):
+    RELATED_NAME = 'equipment_systems'
+    RELATED_QUERY_NAME = 'equipment_system'
 
     equipment_facility = \
         ForeignKey(
@@ -488,4 +488,4 @@ class EquipmentEnsemble(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentEnsemble, self).save(*args, **kwargs)
+        return super(EquipmentSystem, self).save(*args, **kwargs)
