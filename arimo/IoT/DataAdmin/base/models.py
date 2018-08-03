@@ -308,7 +308,8 @@ class EquipmentFacility(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False)
+            null=False,
+            unique=True)
 
     class Meta:
         ordering = 'name',
