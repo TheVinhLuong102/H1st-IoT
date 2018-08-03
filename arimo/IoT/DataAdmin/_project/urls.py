@@ -26,7 +26,9 @@ from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
+    EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
+
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemPeriodAutoComplete
@@ -76,6 +78,10 @@ urlpatterns = [
     url(r'^{}/$'.format(EquipmentUniqueTypeAutoComplete.name),
         EquipmentUniqueTypeAutoComplete.as_view(),
         name=EquipmentUniqueTypeAutoComplete.name),
+
+    url(r'^{}/$'.format(EquipmentFacilityAutoComplete.name),
+        EquipmentFacilityAutoComplete.as_view(),
+        name=EquipmentFacilityAutoComplete.name),
 
     url(r'^{}/$'.format(EquipmentInstanceAutoComplete.name),
         EquipmentInstanceAutoComplete.as_view(),

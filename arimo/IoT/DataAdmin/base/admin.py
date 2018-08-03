@@ -13,6 +13,7 @@ from .models import \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
+    EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceAssociation
 
@@ -139,18 +140,39 @@ site.register(
     admin_class=EquipmentUniqueTypeAdmin)
 
 
+class EquipmentFacilityAdmin(ModelAdmin):
+    list_display = 'name',
+
+    list_filter = 'name',
+
+    show_full_result_count = False   # too many
+
+    search_fields = 'name',
+
+
 class EquipmentInstanceAdmin(ModelAdmin):
-    list_display = 'equipment_general_type', 'equipment_unique_type', 'name'
+    list_display = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'equipment_facility', \
+        'name'
 
-    list_filter = 'equipment_general_type', 'equipment_unique_type'
+    list_filter = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'equipment_facility'
 
-    list_select_related = 'equipment_general_type', 'equipment_unique_type'
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'equipment_facility'
 
     show_full_result_count = False   # too many
 
     search_fields = \
         'equipment_general_type__name', \
         'equipment_unique_type__name', \
+        'equipment_facility__name', \
         'name'
 
     form = EquipmentInstanceForm
@@ -162,13 +184,23 @@ site.register(
 
 
 class EquipmentInstanceAssociationAdmin(ModelAdmin):
-    list_display = 'name', 'date'
+    list_display = \
+        'equipment_facility', \
+        'name', \
+        'date'
 
-    list_filter = 'name', 'date'
+    list_filter = \
+        'equipment_facility', \
+        'name', \
+        'date'
+
+    list_select_related = 'equipment_facility',
 
     show_full_result_count = False   # too many
 
-    search_fields = 'name',
+    search_fields = \
+        'equipment_facility__name', \
+        'name',
 
     form = EquipmentInstanceAssociationForm
 

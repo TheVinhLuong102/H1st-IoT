@@ -300,6 +300,28 @@ class EquipmentUniqueType(Model):
 
 
 @python_2_unicode_compatible
+class EquipmentFacility(Model):
+    RELATED_NAME = 'equipment_facilities'
+    RELATED_QUERY_NAME = 'equipment_facility'
+
+    name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False)
+
+    class Meta:
+        ordering = 'name',
+
+    def __str__(self):
+        return 'EqFacility "{}"'.format(self.name)
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        return super(EquipmentFacility, self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
 class EquipmentInstance(Model):
     RELATED_NAME = 'equipment_instances'
     RELATED_QUERY_NAME = 'equipment_instance'
@@ -316,6 +338,15 @@ class EquipmentInstance(Model):
     equipment_unique_type = \
         ForeignKey(
             to=EquipmentUniqueType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
+    equipment_facility = \
+        ForeignKey(
+            to=EquipmentFacility,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True,
@@ -417,6 +448,15 @@ class EquipmentInstance(Model):
 class EquipmentInstanceAssociation(Model):
     RELATED_NAME = 'equipment_instance_associations'
     RELATED_QUERY_NAME = 'equipment_instance_association'
+
+    equipment_facility = \
+        ForeignKey(
+            to=EquipmentFacility,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
 
     name = \
         CharField(
