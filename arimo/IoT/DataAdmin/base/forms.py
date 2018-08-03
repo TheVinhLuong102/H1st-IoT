@@ -5,7 +5,7 @@ from .models import \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
     EquipmentInstance, \
-    EquipmentInstanceAssociation
+    EquipmentEnsemble
 
 
 class EquipmentDataFieldForm(autocomplete.FutureModelForm):
@@ -70,9 +70,9 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
                            'data-minimum-input-length': 1}))
 
 
-class EquipmentInstanceAssociationForm(autocomplete.FutureModelForm):
+class EquipmentEnsembleForm(autocomplete.FutureModelForm):
     class Meta:
-        model = EquipmentInstanceAssociation
+        model = EquipmentEnsemble
 
         fields = '__all__'
 

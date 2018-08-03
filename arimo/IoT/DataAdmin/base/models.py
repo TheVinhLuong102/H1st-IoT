@@ -445,7 +445,7 @@ class EquipmentInstance(Model):
 
 
 @python_2_unicode_compatible
-class EquipmentInstanceAssociation(Model):
+class EquipmentEnsemble(Model):
     RELATED_NAME = 'equipment_instance_associations'
     RELATED_QUERY_NAME = 'equipment_instance_association'
 
@@ -487,4 +487,4 @@ class EquipmentInstanceAssociation(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentInstanceAssociation, self).save(*args, **kwargs)
+        return super(EquipmentEnsemble, self).save(*args, **kwargs)

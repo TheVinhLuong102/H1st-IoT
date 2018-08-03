@@ -71,7 +71,7 @@ class Project(object):
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
-            EquipmentInstance, EquipmentInstanceAssociation
+            EquipmentInstance, EquipmentEnsemble
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
             Blueprint, \
@@ -87,7 +87,7 @@ class Project(object):
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
                 EquipmentInstances=EquipmentInstance.objects,
-                EquipmentInstanceAssociations=EquipmentInstanceAssociation.objects,
+                EquipmentEnsembles=EquipmentEnsemble.objects,
 
                 PredMaintBlueprints=Blueprint.objects,
                 EquipmentProblemTypes=EquipmentProblemType.objects,
@@ -683,14 +683,14 @@ class Project(object):
         if to_date:
             kwargs['date__lte'] = datetime.datetime.strptime(to_date, "%Y-%m-%d").date()
 
-        equipment_instance_associations = \
-            self.data.EquipmentInstanceAssociations.filter(
+        equipment_ensembles = \
+            self.data.EquipmentEnsembles.filter(
                 equipment_instances__name=clean_lower_str(equipment_instance_name))
 
-        if equipment_instance_associations:
-            return equipment_instance_associations[0].equipment_instances.all().union(
-                    *(equipment_instance_association.equipment_instances.all()
-                      for equipment_instance_association in equipment_instance_associations[1:]),
+        if equipment_ensembles:
+            return equipment_ensembles[0].equipment_instances.all().union(
+                    *(equipment_ensemble.equipment_instances.all()
+                      for equipment_ensemble in equipment_ensembles[1:]),
                     all=False)
 
         else:
