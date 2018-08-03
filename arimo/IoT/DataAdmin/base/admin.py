@@ -1,4 +1,4 @@
-from django.contrib.admin import ModelAdmin, site
+from django.contrib.admin import ModelAdmin, site, StackedInline, TabularInline
 
 from .forms import \
     EquipmentDataFieldForm, \
@@ -140,6 +140,17 @@ site.register(
     admin_class=EquipmentUniqueTypeAdmin)
 
 
+class EquipmentInstanceTabularInline(TabularInline):
+    model = EquipmentInstance
+
+    fields = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'name'
+
+    form = EquipmentInstanceForm
+
+
 class EquipmentFacilityAdmin(ModelAdmin):
     list_display = 'name',
 
@@ -148,6 +159,8 @@ class EquipmentFacilityAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = 'name',
+
+    inlines = EquipmentInstanceTabularInline,
 
 
 site.register(

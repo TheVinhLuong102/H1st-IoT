@@ -63,6 +63,18 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
         fields = '__all__'
 
         widgets = dict(
+            equipment_unique_type=
+                autocomplete.ModelSelect2(
+                    url='EquipmentUniqueType-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+
+            equipment_facility=
+                autocomplete.ModelSelect2(
+                    url='EquipmentFacility-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
+                        'data-minimum-input-length': 1}),
+
             data_fields=
                 autocomplete.ModelSelect2Multiple(
                     url='EquipmentDataField-AutoComplete',
