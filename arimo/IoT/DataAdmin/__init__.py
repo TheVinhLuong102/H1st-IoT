@@ -667,11 +667,11 @@ class Project(object):
                 equipment_unique_type_group_name=equipment_unique_type_group_name) \
             .equipment_unique_types.all()
 
-        equipment_data_fields = set(equipment_unique_types[0].data_fields.all())
+        equipment_data_fields = equipment_unique_types[0].data_fields.all()
 
         for equipment_unique_type in equipment_unique_types[1:]:
             # use .update(...) instead of .intersection_update(...) to be more relaxed
-            equipment_data_fields.update(equipment_unique_type.data_fields.all())
+            equipment_data_fields |= equipment_unique_type.data_fields.all()
 
         return equipment_data_fields
 
