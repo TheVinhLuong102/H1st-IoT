@@ -69,7 +69,7 @@ class Project(object):
         self._migrate()
 
         from arimo.IoT.DataAdmin.base.models import \
-            DataType, EquipmentDataFieldType, EquipmentDataField, \
+            DataType, EquipmentDataFieldType, EquipmentDataField, NumericMeasurementUnit, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentFacility, EquipmentInstance, EquipmentSystem
 
@@ -83,6 +83,7 @@ class Project(object):
                 DataTypes=DataType.objects,
                 EquipmentDataFieldTypes=EquipmentDataFieldType.objects,
                 EquipmentDataFields=EquipmentDataField.objects,
+                NumericMeasurementUnits=NumericMeasurementUnit.objects,
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
