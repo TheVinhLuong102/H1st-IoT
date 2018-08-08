@@ -12,7 +12,7 @@ Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
 Django-QuerySetSequence >= 0.8
 Django-Tagging >= 0.4.6
-Django-Taggit >= 0.22.2
+Django-Taggit >= 0.23.0
 
 Django-Debug-Toolbar >= 1.9.1
 Django-Grappelli >= 2.11.1
