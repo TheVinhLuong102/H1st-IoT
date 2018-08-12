@@ -7,7 +7,7 @@ Django >= 1.11.15, <2   # Django2 bug in Py3: 'Options' object has no attribute 
 
 
 # Django Auto-Complete
-Django-AutoComplete-Light >= 3.2.10
+Django-AutoComplete-Light == 3.2.10   # *** > 3.2.10 has ImportError ***
 Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
 Django-QuerySetSequence >= 0.8
