@@ -512,6 +512,57 @@ class Project(object):
 
         return equipment_instances[0]
 
+    def save_equipment_data(
+            self, df, equipment_instance_id_or_data_set_name,
+            mode='overwrite', _spark=False, verbose=True):
+        import pandas
+        import pyspark.sql
+        from arimo.df.spark import SparkADF
+        from arimo.util.date_time import DATE_COL
+
+        if isinstance(df, _STR_CLASSES):
+            adf = SparkADF.load(
+                path=df,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                verbose=verbose)
+
+        elif isinstance(df, pandas.DataFrame):
+            adf = SparkADF.create(data=df)
+
+        elif isinstance(df, pyspark.sql.DataFrame):
+            adf = SparkADF(sparkDF=df)
+
+        else:
+            assert isinstance(df, SparkADF)
+            adf = df
+
+        if SparkADF._DEFAULT_I_COL in adf.columns:
+            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
+
+            adf.rename(
+                inplace=True,
+                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
+
+        else:
+            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
+            adf.tCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
+
+        assert self._DATE_TIME_COL_NAME in adf.columns
+        adf.tCol = self._DATE_TIME_COL_NAME
+
+        adf.save(
+            path=os.path.join(
+                self.params.s3.equipment_data.dir_path,
+                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
+            format='parquet',
+            mode=mode,
+            partitionBy=DATE_COL,
+            aws_access_key_id=self.params.s3.access_key_id,
+            aws_secret_access_key=self.params.s3.secret_access_key,
+            verbose=verbose)
+
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
             _from_files=True, _spark=False,
@@ -570,17 +621,17 @@ class Project(object):
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
         from arimo.df.spark_from_files import ArrowSparkADF
         from arimo.util.date_time import DATE_COL
-        from arimo.util.types.spark_sql import _DATE_TYPE, _STR_TYPE
+        from arimo.util.types.spark_sql import _DATE_TYPE
 
-        file_adf = ArrowSparkADF(
-            path=os.path.join(
-                self.params.s3.equipment_data.dir_path,
-                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
-            mergeSchema=True,
-            aws_access_key_id=self.params.s3.access_key_id,
-            aws_secret_access_key=self.params.s3.secret_access_key,
-            iCol=None, tCol=None,
-            verbose=True)
+        file_adf = \
+            ArrowSparkADF(
+                path=os.path.join(
+                    self.params.s3.equipment_data.dir_path,
+                    equipment_instance_id_or_data_set_name + _PARQUET_EXT),
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                iCol=None, tCol=None,
+                verbose=True)
 
         assert file_adf.type(DATE_COL) == _DATE_TYPE, \
             '*** Date Col not of Date Type (likely because of NULL Date-Times) ***'
@@ -607,44 +658,6 @@ class Project(object):
 
         if equipment_instance_ids_w_dups:
             print('*** DUPLICATED EQUIPMENT INSTANCE IDs: {} ***'.format(equipment_instance_ids_w_dups))
-
-    def save_equipment_data(self, df, equipment_instance_id_or_data_set_name, mode='overwrite', verbose=True):
-        import pandas
-        import pyspark.sql
-        from arimo.df.spark import SparkADF
-
-        if isinstance(df, pandas.DataFrame):
-            adf = SparkADF.create(data=df)
-
-        elif isinstance(df, pyspark.sql.DataFrame):
-            adf = SparkADF(sparkDF=df)
-
-        else:
-            assert isinstance(df, SparkADF)
-            adf = df
-
-        if SparkADF._DEFAULT_I_COL in adf.columns:
-            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
-
-            adf.rename(
-                inplace=True,
-                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
-
-        else:
-            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-
-        assert self._DATE_TIME_COL_NAME in adf.columns
-        adf.tCol = self._DATE_TIME_COL_NAME
-
-        adf.save(
-            path=os.path.join(
-                self.params.s3.equipment_data.dir_path,
-                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
-            format='parquet',
-            mode=mode,
-            aws_access_key_id=self.params.s3.access_key_id,
-            aws_secret_access_key=self.params.s3.secret_access_key,
-            verbose=verbose)
 
     def equipment_unique_type_names(self, equipment_general_type_name):
         return sorted(
