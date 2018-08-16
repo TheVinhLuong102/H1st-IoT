@@ -1,12 +1,14 @@
 from collections import Counter
 import datetime
 import os
+import pandas
 from ruamel import yaml
 import six
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
+from django.db.models import Count
 
 import arimo.IoT.DataAdmin._project.settings
 from arimo.IoT.DataAdmin.util import clean_lower_str, _clean_upper_str, _JSON_EXT, _PARQUET_EXT, _YAML_EXT
@@ -708,6 +710,106 @@ class Project(object):
         else:
             return self.data.EquipmentInstances.filter(
                     name=clean_lower_str(equipment_instance_name))
+
+    def _equipment_data_fields_n_equipment_unique_types(only0=True):
+        df = pandas.DataFrame.from_records(
+            data=IoT_DATA_ADMIN_PROJECT.models.base.EquipmentDataField.objects
+                .values('equipment_general_type__name', 'equipment_data_field_type__name', 'name')
+                .annotate(n_equipment_unique_types=Count('equipment_unique_types'))
+                .order_by('equipment_general_type__name', 'equipment_data_field_type__name', 'name'),
+            index=None,
+            exclude=None,
+            columns=['equipment_general_type__name', 'equipment_data_field_type__name', 'name', 'n_equipment_unique_types'],
+            coerce_float=False,
+            nrows=None)
+
+        return df.loc[df.n_equipment_unique_types == 0] \
+            if only0 \
+            else df
+
+    def equipment_unique_types_n_equipment_data_fields(only0=True):
+        df = pandas.DataFrame.from_records(
+            data=self.data.EquipmentUniqueTypes
+                .values('equipment_general_type__name', 'name')
+                .annotate(n_equipment_data_fields=Count('data_fields'))
+                .order_by('equipment_general_type__name', 'name'),
+            index=None,
+            exclude=None,
+            columns=['equipment_general_type__name', 'name', 'n_equipment_data_fields'],
+            coerce_float=False,
+            nrows=None)
+
+        return df.loc[df.n_equipment_data_fields == 0] \
+            if only0 \
+            else df
+
+    def equipment_data_field_names_n_counts(only_multi=True):
+        d = {(i['equipment_general_type__name'], i['name']): i['n']
+             for i in IoT_DATA_ADMIN_PROJECT.models.base.EquipmentDataField.objects
+                 .values('equipment_general_type__name', 'name')
+                 .annotate(n=Count('name'))
+                 .order_by('equipment_general_type__name', 'name')}
+
+        return {k: v for k, v in d.items() if v > 1} \
+            if only_multi \
+            else d
+
+    def equipment_instances_w_cap_urls():
+        _PREFIX = 's3://arimo-panasonic-ap/data/CombinedConfigMeasure/'
+        _PREFIX_LEN = len(_PREFIX)
+
+        ls = []
+
+        for equipment_instance in \
+                IoT_DATA_ADMIN_PROJECT.models.base.EquipmentInstance.objects.filter(data_file_url__startswith=_PREFIX):
+            data_file_url = equipment_instance.data_file_url[_PREFIX_LEN:]
+            if data_file_url != data_file_url.lower():
+                ls.append(data_file_url)
+
+        return ls
+
+    def equipment_instances_n_equipment_unique_types(only_multi=False):
+        s = pandas.DataFrame.from_records(
+            data=IoT_DATA_ADMIN_PROJECT.models.base.EquipmentInstance.objects
+                .values('name')
+                .annotate(n_equipment_unique_types=Count('equipment_unique_type'))
+                .order_by('name'),
+            index=None,
+            exclude=None,
+            columns=['name', 'n_equipment_unique_types'],
+            coerce_float=False,
+            nrows=None) \
+            .set_index(
+            keys='name',
+            drop=True,
+            append=False,
+            inplace=False,
+            verify_integrity=True)['n_equipment_unique_types']
+
+        return s.loc[s > 1] \
+            if only_multi \
+            else s
+
+    def equipment_unique_types_n_equipment_instances_w_data(equipment_general_type_name='refrig'):
+        return pandas.DataFrame.from_records(
+            data=IoT_DATA_ADMIN_PROJECT.models.base.EquipmentInstance.objects
+                .filter(
+                equipment_general_type__name=equipment_general_type_name,
+                data_file_url__startswith='s3://')
+                .values('equipment_unique_type__name')
+                .annotate(n=Count('data_file_url'))
+                .order_by('equipment_unique_type__name'),
+            index=None,
+            exclude=None,
+            columns=['equipment_unique_type__name', 'n'],
+            coerce_float=False,
+            nrows=None) \
+            .set_index(
+            keys='equipment_unique_type__name',
+            drop=True,
+            append=False,
+            inplace=False,
+            verify_integrity=True)['n']
 
 
 def project(name='TEST'):
