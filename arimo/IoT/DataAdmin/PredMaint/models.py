@@ -45,6 +45,9 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
             null=False,
             on_delete=PROTECT)
 
+    def __str__(self):
+        return ''
+
 
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
@@ -75,6 +78,8 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             null=False,
             default=True)
 
+    def __str__(self):
+        return ''
 
 
 @python_2_unicode_compatible
