@@ -15,8 +15,8 @@ from ..util import MAX_CHAR_LEN, clean_lower_str
 
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
-    RELATED_NAME = 'sensor_measurement_data_field_profiles'
-    RELATED_QUERY_NAME = 'sensor_measurement_data_field_profile'
+    RELATED_NAME = 'equipment_unique_type_group_measurement_data_field_profiles'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_measurement_data_field_profile'
 
     equipment_general_type = \
         ForeignKey(
@@ -44,6 +44,53 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
             blank=False,
             null=False,
             on_delete=PROTECT)
+
+    valid_proportion = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
+    sample_min = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    outlier_rst_min = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    sample_quartile = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    sample_median = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    sample_3rd_quartile = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    outlier_rst_max = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    sample_max = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_created=True,
+            auto_now=True,
+            auto_now_add=True)
 
     def __str__(self):
         return ''
