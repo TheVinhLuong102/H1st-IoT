@@ -9,8 +9,72 @@ from django.db.models.signals import post_save
 from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 
-from ..base.models import EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentInstance
+from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentInstance
 from ..util import MAX_CHAR_LEN, clean_lower_str
+
+
+@python_2_unicode_compatible
+class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
+    RELATED_NAME = 'sensor_measurement_data_field_profiles'
+    RELATED_QUERY_NAME = 'sensor_measurement_data_field_profile'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+
+@python_2_unicode_compatible
+class EquipmentUniqueTypeGroupServiceConfig(Model):
+    RELATED_NAME = 'equipment_unique_type_group_service_configs'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
+
 
 
 @python_2_unicode_compatible
