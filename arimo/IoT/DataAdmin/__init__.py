@@ -30,6 +30,7 @@ class Project(object):
     _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
+    _EQUIPMENT_INSTANCE_ALIAS_COL_NAME = 'equipment_instance_alias'
     _DATE_TIME_COL_NAME = 'date_time'
 
     _DEFAULT_PARAMS = \
