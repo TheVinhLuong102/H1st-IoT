@@ -1,7 +1,6 @@
 from collections import Counter
 import datetime
 import os
-import pandas
 from ruamel import yaml
 import six
 
