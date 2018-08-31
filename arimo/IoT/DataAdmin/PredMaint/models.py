@@ -213,6 +213,76 @@ class Blueprint(Model):
 
 
 @python_2_unicode_compatible
+class EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfile(Model):
+    RELATED_NAME = 'equipment_unique_type_group_measurement_data_field_measurement_data_field_benchmark_metric_profiles'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_measurement_data_field_measurement_data_field_benchmark_metric_profile'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    to_date = \
+        DateField(
+            auto_now=False,
+            auto_now_add=False,
+            default=None)
+
+    n = IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
+    mae = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    medae = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    r2 = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    last_updated = \
+        DateTimeField(
+            #  The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
+            #auto_created=True,
+            #auto_now=True,
+            #auto_now_add=True
+        )
+
+    def __str__(self):
+        return ''
+
+
+@python_2_unicode_compatible
 class EquipmentProblemType(Model):
     name = \
         CharField(
