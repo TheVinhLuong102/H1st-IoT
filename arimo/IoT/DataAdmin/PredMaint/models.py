@@ -14,9 +14,9 @@ from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
 @python_2_unicode_compatible
-class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
-    RELATED_NAME = 'equipment_unique_type_group_measurement_data_field_profiles'
-    RELATED_QUERY_NAME = 'equipment_unique_type_group_measurement_data_field_profile'
+class EquipmentUniqueTypeGroupDataFieldProfile(Model):
+    RELATED_NAME = 'equipment_unique_type_group_data_field_profiles'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_profile'
 
     equipment_general_type = \
         ForeignKey(
@@ -110,6 +110,13 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
             #auto_now=True,
             #auto_now_add=True
         )
+
+    class Meta:
+        ordering = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            '-to_date'
 
     def __str__(self):
         return ''
@@ -221,9 +228,9 @@ class Blueprint(Model):
 
 
 @python_2_unicode_compatible
-class EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfile(Model):
-    RELATED_NAME = 'equipment_unique_type_group_measurement_data_field_measurement_data_field_benchmark_metric_profiles'
-    RELATED_QUERY_NAME = 'equipment_unique_type_group_measurement_data_field_measurement_data_field_benchmark_metric_profile'
+class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
+    RELATED_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile'
 
     equipment_general_type = \
         ForeignKey(
@@ -252,7 +259,7 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfil
             null=False,
             on_delete=PROTECT)
 
-    to_date = \
+    trained_to_date = \
         DateField(
             auto_now=False,
             auto_now_add=False,
@@ -285,6 +292,13 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfil
             #auto_now=True,
             #auto_now_add=True
         )
+
+    class Meta:
+        ordering = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            '-trained_to_date'
 
     def __str__(self):
         return ''

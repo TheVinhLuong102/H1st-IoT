@@ -2,13 +2,13 @@ from django.contrib.admin import ModelAdmin, site
 
 from .forms import EquipmentProblemPeriodForm, AlertForm
 from .models import \
-    EquipmentUniqueTypeGroupMeasurementDataFieldProfile, \
+    EquipmentUniqueTypeGroupDataFieldProfile, \
     Blueprint, \
-    EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfile, \
+    EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentProblemType, EquipmentProblemPeriod, AlertDiagnosisStatus, Alert
 
 
-class EquipmentUniqueTypeGroupMeasurementDataFieldProfileAdmin(ModelAdmin):
+class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
@@ -17,8 +17,7 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfileAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_data_field', \
+        'equipment_data_field',
 
     list_select_related = \
         'equipment_general_type', \
@@ -28,12 +27,13 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfileAdmin(ModelAdmin):
 
     search_fields = \
         'equipment_general_type__name', \
-        'equipment_unique_type_group__name'
+        'equipment_unique_type_group__name', \
+        'equipment_data_field__name'
 
 
 site.register(
-    EquipmentUniqueTypeGroupMeasurementDataFieldProfile,
-    admin_class=EquipmentUniqueTypeGroupMeasurementDataFieldProfileAdmin)
+    EquipmentUniqueTypeGroupDataFieldProfile,
+    admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
 
 
 class BlueprintAdmin(ModelAdmin):
