@@ -13,15 +13,27 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_data_field', \
-        'to_date'
+        'to_date', \
+        'valid_proportion', \
+        'n_distinct_values', \
+        'sample_min', \
+        'outlier_rst_min', \
+        'sample_quartile', \
+        'sample_median', \
+        'sample_3rd_quartile', \
+        'outlier_rst_max', \
+        'sample_max', \
+        'last_updated'
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_data_field',
+        'equipment_unique_type_group', \
+        'equipment_data_field'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group'
+        'equipment_unique_type_group', \
+        'equipment_data_field'
 
     show_full_result_count = False   # too many
 
@@ -29,6 +41,22 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
+
+    readonly_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        'to_date', \
+        'valid_proportion', \
+        'n_distinct_values', \
+        'sample_min', \
+        'outlier_rst_min', \
+        'sample_quartile', \
+        'sample_median', \
+        'sample_3rd_quartile', \
+        'outlier_rst_max', \
+        'sample_max', \
+        'last_updated'
 
 
 site.register(
