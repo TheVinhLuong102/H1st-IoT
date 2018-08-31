@@ -2,11 +2,11 @@ from dateutil.relativedelta import relativedelta
 
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, \
+    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, IntegerField, \
     ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.db.models.signals import post_save
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils.encoding import python_2_unicode_compatible
 
 from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentInstance
@@ -45,11 +45,20 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
             null=False,
             on_delete=PROTECT)
 
+    to_date = \
+        DateField(
+            auto_now=False,
+            auto_now_add=False,
+            default=None)
+
     valid_proportion = \
         FloatField(
             blank=False,
             null=False,
             default=0)
+
+    #n_distinct_values = \
+    #    Integer
 
     sample_min = \
         FloatField(
@@ -88,9 +97,11 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
 
     last_updated = \
         DateTimeField(
-            auto_created=True,
-            auto_now=True,
-            auto_now_add=True)
+            #  The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
+            #auto_created=True,
+            #auto_now=True,
+            #auto_now_add=True
+        )
 
     def __str__(self):
         return ''
@@ -410,7 +421,8 @@ class Alert(Model):
         ForeignKey(
             to=AlertDiagnosisStatus,
             blank=True,
-            null=True)
+            null=True,
+            on_delete=PROTECT)
 
     equipment_problem_periods = \
         ManyToManyField(
