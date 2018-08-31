@@ -3,7 +3,7 @@ Python-DateUtil
 
 
 # Django
-Django >= 1.11.15, <2   # Django2 bug in Py3: 'Options' object has no attribute 'virtual_fields': https://github.com/klen/mixer/issues/81
+Django >= 2.1.1
 
 
 # Django Auto-Complete
