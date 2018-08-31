@@ -21,6 +21,16 @@ _metadata = \
 _SCRIPT_REL_PATH_TO_INSTALL = 'bin/arimo-iot-data'
 
 
+install_requires = []
+
+for s in open(_REQUIREMENTS_FILE_NAME).readlines():
+    if not s.startswith('#'):
+        s = s.strip()
+        install_requires.append(
+            'Django'
+            if s.lower().startswith('django')
+            else s)
+
 setup(
     name=_metadata['PACKAGE'],
     author=_metadata['AUTHOR'],
@@ -32,10 +42,7 @@ setup(
     keywords=_metadata['DESCRIPTION'],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=
-        [s.strip()
-         for s in open(_REQUIREMENTS_FILE_NAME).readlines()
-         if not s.startswith('#')],
+    install_requires=install_requires,
     scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
 
 
