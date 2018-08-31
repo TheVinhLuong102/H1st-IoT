@@ -48,6 +48,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_data_field', \
         'to_date', \
         'valid_proportion', \
+        'distinct_values', \
         'n_distinct_values', \
         'sample_min', \
         'outlier_rst_min', \
