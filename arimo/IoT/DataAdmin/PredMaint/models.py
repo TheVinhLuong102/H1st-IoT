@@ -47,9 +47,8 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
     to_date = \
         DateField(
-            auto_now=False,
-            auto_now_add=False,
-            default=None)
+            blank=True,
+            null=True)
 
     valid_proportion = \
         FloatField(
