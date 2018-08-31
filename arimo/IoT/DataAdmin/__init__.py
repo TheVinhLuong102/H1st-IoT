@@ -76,7 +76,9 @@ class Project(object):
             EquipmentFacility, EquipmentInstance, EquipmentSystem
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
+            EquipmentUniqueTypeGroupMeasurementDataFieldProfile, \
             Blueprint, \
+            EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfile, \
             EquipmentProblemPeriod, EquipmentProblemType, \
             AlertDiagnosisStatus, Alert
 
@@ -93,7 +95,11 @@ class Project(object):
                 EquipmentInstances=EquipmentInstance.objects,
                 EquipmentSystems=EquipmentSystem.objects,
 
+                EquipmentUniqueTypeGroupMeasurementDataFieldProfiles=
+                    EquipmentUniqueTypeGroupMeasurementDataFieldProfile.objects,
                 PredMaintBlueprints=Blueprint.objects,
+                EquipmentUniqueTypeGroupMeasurementDataFieldPredMaintBlueprintBenchmarkMetricProfile=
+                    EquipmentUniqueTypeGroupMeasurementDataFieldBlueprintBenchmarkMetricProfile.objects,
                 EquipmentProblemTypes=EquipmentProblemType.objects,
                 EquipmentProblemPeriods=EquipmentProblemPeriod.objects,
                 PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,

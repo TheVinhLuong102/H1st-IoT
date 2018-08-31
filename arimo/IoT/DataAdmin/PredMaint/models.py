@@ -6,7 +6,7 @@ from django.db.models import \
     ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.db.models.signals import post_save
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 
 from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentInstance
@@ -57,8 +57,16 @@ class EquipmentUniqueTypeGroupMeasurementDataFieldProfile(Model):
             null=False,
             default=0)
 
-    #n_distinct_values = \
-    #    Integer
+    distinct_values = \
+        JSONField(
+            default=list,
+            encoder=None)
+
+    n_distinct_values = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
 
     sample_min = \
         FloatField(
