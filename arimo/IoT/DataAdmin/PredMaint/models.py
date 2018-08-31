@@ -59,7 +59,7 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
     distinct_values = \
         JSONField(
-            default=list,
+            default=dict,
             encoder=None)
 
     n_distinct_values = \
@@ -105,11 +105,7 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
     last_updated = \
         DateTimeField(
-            #  The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
-            #auto_created=True,
-            #auto_now=True,
-            #auto_now_add=True
-        )
+            auto_now=True)
 
     class Meta:
         ordering = \
@@ -287,11 +283,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 
     last_updated = \
         DateTimeField(
-            #  The options auto_now, auto_now_add, and default are mutually exclusive. Only one of these options may be present.
-            #auto_created=True,
-            #auto_now=True,
-            #auto_now_add=True
-        )
+            auto_now=True)
 
     class Meta:
         ordering = \
