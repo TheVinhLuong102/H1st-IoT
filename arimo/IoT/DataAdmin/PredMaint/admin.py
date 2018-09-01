@@ -27,8 +27,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_data_field'
+        'equipment_unique_type_group'
 
     list_select_related = \
         'equipment_general_type', \
