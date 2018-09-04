@@ -1,6 +1,9 @@
-from django.contrib.admin import ModelAdmin, site
+from django.contrib.admin import ModelAdmin, site, StackedInline
 
-from .forms import EquipmentProblemPeriodForm, AlertForm
+from .forms import \
+    MonitoredEquipmentDataFieldConfigForm, \
+    EquipmentProblemPeriodForm, \
+    AlertForm
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     MonitoredEquipmentDataFieldConfig, \
@@ -66,6 +69,17 @@ site.register(
     admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
 
 
+class MonitoredEquipmentDataFieldConfigStackedInline(StackedInline):
+    model = MonitoredEquipmentDataFieldConfig
+
+    fields = \
+        'monitored_equipment_data_field', \
+        'excluded_equipment_data_fields', \
+        'active'
+
+    form = MonitoredEquipmentDataFieldConfigForm
+
+
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
@@ -86,6 +100,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     search_fields = \
         'equipment_general_type__name', \
         'equipment_unique_type_group__name'
+
+    inlines = MonitoredEquipmentDataFieldConfigStackedInline,
 
 
 site.register(

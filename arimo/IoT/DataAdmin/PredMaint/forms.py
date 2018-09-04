@@ -1,6 +1,26 @@
 from dal import autocomplete
 
-from .models import EquipmentProblemPeriod, Alert
+from .models import MonitoredEquipmentDataFieldConfig, EquipmentProblemPeriod, Alert
+
+
+class MonitoredEquipmentDataFieldConfigForm(autocomplete.FutureModelForm):
+    class Meta:
+        model = MonitoredEquipmentDataFieldConfig
+
+        fields = '__all__'
+
+        widgets = dict(
+            monitored_equipment_data_field=
+                autocomplete.ModelSelect2(
+                    url='EquipmentDataField-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+
+            excluded_equipment_data_fields=
+                autocomplete.ModelSelect2Multiple(
+                    url='EquipmentDataField-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}))
 
 
 class EquipmentProblemPeriodForm(autocomplete.FutureModelForm):

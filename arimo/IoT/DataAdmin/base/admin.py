@@ -1,4 +1,4 @@
-from django.contrib.admin import ModelAdmin, site, StackedInline, TabularInline
+from django.contrib.admin import ModelAdmin, site, TabularInline
 
 from .forms import \
     EquipmentDataFieldForm, \
