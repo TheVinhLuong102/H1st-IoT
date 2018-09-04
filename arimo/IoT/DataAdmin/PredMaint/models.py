@@ -136,8 +136,7 @@ class MonitoredEquipmentDataFieldConfig(Model):
             to=EquipmentDataField,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False)
+            blank=True)
 
     active = \
         BooleanField(
@@ -177,8 +176,7 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             to=MonitoredEquipmentDataFieldConfig,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False)
+            blank=False)
 
     active = \
         BooleanField(
