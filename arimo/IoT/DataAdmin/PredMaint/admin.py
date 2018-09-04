@@ -70,7 +70,7 @@ site.register(
 
 
 class MonitoredEquipmentDataFieldConfigStackedInline(StackedInline):
-    model = MonitoredEquipmentDataFieldConfig
+    model = EquipmentUniqueTypeGroupServiceConfig.monitored_equipment_data_field_configs.through
 
     fields = \
         'monitored_equipment_data_field', \
