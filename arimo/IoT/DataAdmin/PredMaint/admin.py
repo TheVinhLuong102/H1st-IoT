@@ -3,6 +3,8 @@ from django.contrib.admin import ModelAdmin, site
 from .forms import EquipmentProblemPeriodForm, AlertForm
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
+    MonitoredEquipmentDataFieldConfig, \
+    EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentProblemType, EquipmentProblemPeriod, AlertDiagnosisStatus, Alert
@@ -62,6 +64,33 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 site.register(
     EquipmentUniqueTypeGroupDataFieldProfile,
     admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
+
+
+class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
+    list_display = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'active'
+
+    list_filter = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'active'
+
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type_group',
+
+    show_full_result_count = False   # too many
+
+    search_fields = \
+        'equipment_general_type__name', \
+        'equipment_unique_type_group__name'
+
+
+site.register(
+    EquipmentUniqueTypeGroupServiceConfig,
+    admin_class=EquipmentUniqueTypeGroupServiceConfigAdmin)
 
 
 class BlueprintAdmin(ModelAdmin):

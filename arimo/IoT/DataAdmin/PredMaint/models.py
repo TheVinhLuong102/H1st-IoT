@@ -118,6 +118,38 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
 
 @python_2_unicode_compatible
+class MonitoredEquipmentDataFieldConfig(Model):
+    RELATED_NAME = 'monitored_equipment_data_field_configs'
+    RELATED_QUERY_NAME = 'monitored_equipment_data_field_config'
+
+    monitored_equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    excluded_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False)
+
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
+
+    def __str__(self):
+        return ''
+
+
+@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_service_configs'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
@@ -140,14 +172,36 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             null=False,
             on_delete=PROTECT)
 
+    monitored_equipment_data_field_configs = \
+        ManyToManyField(
+            to=MonitoredEquipmentDataFieldConfig,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False)
+
     active = \
         BooleanField(
             blank=False,
             null=False,
             default=True)
 
+    comments = \
+        TextField(
+            blank=True,
+            null=True)
+
+    class Meta:
+        ordering = \
+            '-active', \
+            'equipment_general_type', \
+            'equipment_unique_type_group'
+
     def __str__(self):
-        return ''
+        return '{}Pred Maint Svc Config: {} {}'.format(
+            '' if self.active
+               else '(INACTIVE) ',
+            self.equipment_general_type.name.upper(), self.equipment_unique_type_group.name)
 
 
 @python_2_unicode_compatible
