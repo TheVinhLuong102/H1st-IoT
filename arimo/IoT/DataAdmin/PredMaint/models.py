@@ -134,8 +134,8 @@ class MonitoredEquipmentDataFieldConfig(Model):
     excluded_equipment_data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
+            related_name='monitored_equipment_data_field_configs_excl',
+            related_query_name='monitored_equipment_data_field_config_excl',
             blank=True)
 
     active = \
