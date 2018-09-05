@@ -80,7 +80,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
 
     form = EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm
 
-    extra = 3
+    extra = 0
 
 
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):

@@ -154,7 +154,7 @@ class EquipmentInstanceTabularInline(TabularInline):
 
     form = EquipmentInstanceForm
 
-    extra = 3
+    extra = 0
 
 
 class EquipmentFacilityAdmin(ModelAdmin):
