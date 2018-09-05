@@ -13,7 +13,6 @@ from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUni
 from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupDataFieldProfile(Model):
     RELATED_NAME = 'equipment_unique_type_group_data_field_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_profile'
@@ -113,9 +112,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
             'equipment_data_field', \
             '-to_date'
 
-    def __str__(self):
-        return ''
-
 
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
@@ -164,7 +160,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             self.equipment_general_type.name.upper(), self.equipment_unique_type_group.name)
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_monitored_data_field_configs'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_monitored_data_field_config'
@@ -210,9 +205,6 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             '-active', \
             'equipment_unique_type_group_service_config', \
             'monitored_equipment_data_field'
-
-    def __str__(self):
-        return ''
 
 
 @python_2_unicode_compatible
@@ -287,7 +279,6 @@ class Blueprint(Model):
                else ' (INACTIVE)')
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
     RELATED_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile'
@@ -355,9 +346,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
             'equipment_unique_type_group', \
             'equipment_data_field', \
             '-trained_to_date'
-
-    def __str__(self):
-        return ''
 
 
 @python_2_unicode_compatible
