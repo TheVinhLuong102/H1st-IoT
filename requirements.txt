@@ -7,7 +7,7 @@ Django >= 2.1.1
 
 
 # Django Auto-Complete
-Django-AutoComplete-Light == 3.2.10   # *** 3.3.0: from django.contrib.admin.widgets import SELECT2_TRANSLATIONS: ImportError: cannot import name SELECT2_TRANSLATIONS ***
+Django-AutoComplete-Light >= 3.3.0
 Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
 Django-QuerySetSequence >= 0.8

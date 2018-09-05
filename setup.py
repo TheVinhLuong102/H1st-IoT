@@ -1,6 +1,7 @@
 import json
 import os
 from setuptools import find_packages, setup
+import six
 
 
 _PACKAGE_NAMESPACE_NAME = 'arimo'
@@ -26,10 +27,13 @@ install_requires = []
 for s in open(_REQUIREMENTS_FILE_NAME).readlines():
     if not s.startswith('#'):
         s = s.strip()
+        lower_s = s.lower()
         install_requires.append(
             'Django'
-            if s.lower().startswith('django')
-            else s)
+            if lower_s.startswith('django')
+            else ('Django-AutoComplete-Light==3.2.10'
+                  if six.PY2 and lower_s.startswith('django-autocomplete-light')
+                  else s))
 
 setup(
     name=_metadata['PACKAGE'],
