@@ -331,6 +331,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
             blank=True,
             null=True)
 
+    rmse = \
+        FloatField(
+            blank=True,
+            null=True)
+
     r2 = \
         FloatField(
             blank=True,

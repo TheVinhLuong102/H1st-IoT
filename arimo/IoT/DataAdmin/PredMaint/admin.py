@@ -153,9 +153,10 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'equipment_data_field', \
         'trained_to_date', \
         'n', \
+        'r2', \
         'mae', \
         'medae', \
-        'r2', \
+        'rmse', \
         'last_updated'
 
     list_filter = \
@@ -181,9 +182,10 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'equipment_data_field', \
         'trained_to_date', \
         'n', \
+        'r2', \
         'mae', \
         'medae', \
-        'r2', \
+        'rmse', \
         'last_updated'
 
 
