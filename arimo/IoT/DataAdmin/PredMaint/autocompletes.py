@@ -7,7 +7,7 @@ class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentProblemType-AutoComplete'
 
     def get_queryset(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             query_set = EquipmentProblemType.objects.all()
 
         else:
@@ -23,7 +23,7 @@ class EquipmentProblemPeriodAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentProblemPeriod-AutoComplete'
 
     def get_queryset(self):
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             query_set = EquipmentProblemPeriod.objects.all()
 
         else:
