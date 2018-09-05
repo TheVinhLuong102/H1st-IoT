@@ -75,7 +75,8 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
     fields = \
         'monitored_equipment_data_field', \
         'excluded_equipment_data_fields', \
-        'active'
+        'active', \
+        'comments'
 
     form = EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm
 

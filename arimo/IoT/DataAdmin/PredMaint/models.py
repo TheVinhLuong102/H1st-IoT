@@ -200,6 +200,17 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             null=False,
             default=True)
 
+    comments = \
+        TextField(
+            blank=True,
+            null=True)
+
+    class Meta:
+        ordering = \
+            '-active', \
+            'equipment_unique_type_group_service_config', \
+            'monitored_equipment_data_field'
+
     def __str__(self):
         return ''
 
