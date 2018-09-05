@@ -1,12 +1,12 @@
 from django.contrib.admin import ModelAdmin, site, StackedInline
 
 from .forms import \
-    MonitoredEquipmentDataFieldConfigForm, \
+    EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
     EquipmentProblemPeriodForm, \
     AlertForm
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
-    MonitoredEquipmentDataFieldConfig, \
+    EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
@@ -69,15 +69,17 @@ site.register(
     admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
 
 
-class MonitoredEquipmentDataFieldConfigStackedInline(StackedInline):
-    model = EquipmentUniqueTypeGroupServiceConfig.monitored_equipment_data_field_configs.through
+class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInline):
+    model = EquipmentUniqueTypeGroupMonitoredDataFieldConfig
 
     fields = \
         'monitored_equipment_data_field', \
         'excluded_equipment_data_fields', \
         'active'
 
-    form = MonitoredEquipmentDataFieldConfigForm
+    form = EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm
+
+    extra = 3
 
 
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
@@ -101,7 +103,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_unique_type_group__name'
 
-    inlines = MonitoredEquipmentDataFieldConfigStackedInline,
+    inlines = EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline,
 
 
 site.register(

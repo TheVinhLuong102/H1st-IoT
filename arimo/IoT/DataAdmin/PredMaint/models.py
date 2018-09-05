@@ -118,37 +118,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
 
 @python_2_unicode_compatible
-class MonitoredEquipmentDataFieldConfig(Model):
-    RELATED_NAME = 'monitored_equipment_data_field_configs'
-    RELATED_QUERY_NAME = 'monitored_equipment_data_field_config'
-
-    monitored_equipment_data_field = \
-        ForeignKey(
-            to=EquipmentDataField,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
-
-    excluded_equipment_data_fields = \
-        ManyToManyField(
-            to=EquipmentDataField,
-            related_name='monitored_equipment_data_field_configs_excl',
-            related_query_name='monitored_equipment_data_field_config_excl',
-            blank=True)
-
-    active = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=True)
-
-    def __str__(self):
-        return ''
-
-
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_service_configs'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
@@ -170,13 +139,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             blank=False,
             null=False,
             on_delete=PROTECT)
-
-    monitored_equipment_data_field_configs = \
-        ManyToManyField(
-            to=MonitoredEquipmentDataFieldConfig,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False)
 
     active = \
         BooleanField(
@@ -200,6 +162,46 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             '' if self.active
                else '(INACTIVE) ',
             self.equipment_general_type.name.upper(), self.equipment_unique_type_group.name)
+
+
+@python_2_unicode_compatible
+class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
+    RELATED_NAME = 'equipment_unique_type_group_monitored_data_field_configs'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_monitored_data_field_config'
+
+    equipment_unique_type_group_service_config = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroupServiceConfig,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True,
+            null=True,
+            on_delete=PROTECT)
+
+    monitored_equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    excluded_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name='equipment_unique_type_group_monitored_data_field_configs_excl',
+            related_query_name='equipment_unique_type_group_monitored_data_field_config_excl',
+            blank=True)
+
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
+
+    def __str__(self):
+        return ''
 
 
 @python_2_unicode_compatible

@@ -1,11 +1,11 @@
 from dal import autocomplete
 
-from .models import MonitoredEquipmentDataFieldConfig, EquipmentProblemPeriod, Alert
+from .models import EquipmentUniqueTypeGroupMonitoredDataFieldConfig, EquipmentProblemPeriod, Alert
 
 
-class MonitoredEquipmentDataFieldConfigForm(autocomplete.FutureModelForm):
+class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureModelForm):
     class Meta:
-        model = MonitoredEquipmentDataFieldConfig
+        model = EquipmentUniqueTypeGroupMonitoredDataFieldConfig
 
         fields = '__all__'
 

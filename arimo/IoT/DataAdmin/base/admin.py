@@ -154,6 +154,8 @@ class EquipmentInstanceTabularInline(TabularInline):
 
     form = EquipmentInstanceForm
 
+    extra = 3
+
 
 class EquipmentFacilityAdmin(ModelAdmin):
     list_display = 'name',
