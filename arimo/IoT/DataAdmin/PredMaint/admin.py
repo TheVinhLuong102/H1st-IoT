@@ -146,6 +146,52 @@ site.register(
     admin_class=BlueprintAdmin)
 
 
+class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(ModelAdmin):
+    list_display = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        'trained_to_date', \
+        'n', \
+        'mae', \
+        'medae', \
+        'r2', \
+        'last_updated'
+
+    list_filter = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'trained_to_date'
+
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_data_field'
+
+    show_full_result_count = False   # too many
+
+    search_fields = \
+        'equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_data_field__name'
+
+    readonly_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        'trained_to_date', \
+        'n', \
+        'mae', \
+        'medae', \
+        'r2', \
+        'last_updated'
+
+
+site.register(
+    EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile,
+    admin_class=EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin)
+
+
 class EquipmentProblemTypeAdmin(ModelAdmin):
     list_display = 'name',
 
