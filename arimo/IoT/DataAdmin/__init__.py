@@ -10,7 +10,7 @@ from django.core.wsgi import get_wsgi_application
 from django.db.models import Count
 
 import arimo.IoT.DataAdmin._project.settings
-from arimo.IoT.DataAdmin.util import clean_lower_str, _clean_upper_str, _JSON_EXT, _PARQUET_EXT, _YAML_EXT
+from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _PARQUET_EXT, _YAML_EXT
 
 
 _STR_CLASSES = \
