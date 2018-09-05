@@ -77,6 +77,7 @@ class Project(object):
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
+            EquipmentUniqueTypeGroupServiceConfig, \
             Blueprint, \
             EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
             EquipmentProblemPeriod, EquipmentProblemType, \
@@ -97,6 +98,8 @@ class Project(object):
 
                 EquipmentUniqueTypeGroupDataFieldProfiles=
                     EquipmentUniqueTypeGroupDataFieldProfile.objects,
+                EquipmentUniqueTypeGroupPredMaintServiceConfigs=
+                    EquipmentUniqueTypeGroupServiceConfig.objects,
                 PredMaintBlueprints=Blueprint.objects,
                 EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
                     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
