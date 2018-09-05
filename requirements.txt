@@ -17,7 +17,7 @@ Django-Taggit >= 0.23.0
 Django-Debug-Toolbar >= 1.9.1
 Django-Grappelli >= 2.11.1
 
-Django-Extensions >= 1.9.9, < 2
+Django-Extensions >= 2.1.2
 
 Django-Nested-InLines >= 0.1
 
