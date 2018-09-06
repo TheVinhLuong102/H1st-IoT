@@ -100,13 +100,16 @@ class Project(object):
                     EquipmentUniqueTypeGroupDataFieldProfile.objects,
                 EquipmentUniqueTypeGroupPredMaintServiceConfigs=
                     EquipmentUniqueTypeGroupServiceConfig.objects,
+
                 PredMaintBlueprints=Blueprint.objects,
                 EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
                     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
+
                 EquipmentProblemTypes=EquipmentProblemType.objects,
                 EquipmentProblemPeriods=EquipmentProblemPeriod.objects,
-                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
-                PredMaintAlerts=Alert.objects)
+
+                PredMaintAlerts=Alert.objects,
+                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects)
 
         self.CAT_DATA_TYPE = \
             self.data.DataTypes.get_or_create(
