@@ -372,7 +372,7 @@ class Project(object):
             **kwargs):
         if equipment_unique_type_name:
             kwargs['equipment_unique_type'] = \
-                self.equipment_unique_type(
+                self.update_or_create_equipment_unique_type(
                     equipment_general_type_name=equipment_general_type_name,
                     equipment_unique_type_name=equipment_unique_type_name)
 
