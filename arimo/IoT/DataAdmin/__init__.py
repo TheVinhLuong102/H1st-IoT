@@ -226,7 +226,10 @@ class Project(object):
                 name=clean_lower_str(equipment_unique_type_group_name))
 
         assert len(equipment_general_type_groups) == 1, \
-            '*** {} ***'.format(equipment_general_type_groups)
+            '*** {} {}: {} ***'.format(
+                equipment_general_type_name,
+                equipment_unique_type_group_name,
+                equipment_general_type_groups)
 
         return equipment_general_type_groups[0]
 
@@ -283,7 +286,10 @@ class Project(object):
                 name=clean_lower_str(equipment_unique_type_name))
 
         assert len(equipment_unique_types) == 1, \
-            '*** {} ***'.format(equipment_unique_types)
+            '*** {} {}: {} ***'.format(
+                equipment_general_type_name,
+                equipment_unique_type_name,
+                equipment_unique_types)
 
         return equipment_unique_types[0]
 
