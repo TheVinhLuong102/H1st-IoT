@@ -158,7 +158,7 @@ class Project(object):
     def _migrate(self):
         call_command('migrate')
 
-    def create_equipment_general_type(self, equipment_general_type_name):
+    def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
                 name=clean_lower_str(equipment_general_type_name),
                 defaults=None)[0]
@@ -239,7 +239,7 @@ class Project(object):
         equipment_unique_type = \
             self.data.EquipmentUniqueTypes.get_or_create(
                 equipment_general_type=
-                    self.equipment_general_type(
+                    self.get_or_create_equipment_general_type(
                         equipment_general_type_name=equipment_general_type_name),
                 name=clean_lower_str(equipment_unique_type_name),
                 defaults=None)[0]
