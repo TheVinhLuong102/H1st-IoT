@@ -136,6 +136,13 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             null=False,
             on_delete=PROTECT)
 
+    global_excluded_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     active = \
         BooleanField(
             blank=False,

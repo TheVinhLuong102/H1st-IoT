@@ -1,6 +1,22 @@
 from dal import autocomplete
 
-from .models import EquipmentUniqueTypeGroupMonitoredDataFieldConfig, EquipmentProblemPeriod, Alert
+from .models import \
+    EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
+    EquipmentProblemPeriod, Alert
+
+
+class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
+    class Meta:
+        model = EquipmentUniqueTypeGroupServiceConfig
+
+        fields = '__all__'
+
+        widgets = dict(
+            global_excluded_equipment_data_fields=
+                autocomplete.ModelSelect2Multiple(
+                    url='EquipmentDataField-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}))
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureModelForm):

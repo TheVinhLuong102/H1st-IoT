@@ -1,9 +1,11 @@
 from django.contrib.admin import ModelAdmin, site, StackedInline
 
 from .forms import \
+    EquipmentUniqueTypeGroupServiceConfigForm, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
     EquipmentProblemPeriodForm, \
     AlertForm
+
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
@@ -104,6 +106,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     search_fields = \
         'equipment_general_type__name', \
         'equipment_unique_type_group__name'
+
+    form = EquipmentUniqueTypeGroupServiceConfigForm
 
     inlines = EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline,
 
