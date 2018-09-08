@@ -33,6 +33,12 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
                 autocomplete.ModelSelect2Multiple(
                     url='EquipmentUniqueType-AutoComplete',
                     attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+
+            equipment_data_fields=
+                autocomplete.ModelSelect2Multiple(
+                    url='EquipmentDataField-AutoComplete',
+                    attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
 
