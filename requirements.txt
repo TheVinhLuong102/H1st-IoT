@@ -47,3 +47,7 @@ PyYAML >= 3.13
 Ruamel.YAML >= 0.15.64
 
 Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
+
+
+# SciPy stack
+Pandas >= 0.23.4
