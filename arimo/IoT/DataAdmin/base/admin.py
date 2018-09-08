@@ -115,7 +115,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeGroupForm
 
-    readonly_fields = 'equipment_data_fields',
+    # readonly_fields = 'equipment_data_fields',   *** UGLY READ-ONLY DISPLAY ***
 
 
 site.register(

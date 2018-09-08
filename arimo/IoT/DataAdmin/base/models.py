@@ -253,11 +253,11 @@ class EquipmentUniqueTypeGroup(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
 
-        self.equipment_data_fields = \
-            self.equipment_unique_types[0].data_fields.all().union(
+        self.equipment_data_fields.set(
+            self.equipment_unique_types.all()[0].data_fields.all().union(
             *(equipment_unique_type.data_fields.all()
-              for equipment_unique_type in self.equipment_unique_types[1:]),
-            all=False)
+              for equipment_unique_type in self.equipment_unique_types.all()[1:]),
+            all=False))
 
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
 
