@@ -235,6 +235,13 @@ class EquipmentUniqueTypeGroup(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     class Meta:
         ordering = 'equipment_general_type', 'name'
 
@@ -245,6 +252,13 @@ class EquipmentUniqueTypeGroup(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
+
+        self.equipment_data_fields = \
+            self.equipment_unique_types[0].data_fields.all().union(
+            *(equipment_unique_type.data_fields.all()
+              for equipment_unique_type in self.equipment_unique_types[1:]),
+            all=False)
+
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
 
 
