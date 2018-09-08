@@ -113,13 +113,6 @@ class EquipmentDataField(Model):
             null=False,
             on_delete=PROTECT)
 
-    equipment_unique_types = \
-        ManyToManyField(
-            to='EquipmentUniqueType',
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=True)
-
     name = \
         CharField(
             max_length=MAX_CHAR_LEN,
@@ -176,6 +169,13 @@ class EquipmentDataField(Model):
         FloatField(
             blank=True,
             null=True)
+
+    equipment_unique_types = \
+        ManyToManyField(
+            to='EquipmentUniqueType',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
 
     class Meta:
         ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
