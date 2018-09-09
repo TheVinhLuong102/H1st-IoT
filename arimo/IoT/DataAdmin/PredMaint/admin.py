@@ -90,6 +90,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
+        'details', \
         'active', \
         'last_updated'
 
@@ -111,6 +112,18 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     form = EquipmentUniqueTypeGroupServiceConfigForm
 
     inlines = EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline,
+
+    def details(self, obj):
+        return '; '.join(
+            '{}{}'.format(
+                equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field.name.upper(),
+                ' (excl. {})'.format(
+                    ', '.join(excluded_equipment_data_field.name
+                              for excluded_equipment_data_field in
+                                equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.all()))
+                    if equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.count()
+                    else '')
+            for equipment_unique_type_group_monitored_data_field_config in obj.equipment_unique_type_group_monitored_data_field_configs.all())
 
 
 site.register(
