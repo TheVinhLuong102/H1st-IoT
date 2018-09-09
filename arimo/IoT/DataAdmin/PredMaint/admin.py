@@ -90,7 +90,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
-        'active'
+        'active', \
+        'last_updated'
 
     list_filter = \
         'equipment_general_type', \
@@ -124,7 +125,8 @@ class BlueprintAdmin(ModelAdmin):
         'trained_to_date', \
         'timestamp', \
         'uuid', \
-        'active'
+        'active', \
+        'last_updated'
 
     list_filter = \
         'equipment_general_type', \
@@ -220,7 +222,8 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'to_date', \
         'equipment_problem_type_names', \
         'dismissed', \
-        'comments'
+        'comments', \
+        'last_updated'
 
     list_filter = \
         'from_date', \
@@ -251,7 +254,8 @@ site.register(
 class AlertDiagnosisStatusAdmin(ModelAdmin):
     list_display = \
         'index', \
-        'name'
+        'name', \
+        'last_updated'
 
     list_filter = 'name',
 

@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, FloatField, ForeignKey, ManyToManyField, URLField, \
+    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -35,6 +35,10 @@ class NumericMeasurementUnit(Model):
             blank=False,
             null=False,
             unique=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = 'name',
@@ -75,6 +79,10 @@ class EquipmentGeneralType(Model):
             blank=False,
             null=False,
             unique=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = 'name',
@@ -177,6 +185,10 @@ class EquipmentDataField(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
 
@@ -242,6 +254,10 @@ class EquipmentUniqueTypeGroup(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = 'equipment_general_type', 'name'
 
@@ -300,6 +316,10 @@ class EquipmentUniqueType(Model):
             # related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = 'equipment_general_type', 'name'
 
@@ -324,6 +344,10 @@ class EquipmentFacility(Model):
             blank=False,
             null=False,
             unique=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = 'name',
@@ -381,6 +405,10 @@ class EquipmentInstance(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     data_db_url = \
         URLField(
@@ -494,6 +522,10 @@ class EquipmentSystem(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = 'name', 'date'

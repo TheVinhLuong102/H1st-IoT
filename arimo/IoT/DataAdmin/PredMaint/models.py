@@ -154,6 +154,10 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             blank=True,
             null=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = \
             '-active', \
@@ -271,6 +275,10 @@ class Blueprint(Model):
             null=False,
             default=False)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = \
             'equipment_general_type', \
@@ -369,6 +377,10 @@ class EquipmentProblemType(Model):
             null=False,
             unique=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = 'name',
 
@@ -435,6 +447,10 @@ class EquipmentProblemPeriod(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
 
@@ -486,6 +502,10 @@ class AlertDiagnosisStatus(Model):
             null=False,
             unique=True,
             default='to_diagnose')
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = 'index',
@@ -581,6 +601,10 @@ class Alert(Model):
                 # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_periods: (fields.E302) Reverse accessor for 'Alert.equipment_problem_periods' clashes with field name 'EquipmentProblemPeriod.alerts'.
                 # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_problem_periods'.
             blank=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
 
     class Meta:
         ordering = \

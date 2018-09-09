@@ -60,7 +60,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'upper_numeric_null', \
         'default_val', \
         'min_val', \
-        'max_val'
+        'max_val', \
+        'last_updated'
 
     list_filter = \
         'equipment_general_type', \
@@ -101,7 +102,8 @@ site.register(
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
-        'name'
+        'name', \
+        'last_updated'
 
     list_filter = 'equipment_general_type',
 
@@ -126,7 +128,8 @@ site.register(
 class EquipmentUniqueTypeAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
-        'name'
+        'name', \
+        'last_updated'
 
     list_filter = 'equipment_general_type',
 
@@ -152,7 +155,8 @@ class EquipmentInstanceTabularInline(TabularInline):
     fields = \
         'equipment_general_type', \
         'equipment_unique_type', \
-        'name'
+        'name', \
+        'last_updated'
 
     form = EquipmentInstanceForm
 
@@ -160,7 +164,9 @@ class EquipmentInstanceTabularInline(TabularInline):
 
 
 class EquipmentFacilityAdmin(ModelAdmin):
-    list_display = 'name',
+    list_display = \
+        'name', \
+        'last_updated'
 
     list_filter = 'name',
 
@@ -181,7 +187,8 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type', \
         'equipment_facility', \
-        'name'
+        'name', \
+        'last_updated'
 
     list_filter = \
         'equipment_general_type', \
@@ -213,7 +220,8 @@ class EquipmentSystemAdmin(ModelAdmin):
     list_display = \
         'equipment_facility', \
         'name', \
-        'date'
+        'date', \
+        'last_updated'
 
     list_filter = \
         'equipment_facility', \
