@@ -90,7 +90,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
-        'details', \
+        'monitored_and_excluded_equipment_data_fields', \
         'active', \
         'last_updated'
 
@@ -113,7 +113,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     inlines = EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline,
 
-    def details(self, obj):
+    def monitored_and_excluded_equipment_data_fields(self, obj):
         return '; '.join(
             '{}{}'.format(
                 equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field.name.upper(),
@@ -123,7 +123,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                                 equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.all()))
                     if equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.count()
                     else '')
-            for equipment_unique_type_group_monitored_data_field_config in obj.equipment_unique_type_group_monitored_data_field_configs.all())
+            for equipment_unique_type_group_monitored_data_field_config in
+                obj.equipment_unique_type_group_monitored_data_field_configs.filter(active=True))
 
 
 site.register(
