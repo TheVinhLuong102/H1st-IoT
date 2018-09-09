@@ -126,7 +126,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
                     obj.equipment_unique_type_group_monitored_data_field_configs.filter(active=True)),
-            ' global excl: {}'.format(
+            ' | global excl: {}'.format(
                 ', '.join(excluded_equipment_data_field.name
                           for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
                 if obj.global_excluded_equipment_data_fields.count()
