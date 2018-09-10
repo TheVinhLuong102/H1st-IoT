@@ -19,7 +19,8 @@ _metadata = \
             _METADATA_FILE_NAME)))
 
 
-_SCRIPT_REL_PATH_TO_INSTALL = 'bin/arimo-iot-data'
+# XXX FIX: Remove this script.
+_SCRIPT_REL_PATH_TO_INSTALL = 'arimo/IoT/DataAdmin/bin/arimo-iot-data'
 
 
 install_requires = []
@@ -48,22 +49,3 @@ setup(
     include_package_data=True,
     install_requires=install_requires,
     scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
-
-
-for _dir_path in (os.path.expanduser('~/.local'), '/usr/local'):
-    _bin_dir_path = os.path.join(_dir_path, 'bin')
-
-    if not os.path.isdir(_bin_dir_path):
-        os.makedirs(_bin_dir_path)
-
-    _executable_script_path = \
-        os.path.join(
-            _dir_path,
-            _SCRIPT_REL_PATH_TO_INSTALL)
-
-    if not (os.path.isfile(_executable_script_path) or os.path.islink(_executable_script_path)):
-        os.symlink(
-            os.path.join(os.path.dirname(__file__), _SCRIPT_REL_PATH_TO_INSTALL),
-            _executable_script_path)
-
-    assert os.path.isfile(_executable_script_path) or os.path.islink(_executable_script_path)
