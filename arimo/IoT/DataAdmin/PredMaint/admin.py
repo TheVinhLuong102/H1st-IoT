@@ -36,8 +36,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type_group', \
         '-to_date', \
-        '-n_distinct_values', \
-        '-valid_proportion', \
+        '-n_distinct_values'
 
     list_filter = \
         'equipment_general_type', \
