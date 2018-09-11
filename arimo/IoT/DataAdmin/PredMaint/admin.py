@@ -32,6 +32,13 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_max', \
         'last_updated'
 
+    ordering = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        '-to_date', \
+        '-n_distinct_values', \
+        '-valid_proportion', \
+
     list_filter = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
