@@ -47,7 +47,8 @@ class Project(object):
                 secret_access_key=None,
 
                 equipment_data=dict(
-                    dir_prefix='.arimo/PredMaint/EquipmentData')))
+                    dir_prefix='.arimo/PredMaint/EquipmentData',
+                    raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw')))
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
@@ -137,6 +138,11 @@ class Project(object):
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
                     self.params.s3.equipment_data.dir_prefix)
+
+            self.params.s3.equipment_data.raw_dir_path = \
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
+                    self.params.s3.equipment_data.raw_dir_prefix)
 
             self.s3_client = \
                 s3.client(
