@@ -35,7 +35,8 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     list_filter = \
         'equipment_general_type', \
         'equipment_unique_type_group', \
-        'to_date'
+        'to_date', \
+        'equipment_data_field'
 
     list_select_related = \
         'equipment_general_type', \
