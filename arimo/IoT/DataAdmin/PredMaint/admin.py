@@ -12,6 +12,7 @@ from .models import \
     EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
+    EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, EquipmentProblemPeriod, AlertDiagnosisStatus, Alert
 
 
@@ -225,6 +226,50 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
 site.register(
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile,
     admin_class=EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin)
+
+
+class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
+    list_display = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        'date', \
+        'risk_score_value', \
+        'last_updated'
+
+    list_filter = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'risk_score_name', \
+        'date'
+
+    list_select_related = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance'
+
+    readonly_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        'date', \
+        'risk_score_value', \
+        'last_updated'
+
+    show_full_result_count = False   # too many
+
+    search_fields = \
+        'equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_instance__name', \
+        'risk_score_name'
+
+
+site.register(
+    EquipmentInstanceDailyRiskScore,
+    admin_class=EquipmentInstanceDailyRiskScoreAdmin)
 
 
 class EquipmentProblemTypeAdmin(ModelAdmin):

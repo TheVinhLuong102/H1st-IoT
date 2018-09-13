@@ -82,6 +82,7 @@ class Project(object):
             EquipmentUniqueTypeGroupServiceConfig, \
             Blueprint, \
             EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
+            EquipmentInstanceDailyRiskScore, \
             EquipmentProblemPeriod, EquipmentProblemType, \
             AlertDiagnosisStatus, Alert
 
@@ -106,6 +107,8 @@ class Project(object):
                 PredMaintBlueprints=Blueprint.objects,
                 EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
                     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
+
+                EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
 
                 EquipmentProblemTypes=EquipmentProblemType.objects,
                 EquipmentProblemPeriods=EquipmentProblemPeriod.objects,

@@ -369,6 +369,81 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 
 
 @python_2_unicode_compatible
+class EquipmentInstanceDailyRiskScore(Model):
+    RELATED_NAME = 'alerts'
+    RELATED_QUERY_NAME = 'alert'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    risk_score_name = \
+        CharField(
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            unique=True)
+
+    date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_created=False,
+            default=None)
+
+    risk_score_value = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_instance', \
+            'risk_score_name', \
+            '-date'
+
+    def __str__(self):
+        return '{} {} #{} on {}: {} = {:.3g}'.format(
+            self.equipment_general_type.name,
+            self.equipment_unique_type_group.name,
+            self.equipment_instance.name,
+            self.date,
+            self.risk_score_name,
+            self.risk_score_value)
+
+
+@python_2_unicode_compatible
 class EquipmentProblemType(Model):
     name = \
         CharField(
