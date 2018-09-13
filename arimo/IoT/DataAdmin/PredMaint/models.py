@@ -370,8 +370,8 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 
 @python_2_unicode_compatible
 class EquipmentInstanceDailyRiskScore(Model):
-    RELATED_NAME = 'alerts'
-    RELATED_QUERY_NAME = 'alert'
+    RELATED_NAME = 'equipment_instance_daily_risk_scores'
+    RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
 
     equipment_general_type = \
         ForeignKey(
