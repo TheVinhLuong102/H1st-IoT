@@ -7,14 +7,14 @@ Django >= 2.1.1
 
 
 # Django Auto-Complete
-Django-AutoComplete-Light >= 3.3.0
+Django-AutoComplete-Light >= 3.3.1
 Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
 Django-QuerySetSequence >= 0.8
 Django-Tagging >= 0.4.6
 Django-Taggit >= 0.23.0
 
-Django-Debug-Toolbar >= 1.9.1
+Django-Debug-Toolbar >= 1.10.1
 Django-Grappelli >= 2.11.1
 
 Django-Extensions >= 2.1.2
@@ -38,13 +38,13 @@ SQLAlchemy-Migrate >= 0.11.0
 
 PsycoPG2-binary >= 2.7.5
 
-AWSEBCLI >= 3.14.5
+AWSEBCLI >= 3.14.6
 
 AWSCLI >= 1.14.51
 Boto3 >= 1.6.4
 
 PyYAML >= 3.13
-Ruamel.YAML >= 0.15.64
+Ruamel.YAML >= 0.15.66
 
 Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
 
