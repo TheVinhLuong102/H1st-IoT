@@ -292,6 +292,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'equipment_instance', \
         'from_date', \
         'to_date', \
+        'ongoing', \
         'duration', \
         'equipment_problem_type_names', \
         'dismissed', \
@@ -299,23 +300,23 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
+        'ongoing', \
         'from_date', \
         'to_date', \
         'dismissed'
 
     list_select_related = 'equipment_instance',
 
-    readonly_fields = 'alerts',   # too many alerts, so Select box would freeze
+    readonly_fields = \
+        'date_range', \
+        'duration', \
+        'alerts'   # too many alerts, so Select box would freeze
 
     show_full_result_count = False   # too many
 
     search_fields = 'equipment_instance__name',
 
     form = EquipmentProblemPeriodForm
-
-    readonly_fields = \
-        'date_range', \
-        'duration'
     
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
@@ -355,6 +356,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
+        'ongoing', \
         'duration', \
         'approx_average_risk_score', \
         'cumulative_excess_risk_score', \
@@ -373,6 +375,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
+        'ongoing', \
         'diagnosis_status'
 
     show_full_result_count = False   # too many
@@ -393,6 +396,7 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
+        'ongoing', \
         'date_range', \
         'duration', \
         'cumulative_excess_risk_score', \

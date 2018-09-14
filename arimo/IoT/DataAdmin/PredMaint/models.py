@@ -514,6 +514,12 @@ class EquipmentProblemPeriod(Model):
             null=False,
             default=0)
 
+    ongoing = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
+
     equipment_problem_types = \
         ManyToManyField(
             to=EquipmentProblemType,
@@ -547,10 +553,13 @@ class EquipmentProblemPeriod(Model):
         ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
 
     def __str__(self):
-        return 'EqInst #{} from {} to {}: {}{}'.format(
+        return 'EqInst #{} from {} to {}{}: {}{}'.format(
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
+            ' ONGOING'
+                if self.ongoing
+                else ''
             ', '.join(equipment_problem_type.name.upper()
                       for equipment_problem_type in self.equipment_problem_types.all()),
             ' (DISMISSED)'
@@ -707,6 +716,12 @@ class Alert(Model):
             null=False,
             default=0)
 
+    ongoing = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
+
     diagnosis_status = \
         ForeignKey(
             to=AlertDiagnosisStatus,
@@ -731,6 +746,7 @@ class Alert(Model):
     class Meta:
         ordering = \
             'diagnosis_status', \
+            '-ongoing', \
             'risk_score_name', \
             '-threshold', \
             '-cumulative_excess_risk_score'
@@ -739,8 +755,11 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
+        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
             self.diagnosis_status.name.upper(),
+            'ONGOING '
+                if self.ongoing
+                else '',
             self.equipment_general_type.name.upper(),
             self.equipment_unique_type_group.name,
             self.equipment_instance.name,
