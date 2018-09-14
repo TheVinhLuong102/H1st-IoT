@@ -701,7 +701,7 @@ class Alert(Model):
             null=False,
             default=0)
 
-    average_excess_risk_score = \
+    approx_average_risk_score = \
         FloatField(
             blank=False,
             null=False,
@@ -739,14 +739,14 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: Alert on {} {} #{} from {} to {} w Avg Excess Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
+        return '{}: Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
             self.diagnosis_status.name.upper(),
             self.equipment_general_type.name.upper(),
             self.equipment_unique_type_group.name,
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
-            self.average_excess_risk_score,
+            self.approx_average_risk_score,
             self.risk_score_name,
             self.threshold,
             self.duration)
@@ -762,8 +762,9 @@ class Alert(Model):
         self.duration = duration = \
             (self.to_date - self.from_date).days + 1
 
-        self.average_excess_risk_score = \
-            self.cumulative_excess_risk_score / duration
+        self.approx_average_risk_score = \
+            self.threshold + \
+            (self.cumulative_excess_risk_score / duration)
 
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
