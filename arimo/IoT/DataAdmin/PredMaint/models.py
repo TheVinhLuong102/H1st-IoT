@@ -2,7 +2,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, IntegerField, \
+    BigAutoField, BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, IntegerField, \
     ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.db.models.signals import post_save
@@ -372,6 +372,9 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 class EquipmentInstanceDailyRiskScore(Model):
     RELATED_NAME = 'equipment_instance_daily_risk_scores'
     RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
+
+    id = BigAutoField(
+        primary_key=True)
 
     equipment_general_type = \
         ForeignKey(
