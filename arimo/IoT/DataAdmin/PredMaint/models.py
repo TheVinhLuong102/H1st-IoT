@@ -1,3 +1,5 @@
+from __future__ import division
+
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import \
@@ -6,8 +8,10 @@ from django.db.models import \
     ManyToManyField, TextField, URLField, \
     CASCADE, PROTECT, SET_NULL
 from django.db.models.signals import post_save
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import DateRangeField, JSONField
 from django.utils.encoding import python_2_unicode_compatible
+
+from psycopg2.extras import DateRange
 
 from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentInstance
 from ..util import MAX_CHAR_LEN, clean_lower_str
@@ -499,6 +503,17 @@ class EquipmentProblemPeriod(Model):
             auto_created=False,
             default=None)
 
+    date_range = \
+        DateRangeField(
+            blank=True,
+            null=True)
+
+    duration = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
     equipment_problem_types = \
         ManyToManyField(
             to=EquipmentProblemType,
@@ -541,6 +556,19 @@ class EquipmentProblemPeriod(Model):
             ' (DISMISSED)'
                 if self.dismissed
                 else '')
+
+    def save(self, *args, **kwargs):
+        self.date_range = \
+            DateRange(
+                lower=self.from_date,
+                upper=self.to_date,
+                bounds='[]',
+                empty=False)
+
+        self.duration = \
+            (self.to_date - self.from_date).days + 1
+
+        return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
 
 def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
@@ -656,7 +684,24 @@ class Alert(Model):
             auto_created=False,
             default=None)
 
-    quantified_risk_degree = \
+    date_range = \
+        DateRangeField(
+            blank=True,
+            null=True)
+
+    duration = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
+    cumulative_excess_risk_score = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
+    average_excess_risk_score = \
         FloatField(
             blank=False,
             null=False,
@@ -688,24 +733,38 @@ class Alert(Model):
             'diagnosis_status', \
             'risk_score_name', \
             '-threshold', \
-            '-quantified_risk_degree'
+            '-cumulative_excess_risk_score'
 
     def __str__(self):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: Alert on {} {} #{} from {} to {} with Quantified Risk Degree {:,.1f} based on {} > {}'.format(
+        return '{}: Alert on {} {} #{} from {} to {} w Avg Excess Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
             self.diagnosis_status.name.upper(),
             self.equipment_general_type.name.upper(),
             self.equipment_unique_type_group.name,
             self.equipment_instance.name,
             self.from_date,
             self.to_date,
-            self.quantified_risk_degree,
+            self.average_excess_risk_score,
             self.risk_score_name,
-            self.threshold)
+            self.threshold,
+            self.duration)
 
     def save(self, *args, **kwargs):
+        self.date_range = \
+            DateRange(
+                lower=self.from_date,
+                upper=self.to_date,
+                bounds='[]',
+                empty=False)
+
+        self.duration = duration = \
+            (self.to_date - self.from_date).days + 1
+
+        self.average_excess_risk_score = \
+            self.cumulative_excess_risk_score / duration
+
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 

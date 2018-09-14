@@ -292,6 +292,7 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
         'equipment_instance', \
         'from_date', \
         'to_date', \
+        'duration', \
         'equipment_problem_type_names', \
         'dismissed', \
         'comments', \
@@ -312,6 +313,10 @@ class EquipmentProblemPeriodAdmin(ModelAdmin):
 
     form = EquipmentProblemPeriodForm
 
+    readonly_fields = \
+        'date_range', \
+        'duration'
+    
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
@@ -350,7 +355,9 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'quantified_risk_degree', \
+        'duration', \
+        'average_excess_risk_score', \
+        'cumulative_excess_risk_score', \
         'diagnosis_status'
 
     list_select_related = \
@@ -378,6 +385,18 @@ class AlertAdmin(ModelAdmin):
 
     form = AlertForm
 
+    readonly_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        'threshold', \
+        'from_date', \
+        'to_date', \
+        'date_range', \
+        'duration', \
+        'cumulative_excess_risk_score', \
+        'average_excess_risk_score'
 
 site.register(
     Alert,
