@@ -404,8 +404,7 @@ class EquipmentInstanceDailyRiskScore(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False,
-            unique=True)
+            null=False)
 
     date = \
         DateField(
