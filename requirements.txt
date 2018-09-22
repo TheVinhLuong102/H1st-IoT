@@ -25,7 +25,8 @@ Django-Nested-InLines >= 0.1
 # Django REST Framework
 DjangoRESTFramework >= 3.8.2
 CoreAPI >= 2.3.3   # schema generation support
-Markdown >= 2.6.11   # Markdown support for the browsable API.
+Markdown >= 2.6.11, < 3   # Markdown support for the browsable API.
+   # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
 Django-Filter >= 2.0.0   # filtering support
 Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
 Django-Guardian >= 1.4.9   # object-level permissions support
