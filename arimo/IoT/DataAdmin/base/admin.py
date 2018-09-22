@@ -155,8 +155,8 @@ class EquipmentInstanceTabularInline(TabularInline):
     fields = \
         'equipment_general_type', \
         'equipment_unique_type', \
-        'name', \
-        'last_updated'
+        'name'
+        # 'last_updated' cannot be specified for EquipmentInstance model form as it is a non-editable field
 
     form = EquipmentInstanceForm
 
