@@ -739,6 +739,41 @@ class Project(object):
             return self.data.EquipmentInstances.filter(
                     name=clean_lower_str(equipment_instance_name))
 
+    def test_equipment_data_date_vs_date_time(self, equipment_instance_id_or_data_set_name):
+        from pyspark.sql.functions import to_date
+        from arimo.util.date_time import DATE_COL
+
+        equipment_data_adf = \
+            self.load_equipment_data(
+                equipment_instance_id_or_data_set_name=equipment_instance_id_or_data_set_name,
+                _from_files=True, _spark=True,
+                set_i_col=False, set_t_col=False,
+                verbose=True) \
+            [[self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+              DATE_COL,
+              self._DATE_TIME_COL_NAME]]
+
+        equipment_data_adf_w_diff_date_vs_date_time = \
+            equipment_data_adf.filter(
+                to_date(equipment_data_adf[self._DATE_TIME_COL_NAME])
+                != equipment_data_adf[DATE_COL])
+
+        equipment_data_adf_w_diff_date_vs_date_time.cache()
+
+        if equipment_data_adf_w_diff_date_vs_date_time.nRows:
+            path = 's3://{}/tmp/{}---DATE-vs-DATE-TIME{}'.format(
+                        self.params.s3.bucket,
+                        equipment_instance_id_or_data_set_name,
+                        _JSON_EXT)
+
+            equipment_data_adf_w_diff_date_vs_date_time.repartition(1).save(
+                path=path,
+                format='json',
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key)
+
+            raise ValueError('*** ERRONEOUS ROWS SAVED TO "{}" ***'.format(path))
+
     def _equipment_general_types_n_equipment_data_fields(self, only0=True):
         df = pandas.DataFrame.from_records(
             data=self.data.EquipmentGeneralTypes
