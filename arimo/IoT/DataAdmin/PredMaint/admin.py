@@ -361,7 +361,8 @@ class AlertAdmin(ModelAdmin):
         'approx_average_risk_score', \
         'last_risk_score', \
         'cumulative_excess_risk_score', \
-        'diagnosis_status'
+        'diagnosis_status', \
+        'last_updated'
 
     list_select_related = \
         'equipment_general_type', \
