@@ -716,6 +716,12 @@ class Alert(Model):
             null=False,
             default=0)
 
+    last_risk_score = \
+        FloatField(
+            blank=False,
+            null=False,
+            default=0)
+
     ongoing = \
         BooleanField(
             blank=False,
@@ -755,7 +761,7 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (based on {} > {}) for {:,} Days'.format(
+        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (Last: {:,.1f}) (based on {} > {}) for {:,} Days'.format(
             self.diagnosis_status.name.upper(),
             'ONGOING '
                 if self.ongoing
@@ -766,6 +772,7 @@ class Alert(Model):
             self.from_date,
             self.to_date,
             self.approx_average_risk_score,
+            self.last_risk_score,
             self.risk_score_name,
             self.threshold,
             self.duration)

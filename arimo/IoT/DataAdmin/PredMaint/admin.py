@@ -359,6 +359,7 @@ class AlertAdmin(ModelAdmin):
         'ongoing', \
         'duration', \
         'approx_average_risk_score', \
+        'last_risk_score', \
         'cumulative_excess_risk_score', \
         'diagnosis_status'
 
@@ -400,7 +401,9 @@ class AlertAdmin(ModelAdmin):
         'date_range', \
         'duration', \
         'cumulative_excess_risk_score', \
-        'approx_average_risk_score'
+        'approx_average_risk_score', \
+        'last_risk_score'
+
 
 site.register(
     Alert,
