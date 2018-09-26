@@ -31,6 +31,8 @@ Django-Filter >= 2.0.0   # filtering support
 Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
 Django-Guardian >= 1.4.9   # object-level permissions support
 
+HTTPie >= 0.9.9
+
 
 # misc
 SQLAlchemy >= 1.2.11
