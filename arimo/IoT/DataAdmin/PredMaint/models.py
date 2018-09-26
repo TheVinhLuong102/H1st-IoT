@@ -255,11 +255,7 @@ class Blueprint(Model):
 
     timestamp = \
         DateTimeField(
-            blank=False,
-            null=False,
-            auto_now=False,
-            auto_created=False,
-            default=None)
+            auto_now_add=True)
 
     uuid = \
         CharField(
