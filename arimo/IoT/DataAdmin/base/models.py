@@ -399,30 +399,9 @@ class EquipmentInstance(Model):
             null=False,
             unique=True)
 
-    data_fields = \
-        ManyToManyField(
-            to=EquipmentDataField,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=True)
-
     last_updated = \
         DateTimeField(
             auto_now=True)
-
-    data_db_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    data_db_tbl = \
-        CharField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
 
     data_file_url = \
         URLField(
@@ -431,36 +410,8 @@ class EquipmentInstance(Model):
             null=True,
             default=None)
 
-    control_data_db_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    control_data_db_tbl = \
-        CharField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
     control_data_file_url = \
         URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    measure_data_db_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    measure_data_db_tbl = \
-        CharField(
             max_length=MAX_CHAR_LEN,
             blank=True,
             null=True,
