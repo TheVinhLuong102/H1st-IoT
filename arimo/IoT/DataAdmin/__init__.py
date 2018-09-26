@@ -547,33 +547,33 @@ class Project(object):
             mode='overwrite', _spark=False, verbose=True):
         import pandas
         import pyspark.sql
-        from arimo.df.spark import SparkADF
+        from arimo.data.spark import DDF
         from arimo.util.date_time import DATE_COL
 
         if isinstance(df, _STR_CLASSES):
-            adf = SparkADF.load(
+            adf = DDF.load(
                 path=df,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=verbose)
 
         elif isinstance(df, pandas.DataFrame):
-            adf = SparkADF.create(data=df)
+            adf = DDF.create(data=df)
 
         elif isinstance(df, pyspark.sql.DataFrame):
-            adf = SparkADF(sparkDF=df)
+            adf = DDF(sparkDF=df)
 
         else:
-            assert isinstance(df, SparkADF)
+            assert isinstance(df, DDF)
             adf = df
 
-        if SparkADF._DEFAULT_I_COL in adf.columns:
+        if DDF._DEFAULT_I_COL in adf.columns:
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
 
             adf.rename(
                 inplace=True,
                 iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
-                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: SparkADF._DEFAULT_I_COL})
+                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: DDF._DEFAULT_I_COL})
 
         else:
             assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
@@ -598,16 +598,16 @@ class Project(object):
             _from_files=True, _spark=False,
             set_i_col=True, set_t_col=True,
             verbose=True, **kwargs):
-        from arimo.df.from_files import ArrowADF
-        from arimo.df.spark import SparkADF
-        from arimo.df.spark_from_files import ArrowSparkADF
+        from arimo.data.parquet import S3ParquetDataFeeder
+        from arimo.data.distributed import DDF
+        from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
 
         path = os.path.join(
             self.params.s3.equipment_data.dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        adf = (ArrowSparkADF(
+        adf = (S3ParquetDistributedDataFrame(
                 path=path, mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
@@ -619,7 +619,7 @@ class Project(object):
                     else None,
                 verbose=verbose, **kwargs)
                if _spark
-               else ArrowADF(
+               else S3ParquetDataFeeder(
                 path=path,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
@@ -631,7 +631,7 @@ class Project(object):
                     else None,
                 verbose=verbose, **kwargs)) \
             if _from_files \
-            else SparkADF.load(
+            else DDF.load(
                 path=path,
                 format='parquet', mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
@@ -649,12 +649,12 @@ class Project(object):
         return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
-        from arimo.df.spark_from_files import ArrowSparkADF
+        from arimo.data.spark_from_files import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
         from arimo.util.types.spark_sql import _DATE_TYPE
 
         file_adf = \
-            ArrowSparkADF(
+            S3ParquetDistributedDataFrame(
                 path=os.path.join(
                     self.params.s3.equipment_data.dir_path,
                     equipment_instance_id_or_data_set_name + _PARQUET_EXT),
