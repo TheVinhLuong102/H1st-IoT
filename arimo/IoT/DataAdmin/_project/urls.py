@@ -28,10 +28,12 @@ from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
+from arimo.IoT.DataAdmin.base.urls import urlpatterns as base_url_patterns
 
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemPeriodAutoComplete
+from arimo.IoT.DataAdmin.PredMaint.urls import urlpatterns as pred_maint_url_patterns
 
 
 # Serializers define the API representation.
@@ -94,7 +96,7 @@ urlpatterns = [
     url(r'^{}/$'.format(EquipmentProblemPeriodAutoComplete.name),
         EquipmentProblemPeriodAutoComplete.as_view(),
         name=EquipmentProblemPeriodAutoComplete.name)
-]
+] + base_url_patterns + pred_maint_url_patterns
 
 
 if settings.DEBUG:

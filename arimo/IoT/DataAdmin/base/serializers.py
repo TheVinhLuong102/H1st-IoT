@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer, Serializer
 
 
 from .models import \
