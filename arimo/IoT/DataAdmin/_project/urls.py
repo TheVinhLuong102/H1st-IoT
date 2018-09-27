@@ -17,10 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth.models import User
 from django.views.generic.base import RedirectView
-
-from rest_framework import routers, serializers, viewsets
 
 from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
@@ -28,47 +25,33 @@ from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
-from arimo.IoT.DataAdmin.base.urls import urlpatterns as base_url_patterns
+from arimo.IoT.DataAdmin.base.urls import ROUTER as BASE_ROUTER
 
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemPeriodAutoComplete
-from arimo.IoT.DataAdmin.PredMaint.urls import urlpatterns as pred_maint_url_patterns
-
-
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
-
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
 
 
 urlpatterns = [
+    # Home Redirected URL
     url(r'^$', RedirectView.as_view(url='/admin')),
 
+    # Admin URLs
     url(r'^grappelli/', include('grappelli.urls')),
-
     url(r'^admin/', admin.site.urls),
+
+    # API URLs
+    # if you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views
+    # include login URLs for the browsable API
+    url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # wire up our API using automatic URL routing
     # note that the URL path can be whatever you want
-    url(r'^rest/', include(router.urls)),
+    url(r'^api/base/', include(BASE_ROUTER.urls)),
+    url(r'^api/pred-maint/', include(PRED_MAINT_ROUTER.urls)),
 
-    # if you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views
-    # include login URLs for the browsable API
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
+    # Auto-Complete URLs
     url(r'^{}/$'.format(EquipmentDataFieldAutoComplete.name),
         EquipmentDataFieldAutoComplete.as_view(),
         name=EquipmentDataFieldAutoComplete.name),
@@ -96,12 +79,9 @@ urlpatterns = [
     url(r'^{}/$'.format(EquipmentProblemPeriodAutoComplete.name),
         EquipmentProblemPeriodAutoComplete.as_view(),
         name=EquipmentProblemPeriodAutoComplete.name)
-] + base_url_patterns + pred_maint_url_patterns
+]
 
 
 if settings.DEBUG:
     import debug_toolbar
-
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
+    urlpatterns.insert(0, url(r'^__debug__/', include(debug_toolbar.urls)))
