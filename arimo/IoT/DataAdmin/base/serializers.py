@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer, Serializer
-from rest_framework.renderers import JSONRenderer, JSONRenderer
 
 
 from .models import \
@@ -88,3 +87,6 @@ class EquipmentSystemSerializer(ModelSerializer):
 # serializer(obj)
 # serializer(data=data)
 # serializer(objs, many=True)
+# serializer.data
+# serializer.errors
+# serializer.save()
