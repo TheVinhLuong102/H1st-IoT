@@ -46,28 +46,30 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
 
 class EquipmentDataFieldSerializer(ModelSerializer):
     equipment_general_type = \
-        CharField(
-            source='equipment_general_type.name')
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
 
     equipment_data_field_type = \
-        CharField(
-            source='equipment_data_field_type.name')
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
 
     data_type = \
-        CharField(
-            allow_null=True,
-            source='data_type.name')
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
 
     numeric_measurement_unit = \
-        CharField(
-            allow_null=True,
-            source='numeric_measurement_unit.name')
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
 
     equipment_unique_types = \
-        ListField(
-            # many=True,
-            source='equipment_unique_types.name'
-        )
+        SlugRelatedField(
+            many=True,
+            read_only=True,
+            slug_field='name')
 
     class Meta:
         model = EquipmentDataField
@@ -87,35 +89,133 @@ class EquipmentDataFieldSerializer(ModelSerializer):
             'equipment_unique_types', \
             'last_updated'
 
-        depth = 1
+        # depth = 1
+
+
+class EquipmentDataFieldShortFormRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        # TODO
+        pass
+
+    def to_representation(self, value):
+        return dict(
+            # equipment_general_type=value.equipment_general_type.name,
+            equipment_data_field_type=value.equipment_data_field_type.name,
+            name=value.name)
 
 
 class EquipmentUniqueTypeGroupSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
+
+    equipment_unique_types = \
+        SlugRelatedField(
+            many=True,
+            read_only=True,
+            slug_field='name')
+
+    equipment_data_fields = \
+        EquipmentDataFieldShortFormRelatedField(
+            many=True,
+            read_only=True)
+
     class Meta:
         model = EquipmentUniqueTypeGroup
 
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'name', \
+            'equipment_unique_types', \
+            'equipment_data_fields', \
+            'last_updated'
 
 
 class EquipmentUniqueTypeSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
+
+    data_fields = \
+        EquipmentDataFieldShortFormRelatedField(
+            many=True,
+            read_only=True)
+
+    groups = \
+        SlugRelatedField(
+            many=True,
+            read_only=True,
+            slug_field='name')
+
     class Meta:
         model = EquipmentUniqueType
 
-        fields = '__all__'
-
-
-class EquipmentFacilitySerializer(ModelSerializer):
-    class Meta:
-        model = EquipmentFacility
-
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'name', \
+            'data_fields', \
+            'groups', \
+            'last_updated'
 
 
 class EquipmentInstanceSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
+
+    equipment_unique_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
+
+    equipment_facility = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name')
+
     class Meta:
         model = EquipmentInstance
 
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type', \
+            'equipment_facility', \
+            'name', \
+            'last_updated', \
+            'data_file_url', \
+            'control_data_file_url', \
+            'measure_data_file_url'
+
+
+class EquipmentInstanceShortFormRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        # TODO
+        pass
+
+    def to_representation(self, value):
+        return dict(
+            equipment_general_type=value.equipment_general_type.name,
+            equipment_unique_type=value.equipment_unique_type.name,
+            equipment_facility=value.equipment_facility.name,
+            name=value.name)
+
+
+class EquipmentFacilitySerializer(ModelSerializer):
+    equipment_instances = \
+        EquipmentInstanceShortFormRelatedField(
+            many=True,
+            read_only=True)
+
+    class Meta:
+        model = EquipmentFacility
+
+        fields = \
+            'name', \
+            'equipment_instances', \
+            'last_updated'
 
 
 class EquipmentSystemSerializer(ModelSerializer):
