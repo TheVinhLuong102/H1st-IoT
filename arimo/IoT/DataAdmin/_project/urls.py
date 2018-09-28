@@ -19,18 +19,24 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
+from rest_framework.schemas import get_schema_view
+
 from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
-from arimo.IoT.DataAdmin.base.urls import ROUTER as BASE_ROUTER
+from arimo.IoT.DataAdmin.base.urls import \
+    ROUTER as BASE_ROUTER, \
+    URL_PATTERNS as BASE_URL_PATTERNS
 
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemPeriodAutoComplete
-from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
+from arimo.IoT.DataAdmin.PredMaint.urls import \
+    ROUTER as PRED_MAINT_ROUTER, \
+    URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
 
 urlpatterns = [
@@ -45,6 +51,7 @@ urlpatterns = [
     # if you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views
     # include login URLs for the browsable API
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/schema/$', get_schema_view('Arimo IoT DataAdmin API')),
 
     # wire up our API using automatic URL routing
     # note that the URL path can be whatever you want
@@ -79,7 +86,8 @@ urlpatterns = [
     url(r'^{}/$'.format(EquipmentProblemPeriodAutoComplete.name),
         EquipmentProblemPeriodAutoComplete.as_view(),
         name=EquipmentProblemPeriodAutoComplete.name)
-]
+
+] + BASE_URL_PATTERNS + PRED_MAINT_URL_PATTERNS
 
 
 if settings.DEBUG:

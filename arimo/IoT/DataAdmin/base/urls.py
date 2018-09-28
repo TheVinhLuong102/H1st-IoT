@@ -1,4 +1,3 @@
-from rest_framework.schemas import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -26,3 +25,6 @@ ROUTER.register('equipment-unique-types', EquipmentUniqueTypeViewSet)
 ROUTER.register('equipment-facilities', EquipmentFacilityViewSet)
 ROUTER.register('equipment-instances', EquipmentInstanceViewSet)
 ROUTER.register('equipment-systems', EquipmentSystemViewSet)
+
+
+URL_PATTERNS = []

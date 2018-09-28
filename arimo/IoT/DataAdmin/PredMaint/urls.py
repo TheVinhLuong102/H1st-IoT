@@ -1,6 +1,5 @@
 from rest_framework.routers import DefaultRouter
 
-
 from .views import \
     EquipmentUniqueTypeGroupDataFieldProfileViewSet, \
     EquipmentUniqueTypeGroupServiceConfigViewSet, \
@@ -55,3 +54,6 @@ ROUTER.register(
 ROUTER.register(
     'alerts',
     AlertViewSet)
+
+
+URL_PATTERNS = []
