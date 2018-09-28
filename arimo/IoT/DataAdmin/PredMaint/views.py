@@ -1,6 +1,6 @@
 from rest_framework.authentication import \
     BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import \
     CoreJSONRenderer, JSONRenderer
 from rest_framework.viewsets import ModelViewSet
@@ -45,7 +45,9 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentUniqueTypeGroupServiceConfigViewSet(ModelViewSet):
@@ -63,7 +65,9 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfigViewSet(ModelViewSet):
@@ -81,7 +85,9 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class BlueprintViewSet(ModelViewSet):
@@ -99,7 +105,9 @@ class BlueprintViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ModelViewSet):
@@ -117,7 +125,9 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Mo
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentInstanceDailyRiskScoreViewSet(ModelViewSet):
@@ -135,7 +145,9 @@ class EquipmentInstanceDailyRiskScoreViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentProblemTypeViewSet(ModelViewSet):
@@ -153,7 +165,9 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentProblemPeriodViewSet(ModelViewSet):
@@ -171,7 +185,9 @@ class EquipmentProblemPeriodViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class AlertDiagnosisStatusViewSet(ModelViewSet):
@@ -189,7 +205,9 @@ class AlertDiagnosisStatusViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class AlertViewSet(ModelViewSet):
@@ -207,4 +225,6 @@ class AlertViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly

@@ -9,7 +9,7 @@ from rest_framework.generics import GenericAPIView, \
     ListCreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import \
     ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import \
     CoreJSONRenderer, JSONRenderer, \
     HTMLFormRenderer, StaticHTMLRenderer, TemplateHTMLRenderer
@@ -60,7 +60,9 @@ class DataTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -78,7 +80,9 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentDataFieldTypeViewSet(ModelViewSet):
@@ -96,7 +100,9 @@ class EquipmentDataFieldTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -114,7 +120,9 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
@@ -132,7 +140,9 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
@@ -150,7 +160,9 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
@@ -168,7 +180,9 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -186,7 +200,9 @@ class EquipmentFacilityViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
@@ -204,7 +220,9 @@ class EquipmentInstanceViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 class EquipmentSystemViewSet(ModelViewSet):
@@ -222,7 +240,9 @@ class EquipmentSystemViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = \
+        IsAuthenticated, \
+        IsAuthenticatedOrReadOnly
 
 
 # request.data

@@ -1,4 +1,7 @@
-from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer, Serializer
+from rest_framework.serializers import \
+    Serializer, \
+    ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
+    HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 
 
 from .models import \
