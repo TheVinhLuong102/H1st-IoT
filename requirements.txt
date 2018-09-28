@@ -44,8 +44,8 @@ PsycoPG2-binary >= 2.7.5
 
 AWSEBCLI >= 3.14.6
 
-AWSCLI >= 1.14.51
-Boto3 >= 1.6.4
+AWSCLI >= 1.16.23
+Boto3 >= 1.9.13
 
 PyYAML >= 3.13
 Ruamel.YAML >= 0.15.66
