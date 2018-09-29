@@ -1,5 +1,5 @@
 from rest_framework.serializers import \
-    Serializer, \
+    Serializer, CharField, ListField, \
     ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
     HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 

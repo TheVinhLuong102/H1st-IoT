@@ -3,6 +3,8 @@ from rest_framework.serializers import \
     ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
     HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 
+from drf_writable_nested.serializers import WritableNestedModelSerializer
+
 from .models import \
     DataType, \
     NumericMeasurementUnit, \
@@ -44,7 +46,7 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentDataFieldSerializer(ModelSerializer):
+class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
             read_only=True,
@@ -104,7 +106,7 @@ class EquipmentDataFieldShortFormRelatedField(RelatedField):
             name=value.name)
 
 
-class EquipmentUniqueTypeGroupSerializer(ModelSerializer):
+class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
             read_only=True,
@@ -132,7 +134,7 @@ class EquipmentUniqueTypeGroupSerializer(ModelSerializer):
             'last_updated'
 
 
-class EquipmentUniqueTypeSerializer(ModelSerializer):
+class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
             read_only=True,
