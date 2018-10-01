@@ -24,7 +24,7 @@ Django-Nested-InLines >= 0.1
 
 # Django REST Framework & API
 DjangoRESTFramework >= 3.8.2
-DjangoRESTFramework-JSONAPI > = 2.6.0
+DjangoRESTFramework-JSONAPI >= 2.6.0
 DRF-Writable-Nested >= 0.5.1
 
 CoreAPI >= 2.3.3   # schema generation support
