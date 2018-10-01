@@ -9,9 +9,8 @@ from rest_framework.generics import GenericAPIView, \
     ListCreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import \
     ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.renderers import \
-    CoreJSONRenderer, JSONRenderer, \
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.renderers import CoreJSONRenderer, JSONRenderer, \
     HTMLFormRenderer, StaticHTMLRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -45,7 +44,7 @@ from .serializers import \
     EquipmentSystemSerializer
 
 
-class DataTypeViewSet(ModelViewSet):
+class DataTypeViewSet(ReadOnlyModelViewSet):
     queryset = DataType.objects.all()
 
     serializer_class = DataTypeSerializer
@@ -61,8 +60,7 @@ class DataTypeViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticatedOrReadOnly,
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -81,11 +79,10 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticatedOrReadOnly,
 
 
-class EquipmentDataFieldTypeViewSet(ModelViewSet):
+class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     queryset = EquipmentDataFieldType.objects.all()
 
     serializer_class = EquipmentDataFieldTypeSerializer
@@ -101,8 +98,7 @@ class EquipmentDataFieldTypeViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticatedOrReadOnly,
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -121,8 +117,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
@@ -141,8 +136,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
@@ -161,8 +155,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
@@ -181,8 +174,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -201,8 +193,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
@@ -221,8 +212,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 class EquipmentSystemViewSet(ModelViewSet):
@@ -241,8 +231,7 @@ class EquipmentSystemViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
 
 # request.data
