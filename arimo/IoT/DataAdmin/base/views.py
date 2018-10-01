@@ -81,6 +81,27 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
+    @action(
+        methods=['GET'],
+        detail=True,
+        renderer_classes=[CoreJSONRenderer, JSONRenderer])
+    def retrieve_by_name(self, request, *args, **kwargs):
+        pass
+
+    @action(
+        methods=['GET'],
+        detail=True,
+        renderer_classes=[CoreJSONRenderer, JSONRenderer])
+    def update_by_name(self, request, *args, **kwargs):
+        pass
+
+    @action(
+        methods=['GET'],
+        detail=True,
+        renderer_classes=[CoreJSONRenderer, JSONRenderer])
+    def destroy_by_name(self, request, *args, **kwargs):
+        pass
+
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     queryset = EquipmentDataFieldType.objects.all()
