@@ -3,7 +3,11 @@ from rest_framework.serializers import \
     ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
     HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 
-from drf_writable_nested.serializers import WritableNestedModelSerializer
+from rest_framework_json_api.serializers import SerializerMetaclass
+
+from drf_writable_nested.serializers import \
+    WritableNestedModelSerializer, \
+    NestedCreateMixin, NestedUpdateMixin
 
 from .models import \
     DataType, \
@@ -162,7 +166,7 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'last_updated'
 
 
-class EquipmentInstanceSerializer(ModelSerializer):
+class EquipmentInstanceSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
             read_only=True,
@@ -205,7 +209,7 @@ class EquipmentInstanceShortFormRelatedField(RelatedField):
             name=value.name)
 
 
-class EquipmentFacilitySerializer(ModelSerializer):
+class EquipmentFacilitySerializer(WritableNestedModelSerializer):
     equipment_instances = \
         EquipmentInstanceShortFormRelatedField(
             many=True,
@@ -220,7 +224,7 @@ class EquipmentFacilitySerializer(ModelSerializer):
             'last_updated'
 
 
-class EquipmentSystemSerializer(ModelSerializer):
+class EquipmentSystemSerializer(WritableNestedModelSerializer):
     class Meta:
         model = EquipmentSystem
 
