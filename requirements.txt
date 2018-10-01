@@ -22,20 +22,32 @@ Django-Extensions >= 2.1.2
 Django-Nested-InLines >= 0.1
 
 
-# Django REST Framework & API
+# DJANGO REST FRAMEWORK
 DjangoRESTFramework >= 3.8.2
+
+# JSON API
 DjangoRESTFramework-JSONAPI >= 2.6.0
+
+# Serializers
 DRF-Writable-Nested >= 0.5.1
 
-CoreAPI >= 2.3.3   # schema generation support
+# CoreAPI / schema-generation support
+CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
-Markdown >= 2.6.11, < 3   # Markdown support for the browsable API.
+
+# Filtering support
+DjangoRESTFramework-Filters >= 0.10.2
+Django-Filter >= 2.0.0
+Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
+
+# Object-level permissions support
+Django-Guardian >= 1.4.9
+
+# Markdown support for the browsable API
+Markdown >= 2.6.11, < 3
    # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
 
-Django-Filter >= 2.0.0   # filtering support
-Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
-Django-Guardian >= 1.4.9   # object-level permissions support
-
+# HTTP
 HTTPie >= 0.9.9
 
 
