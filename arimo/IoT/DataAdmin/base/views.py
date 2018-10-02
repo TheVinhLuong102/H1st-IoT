@@ -70,6 +70,8 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_field = 'name'
 
+    lookup_url_kwarg = 'data_type_name___cat_or_num'
+
     # filter_class = DataTypeFilter   # for simplicity, don't expose filtered API for this
 
     renderer_classes = \
@@ -91,7 +93,9 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    lookup_field = lookup_url_kwarg = 'name'
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'numeric_measurement_unit_name'
 
     # filter_class = NumericMeasurementUnitFilter   # for simplicity, don't expose filtered API for this
 
@@ -114,7 +118,9 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    lookup_field = lookup_url_kwarg = 'name'
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_data_field_type_name___control_or_measure'
 
     # filter_class = EquipmentDataFieldTypeFilter   # for simplicity, don't expose filtered API for this
 
@@ -137,7 +143,9 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    lookup_field = lookup_url_kwarg = 'name'
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_general_type_name'
 
     # filter_class = EquipmentGeneralTypeFilter   # for simplicity, don't expose filtered API for this
 
@@ -181,6 +189,10 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_unique_type_group_name'
+
     filter_class = EquipmentUniqueTypeGroupFilter
 
     renderer_classes = \
@@ -223,6 +235,10 @@ class EquipmentFacilityViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_facility_name'
+
     filter_class = EquipmentFacilityFilter
 
     renderer_classes = \
@@ -243,6 +259,10 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     permission_classes = \
         IsAuthenticated,
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_instance_name'
 
     filter_class = EquipmentInstanceFilter
 
