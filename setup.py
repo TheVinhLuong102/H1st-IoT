@@ -19,10 +19,6 @@ _metadata = \
             _METADATA_FILE_NAME)))
 
 
-# XXX FIX: Remove this script.
-_SCRIPT_REL_PATH_TO_INSTALL = 'arimo/IoT/DataAdmin/bin/arimo-iot-data'
-
-
 install_requires = []
 
 for s in open(_REQUIREMENTS_FILE_NAME).readlines():
@@ -51,5 +47,4 @@ setup(
     keywords=_metadata['DESCRIPTION'],
     packages=find_packages(),
     include_package_data=True,
-    install_requires=install_requires,
-    scripts=[_SCRIPT_REL_PATH_TO_INSTALL])
+    install_requires=install_requires)
