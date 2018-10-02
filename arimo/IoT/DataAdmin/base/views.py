@@ -19,7 +19,17 @@ from rest_framework.status import \
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 
-
+from .filters import \
+    DataTypeFilter, \
+    NumericMeasurementUnitFilter, \
+    EquipmentDataFieldTypeFilter, \
+    EquipmentGeneralTypeFilter, \
+    EquipmentDataFieldFilter, \
+    EquipmentUniqueTypeGroupFilter, \
+    EquipmentUniqueTypeFilter, \
+    EquipmentFacilityFilter, \
+    EquipmentInstanceFilter, \
+    EquipmentSystemFilter
 from .models import \
     DataType, \
     NumericMeasurementUnit, \
@@ -55,12 +65,14 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticatedOrReadOnly,
+
+    filter_class = DataTypeFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -74,19 +86,23 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticatedOrReadOnly,
+
+    filter_class = NumericMeasurementUnitFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
 
     @action(
         methods=['GET'],
         detail=True,
         renderer_classes=[CoreJSONRenderer, JSONRenderer])
     def retrieve_by_name(self, request, *args, **kwargs):
-        pass
+        instance = self.get_object()
+
+        return Response()
 
     @action(
         methods=['GET'],
@@ -114,12 +130,14 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticatedOrReadOnly,
+
+    filter_class = EquipmentDataFieldTypeFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -133,12 +151,14 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentGeneralTypeFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
@@ -152,12 +172,14 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentDataFieldFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
@@ -171,12 +193,14 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentUniqueTypeGroupFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
@@ -190,12 +214,14 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentUniqueTypeFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -209,12 +235,14 @@ class EquipmentFacilityViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentFacilityFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
@@ -228,12 +256,14 @@ class EquipmentInstanceViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentInstanceFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 class EquipmentSystemViewSet(ModelViewSet):
@@ -247,12 +277,14 @@ class EquipmentSystemViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentSystemFilter
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    permission_classes = \
-        IsAuthenticated,
 
 
 # request.data

@@ -1,5 +1,6 @@
 from rest_framework_filters import FilterSet, \
-    CharFilter, DateFilter
+    CharFilter, DateFilter, \
+    RelatedFilter, AllLookupsFilter
 
 from .models import \
     DataType, \
@@ -18,28 +19,28 @@ class DataTypeFilter(FilterSet):
     class Meta:
         model = DataType
 
-        fields = 'name',
+        fields = dict(name='__all__')
 
 
 class NumericMeasurementUnitFilter(FilterSet):
     class Meta:
         model = NumericMeasurementUnit
 
-        fields = 'name',
+        fields = dict(name='__all__')
 
 
 class EquipmentDataFieldTypeFilter(FilterSet):
     class Meta:
         model = EquipmentDataFieldType
 
-        fields = 'name',
+        fields = dict(name='__all__')
 
 
 class EquipmentGeneralTypeFilter(FilterSet):
     class Meta:
         model = EquipmentGeneralType
 
-        fields = '__all__'
+        fields = dict(name='__all__')
 
 
 class EquipmentDataFieldFilter(FilterSet):
