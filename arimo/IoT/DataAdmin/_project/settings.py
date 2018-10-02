@@ -194,4 +194,6 @@ REST_FRAMEWORK = {
         'rest_framework_filters.backends.RestFrameworkFilterBackend'
         # 'django_filters.rest_framework.DjangoFilterBackend'
     ]
+    if not _ON_LINUX_CLUSTER
+    else []
 }
