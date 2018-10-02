@@ -2,12 +2,12 @@
 
 
 # CoreAPI direct
-coreapi get http://localhost:8000/api/base/equipment-data-field-types/1
+coreapi get http://localhost:8000/api/base/equipment-data-field-types/control
 
 # CoreAPI via schema
 coreapi get http://localhost:8000/api/schema
-coreapi action base equipment-data-field-types read --param id=1
+coreapi action base equipment-data-field-types read --param name=control
 
 
 # HTTP
-http http://localhost:8000/api/base/equipment-data-field-types/1/   # must have trailing slash
+http http://localhost:8000/api/base/equipment-data-field-types/control/   # must have trailing slash

@@ -68,7 +68,9 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    filter_class = DataTypeFilter
+    lookup_field = 'name'
+
+    # filter_class = DataTypeFilter   # for simplicity, don't expose filtered API for this
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -89,34 +91,13 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    filter_class = NumericMeasurementUnitFilter
+    lookup_field = 'name'
+
+    # filter_class = NumericMeasurementUnitFilter   # for simplicity, don't expose filtered API for this
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    @action(
-        methods=['GET'],
-        detail=True,
-        renderer_classes=[CoreJSONRenderer, JSONRenderer])
-    def retrieve_by_name(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        return Response()
-
-    @action(
-        methods=['GET'],
-        detail=True,
-        renderer_classes=[CoreJSONRenderer, JSONRenderer])
-    def update_by_name(self, request, *args, **kwargs):
-        pass
-
-    @action(
-        methods=['GET'],
-        detail=True,
-        renderer_classes=[CoreJSONRenderer, JSONRenderer])
-    def destroy_by_name(self, request, *args, **kwargs):
-        pass
 
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
@@ -133,7 +114,9 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    filter_class = EquipmentDataFieldTypeFilter
+    lookup_field = 'name'
+
+    # filter_class = EquipmentDataFieldTypeFilter   # for simplicity, don't expose filtered API for this
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -154,7 +137,9 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    filter_class = EquipmentGeneralTypeFilter
+    lookup_field = 'name'
+
+    # filter_class = EquipmentGeneralTypeFilter   # for simplicity, don't expose filtered API for this
 
     renderer_classes = \
         CoreJSONRenderer, \
