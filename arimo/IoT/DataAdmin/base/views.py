@@ -91,7 +91,7 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
+    lookup_field = lookup_url_kwarg = 'name'
 
     # filter_class = NumericMeasurementUnitFilter   # for simplicity, don't expose filtered API for this
 
@@ -114,7 +114,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     permission_classes = \
         IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
+    lookup_field = lookup_url_kwarg = 'name'
 
     # filter_class = EquipmentDataFieldTypeFilter   # for simplicity, don't expose filtered API for this
 
@@ -137,7 +137,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    lookup_field = 'name'
+    lookup_field = lookup_url_kwarg = 'name'
 
     # filter_class = EquipmentGeneralTypeFilter   # for simplicity, don't expose filtered API for this
 

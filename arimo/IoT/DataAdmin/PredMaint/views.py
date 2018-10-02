@@ -107,13 +107,15 @@ class BlueprintViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     permission_classes = \
         IsAuthenticated, \
         IsAuthenticatedOrReadOnly
+
+    lookup_field = lookup_url_kwarg = 'uuid'
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ModelViewSet):

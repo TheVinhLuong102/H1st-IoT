@@ -19,28 +19,72 @@ class DataTypeFilter(FilterSet):
     class Meta:
         model = DataType
 
-        fields = dict(name='__all__')
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ]
+        )
 
 
 class NumericMeasurementUnitFilter(FilterSet):
     class Meta:
         model = NumericMeasurementUnit
 
-        fields = dict(name='__all__')
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ]
+        )
 
 
 class EquipmentDataFieldTypeFilter(FilterSet):
     class Meta:
         model = EquipmentDataFieldType
 
-        fields = dict(name='__all__')
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ]
+        )
 
 
 class EquipmentGeneralTypeFilter(FilterSet):
     class Meta:
         model = EquipmentGeneralType
 
-        fields = dict(name='__all__')
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ]
+        )
 
 
 class EquipmentDataFieldFilter(FilterSet):
