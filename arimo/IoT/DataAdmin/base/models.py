@@ -125,7 +125,8 @@ class EquipmentDataField(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False)
+            null=False,
+            unique=False)
 
     data_type = \
         ForeignKey(
@@ -238,7 +239,8 @@ class EquipmentUniqueTypeGroup(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False)
+            null=False,
+            unique=True)
 
     equipment_unique_types = \
         ManyToManyField(
@@ -296,7 +298,9 @@ class EquipmentUniqueType(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False)
+            null=False,
+            # unique=True
+        )
 
     # *** USING 'equipment_data_fields' (corresponding to EquipmentDataField above) LEADS TO BUG ***
     data_fields = \
@@ -458,7 +462,9 @@ class EquipmentSystem(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            default=None)
+            default=None,
+            # unique=True
+        )
 
     date = \
         DateField(
