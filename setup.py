@@ -36,7 +36,9 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
                   if six.PY2 and lower_s.startswith('django-autocomplete-light >=')
                   else ('DjangoRESTFramework-Filters == 0.10.2'
                         if six.PY2 and lower_s.startswith('djangorestframework-filters >=')
-                        else s)))
+                        else ('Django-Filters == 1.1.0'
+                              if six.PY2 and lower_s.startswith('django-filters >=')
+                              else s))))
 
 setup(
     name=_metadata['PACKAGE'],
