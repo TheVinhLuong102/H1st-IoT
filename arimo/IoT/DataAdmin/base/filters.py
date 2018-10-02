@@ -1,6 +1,4 @@
-from rest_framework_filters import FilterSet, \
-    CharFilter, DateFilter, \
-    RelatedFilter, AllLookupsFilter
+from rest_framework_filters import FilterSet, RelatedFilter, AllLookupsFilter
 
 from .models import \
     DataType, \
@@ -88,10 +86,68 @@ class EquipmentGeneralTypeFilter(FilterSet):
 
 
 class EquipmentDataFieldFilter(FilterSet):
+    equipment_general_type = \
+        RelatedFilter(
+            filterset=EquipmentGeneralTypeFilter,
+            queryset=EquipmentUniqueType.objects.all())
+
+    equipment_data_field_type = \
+        RelatedFilter(
+            filterset=EquipmentDataFieldTypeFilter,
+            queryset=EquipmentDataFieldType.objects.all())
+
+    data_type = \
+        RelatedFilter(
+            filterset=DataTypeFilter,
+            queryset=DataType.objects.all())
+
+    numeric_measurement_unit = \
+        RelatedFilter(
+            filterset=NumericMeasurementUnitFilter,
+            queryset=NumericMeasurementUnit.objects.all())
+
+    equipment_unique_types = \
+        RelatedFilter(
+            filterset='EquipmentUniqueTypeFilter',
+            queryset=EquipmentUniqueType.objects.all())
+
     class Meta:
         model = EquipmentDataField
 
-        fields = '__all__'
+        fields = dict(
+            equipment_general_type='__all__',
+
+            equipment_data_field_type='__all__',
+
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ],
+
+            data_type='__all__',
+
+            nullable='__all__',
+
+            numeric_measurement_unit='__all__',
+
+            lower_numeric_null='__all__',
+
+            upper_numeric_null='__all__',
+
+            default_val='__all__',
+
+            min_val='__all__',
+
+            max_val='__all__',
+
+            equipment_unique_types='__all__'
+        )
 
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):

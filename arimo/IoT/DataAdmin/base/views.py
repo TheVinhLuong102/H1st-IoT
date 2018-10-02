@@ -168,7 +168,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    filter_class = EquipmentDataFieldFilter
+    # filter_class = EquipmentDataFieldFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -193,7 +193,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_unique_type_group_name'
 
-    filter_class = EquipmentUniqueTypeGroupFilter
+    # filter_class = EquipmentUniqueTypeGroupFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -214,7 +214,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    filter_class = EquipmentUniqueTypeFilter
+    # filter_class = EquipmentUniqueTypeFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -239,7 +239,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_facility_name'
 
-    filter_class = EquipmentFacilityFilter
+    # filter_class = EquipmentFacilityFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -264,7 +264,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_instance_name'
 
-    filter_class = EquipmentInstanceFilter
+    # filter_class = EquipmentInstanceFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -285,7 +285,7 @@ class EquipmentSystemViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    filter_class = EquipmentSystemFilter
+    # filter_class = EquipmentSystemFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
