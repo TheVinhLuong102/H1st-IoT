@@ -29,13 +29,14 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
     if not s.startswith('#'):
         s = s.strip()
         lower_s = s.lower()
-        if six.PY3 or (not lower_s.startswith('djangorestframework-filters')):
-            install_requires.append(
-                'Django'
-                if lower_s.startswith('django >=')
-                else ('Django-AutoComplete-Light == 3.2.10'
-                      if six.PY2 and lower_s.startswith('django-autocomplete-light >=')
-                      else s))
+        install_requires.append(
+            'Django'
+            if lower_s.startswith('django >=')
+            else ('Django-AutoComplete-Light == 3.2.10'
+                  if six.PY2 and lower_s.startswith('django-autocomplete-light >=')
+                  else ('DjangoRESTFramework-Filters == 0.10.2'
+                        if six.PY2 and lower_s.startswith('djangorestframework-filters >=')
+                        else s)))
 
 setup(
     name=_metadata['PACKAGE'],
