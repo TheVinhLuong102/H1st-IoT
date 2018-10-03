@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 from ruamel import yaml
+import six
 import sys
 
 
@@ -194,8 +195,7 @@ REST_FRAMEWORK = {
 
     'DEFAULT_FILTER_BACKENDS': [
         'rest_framework_filters.backends.RestFrameworkFilterBackend'
-        # 'django_filters.rest_framework.DjangoFilterBackend'
     ]
-    if not _ON_LINUX_CLUSTER
+    if six.PY3
     else []
 }
