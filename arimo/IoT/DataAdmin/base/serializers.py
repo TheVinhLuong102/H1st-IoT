@@ -3,8 +3,6 @@ from rest_framework.serializers import \
     ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
     HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 
-from rest_framework_json_api.serializers import SerializerMetaclass
-
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import \
@@ -60,35 +58,41 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
         SlugRelatedField(
             queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=True)
 
     equipment_data_field_type = \
         SlugRelatedField(
-            queryset=EquipmentDataField.objects.all(), read_only=False,
+            queryset=EquipmentDataFieldType.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=True)
 
     data_type = \
         SlugRelatedField(
             queryset=DataType.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=False)
 
     numeric_measurement_unit = \
         SlugRelatedField(
             queryset=NumericMeasurementUnit.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=False)
 
     equipment_unique_types = \
         EquipmentUniqueTypeShortFormRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
-            many=True)
+            many=True,
+            required=False)
 
     class Meta:
         model = EquipmentDataField
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'equipment_data_field_type', \
             'name', \
