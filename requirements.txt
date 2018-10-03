@@ -36,7 +36,7 @@ CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
 
 # Filtering support
-DjangoRESTFramework-Filters == 1.0.0.dev0   # *** v0 incompat w/ Django-Filter v2 ***
+DjangoRESTFramework-Filters >= 0.10.2   # *** TODO: FIX: v0.10.2 incompat w/ Django-Filter v2 ***
 Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
 Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
 
