@@ -189,13 +189,13 @@ class EquipmentProblemPeriodViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     permission_classes = \
         IsAuthenticated, \
         IsAuthenticatedOrReadOnly
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class AlertDiagnosisStatusViewSet(ModelViewSet):

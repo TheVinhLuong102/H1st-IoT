@@ -3,6 +3,7 @@ from rest_framework.serializers import \
     ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
     HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
 
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
@@ -15,6 +16,10 @@ from .models import \
     EquipmentProblemPeriod, \
     AlertDiagnosisStatus, \
     Alert
+from ..base.models import \
+    EquipmentGeneralType, \
+    EquipmentUniqueTypeGroup, \
+    EquipmentInstance
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
@@ -63,14 +68,37 @@ class EquipmentProblemTypeSerializer(ModelSerializer):
     class Meta:
         model = EquipmentProblemType
 
-        fields = '__all__'
+        fields = 'name',
 
 
-class EquipmentProblemPeriodSerializer(ModelSerializer):
+class EquipmentProblemPeriodSerializer(WritableNestedModelSerializer):
+    equipment_instance = \
+        SlugRelatedField(
+            queryset=EquipmentInstance.objects.all(), read_only=False,
+            slug_field='name',
+            many=False,
+            required=True)
+
+    equipment_problem_types = \
+        SlugRelatedField(
+            queryset=EquipmentProblemType.objects.all(), read_only=False,
+            slug_field='name',
+            many=True,
+            required=True)
+
     class Meta:
         model = EquipmentProblemPeriod
 
-        fields = '__all__'
+        fields = \
+            'equipment_instance', \
+            'from_date', \
+            'to_date', \
+            'dismissed', \
+            'duration', \
+            'ongoing', \
+            'equipment_problem_types', \
+            'comments', \
+            'last_updated'
 
 
 class AlertDiagnosisStatusSerializer(ModelSerializer):
@@ -81,7 +109,45 @@ class AlertDiagnosisStatusSerializer(ModelSerializer):
 
 
 class AlertSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_instance = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    diagnosis_status = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
     class Meta:
         model = Alert
 
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_instance', \
+            'risk_score_name', \
+            'threshold', \
+            'from_date', \
+            'to_date', \
+            'duration', \
+            'cumulative_excess_risk_score', \
+            'approx_average_risk_score', \
+            'last_risk_score', \
+            'ongoing', \
+            'diagnosis_status', \
+            'last_updated'
