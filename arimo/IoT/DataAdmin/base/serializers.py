@@ -16,6 +16,7 @@ from .models import \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentSystem
+from ..util import clean_lower_str
 
 
 class DataTypeSerializer(ModelSerializer):
@@ -47,6 +48,11 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
 
 
 class EquipmentUniqueTypeShortFormRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        return EquipmentUniqueType.objects.get_or_create(
+            equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
+            name=clean_lower_str(data['name']))[0]
+
     def to_representation(self, value):
         return dict(
             equipment_general_type=value.equipment_general_type.name,
