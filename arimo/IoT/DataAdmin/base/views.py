@@ -78,6 +78,8 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
+    pagination_class = None
+
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
     queryset = NumericMeasurementUnit.objects.all()
@@ -102,6 +104,8 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    pagination_class = None
 
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
@@ -128,6 +132,8 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
+    pagination_class = None
+
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
     queryset = EquipmentGeneralType.objects.all()
@@ -153,6 +159,8 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
+    pagination_class = None
+
 
 class EquipmentDataFieldViewSet(ModelViewSet):
     queryset = EquipmentDataField.objects.all()
@@ -173,6 +181,8 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    pagination_class = None
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
@@ -199,6 +209,8 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
+    pagination_class = None
+
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
     queryset = EquipmentUniqueType.objects.all()
@@ -219,6 +231,8 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    pagination_class = None
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -244,6 +258,8 @@ class EquipmentFacilityViewSet(ModelViewSet):
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    pagination_class = None
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
