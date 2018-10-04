@@ -72,13 +72,11 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'data_type_name___cat_or_num'
 
-    # filter_class = DataTypeFilter   # for simplicity, don't expose filtered API for this
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    pagination_class = None
+    filter_class = pagination_class = None
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -99,11 +97,11 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'numeric_measurement_unit_name'
 
-    # filter_class = NumericMeasurementUnitFilter   # for simplicity, don't expose filtered API for this
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    filter_class = NumericMeasurementUnitFilter
 
     pagination_class = None
 
@@ -126,13 +124,11 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'equipment_data_field_type_name___control_or_measure'
 
-    # filter_class = EquipmentDataFieldTypeFilter   # for simplicity, don't expose filtered API for this
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    pagination_class = None
+    filter_class = pagination_class = None
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -153,11 +149,11 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_general_type_name'
 
-    # filter_class = EquipmentGeneralTypeFilter   # for simplicity, don't expose filtered API for this
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    filter_class = EquipmentGeneralTypeFilter
 
     pagination_class = None
 

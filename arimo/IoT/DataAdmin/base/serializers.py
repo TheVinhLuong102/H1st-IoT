@@ -22,28 +22,24 @@ from ..util import clean_lower_str
 class DataTypeSerializer(ModelSerializer):
     class Meta:
         model = DataType
-
         fields = 'name',
 
 
 class NumericMeasurementUnitSerializer(ModelSerializer):
     class Meta:
         model = NumericMeasurementUnit
-
         fields = 'name',
 
 
 class EquipmentDataFieldTypeSerializer(ModelSerializer):
     class Meta:
         model = EquipmentDataFieldType
-
         fields = 'name',
 
 
 class EquipmentGeneralTypeSerializer(ModelSerializer):
     class Meta:
         model = EquipmentGeneralType
-
         fields = 'name',
 
 
