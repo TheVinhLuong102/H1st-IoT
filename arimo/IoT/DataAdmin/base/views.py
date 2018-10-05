@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.http import HttpResponse, Http404, JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect, requires_csrf_token
 
@@ -18,6 +19,8 @@ from rest_framework.status import \
     HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
+
+from silk.profiling.profiler import silk_profile
 
 from .filters import \
     DataTypeFilter, \
@@ -160,8 +163,15 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
 class EquipmentDataFieldViewSet(ModelViewSet):
     queryset = EquipmentDataField.objects \
-        .select_related('equipment_general_type', 'equipment_data_field_type', 'data_type', 'numeric_measurement_unit') \
-        .prefetch_related('equipment_unique_types')
+        .select_related(
+            'equipment_general_type',
+            'equipment_data_field_type',
+            'data_type',
+            'numeric_measurement_unit') \
+        .prefetch_related(
+            Prefetch(
+                'equipment_unique_types',
+                queryset=EquipmentUniqueType.objects.select_related('equipment_general_type')))
 
     serializer_class = EquipmentDataFieldSerializer
 
@@ -181,6 +191,10 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     filter_class = EquipmentDataFieldFilter
 
     pagination_class = None
+
+    @silk_profile('equipment-data-field-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentDataFieldViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
