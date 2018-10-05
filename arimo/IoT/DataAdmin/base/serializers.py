@@ -51,7 +51,7 @@ class EquipmentUniqueTypeShortFormRelatedField(RelatedField):
 
     def to_representation(self, value):
         return dict(
-            equipment_general_type=value.equipment_general_type.name,
+            # equipment_general_type=value.equipment_general_type.name,
             name=value.name)
 
 
@@ -86,7 +86,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
 
     equipment_unique_types = \
         EquipmentUniqueTypeShortFormRelatedField(
-            queryset=EquipmentUniqueType.objects.all(), read_only=False,
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,   # .all()
             many=True,
             required=False)
 

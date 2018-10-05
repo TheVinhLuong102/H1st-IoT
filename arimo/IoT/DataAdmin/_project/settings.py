@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'debug_toolbar',
+    'silk',
 
     'arimo.IoT.DataAdmin.base',
     'arimo.IoT.DataAdmin.PredMaint'
@@ -93,9 +94,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
         # You should include the Debug Toolbar middleware as early as possible in the list.
         # However, it must come after any other middleware that encodes the response's content, such as GZipMiddleware
+    'silk.middleware.SilkyMiddleware'
 ]
 
 ROOT_URLCONF = 'arimo.IoT.DataAdmin._project.urls'
@@ -191,7 +193,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100,
+    'PAGE_SIZE': 10,   # 100
 
     'DEFAULT_FILTER_BACKENDS': [
         'rest_framework_filters.backends.RestFrameworkFilterBackend'

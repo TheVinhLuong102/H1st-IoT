@@ -159,7 +159,9 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
-    queryset = EquipmentDataField.objects.all()
+    queryset = EquipmentDataField.objects \
+        .select_related('equipment_general_type', 'equipment_data_field_type', 'data_type', 'numeric_measurement_unit') \
+        .prefetch_related('equipment_unique_types')
 
     serializer_class = EquipmentDataFieldSerializer
 
@@ -172,11 +174,11 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    # filter_class = EquipmentDataFieldFilter
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    filter_class = EquipmentDataFieldFilter
 
     pagination_class = None
 

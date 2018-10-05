@@ -87,7 +87,9 @@ urlpatterns = [
 
     url(r'^{}/$'.format(EquipmentProblemPeriodAutoComplete.name),
         EquipmentProblemPeriodAutoComplete.as_view(),
-        name=EquipmentProblemPeriodAutoComplete.name)
+        name=EquipmentProblemPeriodAutoComplete.name),
+
+    url(r'^silk/', include('silk.urls', namespace='silk'))
 
 ] + BASE_URL_PATTERNS + PRED_MAINT_URL_PATTERNS
 
