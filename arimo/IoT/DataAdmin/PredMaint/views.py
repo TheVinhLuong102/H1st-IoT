@@ -1,17 +1,23 @@
+from django.db.models import Prefetch
+
 from rest_framework.authentication import \
     BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import CoreJSONRenderer, JSONRenderer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
+from silk.profiling.profiler import silk_profile
 
 from .filters import \
+    EquipmentUniqueTypeGroupDataFieldProfileFilter, \
     EquipmentUniqueTypeGroupServiceConfigFilter, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfigFilter, \
+    BlueprintFilter, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter, \
     EquipmentInstanceDailyRiskScoreFilter, \
     EquipmentProblemTypeFilter, \
-    AlertDiagnosisStatusFilter
+    EquipmentProblemPeriodFilter, \
+    AlertDiagnosisStatusFilter, \
+    AlertFilter
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupServiceConfig, \
@@ -26,7 +32,6 @@ from .models import \
 from .serializers import \
     EquipmentUniqueTypeGroupDataFieldProfileSerializer, \
     EquipmentUniqueTypeGroupServiceConfigSerializer, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfigSerializer, \
     BlueprintSerializer, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer, \
     EquipmentInstanceDailyRiskScoreSerializer, \
@@ -35,9 +40,15 @@ from .serializers import \
     AlertDiagnosisStatusSerializer, \
     AlertSerializer
 
+from ..base.models import EquipmentDataField
 
-class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ModelViewSet):
-    queryset = EquipmentUniqueTypeGroupDataFieldProfile.objects.all()
+
+class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
+    queryset = EquipmentUniqueTypeGroupDataFieldProfile.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldProfileSerializer
 
@@ -52,12 +63,44 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ModelViewSet):
         JSONRenderer
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
+
+    filter_class = EquipmentUniqueTypeGroupDataFieldProfileFilter
+
+    # pagination_class = None
+
+    @silk_profile('equipment-unique-type-group-data-field-profile-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupDataFieldProfileViewSet, self).list(request, *args, **kwargs)
 
 
-class EquipmentUniqueTypeGroupServiceConfigViewSet(ModelViewSet):
-    queryset = EquipmentUniqueTypeGroupServiceConfig.objects.all()
+class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
+    queryset = EquipmentUniqueTypeGroupServiceConfig.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+        .prefetch_related(
+            Prefetch(
+                'equipment_unique_type_group_monitored_data_field_configs',
+                queryset=EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
+                    .select_related(
+                        'monitored_equipment_data_field',
+                        'monitored_equipment_data_field__equipment_general_type',
+                        'monitored_equipment_data_field__equipment_data_field_type')
+                    .prefetch_related(
+                        Prefetch(
+                            'excluded_equipment_data_fields',
+                            queryset=EquipmentDataField.objects
+                                .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type')))),
+
+            Prefetch(
+                'global_excluded_equipment_data_fields',
+                queryset=EquipmentDataField.objects
+                    .select_related(
+                        'equipment_general_type',
+                        'equipment_data_field_type')))
 
     serializer_class = EquipmentUniqueTypeGroupServiceConfigSerializer
 
@@ -67,37 +110,27 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
+    filter_class = EquipmentUniqueTypeGroupServiceConfigFilter
 
-class EquipmentUniqueTypeGroupMonitoredDataFieldConfigViewSet(ModelViewSet):
-    queryset = EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects.all()
-
-    serializer_class = EquipmentUniqueTypeGroupMonitoredDataFieldConfigSerializer
-
-    authentication_classes = \
-        BasicAuthentication, \
-        RemoteUserAuthentication, \
-        SessionAuthentication, \
-        TokenAuthentication
+    pagination_class = None
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    @silk_profile('equipment-unique-type-group-service-config-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupServiceConfigViewSet, self).list(request, *args, **kwargs)
 
 
-class BlueprintViewSet(ModelViewSet):
-    queryset = Blueprint.objects.all()
+class BlueprintViewSet(ReadOnlyModelViewSet):
+    queryset = Blueprint.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type')
 
     serializer_class = BlueprintSerializer
 
@@ -108,18 +141,32 @@ class BlueprintViewSet(ModelViewSet):
         TokenAuthentication
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
-    lookup_field = lookup_url_kwarg = 'uuid'
+    lookup_field = 'uuid'
+
+    lookup_url_kwarg = 'blueprint_uuid'
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
+    filter_class = BlueprintFilter
 
-class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ModelViewSet):
-    queryset = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects.all()
+    # pagination_class = None
+
+    @silk_profile('blueprint-list')
+    def list(self, request, *args, **kwargs):
+        return super(BlueprintViewSet, self).list(request, *args, **kwargs)
+
+
+class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ReadOnlyModelViewSet):
+    queryset = \
+        EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 
@@ -129,16 +176,23 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Mo
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
+    filter_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter
+
+    # pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    @silk_profile('equipment-unique-type-group-data-field-blueprint-benchmark-metric-profile-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, self).list(request, *args, **kwargs)
 
 
-class EquipmentInstanceDailyRiskScoreViewSet(ModelViewSet):
+class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     queryset = EquipmentInstanceDailyRiskScore.objects.all()
 
     serializer_class = EquipmentInstanceDailyRiskScoreSerializer
@@ -149,13 +203,17 @@ class EquipmentInstanceDailyRiskScoreViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     permission_classes = \
         IsAuthenticated, \
         IsAuthenticatedOrReadOnly
+
+    filter_class = EquipmentInstanceDailyRiskScoreFilter
+
+    # pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class EquipmentProblemTypeViewSet(ModelViewSet):
@@ -169,17 +227,27 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    filter_class = EquipmentProblemTypeFilter
+
+    pagination_class = None
+
+    @silk_profile('equipment-problem-type-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentProblemTypeViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentProblemPeriodViewSet(ModelViewSet):
-    queryset = EquipmentProblemPeriod.objects.all()
+    queryset = \
+        EquipmentProblemPeriod.objects \
+        .select_related('equipment_instance') \
+        .prefetch_related('equipment_problem_types')
 
     serializer_class = EquipmentProblemPeriodSerializer
 
@@ -190,15 +258,22 @@ class EquipmentProblemPeriodViewSet(ModelViewSet):
         TokenAuthentication
 
     permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+        IsAuthenticated,
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
+    filter_class = EquipmentProblemPeriodFilter
 
-class AlertDiagnosisStatusViewSet(ModelViewSet):
+    # pagination_class = None
+
+    @silk_profile('equipment-problem-period-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentProblemPeriodViewSet, self).list(request, *args, **kwargs)
+
+
+class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     queryset = AlertDiagnosisStatus.objects.all()
 
     serializer_class = AlertDiagnosisStatusSerializer
@@ -209,17 +284,30 @@ class AlertDiagnosisStatusViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticatedOrReadOnly,
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    filter_class = AlertDiagnosisStatusFilter
+
+    pagination_class = None
+
+    @silk_profile('alert-diagnosis-status-list')
+    def list(self, request, *args, **kwargs):
+        return super(AlertDiagnosisStatusViewSet, self).list(request, *args, **kwargs)
 
 
-class AlertViewSet(ModelViewSet):
-    queryset = Alert.objects.all()
+class AlertViewSet(ReadOnlyModelViewSet):
+    queryset = \
+        Alert.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group',
+            'equipment_instance',
+            'diagnosis_status')
 
     serializer_class = AlertSerializer
 
@@ -229,10 +317,17 @@ class AlertViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
+    permission_classes = \
+        IsAuthenticated,
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    filter_class = AlertFilter
+
+    # pagination_class = None
+
+    @silk_profile('alert-list')
+    def list(self, request, *args, **kwargs):
+        return super(AlertViewSet, self).list(request, *args, **kwargs)

@@ -20,34 +20,118 @@ from ..base.models import \
     EquipmentGeneralType, \
     EquipmentUniqueTypeGroup, \
     EquipmentInstance
+from ..base.serializers import EquipmentDataFieldShortFormRelatedField
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_data_field = \
+        EquipmentDataFieldShortFormRelatedField(
+            read_only=True,
+            many=False)
+
     class Meta:
         model = EquipmentUniqueTypeGroupDataFieldProfile
 
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            'to_date', \
+            'valid_proportion', \
+            'distinct_values', \
+            'n_distinct_values', \
+            'sample_min', \
+            'outlier_rst_min', \
+            'sample_quartile', \
+            'sample_median', \
+            'sample_3rd_quartile', \
+            'outlier_rst_max', \
+            'sample_max', \
+            'last_updated'
+
+
+class EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(RelatedField):
+    def to_representation(self, value):
+        return dict(
+                monitored_equipment_data_field=value.monitored_equipment_data_field.name,
+                excluded_equipment_data_fields=[i.name for i in value.excluded_equipment_data_fields.all()],
+                active=value.active,
+                comments=value.comments)
 
 
 class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group_monitored_data_field_configs = \
+        EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(
+            read_only=True,
+            many=True)
+
+    global_excluded_equipment_data_fields = \
+        EquipmentDataFieldShortFormRelatedField(
+            read_only=True,
+            many=True)
+
     class Meta:
         model = EquipmentUniqueTypeGroupServiceConfig
 
-        fields = '__all__'
-
-
-class EquipmentUniqueTypeGroupMonitoredDataFieldConfigSerializer(ModelSerializer):
-    class Meta:
-        model = EquipmentUniqueTypeGroupMonitoredDataFieldConfig
-
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_unique_type_group_monitored_data_field_configs', \
+            'global_excluded_equipment_data_fields', \
+            'active', \
+            'comments', \
+            'last_updated'
 
 
 class BlueprintSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
     class Meta:
         model = Blueprint
 
-        fields = '__all__'
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'trained_to_date', \
+            'timestamp', \
+            'uuid', \
+            'benchmark_metrics', \
+            'active', \
+            'last_updated'
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer(ModelSerializer):
@@ -60,14 +144,12 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
     class Meta:
         model = EquipmentInstanceDailyRiskScore
-
         fields = '__all__'
 
 
 class EquipmentProblemTypeSerializer(ModelSerializer):
     class Meta:
         model = EquipmentProblemType
-
         fields = 'name',
 
 
@@ -104,8 +186,7 @@ class EquipmentProblemPeriodSerializer(WritableNestedModelSerializer):
 class AlertDiagnosisStatusSerializer(ModelSerializer):
     class Meta:
         model = AlertDiagnosisStatus
-
-        fields = '__all__'
+        fields = 'name',
 
 
 class AlertSerializer(ModelSerializer):

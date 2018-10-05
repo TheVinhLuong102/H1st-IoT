@@ -3,7 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import \
     EquipmentUniqueTypeGroupDataFieldProfileViewSet, \
     EquipmentUniqueTypeGroupServiceConfigViewSet, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfigViewSet, \
     BlueprintViewSet, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, \
     EquipmentInstanceDailyRiskScoreViewSet, \
@@ -24,10 +23,6 @@ ROUTER.register(
     EquipmentUniqueTypeGroupServiceConfigViewSet)
 
 ROUTER.register(
-    'equipment-unique-type-group-monitored-data-field-configs',
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfigViewSet)
-
-ROUTER.register(
     'blueprints',
     BlueprintViewSet)
 
@@ -40,7 +35,7 @@ ROUTER.register(
     EquipmentInstanceDailyRiskScoreViewSet)
 
 ROUTER.register(
-    'equipment-problem-type',
+    'equipment-problem-types',
     EquipmentProblemTypeViewSet)
 
 ROUTER.register(

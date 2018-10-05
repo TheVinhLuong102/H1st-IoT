@@ -75,11 +75,11 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'data_type_name___cat_or_num'
 
+    filter_class = pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    filter_class = pagination_class = None
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -100,13 +100,13 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'numeric_measurement_unit_name'
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = NumericMeasurementUnitFilter
 
     pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
@@ -127,11 +127,11 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'equipment_data_field_type_name___control_or_measure'
 
+    filter_class = pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    filter_class = pagination_class = None
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -152,13 +152,13 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_general_type_name'
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentGeneralTypeFilter
 
     pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
@@ -184,13 +184,13 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentDataFieldFilter
 
     pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile('equipment-data-field-list')
     def list(self, request, *args, **kwargs):
@@ -226,11 +226,11 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     filter_class = EquipmentUniqueTypeGroupFilter
 
+    pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    pagination_class = None
 
     @silk_profile('equipment-unique-type-group-list')
     def list(self, request, *args, **kwargs):
@@ -260,13 +260,13 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentUniqueTypeFilter
 
     pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile('equipment-unique-type-list')
     def list(self, request, *args, **kwargs):
@@ -291,13 +291,13 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_facility_name'
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentFacilityFilter
 
     pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
@@ -321,11 +321,11 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     filter_class = EquipmentInstanceFilter
 
+    # pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    # pagination_class = None
 
     @silk_profile('equipment-instance-list')
     def list(self, request, *args, **kwargs):
@@ -348,11 +348,11 @@ class EquipmentSystemViewSet(ModelViewSet):
 
     filter_class = EquipmentSystemFilter
 
+    # pagination_class = None
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
-
-    # pagination_class = None
 
 
 # request.data
