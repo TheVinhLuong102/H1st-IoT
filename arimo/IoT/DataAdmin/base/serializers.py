@@ -111,6 +111,12 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
 
 
 class EquipmentDataFieldShortFormRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        return EquipmentDataField.objects.get_or_create(
+            equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
+            equipment_data_field_type=EquipmentDataFieldType.objects.get_or_create(name=clean_lower_str(data['equipment_data_field_type']))[0],
+            name=clean_lower_str(data['name']))[0]
+
     def to_representation(self, value):
         return dict(
             equipment_general_type=value.equipment_general_type.name,

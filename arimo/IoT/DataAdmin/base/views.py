@@ -198,7 +198,16 @@ class EquipmentDataFieldViewSet(ModelViewSet):
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
-    queryset = EquipmentUniqueTypeGroup.objects.all()
+    queryset = EquipmentUniqueTypeGroup.objects \
+        .select_related(
+            'equipment_general_type') \
+        .prefetch_related(
+            Prefetch(
+                'equipment_unique_types',
+                queryset=EquipmentUniqueType.objects.select_related('equipment_general_type')),
+            Prefetch(
+                'equipment_data_fields',
+                queryset=EquipmentDataField.objects.select_related('equipment_general_type', 'equipment_data_field_type')))
 
     serializer_class = EquipmentUniqueTypeGroupSerializer
 
@@ -215,7 +224,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_unique_type_group_name'
 
-    # filter_class = EquipmentUniqueTypeGroupFilter
+    filter_class = EquipmentUniqueTypeGroupFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -223,9 +232,22 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     pagination_class = None
 
+    @silk_profile('equipment-unique-type-group-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupViewSet, self).list(request, *args, **kwargs)
+
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
-    queryset = EquipmentUniqueType.objects.all()
+    queryset = EquipmentUniqueType.objects \
+        .select_related(
+            'equipment_general_type') \
+        .prefetch_related(
+            Prefetch(
+                'data_fields',
+                queryset=EquipmentDataField.objects.select_related('equipment_general_type', 'equipment_data_field_type')),
+            Prefetch(
+                'groups',
+                queryset=EquipmentUniqueTypeGroup.objects.select_related('equipment_general_type')))
 
     serializer_class = EquipmentUniqueTypeSerializer
 
@@ -238,13 +260,17 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    # filter_class = EquipmentUniqueTypeFilter
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
+    filter_class = EquipmentUniqueTypeFilter
+
     pagination_class = None
+
+    @silk_profile('equipment-unique-type-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -265,17 +291,18 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_facility_name'
 
-    # filter_class = EquipmentFacilityFilter
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    filter_class = EquipmentFacilityFilter
 
     pagination_class = None
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
-    queryset = EquipmentInstance.objects.all()
+    queryset = EquipmentInstance.objects \
+        .select_related('equipment_general_type', 'equipment_unique_type', 'equipment_unique_type__equipment_general_type', 'equipment_facility')
 
     serializer_class = EquipmentInstanceSerializer
 
@@ -292,11 +319,17 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     lookup_url_kwarg = 'equipment_instance_name'
 
-    # filter_class = EquipmentInstanceFilter
+    filter_class = EquipmentInstanceFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    # pagination_class = None
+
+    @silk_profile('equipment-instance-list')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentInstanceViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentSystemViewSet(ModelViewSet):
@@ -313,11 +346,13 @@ class EquipmentSystemViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    # filter_class = EquipmentSystemFilter
+    filter_class = EquipmentSystemFilter
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    # pagination_class = None
 
 
 # request.data
