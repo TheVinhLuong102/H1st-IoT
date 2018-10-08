@@ -138,31 +138,44 @@ class EquipmentUniqueTypeGroupDataFieldProfileFilter(FilterSet):
 
 
 class EquipmentUniqueTypeGroupServiceConfigFilter(FilterSet):
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
+
+    equipment_unique_type_group = \
+        RelatedFilter(
+            queryset=EquipmentUniqueTypeGroup.objects.all(),
+            filterset=EquipmentUniqueTypeGroupFilter)
+
     class Meta:
         model = EquipmentUniqueTypeGroupServiceConfig
 
-        fields = \
-            'equipment_general_type', \
-            'equipment_unique_type_group', \
-            'global_excluded_equipment_data_fields', \
-            'active', \
-            'comments', \
-            'last_updated'
-            # 'equipment_unique_type_group_monitored_data_field_configs'
+        fields = dict(
+            active=['exact']
+        )
 
 
 class BlueprintFilter(FilterSet):
-     class Meta:
-         model = Blueprint
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
 
-         fields = \
-             'equipment_general_type', \
-             'equipment_unique_type_group', \
-             'trained_to_date', \
-             'timestamp', \
-             'uuid', \
-             'active', \
-             'last_updated'
+    equipment_unique_type_group = \
+        RelatedFilter(
+            queryset=EquipmentUniqueTypeGroup.objects.all(),
+            filterset=EquipmentUniqueTypeGroupFilter)
+
+    class Meta:
+        model = Blueprint
+
+        fields = dict(
+            trained_to_date='__all__',
+            timestamp='__all__',
+            uuid='__all__',
+            active='__all__'
+        )
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter(FilterSet):
