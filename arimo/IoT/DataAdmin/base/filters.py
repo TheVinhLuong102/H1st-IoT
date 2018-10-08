@@ -232,7 +232,7 @@ class EquipmentUniqueTypeFilter(FilterSet):
             filterset=EquipmentGeneralTypeFilter)
 
     class Meta:
-        model = EquipmentUniqueTypeGroup
+        model = EquipmentUniqueType
 
         fields = dict(
             name=[
