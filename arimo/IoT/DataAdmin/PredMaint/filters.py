@@ -196,7 +196,17 @@ class EquipmentProblemTypeFilter(FilterSet):
     class Meta:
         model = EquipmentProblemType
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class EquipmentProblemPeriodFilter(FilterSet):
@@ -219,7 +229,17 @@ class AlertDiagnosisStatusFilter(FilterSet):
     class Meta:
         model = AlertDiagnosisStatus
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class AlertFilter(FilterSet):
