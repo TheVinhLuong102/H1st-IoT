@@ -37,11 +37,8 @@ from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
 
 
 urlpatterns = [
-    # Home Redirected URL
+    # Home URL Redirected to Admin
     url(r'^$', RedirectView.as_view(url='/admin')),
-
-    # Admin URLs
-    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
 
     # API URLs
