@@ -1,76 +1,30 @@
-# Py3
-Python-DateUtil
-
-
-# Django
-Django >= 2.1.1
-
-
-# Django Auto-Complete
-Django-AutoComplete-Light >= 3.3.1
-Django-Generic-M2M >= 0.3.1
-Django-GM2M >= 0.6
-Django-QuerySetSequence >= 0.8
-Django-Tagging >= 0.4.6
-Django-Taggit >= 0.23.0
-
-# Django misc
-Django-Debug-Toolbar >= 1.10.1
-Django-Silk >= 3.0.1
-
-Django-Grappelli >= 2.11.1
-
-Django-Extensions >= 2.1.2
-
-Django-Nested-InLines >= 0.1
-
-
-# DJANGO REST FRAMEWORK
-DjangoRESTFramework >= 3.8.2
-
-# JSON API
-DjangoRESTFramework-JSONAPI >= 2.6.0
-
-# Serializers
-DRF-Writable-Nested >= 0.5.1
-
-# CoreAPI / schema-generation support
-CoreAPI >= 2.3.3
-CoreAPI-CLI >= 1.0.9
-
-# Filtering support
-DjangoRESTFramework-Filters >= 0.10.2   # *** TODO: FIX: v0.10.2 incompat w/ Django-Filter v2 ***
-Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
-Django-Crispy-Forms >= 1.7.2   # improved HTML display for filtering
-
-# Object-level permissions support
-Django-Guardian >= 1.4.9
-
-# Markdown support for the browsable API
-Markdown >= 2.6.11, < 3
-   # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
-
-# HTTP
-HTTPie >= 0.9.9
-
-
-# misc
-SQLAlchemy >= 1.2.11
-Alembic >= 1.0.0
-SQLAlchemy-Migrate >= 0.11.0
-
-PsycoPG2-binary >= 2.7.5
-
 AWSEBCLI >= 3.14.6
-
 AWSCLI >= 1.16.23
 Boto3 >= 1.9.13
-
-PyYAML >= 3.13
-Ruamel.YAML >= 0.15.66
-
-Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
-
-
-# SciPy stack
+CoreAPI >= 2.3.3
+CoreAPI-CLI >= 1.0.9
+Django >= 2.1.1
+Django-AutoComplete-Light >= 3.3.1
+Django-Crispy-Forms >= 1.7.2
+Django-Debug-Toolbar >= 1.10.1
+Django-Extensions >= 2.1.2
+Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
+Django-Generic-M2M >= 0.3.1
+Django-GM2M >= 0.6
+Django-Guardian >= 1.4.9
+Django-Nested-InLines >= 0.1
+Django-QuerySetSequence >= 0.8
+DjangoRESTFramework >= 3.8.2
+DjangoRESTFramework-Filters >= 0.10.2   # *** TODO: FIX: v0.10.2 incompat w/ Django-Filter v2 ***
+DRF-Writable-Nested >= 0.5.1
+Django-Silk >= 3.0.1
+Django-Tagging >= 0.4.6
+Django-Taggit >= 0.23.0
+HTTPie >= 0.9.9
+Markdown >= 2.6.11, < 3   # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
 Pandas >= 0.23.4
+PsycoPG2-binary >= 2.7.5
+Python-DateUtil
+Ruamel.YAML >= 0.15.66
+SQLAlchemy >= 1.2.11
+Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
