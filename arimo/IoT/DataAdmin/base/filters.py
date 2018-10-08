@@ -88,37 +88,33 @@ class EquipmentGeneralTypeFilter(FilterSet):
 class EquipmentDataFieldFilter(FilterSet):
     equipment_general_type = \
         RelatedFilter(
-            filterset=EquipmentGeneralTypeFilter,
-            queryset=EquipmentUniqueType.objects.all())
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
 
     equipment_data_field_type = \
         RelatedFilter(
-            filterset=EquipmentDataFieldTypeFilter,
-            queryset=EquipmentDataFieldType.objects.all())
+            queryset=EquipmentDataFieldType.objects.all(),
+            filterset=EquipmentDataFieldTypeFilter)
 
     data_type = \
         RelatedFilter(
-            filterset=DataTypeFilter,
-            queryset=DataType.objects.all())
+            queryset=DataType.objects.all(),
+            filterset=DataTypeFilter)
 
     numeric_measurement_unit = \
         RelatedFilter(
-            filterset=NumericMeasurementUnitFilter,
-            queryset=NumericMeasurementUnit.objects.all())
+            queryset=NumericMeasurementUnit.objects.all(),
+            filterset=NumericMeasurementUnitFilter)
 
     equipment_unique_types = \
         RelatedFilter(
-            filterset='EquipmentUniqueTypeFilter',
-            queryset=EquipmentUniqueType.objects.all())
+            queryset=EquipmentUniqueType.objects.all(),
+            filterset='EquipmentUniqueTypeFilter')
 
     class Meta:
         model = EquipmentDataField
 
         fields = dict(
-            equipment_general_type='__all__',
-
-            equipment_data_field_type='__all__',
-
             name=[
                 'exact', 'iexact',
                 # 'gt', 'gte', 'lt', 'lte',
@@ -130,24 +126,81 @@ class EquipmentDataFieldFilter(FilterSet):
                 # 'regex', 'iregex'
             ],
 
-            data_type='__all__',
+            nullable=[
+                'exact'   # , 'iexact'
+                # 'gt', 'gte', 'lt', 'lte',
+                # 'in',
+                # 'contains', 'icontains',
+                # 'startswith', 'istartswith', 'endswith', 'iendswith'
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ],
 
-            nullable='__all__',
+            lower_numeric_null=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range'
+                # 'isnull',
+                # 'regex', 'iregex',
+                # 'contained_by'
+            ],
 
-            numeric_measurement_unit='__all__',
+            upper_numeric_null=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range'
+                # 'isnull',
+                # 'regex', 'iregex',
+                # 'contained_by'
+            ],
 
-            lower_numeric_null='__all__',
+            default_val=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range',
+                'isnull'
+                # 'regex', 'iregex',
+                # 'contained_by'
+            ],
 
-            upper_numeric_null='__all__',
+            min_val=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range',
+                'isnull'
+                # 'regex', 'iregex',
+                # 'contained_by'
+            ],
 
-            default_val='__all__',
-
-            min_val='__all__',
-
-            max_val='__all__',
-
-            equipment_unique_types='__all__'
-        )
+            max_val=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range',
+                'isnull'
+                # 'regex', 'iregex',
+                # 'contained_by'
+            ])
 
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):
