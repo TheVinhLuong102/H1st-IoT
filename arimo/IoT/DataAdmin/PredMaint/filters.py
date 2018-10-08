@@ -63,7 +63,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileFilter(FilterSet):
                  # 'year__regex', 'year__iregex',
                  # 'year__contained_by',
                  'month',   # 'month__iexact',
-                 'month__gt', 'month__gte', 'month__lt', 'month__lte'
+                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                  'month__in',
                  # 'month__contains', 'month__icontains',
                  # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
