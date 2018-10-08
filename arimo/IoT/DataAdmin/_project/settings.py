@@ -63,14 +63,14 @@ INSTALLED_APPS = [
     'dal_select2_tagging',
     'dal_select2_taggit',
 
-    'django_extensions',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
 
     'rest_framework',
     'rest_framework_filters',

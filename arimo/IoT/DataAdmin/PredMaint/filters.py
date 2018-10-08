@@ -98,15 +98,18 @@ class EquipmentUniqueTypeGroupDataFieldProfileFilter(FilterSet):
                  # 'week__isnull',
                  # 'week__regex', 'week__iregex',
                  # 'week__contained_by',
-                 'quarter',   # 'quarter__iexact',
-                 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                 'quarter__in',
+
+                 # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
+                 # 'quarter',   # 'quarter__iexact',
+                 # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
+                 # 'quarter__in',
                  # 'quarter__contains', 'quarter__icontains',
                  # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                 'quarter__range'
+                 # 'quarter__range'
                  # 'quarter__isnull',
                  # 'quarter__regex', 'quarter__iregex',
                  # 'quarter__contained_by'
+
                  # 'to_date__contained_by'
              ],
 
