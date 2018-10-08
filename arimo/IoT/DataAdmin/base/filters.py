@@ -204,35 +204,100 @@ class EquipmentDataFieldFilter(FilterSet):
 
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
+
     class Meta:
         model = EquipmentUniqueTypeGroup
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class EquipmentUniqueTypeFilter(FilterSet):
-    class Meta:
-        model = EquipmentUniqueType
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
 
-        fields = '__all__'
+    class Meta:
+        model = EquipmentUniqueTypeGroup
+
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class EquipmentFacilityFilter(FilterSet):
     class Meta:
         model = EquipmentFacility
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class EquipmentInstanceFilter(FilterSet):
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
+
     class Meta:
         model = EquipmentInstance
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
 
 
 class EquipmentSystemFilter(FilterSet):
     class Meta:
         model = EquipmentSystem
 
-        fields = '__all__'
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                # 'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'range',
+                # 'isnull',
+                # 'regex', 'iregex'
+            ])
