@@ -555,7 +555,7 @@ class EquipmentProblemPeriod(Model):
             self.to_date,
             ' ONGOING'
                 if self.ongoing
-                else ''
+                else '',
             ', '.join(equipment_problem_type.name.upper()
                       for equipment_problem_type in self.equipment_problem_types.all()),
             ' (DISMISSED)'
