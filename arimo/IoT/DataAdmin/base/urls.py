@@ -24,6 +24,3 @@ ROUTER.register('equipment-unique-types', EquipmentUniqueTypeViewSet)
 ROUTER.register('equipment-facilities', EquipmentFacilityViewSet)
 ROUTER.register('equipment-instances', EquipmentInstanceViewSet)
 ROUTER.register('equipment-systems', EquipmentSystemViewSet)
-
-
-URL_PATTERNS = []

@@ -28,16 +28,12 @@ from arimo.IoT.DataAdmin.base.autocompletes import \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
-from arimo.IoT.DataAdmin.base.urls import \
-    ROUTER as BASE_ROUTER, \
-    URL_PATTERNS as BASE_URL_PATTERNS
+from arimo.IoT.DataAdmin.base.urls import ROUTER as BASE_ROUTER
 
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemPeriodAutoComplete
-from arimo.IoT.DataAdmin.PredMaint.urls import \
-    ROUTER as PRED_MAINT_ROUTER, \
-    URL_PATTERNS as PRED_MAINT_URL_PATTERNS
+from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
 
 
 urlpatterns = [
@@ -90,8 +86,7 @@ urlpatterns = [
         name=EquipmentProblemPeriodAutoComplete.name),
 
     url(r'^silk/', include('silk.urls', namespace='silk'))
-
-] + BASE_URL_PATTERNS + PRED_MAINT_URL_PATTERNS
+]
 
 
 if settings.DEBUG:

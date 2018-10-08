@@ -49,6 +49,3 @@ ROUTER.register(
 ROUTER.register(
     'alerts',
     AlertViewSet)
-
-
-URL_PATTERNS = []
