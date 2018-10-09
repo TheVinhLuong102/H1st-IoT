@@ -583,7 +583,7 @@ def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
             from_date__lte=instance.to_date,
             to_date__gte=instance.from_date   # + relativedelta(months=-1)
         ),
-        # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn’t exist.
+        # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
 
@@ -801,7 +801,7 @@ def alert_post_save(sender, instance, *args, **kwargs):
             equipment_instance=instance.equipment_instance,
             from_date__lte=instance.to_date,   # + relativedelta(months=1)
             to_date__gte=instance.from_date),
-        # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn’t exist.bul
+        # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
 
