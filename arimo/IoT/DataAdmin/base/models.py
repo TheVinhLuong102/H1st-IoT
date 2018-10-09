@@ -2,6 +2,7 @@ from django.db.models import \
     Model, \
     BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
     CASCADE, PROTECT, SET_NULL
+from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
 from ..util import MAX_CHAR_LEN, clean_lower_str
@@ -270,15 +271,25 @@ class EquipmentUniqueTypeGroup(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-
-        if self.equipment_unique_types.count():
-            self.equipment_data_fields.set(
-                self.equipment_unique_types.all()[0].data_fields.all().union(
-                    *(equipment_unique_type.data_fields.all()
-                      for equipment_unique_type in self.equipment_unique_types.all()[1:]),
-                    all=False))
-
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
+
+
+def equipment_unique_type_group_post_save(sender, instance, *args, **kwargs):
+    if instance.equipment_unique_types.count():
+        instance.equipment_data_fields.set(
+            instance.equipment_unique_types.all()[0].data_fields.all().union(
+                *(equipment_unique_type.data_fields.all()
+                  for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
+                all=False),
+            bulk=True,
+            clear=False)
+
+
+post_save.connect(
+    receiver=equipment_unique_type_group_post_save,
+    sender=EquipmentUniqueTypeGroup,
+    weak=True,
+    dispatch_uid=None)
 
 
 @python_2_unicode_compatible
