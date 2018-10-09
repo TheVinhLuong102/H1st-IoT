@@ -281,7 +281,7 @@ def equipment_unique_type_group_post_save(sender, instance, *args, **kwargs):
                 *(equipment_unique_type.data_fields.all()
                   for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
                 all=False),
-            bulk=True,
+            # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn’t exist.bul
             clear=False)
 
 
