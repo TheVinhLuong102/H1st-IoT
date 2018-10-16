@@ -54,7 +54,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_data_field_type', \
         'name', \
         'data_type', \
-        'nullable', \
         'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \
@@ -67,7 +66,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_data_field_type', \
         'data_type', \
-        'nullable', \
         'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \

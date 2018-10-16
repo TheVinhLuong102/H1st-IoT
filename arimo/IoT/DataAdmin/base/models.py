@@ -138,12 +138,6 @@ class EquipmentDataField(Model):
             null=True,
             on_delete=PROTECT)
 
-    nullable = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=True)
-
     numeric_measurement_unit = \
         ForeignKey(
             to=NumericMeasurementUnit,

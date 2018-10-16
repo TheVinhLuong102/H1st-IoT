@@ -126,17 +126,6 @@ class EquipmentDataFieldFilter(FilterSet):
                 # 'regex', 'iregex'
             ],
 
-            nullable=[
-                'exact'   # , 'iexact'
-                # 'gt', 'gte', 'lt', 'lte',
-                # 'in',
-                # 'contains', 'icontains',
-                # 'startswith', 'istartswith', 'endswith', 'iendswith'
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
-            ],
-
             lower_numeric_null=[
                 'exact',   # 'iexact',
                 'gt', 'gte', 'lt', 'lte',
