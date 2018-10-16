@@ -82,6 +82,7 @@ urlpatterns = [
         EquipmentProblemPeriodAutoComplete.as_view(),
         name=EquipmentProblemPeriodAutoComplete.name),
 
+    # Silk Profiling URLs
     url(r'^silk/', include('silk.urls', namespace='silk'))
 ]
 
