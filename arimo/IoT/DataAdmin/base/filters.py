@@ -271,7 +271,7 @@ class EquipmentInstanceFilter(FilterSet):
                 'startswith', 'istartswith', 'endswith', 'iendswith',
                 # 'range',
                 # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ])
 
 
