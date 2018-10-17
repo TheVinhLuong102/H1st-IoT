@@ -218,6 +218,7 @@ class AlertSerializer(ModelSerializer):
         model = Alert
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_instance', \
