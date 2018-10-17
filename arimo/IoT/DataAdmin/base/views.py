@@ -10,6 +10,7 @@ from rest_framework.generics import GenericAPIView, \
     ListCreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import \
     ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.pagination import CursorPagination, LimitOffsetPagination, PageNumberPagination
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import CoreJSONRenderer, JSONRenderer, \
     HTMLFormRenderer, StaticHTMLRenderer, TemplateHTMLRenderer
@@ -68,8 +69,7 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
+    permission_classes = IsAuthenticatedOrReadOnly,
 
     lookup_field = 'name'
 
@@ -93,8 +93,7 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
+    permission_classes = IsAuthenticatedOrReadOnly,
 
     lookup_field = 'name'
 
@@ -120,8 +119,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
+    permission_classes = IsAuthenticatedOrReadOnly,
 
     lookup_field = 'name'
 
@@ -145,8 +143,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     lookup_field = 'name'
 
@@ -181,8 +178,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentDataFieldFilter
 
@@ -217,8 +213,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     lookup_field = 'name'
 
@@ -257,8 +252,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeFilter
 
@@ -284,8 +278,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     lookup_field = 'name'
 
@@ -312,8 +305,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     lookup_field = 'name'
 
@@ -321,7 +313,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     filter_class = EquipmentInstanceFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -343,12 +335,11 @@ class EquipmentSystemViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentSystemFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     renderer_classes = \
         CoreJSONRenderer, \

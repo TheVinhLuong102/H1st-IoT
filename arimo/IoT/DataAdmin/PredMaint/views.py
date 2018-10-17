@@ -2,6 +2,7 @@ from django.db.models import Prefetch
 
 from rest_framework.authentication import \
     BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import CoreJSONRenderer, JSONRenderer
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -62,12 +63,11 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeGroupDataFieldProfileFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     @silk_profile('equipment-unique-type-group-data-field-profile-list')
     def list(self, request, *args, **kwargs):
@@ -110,8 +110,7 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeGroupServiceConfigFilter
 
@@ -140,8 +139,7 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     lookup_field = 'uuid'
 
@@ -153,7 +151,7 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     filter_class = BlueprintFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     @silk_profile('blueprint-list')
     def list(self, request, *args, **kwargs):
@@ -176,12 +174,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -203,13 +200,11 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated, \
-        IsAuthenticatedOrReadOnly
+    permission_classes = IsAuthenticated,
 
     filter_class = EquipmentInstanceDailyRiskScoreFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -227,8 +222,7 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -257,8 +251,7 @@ class EquipmentProblemPeriodViewSet(ModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticated,
+    permission_classes = IsAuthenticated,
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -266,7 +259,7 @@ class EquipmentProblemPeriodViewSet(ModelViewSet):
 
     filter_class = EquipmentProblemPeriodFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     @silk_profile('equipment-problem-period-list')
     def list(self, request, *args, **kwargs):
@@ -284,8 +277,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    permission_classes = \
-        IsAuthenticatedOrReadOnly,
+    permission_classes = IsAuthenticatedOrReadOnly,
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -326,7 +318,7 @@ class AlertViewSet(ReadOnlyModelViewSet):
 
     filter_class = AlertFilter
 
-    # pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     @silk_profile('alert-list')
     def list(self, request, *args, **kwargs):
