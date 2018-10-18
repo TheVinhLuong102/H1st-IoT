@@ -540,6 +540,12 @@ class EquipmentProblemPeriod(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
+    
+    has_associated_alerts = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
 
     last_updated = \
         DateTimeField(
@@ -577,12 +583,18 @@ class EquipmentProblemPeriod(Model):
 
 
 def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
-    instance.alerts.set(
+    alerts = \
         Alert.objects.filter(
             equipment_instance=instance.equipment_instance,
-            date_range__overlap=instance.date_range),
+            date_range__overlap=instance.date_range)
+
+    instance.alerts.set(
+        alerts,
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
+
+    instance.has_associated_alerts.set(
+        bool(alerts.count()))
 
 
 post_save.connect(
@@ -739,6 +751,12 @@ class Alert(Model):
                 # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_periods: (fields.E302) Reverse accessor for 'Alert.equipment_problem_periods' clashes with field name 'EquipmentProblemPeriod.alerts'.
                 # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_problem_periods'.
             blank=True)
+    
+    has_associated_equipment_problems = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
 
     last_updated = \
         DateTimeField(
@@ -794,12 +812,18 @@ class Alert(Model):
 
 
 def alert_post_save(sender, instance, *args, **kwargs):
-    instance.equipment_problem_periods.set(
+    equipment_problem_periods = \
         EquipmentProblemPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
-            date_range__overlap=instance.date_range),
+            date_range__overlap=instance.date_range)
+    
+    instance.equipment_problem_periods.set(
+        equipment_problem_periods,
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
+
+    instance.has_associated_equipment_problems.set(
+        bool(equipment_problem_periods.count()))
 
 
 post_save.connect(
