@@ -580,9 +580,7 @@ def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
     instance.alerts.set(
         Alert.objects.filter(
             equipment_instance=instance.equipment_instance,
-            from_date__lte=instance.to_date,
-            to_date__gte=instance.from_date   # + relativedelta(months=-1)
-        ),
+            date_range__overlap=instance.date_range),
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
@@ -799,8 +797,7 @@ def alert_post_save(sender, instance, *args, **kwargs):
     instance.equipment_problem_periods.set(
         EquipmentProblemPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
-            from_date__lte=instance.to_date,   # + relativedelta(months=1)
-            to_date__gte=instance.from_date),
+            date_range__overlap=instance.date_range),
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
