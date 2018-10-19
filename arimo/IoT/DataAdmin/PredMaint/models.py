@@ -742,7 +742,7 @@ class Alert(Model):
             null=True,
             on_delete=PROTECT)
 
-    equipment_problem_periods = \
+    equipment_diagnoses = \
         ManyToManyField(
             to=EquipmentProblemPeriod,
             through=EquipmentProblemPeriod.alerts.through,
