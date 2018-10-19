@@ -471,8 +471,8 @@ class EquipmentProblemType(Model):
 
 @python_2_unicode_compatible
 class EquipmentProblemPeriod(Model):
-    RELATED_NAME = 'equipment_problem_instances'
-    RELATED_QUERY_NAME = 'equipment_problem_instance'
+    RELATED_NAME = 'equipment_diagnoses'
+    RELATED_QUERY_NAME = 'equipment_diagnosis'
 
     equipment_instance = \
         ForeignKey(
@@ -537,8 +537,8 @@ class EquipmentProblemPeriod(Model):
     alerts = \
         ManyToManyField(
             to='Alert',
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
             blank=True)
     
     has_associated_alerts = \
