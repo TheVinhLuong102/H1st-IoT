@@ -1,6 +1,6 @@
 from dal import autocomplete
 
-from .models import EquipmentProblemType, EquipmentProblemPeriod
+from .models import EquipmentProblemType, EquipmentProblemPeriod as EquipmentDiagnosis
 
 
 class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
@@ -19,15 +19,15 @@ class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
         return query_set
 
 
-class EquipmentProblemPeriodAutoComplete(autocomplete.Select2QuerySetView):
-    name = 'EquipmentProblemPeriod-AutoComplete'
+class EquipmentDiagnosisAutoComplete(autocomplete.Select2QuerySetView):
+    name = 'EquipmentDiagnosis-AutoComplete'
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            query_set = EquipmentProblemPeriod.objects.all()
+            query_set = EquipmentDiagnosis.objects.all()
 
         else:
-            return EquipmentProblemPeriod.objects.none()
+            return EquipmentDiagnosis.objects.none()
 
         if self.q:
             query_set = query_set.filter(equipment_instance__name__icontains=self.q)

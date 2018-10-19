@@ -32,7 +32,7 @@ from arimo.IoT.DataAdmin.base.urls import ROUTER as BASE_ROUTER
 
 from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
     EquipmentProblemTypeAutoComplete, \
-    EquipmentProblemPeriodAutoComplete
+    EquipmentDiagnosisAutoComplete
 from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
 
 
@@ -78,9 +78,9 @@ urlpatterns = [
         EquipmentProblemTypeAutoComplete.as_view(),
         name=EquipmentProblemTypeAutoComplete.name),
 
-    url(r'^{}/$'.format(EquipmentProblemPeriodAutoComplete.name),
-        EquipmentProblemPeriodAutoComplete.as_view(),
-        name=EquipmentProblemPeriodAutoComplete.name),
+    url(r'^{}/$'.format(EquipmentDiagnosisAutoComplete.name),
+        EquipmentDiagnosisAutoComplete.as_view(),
+        name=EquipmentDiagnosisAutoComplete.name),
 
     # Silk Profiling URLs
     url(r'^silk/', include('silk.urls', namespace='silk'))

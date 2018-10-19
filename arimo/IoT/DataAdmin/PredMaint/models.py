@@ -582,7 +582,7 @@ class EquipmentProblemPeriod(Model):
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
 
-def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
+def equipment_diagnosis_post_save(sender, instance, *args, **kwargs):
     alerts = \
         Alert.objects.filter(
             equipment_instance=instance.equipment_instance,
@@ -598,7 +598,7 @@ def equipment_problem_period_post_save(sender, instance, *args, **kwargs):
 
 
 post_save.connect(
-    receiver=equipment_problem_period_post_save,
+    receiver=equipment_diagnosis_post_save,
     sender=EquipmentProblemPeriod,
     weak=True,
     dispatch_uid=None)
@@ -748,11 +748,11 @@ class Alert(Model):
             through=EquipmentProblemPeriod.alerts.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
-                # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_periods: (fields.E302) Reverse accessor for 'Alert.equipment_problem_periods' clashes with field name 'EquipmentProblemPeriod.alerts'.
-                # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_problem_periods'.
+                # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_diagnoses: (fields.E302) Reverse accessor for 'Alert.equipment_diagnoses' clashes with field name 'EquipmentProblemPeriod.alerts'.
+                # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_diagnoses'.
             blank=True)
     
-    has_associated_equipment_problems = \
+    has_associated_equipment_diagnoses = \
         BooleanField(
             blank=False,
             null=False,
@@ -812,18 +812,18 @@ class Alert(Model):
 
 
 def alert_post_save(sender, instance, *args, **kwargs):
-    equipment_problem_periods = \
+    equipment_diagnoses = \
         EquipmentProblemPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
     
-    instance.equipment_problem_periods.set(
-        equipment_problem_periods,
+    instance.equipment_diagnoses.set(
+        equipment_diagnoses,
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
-    instance.has_associated_equipment_problems.set(
-        bool(equipment_problem_periods.count()))
+    instance.has_associated_equipment_diagnoses.set(
+        bool(equipment_diagnoses.count()))
 
 
 post_save.connect(

@@ -83,7 +83,7 @@ class Project(object):
             Blueprint, \
             EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
             EquipmentInstanceDailyRiskScore, \
-            EquipmentProblemPeriod, EquipmentProblemType, \
+            EquipmentProblemPeriod as EquipmentDiagnosis, EquipmentProblemType, \
             AlertDiagnosisStatus, Alert
 
         self.data = \
@@ -111,7 +111,7 @@ class Project(object):
                 EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
 
                 EquipmentProblemTypes=EquipmentProblemType.objects,
-                EquipmentProblemPeriods=EquipmentProblemPeriod.objects,
+                EquipmentDiagnoses=EquipmentDiagnosis.objects,
 
                 PredMaintAlerts=Alert.objects,
                 PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects)
