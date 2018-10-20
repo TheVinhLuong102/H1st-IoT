@@ -72,7 +72,7 @@ class AlertForm(autocomplete.FutureModelForm):
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}),
 
-            equipment_diagnoses=
+            equipment_problem_diagnoses=
                  autocomplete.ModelSelect2Multiple(
                      url='EquipmentProblemDiagnosis-AutoComplete',
                      attrs={# Only trigger autocompletion after characters have been typed
