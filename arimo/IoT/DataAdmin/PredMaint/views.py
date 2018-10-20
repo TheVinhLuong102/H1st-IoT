@@ -16,7 +16,7 @@ from .filters import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter, \
     EquipmentInstanceDailyRiskScoreFilter, \
     EquipmentProblemTypeFilter, \
-    EquipmentDiagnosisFilter, \
+    EquipmentProblemDiagnosisFilter, \
     AlertDiagnosisStatusFilter, \
     AlertFilter
 from .models import \
@@ -27,7 +27,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemPeriod as EquipmentDiagnosis, \
+    EquipmentProblemPeriod as EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 from .serializers import \
@@ -37,7 +37,7 @@ from .serializers import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer, \
     EquipmentInstanceDailyRiskScoreSerializer, \
     EquipmentProblemTypeSerializer, \
-    EquipmentDiagnosisSerializer, \
+    EquipmentProblemDiagnosisSerializer, \
     AlertDiagnosisStatusSerializer, \
     AlertSerializer
 
@@ -237,13 +237,13 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         return super(EquipmentProblemTypeViewSet, self).list(request, *args, **kwargs)
 
 
-class EquipmentDiagnosisViewSet(ModelViewSet):
+class EquipmentProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
-        EquipmentDiagnosis.objects \
+        EquipmentProblemDiagnosis.objects \
         .select_related('equipment_instance') \
         .prefetch_related('equipment_problem_types')
 
-    serializer_class = EquipmentDiagnosisSerializer
+    serializer_class = EquipmentProblemDiagnosisSerializer
 
     authentication_classes = \
         BasicAuthentication, \
@@ -257,13 +257,13 @@ class EquipmentDiagnosisViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    filter_class = EquipmentDiagnosisFilter
+    filter_class = EquipmentProblemDiagnosisFilter
 
     pagination_class = LimitOffsetPagination
 
     @silk_profile('equipment-problem-period-list')
     def list(self, request, *args, **kwargs):
-        return super(EquipmentDiagnosisViewSet, self).list(request, *args, **kwargs)
+        return super(EquipmentProblemDiagnosisViewSet, self).list(request, *args, **kwargs)
 
 
 class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):

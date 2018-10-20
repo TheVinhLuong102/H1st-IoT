@@ -13,7 +13,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemPeriod as EquipmentDiagnosis, \
+    EquipmentProblemPeriod as EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 from ..base.models import \
@@ -153,7 +153,7 @@ class EquipmentProblemTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentDiagnosisSerializer(WritableNestedModelSerializer):
+class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
     equipment_instance = \
         SlugRelatedField(
             queryset=EquipmentInstance.objects.all(), read_only=False,
@@ -169,7 +169,7 @@ class EquipmentDiagnosisSerializer(WritableNestedModelSerializer):
             required=True)
 
     class Meta:
-        model = EquipmentDiagnosis
+        model = EquipmentProblemDiagnosis
 
         fields = \
             'equipment_instance', \

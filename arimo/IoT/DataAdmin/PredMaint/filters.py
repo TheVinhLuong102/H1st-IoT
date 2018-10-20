@@ -7,7 +7,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemPeriod as EquipmentDiagnosis, \
+    EquipmentProblemPeriod as EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 from ..base.filters import \
@@ -442,14 +442,14 @@ class EquipmentProblemTypeFilter(FilterSet):
             ])
 
 
-class EquipmentDiagnosisFilter(FilterSet):
+class EquipmentProblemDiagnosisFilter(FilterSet):
     equipment_instance = \
         RelatedFilter(
             queryset=EquipmentInstance.objects.all(),
             filterset=EquipmentInstanceFilter)
 
     class Meta:
-         model = EquipmentDiagnosis
+         model = EquipmentProblemDiagnosis
 
          fields = dict(
              from_date=[

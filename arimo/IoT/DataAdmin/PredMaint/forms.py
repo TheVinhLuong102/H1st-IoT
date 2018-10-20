@@ -2,7 +2,7 @@ from dal import autocomplete
 
 from .models import \
     EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
-    EquipmentProblemPeriod as EquipmentDiagnosis, Alert
+    EquipmentProblemPeriod as EquipmentProblemDiagnosis, Alert
 
 
 class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
@@ -39,9 +39,9 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
                            'data-minimum-input-length': 1}))
 
 
-class EquipmentDiagnosisForm(autocomplete.FutureModelForm):
+class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
     class Meta:
-        model = EquipmentDiagnosis
+        model = EquipmentProblemDiagnosis
 
         fields = '__all__'
 
@@ -74,6 +74,6 @@ class AlertForm(autocomplete.FutureModelForm):
 
             equipment_diagnoses=
                  autocomplete.ModelSelect2Multiple(
-                     url='EquipmentDiagnosis-AutoComplete',
+                     url='EquipmentProblemDiagnosis-AutoComplete',
                      attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))

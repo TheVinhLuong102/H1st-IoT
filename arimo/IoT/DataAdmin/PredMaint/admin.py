@@ -3,7 +3,7 @@ from django.contrib.admin import ModelAdmin, site, StackedInline
 from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
-    EquipmentDiagnosisForm, \
+    EquipmentProblemDiagnosisForm, \
     AlertForm
 
 from .models import \
@@ -13,7 +13,7 @@ from .models import \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
-    EquipmentProblemType, EquipmentProblemPeriod as EquipmentDiagnosis, AlertDiagnosisStatus, Alert
+    EquipmentProblemType, EquipmentProblemPeriod as EquipmentProblemDiagnosis, AlertDiagnosisStatus, Alert
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
@@ -287,7 +287,7 @@ site.register(
     admin_class=EquipmentProblemTypeAdmin)
 
 
-class EquipmentDiagnosisAdmin(ModelAdmin):
+class EquipmentProblemDiagnosisAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
         'from_date', \
@@ -316,7 +316,7 @@ class EquipmentDiagnosisAdmin(ModelAdmin):
 
     search_fields = 'equipment_instance__name',
 
-    form = EquipmentDiagnosisForm
+    form = EquipmentProblemDiagnosisForm
     
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
@@ -325,8 +325,8 @@ class EquipmentDiagnosisAdmin(ModelAdmin):
 
 
 site.register(
-    EquipmentDiagnosis,
-    admin_class=EquipmentDiagnosisAdmin)
+    EquipmentProblemDiagnosis,
+    admin_class=EquipmentProblemDiagnosisAdmin)
 
 
 class AlertDiagnosisStatusAdmin(ModelAdmin):
