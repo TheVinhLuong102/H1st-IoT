@@ -1,11 +1,9 @@
 from __future__ import division
 
-from dateutil.relativedelta import relativedelta
-
 from django.db.models import \
     Model, \
     BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, IntegerField, \
-    ManyToManyField, TextField, URLField, \
+    ManyToManyField, TextField, \
     CASCADE, PROTECT, SET_NULL
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField, JSONField
