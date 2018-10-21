@@ -521,6 +521,12 @@ class EquipmentProblemPeriod(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    has_equipment_problems = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False)
+
     dismissed = \
         BooleanField(
             blank=False,
@@ -576,6 +582,9 @@ class EquipmentProblemPeriod(Model):
 
         self.duration = \
             (self.to_date - self.from_date).days + 1
+
+        self.has_equipment_problems = \
+            bool(self.equipment_problem_types.all().count())
 
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
