@@ -46,13 +46,14 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
 class EquipmentUniqueTypeShortFormRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentUniqueType.objects.get_or_create(
-            equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-            name=clean_lower_str(data['name']))[0]
+                equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
+                name=clean_lower_str(data['name']))[0]
 
     def to_representation(self, value):
         return dict(
-            equipment_general_type=value.equipment_general_type.name,
-            name=value.name)
+                id=value.id,
+                equipment_general_type=value.equipment_general_type.name,
+                name=value.name)
 
 
 class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
@@ -99,7 +100,6 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'equipment_data_field_type', \
             'name', \
             'data_type', \
-            'nullable', \
             'numeric_measurement_unit', \
             'lower_numeric_null', \
             'upper_numeric_null', \
@@ -113,15 +113,16 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
 class EquipmentDataFieldShortFormRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentDataField.objects.get_or_create(
-            equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-            equipment_data_field_type=EquipmentDataFieldType.objects.get_or_create(name=clean_lower_str(data['equipment_data_field_type']))[0],
-            name=clean_lower_str(data['name']))[0]
+                equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
+                equipment_data_field_type=EquipmentDataFieldType.objects.get_or_create(name=clean_lower_str(data['equipment_data_field_type']))[0],
+                name=clean_lower_str(data['name']))[0]
 
     def to_representation(self, value):
         return dict(
-            equipment_general_type=value.equipment_general_type.name,
-            equipment_data_field_type=value.equipment_data_field_type.name,
-            name=value.name)
+                id=value.id,
+                equipment_general_type=value.equipment_general_type.name,
+                equipment_data_field_type=value.equipment_data_field_type.name,
+                name=value.name)
 
 
 class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
@@ -129,17 +130,20 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
         SlugRelatedField(
             queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=True)
 
     equipment_unique_types = \
         EquipmentUniqueTypeShortFormRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
-            many=True)
+            many=True,
+            required=False)
 
     equipment_data_fields = \
         EquipmentDataFieldShortFormRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
-            many=True)
+            many=True,
+            required=False)
 
     class Meta:
         model = EquipmentUniqueTypeGroup
@@ -157,23 +161,27 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
         SlugRelatedField(
             queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=True)
 
     data_fields = \
         EquipmentDataFieldShortFormRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
-            many=True)
+            many=True,
+            required=False)
 
     groups = \
         SlugRelatedField(
             queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
             slug_field='name',
-            many=True)
+            many=True,
+            required=False)
 
     class Meta:
         model = EquipmentUniqueType
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'name', \
             'data_fields', \
@@ -181,42 +189,13 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'last_updated'
 
 
-class EquipmentInstanceSerializer(WritableNestedModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.all(), read_only=False,
-            slug_field='name',
-            many=False)
-
-    equipment_unique_type = \
-        EquipmentUniqueTypeShortFormRelatedField(
-            queryset=EquipmentUniqueType.objects.all(), read_only=False,
-            many=False)
-
-    equipment_facility = \
-        SlugRelatedField(
-            queryset=EquipmentFacility.objects.all(), read_only=False,
-            slug_field='name')
-
-    class Meta:
-        model = EquipmentInstance
-
-        fields = \
-            'equipment_general_type', \
-            'equipment_unique_type', \
-            'equipment_facility', \
-            'name', \
-            'last_updated', \
-            'data_file_url', \
-            'control_data_file_url', \
-            'measure_data_file_url'
-
-
-class EquipmentFacilitySerializer(WritableNestedModelSerializer):
+class EquipmentFacilitySerializer(ModelSerializer):
     equipment_instances = \
         SlugRelatedField(
             queryset=EquipmentInstance.objects.all(), read_only=False,
-            slug_field='name')
+            slug_field='name',
+            many=True,
+            required=False)
 
     class Meta:
         model = EquipmentFacility
@@ -227,11 +206,63 @@ class EquipmentFacilitySerializer(WritableNestedModelSerializer):
             'last_updated'
 
 
-class EquipmentSystemSerializer(WritableNestedModelSerializer):
+class EquipmentInstanceSerializer(WritableNestedModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
+            slug_field='name',
+            many=False,
+            required=True)
+
+    equipment_unique_type = \
+        EquipmentUniqueTypeShortFormRelatedField(
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,
+            many=False,
+            required=False)
+
+    equipment_facility = \
+        SlugRelatedField(
+            queryset=EquipmentFacility.objects.all(), read_only=False,
+            slug_field='name',
+            many=False,
+            required=False)
+
+    class Meta:
+        model = EquipmentInstance
+
+        fields = \
+            'equipment_general_type', \
+            'equipment_unique_type', \
+            'equipment_facility', \
+            'name', \
+            'last_updated'
+
+
+class EquipmentSystemSerializer(ModelSerializer):
+    equipment_facility = \
+        SlugRelatedField(
+            queryset=EquipmentFacility.objects.all(), read_only=False,
+            slug_field='name',
+            many=False,
+            required=False)
+
+    equipment_instances = \
+        SlugRelatedField(
+            queryset=EquipmentInstance.objects.all(), read_only=False,
+            slug_field='name',
+            many=False,
+            required=False)
+
     class Meta:
         model = EquipmentSystem
 
-        fields = '__all__'
+        fields = \
+            'id', \
+            'equipment_facility', \
+            'name', \
+            'date', \
+            'equipment_instances', \
+            'last_updated'
 
 
 # serializer(obj)

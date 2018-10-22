@@ -186,7 +186,10 @@ class EquipmentDataField(Model):
             auto_now=True)
 
     class Meta:
-        ordering = 'equipment_general_type', 'equipment_data_field_type', 'name'
+        ordering = \
+            'equipment_general_type', \
+            'equipment_data_field_type', \
+            'name'
 
     def __str__(self):
         return '{} [{}] {} [{}{}{}{}{}{}]'.format(
@@ -256,7 +259,9 @@ class EquipmentUniqueTypeGroup(Model):
             auto_now=True)
 
     class Meta:
-        ordering = 'equipment_general_type', 'name'
+        ordering = \
+            'equipment_general_type', \
+            'name'
 
     def __str__(self):
         return 'EqUnqTpGrp {}'.format(
@@ -331,7 +336,9 @@ class EquipmentUniqueType(Model):
             auto_now=True)
 
     class Meta:
-        ordering = 'equipment_general_type', 'name'
+        ordering = \
+            'equipment_general_type', \
+            'name'
 
     def __str__(self):
         return 'EqUnqTp {}'.format(
@@ -491,7 +498,9 @@ class EquipmentSystem(Model):
             auto_now=True)
 
     class Meta:
-        ordering = 'name', 'date'
+        ordering = \
+            'name', \
+            'date'
 
     def __str__(self):
         return '{} on {}'.format(self.name, self.date)

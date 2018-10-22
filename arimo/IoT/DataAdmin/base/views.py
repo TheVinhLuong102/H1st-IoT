@@ -59,6 +59,13 @@ from .serializers import \
 
 
 class DataTypeViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` an unfiltered, unpaginated list of 2 Data Types named "cat" and "num"
+
+    retrieve:
+    `GET` the Data Type specified by `name` "cat" or "num"
+    """
     queryset = DataType.objects.all()
 
     serializer_class = DataTypeSerializer
@@ -83,6 +90,25 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Numeric Measurement Units
+
+    retrieve:
+    `GET` the Numeric Measurement Unit specified by `name`
+
+    create:
+    `POST` a new Numeric Measurement Unit by `name`
+
+    update:
+    `PUT` updated data for the Numeric Measurement Unit specified by `name`
+
+    partial_update:
+    `PATCH` the Numeric Measurement Unit specified by `name`
+
+    destroy:
+    `DELETE` the Numeric Measurement Unit specified by `name`
+    """
     queryset = NumericMeasurementUnit.objects.all()
 
     serializer_class = NumericMeasurementUnitSerializer
@@ -109,6 +135,13 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` an unfiltered, unpaginated list of 2 Equipment Data Field Types named "control" and "measure"
+
+    retrieve:
+    `GET` the Equipment Data Field Type specified by `name` "control" or "measure"
+    """
     queryset = EquipmentDataFieldType.objects.all()
 
     serializer_class = EquipmentDataFieldTypeSerializer
@@ -133,6 +166,25 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, non-paginated list of Equipment General Types
+
+    retrieve:
+    `GET` the Equipment General Type specified by `name`
+
+    create:
+    `POST` a new Equipment General Type by `name`
+
+    update:
+    `PUT` updated data for the Equipment General Type specified by `name`
+
+    partial_update:
+    `PATCH` the Equipment General Type specified by `name`
+
+    destroy:
+    `DELETE` the Equipment General Type specified by `name`
+    """
     queryset = EquipmentGeneralType.objects.all()
 
     serializer_class = EquipmentGeneralTypeSerializer
@@ -159,6 +211,25 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, non-paginated list of Equipment Data Fields
+
+    retrieve:
+    `GET` the Equipment Data Field specified by `id`
+
+    create:
+    `POST` a new Equipment Data Field
+
+    update:
+    `PUT` updated data for the Equipment Data Field specified by `id`
+
+    partial_update:
+    `PATCH` the Equipment Data Field specified by `id`
+
+    destroy:
+    `DELETE` the Equipment Data Field specified by `id`
+    """
     queryset = EquipmentDataField.objects \
         .select_related(
             'equipment_general_type',
@@ -194,6 +265,25 @@ class EquipmentDataFieldViewSet(ModelViewSet):
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, non-paginated list of Equipment Unique Type Groups
+
+    retrieve:
+    `GET` the Equipment Unique Type Group specified by `name`
+
+    create:
+    `POST` a new Equipment Unique Type Group
+
+    update:
+    `PUT` updated data for the Equipment Unique Type Group specified by `name`
+
+    partial_update:
+    `PATCH` the Equipment Unique Type Group specified by `name`
+
+    destroy:
+    `DELETE` the Equipment Unique Type Group specified by `name`
+    """
     queryset = EquipmentUniqueTypeGroup.objects \
         .select_related(
             'equipment_general_type') \
@@ -233,6 +323,25 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, non-paginated list of Equipment Unique Types
+
+    retrieve:
+    `GET` the Equipment Unique Type specified by `id`
+
+    create:
+    `POST` a new Equipment Unique Type
+
+    update:
+    `PUT` updated data for the Equipment Unique Type specified by `id`
+
+    partial_update:
+    `PATCH` the Equipment Unique Type specified by `id`
+
+    destroy:
+    `DELETE` the Equipment Unique Type specified by `id`
+    """
     queryset = EquipmentUniqueType.objects \
         .select_related(
             'equipment_general_type') \
@@ -268,7 +377,28 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
-    queryset = EquipmentFacility.objects.all()
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Facilities
+
+    retrieve:
+    `GET` the Equipment Facility specified by `name`
+
+    create:
+    `POST` a new Equipment Facility
+
+    update:
+    `PUT` updated data for the Equipment Facility specified by `name`
+
+    partial_update:
+    `PATCH` the Equipment Facility specified by `name`
+
+    destroy:
+    `DELETE` the Equipment Facility specified by `name`
+    """
+    queryset = EquipmentFacility.objects \
+        .prefetch_related(
+            'equipment_instances')
 
     serializer_class = EquipmentFacilitySerializer
 
@@ -286,14 +416,37 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     filter_class = EquipmentFacilityFilter
 
-    pagination_class = None
+    pagination_class = LimitOffsetPagination
 
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
+    @silk_profile(name='Equipment Facilities')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentFacilityViewSet, self).list(request, *args, **kwargs)
+
 
 class EquipmentInstanceViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Instances
+
+    retrieve:
+    `GET` the Equipment Instance specified by `name`
+
+    create:
+    `POST` a new Equipment Instance
+
+    update:
+    `PUT` updated data for the Equipment Instance specified by `name`
+
+    partial_update:
+    `PATCH` the Equipment Instance specified by `name`
+
+    destroy:
+    `DELETE` the Equipment Instance specified by `name`
+    """
     queryset = EquipmentInstance.objects \
         .select_related(
             'equipment_general_type',
@@ -328,7 +481,30 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
 
 class EquipmentSystemViewSet(ModelViewSet):
-    queryset = EquipmentSystem.objects.all()
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Systems
+
+    retrieve:
+    `GET` the Equipment System specified by `id`
+
+    create:
+    `POST` a new Equipment System
+
+    update:
+    `PUT` updated data for the Equipment System specified by `id`
+
+    partial_update:
+    `PATCH` the Equipment System specified by `id`
+
+    destroy:
+    `DELETE` the Equipment System specified by `id`
+    """
+    queryset = EquipmentSystem.objects \
+        .select_related(
+            'equipment_facility') \
+        .prefetch_related(
+            'equipment_instances')
 
     serializer_class = EquipmentSystemSerializer
 
