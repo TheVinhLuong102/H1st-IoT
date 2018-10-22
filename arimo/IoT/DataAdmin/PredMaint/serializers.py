@@ -45,6 +45,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
         model = EquipmentUniqueTypeGroupDataFieldProfile
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_data_field', \
@@ -98,6 +99,7 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
         model = EquipmentUniqueTypeGroupServiceConfig
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_unique_type_group_monitored_data_field_configs', \
@@ -129,22 +131,77 @@ class BlueprintSerializer(ModelSerializer):
             'trained_to_date', \
             'timestamp', \
             'uuid', \
-            'benchmark_metrics', \
             'active', \
             'last_updated'
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_data_field = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
     class Meta:
         model = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile
 
-        fields = '__all__'
+        fields = \
+            'id', \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            'trained_to_date', \
+            'n', \
+            'mae', \
+            'medae', \
+            'rmse', \
+            'r2', \
+            'last_updated'
 
 
 class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
+    equipment_general_type = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_unique_type_group = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_instance = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
     class Meta:
         model = EquipmentInstanceDailyRiskScore
-        fields = '__all__'
+
+        fields = \
+            'id', \
+            'equipment_general_type', \
+            'equipment_unique_type_group', \
+            'equipment_instance', \
+            'risk_score_name', \
+            'date', \
+            'risk_score_value', \
+            'last_updated'
 
 
 class EquipmentProblemTypeSerializer(ModelSerializer):
@@ -168,19 +225,25 @@ class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
             many=True,
             required=True)
 
+    # alerts = \
+
     class Meta:
         model = EquipmentProblemDiagnosis
 
         fields = \
+            'id', \
             'equipment_instance', \
             'from_date', \
             'to_date', \
-            'dismissed', \
             'duration', \
             'ongoing', \
             'equipment_problem_types', \
+            'has_equipment_problems', \
+            'dismissed', \
             'comments', \
+            'has_associated_alerts', \
             'last_updated'
+            # 'alerts'
 
 
 class AlertDiagnosisStatusSerializer(ModelSerializer):
@@ -232,4 +295,6 @@ class AlertSerializer(ModelSerializer):
             'last_risk_score', \
             'ongoing', \
             'diagnosis_status', \
+            'has_associated_equipment_problem_diagnoses', \
             'last_updated'
+            # 'equipment_problem_diagnoses', \

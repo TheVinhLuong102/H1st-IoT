@@ -45,10 +45,18 @@ from ..base.models import EquipmentDataField
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
-    queryset = EquipmentUniqueTypeGroupDataFieldProfile.objects \
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Unique Type Group Data Field Profiles
+
+    retrieve:
+    `GET` the Equipment Unique Type Group Data Field Profile specified by `id`
+    """
+    queryset = \
+        EquipmentUniqueTypeGroupDataFieldProfile.objects \
         .select_related(
             'equipment_general_type',
-            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+            'equipment_unique_type_group',
             'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldProfileSerializer
@@ -69,16 +77,24 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile('equipment-unique-type-group-data-field-profile-list')
+    @silk_profile(name='Equipment Unique Type Group Data Field Profiles')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldProfileViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
-    queryset = EquipmentUniqueTypeGroupServiceConfig.objects \
+    """
+    list:
+    `GET` a filterable, unpaginated list of Equipment Unique Type Group Service Configs
+
+    retrieve:
+    `GET` the Equipment Unique Type Group Service Config specified by `id`
+    """
+    queryset = \
+        EquipmentUniqueTypeGroupServiceConfig.objects \
         .select_related(
             'equipment_general_type',
-            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+            'equipment_unique_type_group') \
         .prefetch_related(
             Prefetch(
                 'equipment_unique_type_group_monitored_data_field_configs',
@@ -92,8 +108,8 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
                             'excluded_equipment_data_fields',
                             queryset=EquipmentDataField.objects
                                 .select_related(
-                                'equipment_general_type',
-                                'equipment_data_field_type')))),
+                                    'equipment_general_type',
+                                    'equipment_data_field_type')))),
 
             Prefetch(
                 'global_excluded_equipment_data_fields',
@@ -120,16 +136,24 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-unique-type-group-service-config-list')
+    @silk_profile(name='Equipment Unique Type Group Service Configs')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupServiceConfigViewSet, self).list(request, *args, **kwargs)
 
 
 class BlueprintViewSet(ReadOnlyModelViewSet):
-    queryset = Blueprint.objects \
+    """
+    list:
+    `GET` a filterable, paginated list of Blueprints
+
+    retrieve:
+    `GET` the Blueprint specified by `uuid`
+    """
+    queryset = \
+        Blueprint.objects \
         .select_related(
             'equipment_general_type',
-            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type')
+            'equipment_unique_type_group')
 
     serializer_class = BlueprintSerializer
 
@@ -153,17 +177,24 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile('blueprint-list')
+    @silk_profile(name='Blueprints')
     def list(self, request, *args, **kwargs):
         return super(BlueprintViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles
+
+    retrieve:
+    `GET` the Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile specified by `id`
+    """
     queryset = \
         EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects \
         .select_related(
             'equipment_general_type',
-            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+            'equipment_unique_type_group',
             'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
@@ -184,13 +215,25 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-unique-type-group-data-field-blueprint-benchmark-metric-profile-list')
+    @silk_profile(name='Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
-    queryset = EquipmentInstanceDailyRiskScore.objects.all()
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Instance Daily Risk Scores
+
+    retrieve:
+    `GET` the Equipment Instance Daily Risk Score specified by `id`
+    """
+    queryset = \
+        EquipmentInstanceDailyRiskScore.objects \
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type_group',
+            'equipment_instance')
 
     serializer_class = EquipmentInstanceDailyRiskScoreSerializer
 
@@ -210,8 +253,31 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
+    @silk_profile(name='Equipment Instance Daily Risk Scores')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentInstanceDailyRiskScoreViewSet, self).list(request, *args, **kwargs)
+
 
 class EquipmentProblemTypeViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Equipment Problem Types
+
+    retrieve:
+    `GET` the Equipment Problem Type specified by `name`
+
+    create:
+    `POST` a new Equipment Problem Type by `name`
+
+    update:
+    `PUT` updated data for the Equipment Problem Type specified by `name`
+
+    partial_update:
+    `PATCH` the Equipment Problem Type specified by `name`
+
+    destroy:
+    `DELETE` the Equipment Problem Type specified by `name`
+    """
     queryset = EquipmentProblemType.objects.all()
 
     serializer_class = EquipmentProblemTypeSerializer
@@ -231,10 +297,6 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
     filter_class = EquipmentProblemTypeFilter
 
     pagination_class = None
-
-    @silk_profile('equipment-problem-type-list')
-    def list(self, request, *args, **kwargs):
-        return super(EquipmentProblemTypeViewSet, self).list(request, *args, **kwargs)
 
 
 class EquipmentProblemDiagnosisViewSet(ModelViewSet):
@@ -267,6 +329,13 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
 
 
 class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Alert Diagnosis Statuses
+
+    retrieve:
+    `GET` the Alert Diagnosis Status specified by `name`
+    """
     queryset = AlertDiagnosisStatus.objects.all()
 
     serializer_class = AlertDiagnosisStatusSerializer
@@ -287,12 +356,15 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
 
     pagination_class = None
 
-    @silk_profile('alert-diagnosis-status-list')
-    def list(self, request, *args, **kwargs):
-        return super(AlertDiagnosisStatusViewSet, self).list(request, *args, **kwargs)
-
 
 class AlertViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Alerts
+
+    retrieve:
+    `GET` the Alert specified by `id`
+    """
     queryset = \
         Alert.objects \
         .select_related(
@@ -320,6 +392,6 @@ class AlertViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile('alert-list')
+    @silk_profile(name='Alerts')
     def list(self, request, *args, **kwargs):
         return super(AlertViewSet, self).list(request, *args, **kwargs)

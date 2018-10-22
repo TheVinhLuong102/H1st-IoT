@@ -230,7 +230,8 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Data Field specified by `id`
     """
-    queryset = EquipmentDataField.objects \
+    queryset = \
+        EquipmentDataField.objects \
         .select_related(
             'equipment_general_type',
             'equipment_data_field_type',
@@ -284,7 +285,8 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type Group specified by `name`
     """
-    queryset = EquipmentUniqueTypeGroup.objects \
+    queryset = \
+        EquipmentUniqueTypeGroup.objects \
         .select_related(
             'equipment_general_type') \
         .prefetch_related(
@@ -342,7 +344,8 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type specified by `id`
     """
-    queryset = EquipmentUniqueType.objects \
+    queryset = \
+        EquipmentUniqueType.objects \
         .select_related(
             'equipment_general_type') \
         .prefetch_related(
@@ -396,7 +399,8 @@ class EquipmentFacilityViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Facility specified by `name`
     """
-    queryset = EquipmentFacility.objects \
+    queryset = \
+        EquipmentFacility.objects \
         .prefetch_related(
             'equipment_instances')
 
@@ -447,7 +451,8 @@ class EquipmentInstanceViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Instance specified by `name`
     """
-    queryset = EquipmentInstance.objects \
+    queryset = \
+        EquipmentInstance.objects \
         .select_related(
             'equipment_general_type',
             'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
@@ -500,7 +505,8 @@ class EquipmentSystemViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment System specified by `id`
     """
-    queryset = EquipmentSystem.objects \
+    queryset = \
+        EquipmentSystem.objects \
         .select_related(
             'equipment_facility') \
         .prefetch_related(

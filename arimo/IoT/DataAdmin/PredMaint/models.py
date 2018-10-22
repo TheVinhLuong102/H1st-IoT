@@ -2,9 +2,9 @@ from __future__ import division
 
 from django.db.models import \
     Model, \
-    BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, PositiveSmallIntegerField, IntegerField, \
-    ManyToManyField, TextField, \
-    CASCADE, PROTECT, SET_NULL
+    BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
+    ForeignKey, ManyToManyField, \
+    PROTECT
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField, JSONField
 from django.utils.encoding import python_2_unicode_compatible
