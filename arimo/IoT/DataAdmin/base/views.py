@@ -295,7 +295,10 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
 class EquipmentInstanceViewSet(ModelViewSet):
     queryset = EquipmentInstance.objects \
-        .select_related('equipment_general_type', 'equipment_unique_type', 'equipment_unique_type__equipment_general_type', 'equipment_facility')
+        .select_related(
+            'equipment_general_type',
+            'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+            'equipment_facility')
 
     serializer_class = EquipmentInstanceSerializer
 
