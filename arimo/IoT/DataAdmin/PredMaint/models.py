@@ -584,7 +584,7 @@ class EquipmentProblemPeriod(Model):
             (self.to_date - self.from_date).days + 1
 
         self.has_equipment_problems = \
-            bool(self.equipment_problem_types.all().count())
+            bool(self.equipment_problem_types.count())
 
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
