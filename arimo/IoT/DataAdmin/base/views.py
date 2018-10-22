@@ -188,7 +188,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-data-field-list')
+    @silk_profile(name='Equipment Data Fields')
     def list(self, request, *args, **kwargs):
         return super(EquipmentDataFieldViewSet, self).list(request, *args, **kwargs)
 
@@ -227,7 +227,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-unique-type-group-list')
+    @silk_profile(name='Equipment Unique Type Groups')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupViewSet, self).list(request, *args, **kwargs)
 
@@ -262,7 +262,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-unique-type-list')
+    @silk_profile(name='Equipment Unique Types')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeViewSet, self).list(request, *args, **kwargs)
 
@@ -319,7 +319,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile('equipment-instance-list')
+    @silk_profile(name='Equipment Instances')
     def list(self, request, *args, **kwargs):
         return super(EquipmentInstanceViewSet, self).list(request, *args, **kwargs)
 
@@ -344,6 +344,10 @@ class EquipmentSystemViewSet(ModelViewSet):
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
+
+    @silk_profile(name='Equipment Systems')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentSystemViewSet, self).list(request, *args, **kwargs)
 
 
 # request.data

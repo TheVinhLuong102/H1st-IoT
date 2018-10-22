@@ -19,11 +19,11 @@ class DataTypeFilter(FilterSet):
 
         fields = dict(
             name=[
-                'exact', 'iexact',
+                'exact'   # , 'iexact',
                 # 'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'in',
+                # 'contains', 'icontains',
+                # 'startswith', 'istartswith', 'endswith', 'iendswith',
                 # 'range',
                 # 'isnull',
                 # 'regex', 'iregex'
@@ -55,11 +55,11 @@ class EquipmentDataFieldTypeFilter(FilterSet):
 
         fields = dict(
             name=[
-                'exact', 'iexact',
+                'exact'   # , 'iexact',
                 # 'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
+                # 'in',
+                # 'contains', 'icontains',
+                # 'startswith', 'istartswith', 'endswith', 'iendswith',
                 # 'range',
                 # 'isnull',
                 # 'regex', 'iregex'
