@@ -448,7 +448,10 @@ class EquipmentInstance(Model):
             default=None)
 
     class Meta:
-        ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
+        ordering = \
+            'equipment_general_type', \
+            'equipment_unique_type', \
+            'name'
 
     def __str__(self):
         return 'EqInst #{}'.format(
