@@ -347,7 +347,13 @@ class EquipmentUniqueType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentUniqueType, self).save(*args, **kwargs)
+
+        result = super(EquipmentUniqueType, self).save(*args, **kwargs)
+
+        for equipment_unique_type_group in self.groups.all():
+            equipment_unique_type_group.save()
+
+        return result
 
 
 @python_2_unicode_compatible
