@@ -81,6 +81,10 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldProfileViewSet, self).list(request, *args, **kwargs)
 
+    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Profile')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupDataFieldProfileViewSet, self).retrieve(request, *args, **kwargs)
+
 
 class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
     """
@@ -142,6 +146,10 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
     @silk_profile(name='REST API: Equipment Unique Type Group Service Configs')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupServiceConfigViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Equipment Unique Type Group Service Config')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupServiceConfigViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class BlueprintViewSet(ReadOnlyModelViewSet):
@@ -226,6 +234,10 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, self).list(request, *args, **kwargs)
 
+    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, self).retrieve(request, *args, **kwargs)
+
 
 class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     """
@@ -263,6 +275,10 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     @silk_profile(name='REST API: Equipment Instance Daily Risk Scores')
     def list(self, request, *args, **kwargs):
         return super(EquipmentInstanceDailyRiskScoreViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Equipment Instance Daily Risk Score')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentInstanceDailyRiskScoreViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class EquipmentProblemTypeViewSet(ModelViewSet):
@@ -305,6 +321,14 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     pagination_class = None
 
+    @silk_profile(name='REST API: Equipment Problem Types')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentProblemTypeViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Equipment Problem Type')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentProblemTypeViewSet, self).retrieve(request, *args, **kwargs)
+
 
 class EquipmentProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
@@ -345,6 +369,10 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(EquipmentProblemDiagnosisViewSet, self).list(request, *args, **kwargs)
 
+    @silk_profile(name='REST API: Equipment Problem Diagnosis')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentProblemDiagnosisViewSet, self).retrieve(request, *args, **kwargs)
+
 
 class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     """
@@ -373,6 +401,14 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     filter_class = AlertDiagnosisStatusFilter
 
     pagination_class = None
+
+    @silk_profile(name='REST API: Alert Diagnosis Statuses')
+    def list(self, request, *args, **kwargs):
+        return super(AlertDiagnosisStatusViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Alert Diagnosis Statusis')
+    def retrieve(self, request, *args, **kwargs):
+        return super(AlertDiagnosisStatusViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class AlertViewSet(ReadOnlyModelViewSet):
@@ -413,3 +449,7 @@ class AlertViewSet(ReadOnlyModelViewSet):
     @silk_profile(name='REST API: Alerts')
     def list(self, request, *args, **kwargs):
         return super(AlertViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Alert')
+    def retrieve(self, request, *args, **kwargs):
+        return super(AlertViewSet, self).retrieve(request, *args, **kwargs)
