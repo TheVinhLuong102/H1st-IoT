@@ -1,7 +1,4 @@
-from rest_framework.serializers import \
-    Serializer, CharField, ListField, \
-    ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
-    HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
+from rest_framework.serializers import ModelSerializer, RelatedField, SlugRelatedField
 
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 

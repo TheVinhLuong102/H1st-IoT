@@ -1,6 +1,6 @@
 from dal import autocomplete
 
-from .models import EquipmentProblemType, EquipmentProblemPeriod as EquipmentProblemDiagnosis
+from .models import EquipmentProblemType, EquipmentProblemDiagnosis
 
 
 class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):

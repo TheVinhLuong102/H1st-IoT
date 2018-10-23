@@ -2,7 +2,7 @@ from dal import autocomplete
 
 from .models import \
     EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
-    EquipmentProblemPeriod as EquipmentProblemDiagnosis, Alert
+    EquipmentProblemDiagnosis, Alert
 
 
 class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
