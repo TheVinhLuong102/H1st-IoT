@@ -1,7 +1,8 @@
 from django.db.models import \
     Model, \
-    BooleanField, CharField, DateField, DateTimeField, FloatField, ForeignKey, ManyToManyField, URLField, \
-    CASCADE, PROTECT, SET_NULL
+    CharField, DateField, DateTimeField, FloatField, URLField, \
+    ForeignKey, ManyToManyField, \
+    PROTECT
 from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
