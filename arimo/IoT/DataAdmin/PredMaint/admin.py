@@ -1,6 +1,8 @@
 from django.contrib.admin import ModelAdmin, site, StackedInline
 from django.db.models import Prefetch
 
+from silk.profiling.profiler import silk_profile
+
 from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
@@ -77,6 +79,20 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_max', \
         'last_updated'
 
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldProfileAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profile')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldProfileAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentUniqueTypeGroupDataFieldProfile,
@@ -143,6 +159,20 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                 if obj.global_excluded_equipment_data_fields.count()
                 else '')
 
+    @silk_profile(name='Admin: Equipment Unique Type Group Service Configs')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type Group Service Config')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentUniqueTypeGroupServiceConfig,
@@ -184,6 +214,20 @@ class BlueprintAdmin(ModelAdmin):
         'uuid', \
         'timestamp', \
         'last_updated'
+
+    @silk_profile(name='Admin: Blueprints')
+    def changelist_view(self, request, extra_context=None):
+        return super(BlueprintAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Blueprint')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(BlueprintAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -233,6 +277,20 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'rmse', \
         'last_updated'
 
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile,
@@ -277,6 +335,20 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'equipment_instance__name', \
         'risk_score_name'
 
+    @silk_profile(name='Admin: Equipment Instance Daily Risk Scores')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentInstanceDailyRiskScoreAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Instance Daily Risk Score')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentInstanceDailyRiskScoreAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentInstanceDailyRiskScore,
@@ -291,6 +363,20 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
     show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = 'name',
+
+    @silk_profile(name='Admin: Equipment Problem Types')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentProblemTypeAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Problem Type')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentProblemTypeAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -351,6 +437,20 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
     def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
                          for equipment_problem_type in obj.equipment_problem_types.all())
+
+    @silk_profile(name='Admin: Equipment Problem Diagnoses')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentProblemDiagnosisAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Problem Diagnosis')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentProblemDiagnosisAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -418,6 +518,20 @@ class AlertAdmin(ModelAdmin):
         'ongoing', \
         'has_associated_equipment_problem_diagnoses', \
         'last_updated'
+
+    @silk_profile(name='Admin: Alerts')
+    def changelist_view(self, request, extra_context=None):
+        return super(AlertAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Alert')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(AlertAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(

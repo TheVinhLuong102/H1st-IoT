@@ -263,7 +263,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Data Fields')
+    @silk_profile(name='REST API: Equipment Data Fields')
     def list(self, request, *args, **kwargs):
         return super(EquipmentDataFieldViewSet, self).list(request, *args, **kwargs)
 
@@ -329,7 +329,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Unique Type Groups')
+    @silk_profile(name='REST API: Equipment Unique Type Groups')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupViewSet, self).list(request, *args, **kwargs)
 
@@ -391,7 +391,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Unique Types')
+    @silk_profile(name='REST API: Equipment Unique Types')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeViewSet, self).list(request, *args, **kwargs)
 
@@ -443,7 +443,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Facilities')
+    @silk_profile(name='REST API: Equipment Facilities')
     def list(self, request, *args, **kwargs):
         return super(EquipmentFacilityViewSet, self).list(request, *args, **kwargs)
 
@@ -497,7 +497,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Instances')
+    @silk_profile(name='REST API: Equipment Instances')
     def list(self, request, *args, **kwargs):
         return super(EquipmentInstanceViewSet, self).list(request, *args, **kwargs)
 
@@ -547,7 +547,7 @@ class EquipmentSystemViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Systems')
+    @silk_profile(name='REST API: Equipment Systems')
     def list(self, request, *args, **kwargs):
         return super(EquipmentSystemViewSet, self).list(request, *args, **kwargs)
 

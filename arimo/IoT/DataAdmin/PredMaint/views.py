@@ -77,7 +77,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='Equipment Unique Type Group Data Field Profiles')
+    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Profiles')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldProfileViewSet, self).list(request, *args, **kwargs)
 
@@ -139,7 +139,7 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Unique Type Group Service Configs')
+    @silk_profile(name='REST API: Equipment Unique Type Group Service Configs')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupServiceConfigViewSet, self).list(request, *args, **kwargs)
 
@@ -180,9 +180,13 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='Blueprints')
+    @silk_profile(name='REST API: Blueprints')
     def list(self, request, *args, **kwargs):
         return super(BlueprintViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Blueprint')
+    def retrieve(self, request, *args, **kwargs):
+        return super(BlueprintViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(ReadOnlyModelViewSet):
@@ -218,7 +222,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
+    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def list(self, request, *args, **kwargs):
         return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, self).list(request, *args, **kwargs)
 
@@ -256,7 +260,7 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='Equipment Instance Daily Risk Scores')
+    @silk_profile(name='REST API: Equipment Instance Daily Risk Scores')
     def list(self, request, *args, **kwargs):
         return super(EquipmentInstanceDailyRiskScoreViewSet, self).list(request, *args, **kwargs)
 
@@ -337,7 +341,7 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='Equipment Problem Diagnoses')
+    @silk_profile(name='REST API: Equipment Problem Diagnoses')
     def list(self, request, *args, **kwargs):
         return super(EquipmentProblemDiagnosisViewSet, self).list(request, *args, **kwargs)
 
@@ -406,6 +410,6 @@ class AlertViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='Alerts')
+    @silk_profile(name='REST API: Alerts')
     def list(self, request, *args, **kwargs):
         return super(AlertViewSet, self).list(request, *args, **kwargs)

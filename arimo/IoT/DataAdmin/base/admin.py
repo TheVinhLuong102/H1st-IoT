@@ -1,5 +1,7 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
 
+from silk.profiling.profiler import silk_profile
+
 from .forms import \
     EquipmentDataFieldForm, \
     EquipmentUniqueTypeGroupForm, \
@@ -27,6 +29,20 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
 
     search_fields = 'name',
 
+    @silk_profile(name='Admin: Numeric Measurement Units')
+    def changelist_view(self, request, extra_context=None):
+        return super(NumericMeasurementUnitAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Numeric Measurement Unit')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(NumericMeasurementUnitAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     NumericMeasurementUnit,
@@ -41,6 +57,20 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
     show_full_result_count = False   # only a few, but skip counting anyway
 
     search_fields = 'name',
+
+    @silk_profile(name='Admin: Equipment General Types')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentGeneralTypeAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment General Type')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentGeneralTypeAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -91,6 +121,20 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     form = EquipmentDataFieldForm
 
+    @silk_profile(name='Admin: Equipment Data Fields')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentDataFieldAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Data Field')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentDataFieldAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentDataField,
@@ -117,6 +161,20 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     readonly_fields = 'equipment_data_fields',   # *** UGLY READ-ONLY DISPLAY ***
 
+    @silk_profile(name='Admin: Equipment Unique Type Groups')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeGroupAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type Group')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeGroupAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentUniqueTypeGroup,
@@ -140,6 +198,20 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'name'
 
     form = EquipmentUniqueTypeForm
+
+    @silk_profile(name='Admin: Equipment Unique Types')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -173,6 +245,20 @@ class EquipmentFacilityAdmin(ModelAdmin):
     search_fields = 'name',
 
     inlines = EquipmentInstanceTabularInline,
+
+    @silk_profile(name='Admin: Equipment Facilities')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentFacilityAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Facility')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentFacilityAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
@@ -208,6 +294,20 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     form = EquipmentInstanceForm
 
+    @silk_profile(name='Admin: Equipment Instances')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentInstanceAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Instance')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentInstanceAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
 
 site.register(
     EquipmentInstance,
@@ -235,6 +335,20 @@ class EquipmentSystemAdmin(ModelAdmin):
         'name',
 
     form = EquipmentSystemForm
+
+    @silk_profile(name='Admin: Equipment Systems')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentSystemAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment System')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentSystemAdmin, self).changelist_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
 
 
 site.register(
