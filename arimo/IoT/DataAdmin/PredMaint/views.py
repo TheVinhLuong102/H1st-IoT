@@ -97,23 +97,26 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
             'equipment_unique_type_group') \
         .prefetch_related(
             Prefetch(
-                'equipment_unique_type_group_monitored_data_field_configs',
-                queryset=EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
+                lookup='equipment_unique_type_group_monitored_data_field_configs',
+                queryset=
+                    EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
                     .select_related(
                         'monitored_equipment_data_field',
                         'monitored_equipment_data_field__equipment_general_type',
                         'monitored_equipment_data_field__equipment_data_field_type')
                     .prefetch_related(
                         Prefetch(
-                            'excluded_equipment_data_fields',
-                            queryset=EquipmentDataField.objects
+                            lookup='excluded_equipment_data_fields',
+                            queryset=
+                                EquipmentDataField.objects
                                 .select_related(
                                     'equipment_general_type',
                                     'equipment_data_field_type')))),
 
             Prefetch(
-                'global_excluded_equipment_data_fields',
-                queryset=EquipmentDataField.objects
+                lookup='global_excluded_equipment_data_fields',
+                queryset=
+                    EquipmentDataField.objects
                     .select_related(
                         'equipment_general_type',
                         'equipment_data_field_type')))
@@ -305,14 +308,16 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
         .select_related('equipment_instance') \
         .prefetch_related(
             Prefetch(
-                'equipment_problem_types'),
+                lookup='equipment_problem_types'),
             Prefetch(
-                'alerts',
-                queryset=Alert.objects.select_related(
-                    'equipment_general_type',
-                    'equipment_unique_type_group',
-                    'equipment_instance',
-                    'diagnosis_status')))
+                lookup='alerts',
+                queryset=
+                    Alert.objects
+                    .select_related(
+                        'equipment_general_type',
+                        'equipment_unique_type_group',
+                        'equipment_instance',
+                        'diagnosis_status')))
 
     serializer_class = EquipmentProblemDiagnosisSerializer
 

@@ -239,8 +239,11 @@ class EquipmentDataFieldViewSet(ModelViewSet):
             'numeric_measurement_unit') \
         .prefetch_related(
             Prefetch(
-                'equipment_unique_types',
-                queryset=EquipmentUniqueType.objects.select_related('equipment_general_type')))
+                lookup='equipment_unique_types',
+                queryset=
+                    EquipmentUniqueType.objects
+                    .select_related(
+                        'equipment_general_type')))
 
     serializer_class = EquipmentDataFieldSerializer
 
@@ -291,11 +294,18 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
             'equipment_general_type') \
         .prefetch_related(
             Prefetch(
-                'equipment_unique_types',
-                queryset=EquipmentUniqueType.objects.select_related('equipment_general_type')),
+                lookup='equipment_unique_types',
+                queryset=
+                    EquipmentUniqueType.objects
+                    .select_related(
+                        'equipment_general_type')),
             Prefetch(
-                'equipment_data_fields',
-                queryset=EquipmentDataField.objects.select_related('equipment_general_type', 'equipment_data_field_type')))
+                lookup='equipment_data_fields',
+                queryset=
+                    EquipmentDataField.objects
+                    .select_related(
+                        'equipment_general_type',
+                        'equipment_data_field_type')))
 
     serializer_class = EquipmentUniqueTypeGroupSerializer
 
@@ -350,11 +360,18 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
             'equipment_general_type') \
         .prefetch_related(
             Prefetch(
-                'data_fields',
-                queryset=EquipmentDataField.objects.select_related('equipment_general_type', 'equipment_data_field_type')),
+                lookup='data_fields',
+                queryset=
+                    EquipmentDataField.objects
+                    .select_related(
+                        'equipment_general_type',
+                        'equipment_data_field_type')),
             Prefetch(
-                'groups',
-                queryset=EquipmentUniqueTypeGroup.objects.select_related('equipment_general_type')))
+                lookup='groups',
+                queryset=
+                    EquipmentUniqueTypeGroup.objects
+                    .select_related(
+                        'equipment_general_type')))
 
     serializer_class = EquipmentUniqueTypeSerializer
 

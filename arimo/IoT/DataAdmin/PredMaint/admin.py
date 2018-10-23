@@ -1,4 +1,5 @@
 from django.contrib.admin import ModelAdmin, site, StackedInline
+from django.db.models import Prefetch
 
 from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
@@ -330,6 +331,21 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
     search_fields = 'equipment_instance__name',
 
     form = EquipmentProblemDiagnosisForm
+
+    def get_queryset(self, request):
+        return super(EquipmentProblemDiagnosisAdmin, self).get_queryset(request) \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_problem_types'),
+                Prefetch(
+                    lookup='alerts',
+                    queryset=
+                        Alert.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_unique_type_group',
+                            'equipment_instance',
+                            'diagnosis_status')))
     
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
