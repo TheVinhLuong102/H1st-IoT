@@ -369,7 +369,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
 class AlertViewSet(ReadOnlyModelViewSet):
     """
     list:
-    `GET` a filterable, unpaginated list of Alerts
+    `GET` a filterable, paginated list of Alerts
 
     retrieve:
     `GET` the Alert specified by `id`
