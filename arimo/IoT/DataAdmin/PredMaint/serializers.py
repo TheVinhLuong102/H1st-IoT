@@ -8,7 +8,6 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 from .models import \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupServiceConfig, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
@@ -17,8 +16,6 @@ from .models import \
     AlertDiagnosisStatus, \
     Alert
 from ..base.models import \
-    EquipmentGeneralType, \
-    EquipmentUniqueTypeGroup, \
     EquipmentInstance
 from ..base.serializers import EquipmentDataFieldShortFormRelatedField
 
