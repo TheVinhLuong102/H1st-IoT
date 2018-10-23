@@ -87,7 +87,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profile')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeGroupDataFieldProfileAdmin, self).changelist_view(
+        return super(EquipmentUniqueTypeGroupDataFieldProfileAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -167,7 +167,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Config')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).changelist_view(
+        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -223,7 +223,7 @@ class BlueprintAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Blueprint')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(BlueprintAdmin, self).changelist_view(
+        return super(BlueprintAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -285,7 +285,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin, self).changelist_view(
+        return super(EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -343,7 +343,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Daily Risk Score')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentInstanceDailyRiskScoreAdmin, self).changelist_view(
+        return super(EquipmentInstanceDailyRiskScoreAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -372,7 +372,7 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Type')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentProblemTypeAdmin, self).changelist_view(
+        return super(EquipmentProblemTypeAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -446,7 +446,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Diagnosis')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentProblemDiagnosisAdmin, self).changelist_view(
+        return super(EquipmentProblemDiagnosisAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -527,7 +527,7 @@ class AlertAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Alert')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(AlertAdmin, self).changelist_view(
+        return super(AlertAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
