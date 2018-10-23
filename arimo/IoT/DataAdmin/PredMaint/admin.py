@@ -15,7 +15,6 @@ from .models import \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
     EquipmentProblemDiagnosis, \
-    AlertDiagnosisStatus, \
     Alert
 
 
@@ -177,6 +176,14 @@ class BlueprintAdmin(ModelAdmin):
         'equipment_unique_type_group__name', \
         'uuid'
 
+    readonly_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type_group', \
+        'trained_to_date', \
+        'uuid', \
+        'timestamp', \
+        'last_updated'
+
 
 site.register(
     Blueprint,
@@ -295,11 +302,12 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'equipment_instance', \
         'from_date', \
         'to_date', \
-        'ongoing', \
         'duration', \
+        'ongoing', \
         'equipment_problem_type_names', \
         'dismissed', \
         'comments', \
+        'has_associated_alerts', \
         'last_updated'
 
     list_filter = \
@@ -313,6 +321,8 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
     readonly_fields = \
         'date_range', \
         'duration', \
+        'has_equipment_problems', \
+        'has_associated_alerts', \
         'alerts'   # too many alerts, so Select box would freeze
 
     show_full_result_count = False   # too many
@@ -332,24 +342,6 @@ site.register(
     admin_class=EquipmentProblemDiagnosisAdmin)
 
 
-class AlertDiagnosisStatusAdmin(ModelAdmin):
-    list_display = \
-        'index', \
-        'name', \
-        'last_updated'
-
-    list_filter = 'name',
-
-    show_full_result_count = False   # only a few, but skip counting anyway
-
-    search_fields = 'name',
-
-
-site.register(
-    AlertDiagnosisStatus,
-    admin_class=AlertDiagnosisStatusAdmin)
-
-
 class AlertAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
@@ -359,12 +351,13 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'ongoing', \
         'duration', \
         'approx_average_risk_score', \
         'last_risk_score', \
         'cumulative_excess_risk_score', \
+        'ongoing', \
         'diagnosis_status', \
+        'has_associated_equipment_problem_diagnoses', \
         'last_updated'
 
     list_select_related = \
@@ -401,12 +394,14 @@ class AlertAdmin(ModelAdmin):
         'threshold', \
         'from_date', \
         'to_date', \
-        'ongoing', \
         'date_range', \
         'duration', \
-        'cumulative_excess_risk_score', \
         'approx_average_risk_score', \
-        'last_risk_score'
+        'last_risk_score', \
+        'cumulative_excess_risk_score', \
+        'ongoing', \
+        'has_associated_equipment_problem_diagnoses', \
+        'last_updated'
 
 
 site.register(
