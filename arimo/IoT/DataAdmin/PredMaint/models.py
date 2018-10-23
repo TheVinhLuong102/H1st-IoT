@@ -592,9 +592,6 @@ class EquipmentProblemPeriod(Model):
         self.duration = \
             (self.to_date - self.from_date).days + 1
 
-        self.has_equipment_problems = \
-            bool(self.equipment_problem_types.count())
-
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
 
@@ -614,6 +611,7 @@ def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
         clear=False)
 
     EquipmentProblemDiagnosis.objects.filter(pk=instance.pk).update(
+        has_equipment_problems=bool(instance.equipment_problem_types.count()),
         has_associated_alerts=bool(alerts.count()))
 
 

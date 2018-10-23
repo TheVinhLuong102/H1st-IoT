@@ -332,7 +332,7 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile('equipment-problem-period-list')
+    @silk_profile(name='Equipment Problem Diagnoses')
     def list(self, request, *args, **kwargs):
         return super(EquipmentProblemDiagnosisViewSet, self).list(request, *args, **kwargs)
 
