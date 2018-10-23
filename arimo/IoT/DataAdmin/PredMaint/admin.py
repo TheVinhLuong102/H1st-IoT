@@ -13,7 +13,10 @@ from .models import \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
-    EquipmentProblemType, EquipmentProblemPeriod as EquipmentProblemDiagnosis, AlertDiagnosisStatus, Alert
+    EquipmentProblemType, \
+    EquipmentProblemDiagnosis, \
+    AlertDiagnosisStatus, \
+    Alert
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
@@ -151,8 +154,8 @@ class BlueprintAdmin(ModelAdmin):
         'equipment_general_type', \
         'equipment_unique_type_group', \
         'trained_to_date', \
-        'timestamp', \
         'uuid', \
+        'timestamp', \
         'active', \
         'last_updated'
 

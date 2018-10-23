@@ -12,7 +12,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemPeriod as EquipmentProblemDiagnosis, \
+    EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 from ..base.models import \
@@ -126,8 +126,8 @@ class BlueprintSerializer(ModelSerializer):
             'equipment_general_type', \
             'equipment_unique_type_group', \
             'trained_to_date', \
-            'timestamp', \
             'uuid', \
+            'timestamp', \
             'active', \
             'last_updated'
 

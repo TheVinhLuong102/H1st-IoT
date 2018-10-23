@@ -7,7 +7,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemPeriod as EquipmentProblemDiagnosis, \
+    EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 from ..base.filters import \

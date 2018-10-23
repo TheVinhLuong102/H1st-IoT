@@ -11,7 +11,11 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from psycopg2.extras import DateRange
 
-from ..base.models import EquipmentGeneralType, EquipmentDataField, EquipmentUniqueTypeGroup, EquipmentInstance
+from ..base.models import \
+    EquipmentGeneralType, \
+    EquipmentDataField, \
+    EquipmentUniqueTypeGroup, \
+    EquipmentInstance
 from ..util import MAX_CHAR_LEN, clean_lower_str
 
 
@@ -251,16 +255,16 @@ class Blueprint(Model):
             auto_created=False,
             default=None)
 
-    timestamp = \
-        DateTimeField(
-            auto_now_add=True)
-
     uuid = \
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True)
+
+    timestamp = \
+        DateTimeField(
+            auto_now_add=True)
 
     benchmark_metrics = \
         JSONField(
@@ -556,7 +560,12 @@ class EquipmentProblemPeriod(Model):
             auto_now=True)
 
     class Meta:
-        ordering = '-from_date', '-to_date', 'equipment_instance', 'dismissed'
+        ordering = \
+            '-ongoing', \
+            '-from_date', \
+            '-to_date', \
+            'equipment_instance', \
+            'dismissed'
 
     def __str__(self):
         return 'EqInst #{} from {} to {}{}: {}{}'.format(
@@ -589,6 +598,10 @@ class EquipmentProblemPeriod(Model):
         return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
 
 
+# rename more correctly
+EquipmentProblemDiagnosis = EquipmentProblemPeriod
+
+
 def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
     alerts = \
         Alert.objects.filter(
@@ -600,13 +613,13 @@ def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
-    EquipmentProblemPeriod.objects.filter(pk=instance.pk).update(
+    EquipmentProblemDiagnosis.objects.filter(pk=instance.pk).update(
         has_associated_alerts=bool(alerts.count()))
 
 
 post_save.connect(
     receiver=equipment_problem_diagnosis_post_save,
-    sender=EquipmentProblemPeriod,
+    sender=EquipmentProblemDiagnosis,
     weak=True,
     dispatch_uid=None)
 
@@ -751,8 +764,8 @@ class Alert(Model):
 
     equipment_problem_diagnoses = \
         ManyToManyField(
-            to=EquipmentProblemPeriod,
-            through=EquipmentProblemPeriod.alerts.through,
+            to=EquipmentProblemDiagnosis,
+            through=EquipmentProblemDiagnosis.alerts.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
                 # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_diagnoses: (fields.E302) Reverse accessor for 'Alert.equipment_problem_diagnoses' clashes with field name 'EquipmentProblemPeriod.alerts'.
@@ -820,7 +833,7 @@ class Alert(Model):
 
 def alert_post_save(sender, instance, *args, **kwargs):
     equipment_problem_diagnoses = \
-        EquipmentProblemPeriod.objects.filter(
+        EquipmentProblemDiagnosis.objects.filter(
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
     
