@@ -83,7 +83,7 @@ class Project(object):
             Blueprint, \
             EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
             EquipmentInstanceDailyRiskScore, \
-            EquipmentProblemPeriod as EquipmentDiagnosis, EquipmentProblemType, \
+            EquipmentProblemType, EquipmentProblemDiagnosis, \
             AlertDiagnosisStatus, Alert
 
         self.data = \
@@ -111,10 +111,10 @@ class Project(object):
                 EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
 
                 EquipmentProblemTypes=EquipmentProblemType.objects,
-                EquipmentDiagnoses=EquipmentDiagnosis.objects,
+                EquipmentProblemDiagnoses=EquipmentProblemDiagnosis.objects,
 
-                PredMaintAlerts=Alert.objects,
-                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects)
+                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
+                PredMaintAlerts=Alert.objects)
 
         self.CAT_DATA_TYPE = \
             self.data.DataTypes.get_or_create(
