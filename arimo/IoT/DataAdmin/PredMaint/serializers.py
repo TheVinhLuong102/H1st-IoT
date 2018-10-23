@@ -210,6 +210,25 @@ class EquipmentProblemTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
+class AlertShortFormRelatedField(RelatedField):
+    def to_representation(self, value):
+        return dict(
+                equipment_general_type=value.equipment_general_type.name,
+                equipment_unique_type_group=value.equipment_unique_type_group.name,
+                equipment_instance=value.equipment_instance.name,
+                risk_score_name=value.risk_score_name,
+                threshold=value.threshold,
+                from_date=str(value.from_date),
+                to_date=str(value.to_date),
+                duration=value.duration,
+                cumulative_excess_risk_score=value.cumulative_excess_risk_score,
+                approx_average_risk_score=value.approx_average_risk_score,
+                last_risk_score=value.last_risk_score,
+                ongoing=value.ongoing,
+                diagnosis_status=value.diagnosis_status.name,
+                has_associated_equipment_problem_diagnoses=value.has_associated_equipment_problem_diagnoses)
+
+
 class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
     equipment_instance = \
         SlugRelatedField(
@@ -225,7 +244,10 @@ class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
             many=True,
             required=True)
 
-    # alerts = \
+    alerts = \
+        AlertShortFormRelatedField(
+            read_only=True,
+            many=True)
 
     class Meta:
         model = EquipmentProblemDiagnosis
@@ -242,14 +264,29 @@ class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
             'dismissed', \
             'comments', \
             'has_associated_alerts', \
+            'alerts', \
             'last_updated'
-            # 'alerts'
 
 
 class AlertDiagnosisStatusSerializer(ModelSerializer):
     class Meta:
         model = AlertDiagnosisStatus
         fields = 'name',
+
+
+class EquipmentProblemDiagnosisShortFormRelatedField(RelatedField):
+    def to_representation(self, value):
+        return dict(
+            equipment_instance=value.equipment_instance.name,
+            from_date=str(value.from_date),
+            to_date=str(value.to_date),
+            duration=value.duration,
+            ongoing=value.ongoing,
+            has_equipment_problems=value.has_equipment_problems,
+            equipment_problem_types=[i.name for i in value.equipment_problem_types.all()],
+            dismissed=value.dismissed,
+            comments=value.comments,
+            has_associated_alerts=value.has_associated_alerts)
 
 
 class AlertSerializer(ModelSerializer):
@@ -277,6 +314,11 @@ class AlertSerializer(ModelSerializer):
             slug_field='name',
             many=False)
 
+    equipment_problem_diagnoses = \
+        EquipmentProblemDiagnosisShortFormRelatedField(
+            read_only=True,
+            many=True)
+
     class Meta:
         model = Alert
 
@@ -296,5 +338,5 @@ class AlertSerializer(ModelSerializer):
             'ongoing', \
             'diagnosis_status', \
             'has_associated_equipment_problem_diagnoses', \
+            'equipment_problem_diagnoses', \
             'last_updated'
-            # 'equipment_problem_diagnoses', \

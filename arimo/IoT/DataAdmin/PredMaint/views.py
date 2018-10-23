@@ -303,7 +303,16 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
         EquipmentProblemDiagnosis.objects \
         .select_related('equipment_instance') \
-        .prefetch_related('equipment_problem_types')
+        .prefetch_related(
+            Prefetch(
+                'equipment_problem_types'),
+            Prefetch(
+                'alerts',
+                queryset=Alert.objects.select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type_group',
+                    'equipment_instance',
+                    'diagnosis_status')))
 
     serializer_class = EquipmentProblemDiagnosisSerializer
 
