@@ -29,6 +29,10 @@ class Project(object):
     _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
     _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
+    _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
+    _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
+    _ALERT_DIAGNOSIS_STATUS_CONCLUDED_STR = 'concluded'
+
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
     _EQUIPMENT_INSTANCE_ALIAS_COL_NAME = 'equipment_instance_alias'
     _DATE_TIME_COL_NAME = 'date_time'
@@ -135,6 +139,21 @@ class Project(object):
             self.data.EquipmentDataFieldTypes.get_or_create(
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
+
+        self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
+            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+                name=self._ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR,
+                defaults=dict(index=0))[0]
+
+        self.ALERT_DIAGNOSIS_STATUS_MONITORING = \
+            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+                name=self._ALERT_DIAGNOSIS_STATUS_MONITORING_STR,
+                defaults=dict(index=1))[0]
+
+        self.ALERT_DIAGNOSIS_STATUS_CONCLUDED = \
+            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+                name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_STR,
+                defaults=dict(index=9))[0]
 
         if 's3' in self.params:
             self.params.s3.equipment_data.dir_path = \
