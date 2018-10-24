@@ -152,9 +152,10 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
 
     def __str__(self):
         return '{}Pred Maint Svc Config: {} {}'.format(
-            '' if self.active
-               else '(INACTIVE) ',
-            self.equipment_general_type.name.upper(), self.equipment_unique_type_group.name)
+                '' if self.active
+                   else '(INACTIVE) ',
+                self.equipment_unique_type_group.equipment_general_type.name.upper(),
+                self.equipment_unique_type_group.name)
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
@@ -389,12 +390,12 @@ class EquipmentInstanceDailyRiskScore(Model):
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(
-            self.equipment_general_type.name,
-            self.equipment_unique_type_group.name,
-            self.equipment_instance.name,
-            self.date,
-            self.risk_score_name,
-            self.risk_score_value)
+                self.equipment_unique_type_group.equipment_general_type.name,
+                self.equipment_unique_type_group.name,
+                self.equipment_instance.name,
+                self.date,
+                self.risk_score_name,
+                self.risk_score_value)
 
 
 @python_2_unicode_compatible
@@ -734,20 +735,20 @@ class Alert(Model):
             self.save()
             
         return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (Last: {:,.1f}) (based on {} > {}) for {:,} Days'.format(
-            self.diagnosis_status.name.upper(),
-            'ONGOING '
-                if self.ongoing
-                else '',
-            self.equipment_general_type.name.upper(),
-            self.equipment_unique_type_group.name,
-            self.equipment_instance.name,
-            self.from_date,
-            self.to_date,
-            self.approx_average_risk_score,
-            self.last_risk_score,
-            self.risk_score_name,
-            self.threshold,
-            self.duration)
+                self.diagnosis_status.name.upper(),
+                'ONGOING '
+                    if self.ongoing
+                    else '',
+                self.equipment_unique_type_group.equipment_general_type.name.upper(),
+                self.equipment_unique_type_group.name,
+                self.equipment_instance.name,
+                self.from_date,
+                self.to_date,
+                self.approx_average_risk_score,
+                self.last_risk_score,
+                self.risk_score_name,
+                self.threshold,
+                self.duration)
 
     def save(self, *args, **kwargs):
         self.date_range = \
