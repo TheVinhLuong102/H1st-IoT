@@ -58,7 +58,13 @@ class EquipmentUniqueTypeGroupForm(FutureModelForm):
                     'equipment_general_type',
                     'equipment_data_field_type',
                     'data_type',
-                    'numeric_measurement_unit'))
+                    'numeric_measurement_unit'),
+
+            widget=
+                ModelSelect2Multiple(
+                    url=EquipmentDataFieldAutoComplete.name,
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}))
 
     class Meta:
         model = EquipmentUniqueTypeGroup

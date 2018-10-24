@@ -163,7 +163,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeGroupForm
 
-    readonly_fields = 'equipment_data_fields',   # *** UGLY READ-ONLY DISPLAY ***
+    # readonly_fields = 'equipment_data_fields',   # *** SLOW & ugly when read-only ***
 
     def n_equipment_data_fields(self, obj):
         return obj.equipment_data_fields.count()
