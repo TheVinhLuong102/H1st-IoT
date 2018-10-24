@@ -23,15 +23,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
     RELATED_NAME = 'equipment_unique_type_group_data_field_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_profile'
 
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
-
     equipment_unique_type_group = \
         ForeignKey(
             to=EquipmentUniqueTypeGroup,
@@ -113,7 +104,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
     class Meta:
         ordering = \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_data_field', \
             '-to_date'
@@ -123,15 +113,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_service_configs'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
-
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -167,7 +148,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
     class Meta:
         ordering = \
             '-active', \
-            'equipment_general_type', \
             'equipment_unique_type_group'
 
     def __str__(self):
@@ -229,15 +209,6 @@ class Blueprint(Model):
     RELATED_NAME = 'blueprints'
     RELATED_QUERY_NAME = 'blueprint'
 
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
-
     equipment_unique_type_group = \
         ForeignKey(
             to=EquipmentUniqueTypeGroup,
@@ -283,7 +254,6 @@ class Blueprint(Model):
 
     class Meta:
         ordering = \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             '-trained_to_date', \
             '-timestamp'
@@ -299,15 +269,6 @@ class Blueprint(Model):
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
     RELATED_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile'
-
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -364,7 +325,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 
     class Meta:
         ordering = \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_data_field', \
             '-trained_to_date'
@@ -377,15 +337,6 @@ class EquipmentInstanceDailyRiskScore(Model):
 
     id = BigAutoField(
         primary_key=True)
-
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -431,7 +382,6 @@ class EquipmentInstanceDailyRiskScore(Model):
 
     class Meta:
         ordering = \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_instance', \
             'risk_score_name', \
@@ -661,15 +611,6 @@ class AlertDiagnosisStatus(Model):
 class Alert(Model):
     RELATED_NAME = 'alerts'
     RELATED_QUERY_NAME = 'alert'
-
-    equipment_general_type = \
-        ForeignKey(
-            to=EquipmentGeneralType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
 
     equipment_unique_type_group = \
         ForeignKey(

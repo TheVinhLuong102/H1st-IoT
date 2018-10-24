@@ -25,7 +25,6 @@ from ..base.models import EquipmentDataField
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'to_date', \
@@ -41,19 +40,16 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'last_updated'
 
     ordering = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         '-to_date', \
         '-n_distinct_values'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'to_date', \
         'equipment_data_field__name'
 
     list_select_related = \
-        'equipment_general_type', \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
@@ -61,12 +57,10 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
-        'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
 
     readonly_fields = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'to_date', \
@@ -118,14 +112,12 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
 
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'monitored_and_excluded_equipment_data_fields', \
         'active', \
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'active'
 
@@ -133,9 +125,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     show_full_result_count = False   # too many
 
-    search_fields = \
-        'equipment_general_type__name', \
-        'equipment_unique_type_group__name'
+    search_fields = 'equipment_unique_type_group__name',
 
     form = EquipmentUniqueTypeGroupServiceConfigForm
 
@@ -169,7 +159,6 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).get_queryset(request=request) \
             .select_related(
-                'equipment_general_type',
                 'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
             .prefetch_related(
                 Prefetch(
@@ -205,7 +194,6 @@ site.register(
 
 class BlueprintAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'trained_to_date', \
         'uuid', \
@@ -214,25 +202,21 @@ class BlueprintAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'trained_to_date', \
         'timestamp', \
         'active'
 
     list_select_related = \
-        'equipment_general_type', \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
 
     show_full_result_count = False   # too many
 
     search_fields = \
-        'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'uuid'
 
     readonly_fields = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'trained_to_date', \
         'uuid', \
@@ -261,7 +245,6 @@ site.register(
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'trained_to_date', \
@@ -273,12 +256,10 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'trained_to_date'
 
     list_select_related = \
-        'equipment_general_type', \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
@@ -286,12 +267,10 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
     show_full_result_count = False   # too many
 
     search_fields = \
-        'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
 
     readonly_fields = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'trained_to_date', \
@@ -324,7 +303,6 @@ site.register(
 
 class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name', \
@@ -333,19 +311,16 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'risk_score_name', \
         'date'
 
     list_select_related = \
-        'equipment_general_type', \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
         'equipment_instance', 'equipment_instance__equipment_general_type', \
         'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type'
 
     readonly_fields = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name', \
@@ -356,7 +331,6 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
-        'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
@@ -477,7 +451,6 @@ site.register(
 
 class AlertAdmin(ModelAdmin):
     list_display = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name', \
@@ -494,14 +467,12 @@ class AlertAdmin(ModelAdmin):
         'last_updated'
 
     list_select_related = \
-        'equipment_general_type', \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
         'equipment_instance', 'equipment_instance__equipment_general_type', \
         'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type', \
         'diagnosis_status'
 
     list_filter = \
-        'equipment_general_type', \
         'equipment_unique_type_group__name', \
         'risk_score_name', \
         'threshold', \
@@ -513,7 +484,6 @@ class AlertAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
-        'equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
@@ -521,7 +491,6 @@ class AlertAdmin(ModelAdmin):
     form = AlertForm
 
     readonly_fields = \
-        'equipment_general_type', \
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name', \

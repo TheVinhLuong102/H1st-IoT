@@ -55,7 +55,6 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
     queryset = \
         EquipmentUniqueTypeGroupDataFieldProfile.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group',
             'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
@@ -97,7 +96,6 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
     queryset = \
         EquipmentUniqueTypeGroupServiceConfig.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group') \
         .prefetch_related(
             Prefetch(
@@ -163,7 +161,6 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
     queryset = \
         Blueprint.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group')
 
     serializer_class = BlueprintSerializer
@@ -208,7 +205,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
     queryset = \
         EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group',
             'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
@@ -250,7 +246,6 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     queryset = \
         EquipmentInstanceDailyRiskScore.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group',
             'equipment_instance')
 
@@ -346,7 +341,6 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
                 queryset=
                     Alert.objects
                     .select_related(
-                        'equipment_general_type',
                         'equipment_unique_type_group',
                         'equipment_instance',
                         'diagnosis_status')))
@@ -430,7 +424,6 @@ class AlertViewSet(ReadOnlyModelViewSet):
     queryset = \
         Alert.objects \
         .select_related(
-            'equipment_general_type',
             'equipment_unique_type_group',
             'equipment_instance',
             'diagnosis_status') \

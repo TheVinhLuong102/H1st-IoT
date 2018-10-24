@@ -18,12 +18,6 @@ from ..base.serializers import EquipmentDataFieldShortFormRelatedField
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -40,7 +34,6 @@ class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
 
         fields = \
             'id', \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_data_field', \
             'to_date', \
@@ -67,12 +60,6 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(RelatedField)
 
 
 class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -94,7 +81,6 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
 
         fields = \
             'id', \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_unique_type_group_monitored_data_field_configs', \
             'global_excluded_equipment_data_fields', \
@@ -104,12 +90,6 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
 
 
 class BlueprintSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -120,7 +100,6 @@ class BlueprintSerializer(ModelSerializer):
         model = Blueprint
 
         fields = \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'trained_to_date', \
             'uuid', \
@@ -130,12 +109,6 @@ class BlueprintSerializer(ModelSerializer):
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -153,7 +126,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 
         fields = \
             'id', \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_data_field', \
             'trained_to_date', \
@@ -166,12 +138,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 
 
 class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -189,7 +155,6 @@ class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
 
         fields = \
             'id', \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_instance', \
             'risk_score_name', \
@@ -207,7 +172,6 @@ class EquipmentProblemTypeSerializer(ModelSerializer):
 class AlertShortFormRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
-                equipment_general_type=value.equipment_general_type.name,
                 equipment_unique_type_group=value.equipment_unique_type_group.name,
                 equipment_instance=value.equipment_instance.name,
                 risk_score_name=value.risk_score_name,
@@ -284,12 +248,6 @@ class EquipmentProblemDiagnosisShortFormRelatedField(RelatedField):
 
 
 class AlertSerializer(ModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
     equipment_unique_type_group = \
         SlugRelatedField(
             read_only=True,
@@ -318,7 +276,6 @@ class AlertSerializer(ModelSerializer):
 
         fields = \
             'id', \
-            'equipment_general_type', \
             'equipment_unique_type_group', \
             'equipment_instance', \
             'risk_score_name', \
