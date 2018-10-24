@@ -20,6 +20,8 @@ from .models import \
     EquipmentProblemDiagnosis, \
     Alert
 
+from ..base.models import EquipmentDataField
+
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     list_display = \
@@ -46,14 +48,15 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'to_date', \
-        'equipment_data_field'
+        'equipment_data_field__name'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_data_field'
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
+                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
     show_full_result_count = False   # too many
 
@@ -123,12 +126,10 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'active'
 
-    list_select_related = \
-        'equipment_general_type', \
-        'equipment_unique_type_group',
+    # list_select_related = ...   # already overriding get_queryset below
 
     show_full_result_count = False   # too many
 
@@ -152,12 +153,35 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         if equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.count()
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
-                    obj.equipment_unique_type_group_monitored_data_field_configs.filter(active=True)),
+                    obj.equipment_unique_type_group_monitored_data_field_configs
+                    .filter(
+                        active=True)
+                    .select_related(
+                        'monitored_equipment_data_field')
+                    .prefetch_related(
+                        'excluded_equipment_data_fields')),
             ' | global excl: {}'.format(
                 ', '.join(excluded_equipment_data_field.name
                           for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
                 if obj.global_excluded_equipment_data_fields.count()
                 else '')
+
+    def get_queryset(self, request):
+        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type',
+                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_type_group_monitored_data_field_configs',
+                    queryset=
+                        EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
+                        .select_related(
+                            'monitored_equipment_data_field')
+                        .prefetch_related(
+                            'excluded_equipment_data_fields')),
+
+                'global_excluded_equipment_data_fields')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Configs')
     def changelist_view(self, request, extra_context=None):
@@ -191,14 +215,14 @@ class BlueprintAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'trained_to_date', \
         'timestamp', \
         'active'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group'
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
 
     show_full_result_count = False   # too many
 
@@ -250,13 +274,14 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'trained_to_date'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_data_field'
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
+                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
     show_full_result_count = False   # too many
 
@@ -309,14 +334,15 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'risk_score_name', \
         'date'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_instance'
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+        'equipment_instance', 'equipment_instance__equipment_general_type', \
+        'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type'
 
     readonly_fields = \
         'equipment_general_type', \
@@ -357,8 +383,6 @@ site.register(
 
 class EquipmentProblemTypeAdmin(ModelAdmin):
     list_display = 'name',
-
-    list_filter = 'name',
 
     show_full_result_count = False   # only a few, but skip counting anyway
 
@@ -403,7 +427,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'to_date', \
         'dismissed'
 
-    list_select_related = 'equipment_instance',
+    # list_select_related = ...   # already overriding get_queryset below
 
     readonly_fields = \
         'date_range', \
@@ -420,18 +444,11 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         return super(EquipmentProblemDiagnosisAdmin, self).get_queryset(request) \
+            .select_related(
+                'equipment_instance', 'equipment_instance__equipment_general_type',
+                'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type') \
             .prefetch_related(
-                Prefetch(
-                    lookup='equipment_problem_types'),
-                Prefetch(
-                    lookup='alerts',
-                    queryset=
-                        Alert.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_unique_type_group',
-                            'equipment_instance',
-                            'diagnosis_status')))
+                'equipment_problem_types')
     
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):
@@ -478,13 +495,14 @@ class AlertAdmin(ModelAdmin):
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+        'equipment_instance', 'equipment_instance__equipment_general_type', \
+        'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type', \
         'diagnosis_status'
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type_group', \
+        'equipment_unique_type_group__name', \
         'risk_score_name', \
         'threshold', \
         'from_date', \

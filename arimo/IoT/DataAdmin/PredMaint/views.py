@@ -313,6 +313,10 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_problem_type_name'
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
@@ -333,10 +337,10 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 class EquipmentProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
         EquipmentProblemDiagnosis.objects \
-        .select_related('equipment_instance') \
+        .select_related(
+            'equipment_instance') \
         .prefetch_related(
-            Prefetch(
-                lookup='equipment_problem_types'),
+            'equipment_problem_types',
             Prefetch(
                 lookup='alerts',
                 queryset=
@@ -394,6 +398,10 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticatedOrReadOnly,
 
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'alert_diagnosis_status_name'
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
@@ -425,7 +433,16 @@ class AlertViewSet(ReadOnlyModelViewSet):
             'equipment_general_type',
             'equipment_unique_type_group',
             'equipment_instance',
-            'diagnosis_status')
+            'diagnosis_status') \
+        .prefetch_related(
+            Prefetch(
+                lookup='equipment_problem_diagnoses',
+                queryset=
+                    EquipmentProblemDiagnosis.objects
+                    .select_related(
+                        'equipment_instance')
+                    .prefetch_related(
+                        'equipment_problem_types')))
 
     serializer_class = AlertSerializer
 
