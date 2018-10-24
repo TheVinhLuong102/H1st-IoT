@@ -8,15 +8,20 @@ class EquipmentDataFieldAutoComplete(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            query_set = EquipmentDataField.objects.all()
+            query_set = \
+                EquipmentDataField.objects \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_data_field_type',
+                    'data_type',
+                    'numeric_measurement_unit')
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
 
         else:
             return EquipmentDataField.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set
 
 
 class EquipmentUniqueTypeGroupAutoComplete(autocomplete.Select2QuerySetView):
@@ -24,15 +29,17 @@ class EquipmentUniqueTypeGroupAutoComplete(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            query_set = EquipmentUniqueTypeGroup.objects.all()
+            query_set = \
+                EquipmentUniqueTypeGroup.objects \
+                .select_related(
+                    'equipment_general_type')
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
 
         else:
             return EquipmentUniqueTypeGroup.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set
 
 
 class EquipmentUniqueTypeAutoComplete(autocomplete.Select2QuerySetView):
@@ -40,15 +47,17 @@ class EquipmentUniqueTypeAutoComplete(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            query_set = EquipmentUniqueType.objects.all()
+            query_set = \
+                EquipmentUniqueType.objects.objects \
+                .select_related(
+                    'equipment_general_type')
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
 
         else:
             return EquipmentUniqueType.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set
 
 
 class EquipmentFacilityAutoComplete(autocomplete.Select2QuerySetView):
@@ -58,13 +67,12 @@ class EquipmentFacilityAutoComplete(autocomplete.Select2QuerySetView):
         if self.request.user.is_authenticated:
             query_set = EquipmentFacility.objects.all()
 
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
+
         else:
             return EquipmentFacility.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set
 
 
 class EquipmentInstanceAutoComplete(autocomplete.Select2QuerySetView):
@@ -72,12 +80,16 @@ class EquipmentInstanceAutoComplete(autocomplete.Select2QuerySetView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            query_set = EquipmentInstance.objects.all()
+            query_set = \
+                EquipmentInstance.objects \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type',
+                    'equipment_facility')
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
 
         else:
             return EquipmentInstance.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set

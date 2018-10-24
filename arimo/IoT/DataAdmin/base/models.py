@@ -265,9 +265,9 @@ class EquipmentUniqueTypeGroup(Model):
             'name'
 
     def __str__(self):
-        return 'EqUnqTpGrp {}'.format(
-            # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
-            self.name.upper())
+        return '{} UnqTpGrp {}'.format(
+                self.equipment_general_type.name.upper(),
+                self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -342,9 +342,9 @@ class EquipmentUniqueType(Model):
             'name'
 
     def __str__(self):
-        return 'EqUnqTp {}'.format(
-            # self.equipment_general_type.name.upper(),   # *** THIS WILL MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
-            self.name.upper())
+        return '{} UnqTp {}'.format(
+                self.equipment_general_type.name.upper(),
+                self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -455,10 +455,10 @@ class EquipmentInstance(Model):
             'name'
 
     def __str__(self):
-        return 'EqInst #{}'.format(
-                # self.equipment_unique_type
-                #     if self.equipment_unique_type
-                #     else self.equipment_general_type,   # *** THIS CAN MAKE ADMIN VIEWS BUTCHER THE DATABASE ***
+        return '{} #{}'.format(
+                self.equipment_unique_type
+                    if self.equipment_unique_type
+                    else self.equipment_general_type,
                 self.name)
 
     def save(self, *args, **kwargs):

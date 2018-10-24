@@ -1,4 +1,5 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
+from django.db.models import Prefetch
 
 from silk.profiling.profiler import silk_profile
 
@@ -121,6 +122,21 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     form = EquipmentDataFieldForm
 
+    def get_queryset(self, request):
+        return super(EquipmentDataFieldAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type',
+                'equipment_data_field_type',
+                'data_type',
+                'numeric_measurement_unit') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_types',
+                    queryset=
+                        EquipmentUniqueType.objects
+                        .select_related(
+                            'equipment_general_type')))
+
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, request, extra_context=None):
         return super(EquipmentDataFieldAdmin, self).changelist_view(
@@ -161,6 +177,27 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     readonly_fields = 'equipment_data_fields',   # *** UGLY READ-ONLY DISPLAY ***
 
+    def get_queryset(self, request):
+        return super(EquipmentUniqueTypeGroupAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_types',
+                    queryset=
+                        EquipmentUniqueType.objects
+                        .select_related(
+                            'equipment_general_type')),
+                Prefetch(
+                    lookup='equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')))
+
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, request, extra_context=None):
         return super(EquipmentUniqueTypeGroupAdmin, self).changelist_view(
@@ -198,6 +235,27 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'name'
 
     form = EquipmentUniqueTypeForm
+
+    def get_queryset(self, request):
+        return super(EquipmentUniqueTypeAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')),
+                Prefetch(
+                    lookup='groups',
+                    queryset=
+                        EquipmentUniqueTypeGroup.objects
+                        .select_related(
+                            'equipment_general_type')))
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, request, extra_context=None):
@@ -293,6 +351,13 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'name'
 
     form = EquipmentInstanceForm
+
+    def get_queryset(self, request):
+        return super(EquipmentInstanceAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type',
+                'equipment_unique_type',
+                'equipment_facility')
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, request, extra_context=None):

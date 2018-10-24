@@ -10,13 +10,12 @@ class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
         if self.request.user.is_authenticated:
             query_set = EquipmentProblemType.objects.all()
 
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
+
         else:
             return EquipmentProblemType.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(name__icontains=self.q)
-
-        return query_set
 
 
 class EquipmentProblemDiagnosisAutoComplete(autocomplete.Select2QuerySetView):
@@ -26,10 +25,9 @@ class EquipmentProblemDiagnosisAutoComplete(autocomplete.Select2QuerySetView):
         if self.request.user.is_authenticated:
             query_set = EquipmentProblemDiagnosis.objects.all()
 
+            return query_set.filter(equipment_instance__name__icontains=self.q) \
+                if self.q \
+              else query_set
+
         else:
             return EquipmentProblemDiagnosis.objects.none()
-
-        if self.q:
-            query_set = query_set.filter(equipment_instance__name__icontains=self.q)
-
-        return query_set
