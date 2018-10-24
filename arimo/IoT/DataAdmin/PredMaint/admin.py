@@ -479,7 +479,8 @@ class AlertAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'ongoing', \
-        'diagnosis_status'
+        'diagnosis_status', \
+        'has_associated_equipment_problem_diagnoses'
 
     show_full_result_count = False   # too many
 
