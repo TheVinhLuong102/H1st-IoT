@@ -270,6 +270,13 @@ class EquipmentInstanceTabularInline(TabularInline):
 
     extra = 0
 
+    def get_queryset(self, request):
+        return super(EquipmentInstanceTabularInline, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type',
+                'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+                'equipment_facility')
+
 
 class EquipmentFacilityAdmin(ModelAdmin):
     list_display = \
