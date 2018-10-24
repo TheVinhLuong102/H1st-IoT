@@ -142,7 +142,7 @@ class EquipmentSystemForm(FutureModelForm):
                 EquipmentInstance.objects
                 .select_related(
                     'equipment_general_type',
-                    'equipment_unique_type',
+                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
                     'equipment_facility'),
 
             widget=

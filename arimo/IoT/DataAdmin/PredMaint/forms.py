@@ -86,7 +86,7 @@ class EquipmentProblemDiagnosisForm(FutureModelForm):
                 EquipmentInstance.objects
                 .select_related(
                     'equipment_general_type',
-                    'equipment_unique_type',
+                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
                     'equipment_facility'),
 
             widget=
@@ -123,10 +123,10 @@ class AlertForm(FutureModelForm):
         ModelChoiceField(
             queryset=
                 EquipmentInstance.objects
-                    .select_related(
-                        'equipment_general_type',
-                        'equipment_unique_type',
-                        'equipment_facility'),
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+                    'equipment_facility'),
 
             widget=
                 ModelSelect2(
