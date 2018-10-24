@@ -4,7 +4,7 @@ Boto3 >= 1.9.13
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
 Django >= 2.1.1
-Django-AutoComplete-Light == 3.3.1   # *** 3.3.2 has JavaScript form rendering bug ***
+Django-AutoComplete-Light == 3.3.0   # *** 3.3.1/2 has JavaScript form rendering bug on Mac/Linux ***
 Django-Crispy-Forms >= 1.7.2
 Django-Debug-Toolbar >= 1.10.1
 Django-Extensions >= 2.1.2

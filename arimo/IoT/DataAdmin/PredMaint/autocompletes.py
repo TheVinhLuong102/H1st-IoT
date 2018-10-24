@@ -1,9 +1,9 @@
-from dal import autocomplete
+from dal.autocomplete import Select2QuerySetView
 
 from .models import EquipmentProblemType, EquipmentProblemDiagnosis
 
 
-class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
+class EquipmentProblemTypeAutoComplete(Select2QuerySetView):
     name = 'EquipmentProblemType-AutoComplete'
 
     def get_queryset(self):
@@ -18,7 +18,7 @@ class EquipmentProblemTypeAutoComplete(autocomplete.Select2QuerySetView):
             return EquipmentProblemType.objects.none()
 
 
-class EquipmentProblemDiagnosisAutoComplete(autocomplete.Select2QuerySetView):
+class EquipmentProblemDiagnosisAutoComplete(Select2QuerySetView):
     name = 'EquipmentProblemDiagnosis-AutoComplete'
 
     def get_queryset(self):

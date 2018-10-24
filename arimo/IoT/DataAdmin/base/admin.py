@@ -123,27 +123,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     form = EquipmentDataFieldForm
 
-    # def get_object(self, request, object_id, from_field=None):
-    #     return EquipmentDataField.objects \
-    #         .prefetch_related(
-    #             Prefetch(
-    #                 lookup='equipment_unique_types',
-    #                 queryset=
-    #                     EquipmentUniqueType.objects
-    #                     .select_related(
-    #                         'equipment_general_type'))) \
-    #         .get(pk=object_id)
-
-        # obj = super(EquipmentDataFieldAdmin, self).get_object(
-        #         request=request,
-        #         object_id=object_id,
-        #         from_field=from_field)
-
-        # prefetch_related_objects(
-        #     [obj], 'equipment_unique_types', 'equipment_unique_types__equipment_general_type')
-
-        # return obj
-
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, request, extra_context=None):
         return super(EquipmentDataFieldAdmin, self).changelist_view(
