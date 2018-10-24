@@ -1,5 +1,6 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
 from django.db.models import Prefetch
+from django.db.models.query import prefetch_related_objects
 
 from silk.profiling.profiler import silk_profile
 
@@ -122,20 +123,26 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     form = EquipmentDataFieldForm
 
-    def get_queryset(self, request):
-        return super(EquipmentDataFieldAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type',
-                'equipment_data_field_type',
-                'data_type',
-                'numeric_measurement_unit') \
-            .prefetch_related(
-                Prefetch(
-                    lookup='equipment_unique_types',
-                    queryset=
-                        EquipmentUniqueType.objects
-                        .select_related(
-                            'equipment_general_type')))
+    # def get_object(self, request, object_id, from_field=None):
+    #     return EquipmentDataField.objects \
+    #         .prefetch_related(
+    #             Prefetch(
+    #                 lookup='equipment_unique_types',
+    #                 queryset=
+    #                     EquipmentUniqueType.objects
+    #                     .select_related(
+    #                         'equipment_general_type'))) \
+    #         .get(pk=object_id)
+
+        # obj = super(EquipmentDataFieldAdmin, self).get_object(
+        #         request=request,
+        #         object_id=object_id,
+        #         from_field=from_field)
+
+        # prefetch_related_objects(
+        #     [obj], 'equipment_unique_types', 'equipment_unique_types__equipment_general_type')
+
+        # return obj
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, request, extra_context=None):
@@ -161,11 +168,13 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
+        'equipment_unique_type_names', \
+        'n_equipment_data_fields', \
         'last_updated'
 
     list_filter = 'equipment_general_type',
 
-    list_select_related = 'equipment_general_type',
+    # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
 
     show_full_result_count = False   # only a few, but skip counting anyway
 
@@ -177,26 +186,21 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     readonly_fields = 'equipment_data_fields',   # *** UGLY READ-ONLY DISPLAY ***
 
+    def n_equipment_data_fields(self, obj):
+        return obj.equipment_data_fields.count()
+
+    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
+    def equipment_unique_type_names(self, obj):
+        return ', '.join(equipment_unique_type.name
+                         for equipment_unique_type in obj.equipment_unique_types.all())
+
     def get_queryset(self, request):
         return super(EquipmentUniqueTypeGroupAdmin, self).get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
-                Prefetch(
-                    lookup='equipment_unique_types',
-                    queryset=
-                        EquipmentUniqueType.objects
-                        .select_related(
-                            'equipment_general_type')),
-                Prefetch(
-                    lookup='equipment_data_fields',
-                    queryset=
-                        EquipmentDataField.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_data_field_type',
-                            'data_type',
-                            'numeric_measurement_unit')))
+                'equipment_unique_types',
+                'equipment_data_fields')
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, request, extra_context=None):
@@ -222,11 +226,13 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
+        'n_equipment_data_fields', \
+        'equipment_unique_type_groups', \
         'last_updated'
 
     list_filter = 'equipment_general_type',
 
-    list_select_related = 'equipment_general_type',
+    # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
 
     show_full_result_count = False   # too many
 
@@ -236,26 +242,21 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeForm
 
+    def n_equipment_data_fields(self, obj):
+        return obj.data_fields.count()
+
+    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
+    def equipment_unique_type_groups(self, obj):
+        return ', '.join(equipment_unique_type_group.name
+                         for equipment_unique_type_group in obj.groups.all())
+
     def get_queryset(self, request):
         return super(EquipmentUniqueTypeAdmin, self).get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
-                Prefetch(
-                    lookup='data_fields',
-                    queryset=
-                        EquipmentDataField.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_data_field_type',
-                            'data_type',
-                            'numeric_measurement_unit')),
-                Prefetch(
-                    lookup='groups',
-                    queryset=
-                        EquipmentUniqueTypeGroup.objects
-                        .select_related(
-                            'equipment_general_type')))
+                'data_fields',
+                'groups')
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, request, extra_context=None):
@@ -294,15 +295,22 @@ class EquipmentInstanceTabularInline(TabularInline):
 class EquipmentFacilityAdmin(ModelAdmin):
     list_display = \
         'name', \
+        'n_equipment_instances', \
         'last_updated'
-
-    list_filter = 'name',
 
     show_full_result_count = False   # too many
 
     search_fields = 'name',
 
     inlines = EquipmentInstanceTabularInline,
+
+    def n_equipment_instances(self, obj):
+        return obj.equipment_instances.count()
+
+    def get_queryset(self, request):
+        return super(EquipmentFacilityAdmin, self).get_queryset(request=request) \
+            .prefetch_related(
+                'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, request, extra_context=None):
@@ -334,12 +342,12 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_general_type', \
-        'equipment_unique_type', \
+        'equipment_unique_type__name', \
         'equipment_facility'
 
     list_select_related = \
         'equipment_general_type', \
-        'equipment_unique_type', \
+        'equipment_unique_type', 'equipment_unique_type__equipment_general_type', \
         'equipment_facility'
 
     show_full_result_count = False   # too many
@@ -351,13 +359,6 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'name'
 
     form = EquipmentInstanceForm
-
-    def get_queryset(self, request):
-        return super(EquipmentInstanceAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type',
-                'equipment_unique_type',
-                'equipment_facility')
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, request, extra_context=None):
@@ -384,6 +385,7 @@ class EquipmentSystemAdmin(ModelAdmin):
         'equipment_facility', \
         'name', \
         'date', \
+        'n_equipment_instances', \
         'last_updated'
 
     list_filter = \
@@ -391,7 +393,7 @@ class EquipmentSystemAdmin(ModelAdmin):
         'name', \
         'date'
 
-    list_select_related = 'equipment_facility',
+    # list_select_related = 'equipment_facility',   # already overriding get_queryset below
 
     show_full_result_count = False   # too many
 
@@ -400,6 +402,16 @@ class EquipmentSystemAdmin(ModelAdmin):
         'name',
 
     form = EquipmentSystemForm
+
+    def n_equipment_instances(self, obj):
+        return obj.equipment_instances.count()
+
+    def get_queryset(self, request):
+        return super(EquipmentSystemAdmin, self).get_queryset(request=request) \
+            .select_related(
+                'equipment_facility') \
+            .prefetch_related(
+                'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, request, extra_context=None):

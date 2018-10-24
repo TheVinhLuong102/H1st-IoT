@@ -194,26 +194,26 @@ class EquipmentDataField(Model):
 
     def __str__(self):
         return '{} [{}] {} [{}{}{}{}{}{}]'.format(
-            self.equipment_general_type.name.upper(),
-            self.equipment_data_field_type.name,
-            self.name,
-            self.data_type.name
-                if self.data_type
-                else 'UNTYPED',
-            ('' if self.numeric_measurement_unit is None
-                else ', unit {}'.format(self.numeric_measurement_unit.name.upper())),
-            ('' if self.upper_numeric_null is None
-                else ', null {}'.format(self.upper_numeric_null))
-                if self.lower_numeric_null is None
-                else (', null {}'.format(self.lower_numeric_null)
-                      if self.upper_numeric_null is None
-                      else ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
-            '' if self.default_val is None
-               else ', default {}'.format(self.default_val),
-            '' if self.min_val is None
-               else ', min {}'.format(self.min_val),
-            '' if self.max_val is None
-               else ', max {}'.format(self.max_val))
+                self.equipment_general_type.name.upper(),
+                self.equipment_data_field_type.name,
+                self.name,
+                self.data_type.name
+                    if self.data_type
+                    else 'UNTYPED',
+                ('' if self.numeric_measurement_unit is None
+                    else ', unit {}'.format(self.numeric_measurement_unit.name.upper())),
+                ('' if self.upper_numeric_null is None
+                    else ', null {}'.format(self.upper_numeric_null))
+                    if self.lower_numeric_null is None
+                    else (', null {}'.format(self.lower_numeric_null)
+                          if self.upper_numeric_null is None
+                          else ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
+                '' if self.default_val is None
+                   else ', default {}'.format(self.default_val),
+                '' if self.min_val is None
+                   else ', min {}'.format(self.min_val),
+                '' if self.max_val is None
+                   else ', max {}'.format(self.max_val))
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)

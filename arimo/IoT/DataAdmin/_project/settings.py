@@ -199,3 +199,23 @@ REST_FRAMEWORK = {
     if six.PY3
     else []
 }
+
+
+# Silk Profiling settings
+# SILKY_PYTHON_PROFILER = True
+# SILKY_PYTHON_PROFILER_BINARY = True
+
+SILKY_INTERCEPT_PERCENT = 100
+SILKY_MAX_RECORDED_REQUESTS = 10 ** 3
+SILKY_MAX_RECORDED_REQUESTS_CHECK_PERCENT = 100
+
+SILKY_MAX_REQUEST_BODY_SIZE = -1   # Silk takes anything <0 as no limit
+SILKY_MAX_RESPONSE_BODY_SIZE = -1   # If response body>?kb, ignore
+
+SILKY_META = True
+
+SILKY_STORAGE_CLASS = 'silk.storage.ProfilerResultStorage'
+# SILKY_PYTHON_PROFILER_RESULT_PATH = '/path/to/profiles/'   # If this is not set, MEDIA_ROOT will be used.
+
+SILKY_AUTHENTICATION = True   # User must login
+SILKY_AUTHORISATION = True   # User must have permissions
