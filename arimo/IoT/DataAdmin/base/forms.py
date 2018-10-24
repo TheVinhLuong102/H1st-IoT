@@ -1,5 +1,11 @@
 from dal import autocomplete
 
+from .autocompletes import \
+    EquipmentDataFieldAutoComplete, \
+    EquipmentUniqueTypeGroupAutoComplete, \
+    EquipmentUniqueTypeAutoComplete, \
+    EquipmentFacilityAutoComplete, \
+    EquipmentInstanceAutoComplete
 from .models import \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
@@ -17,7 +23,7 @@ class EquipmentDataFieldForm(autocomplete.FutureModelForm):
         widgets = dict(
             equipment_unique_types=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentUniqueType-AutoComplete',
+                    url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
@@ -31,13 +37,13 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
         widgets = dict(
             equipment_unique_types=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentUniqueType-AutoComplete',
+                    url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}),
 
             equipment_data_fields=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentDataField-AutoComplete',
+                    url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
@@ -51,13 +57,13 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
         widgets = dict(
             data_fields=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentDataField-AutoComplete',
+                    url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}),
 
             groups=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentUniqueTypeGroup-AutoComplete',
+                    url=EquipmentUniqueTypeGroupAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
@@ -71,19 +77,19 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
         widgets = dict(
             equipment_unique_type=
                 autocomplete.ModelSelect2(
-                    url='EquipmentUniqueType-AutoComplete',
+                    url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}),
 
             equipment_facility=
                 autocomplete.ModelSelect2(
-                    url='EquipmentFacility-AutoComplete',
+                    url=EquipmentFacilityAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                         'data-minimum-input-length': 1}),
 
             data_fields=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentDataField-AutoComplete',
+                    url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
@@ -97,12 +103,12 @@ class EquipmentSystemForm(autocomplete.FutureModelForm):
         widgets = dict(
             equipment_facility=
                 autocomplete.ModelSelect2(
-                    url='EquipmentFacility-AutoComplete',
+                    url=EquipmentFacilityAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                         'data-minimum-input-length': 1}),
 
             equipment_instances=
                 autocomplete.ModelSelect2Multiple(
-                    url='EquipmentInstance-AutoComplete',
+                    url=EquipmentInstanceAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
