@@ -414,7 +414,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         return super(AlertDiagnosisStatusViewSet, self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Alert Diagnosis Statusis')
+    @silk_profile(name='REST API: Alert Diagnosis Status')
     def retrieve(self, request, *args, **kwargs):
         return super(AlertDiagnosisStatusViewSet, self).retrieve(request, *args, **kwargs)
 
