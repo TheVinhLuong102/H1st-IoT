@@ -422,7 +422,16 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
                 'equipment_instance', 'equipment_instance__equipment_general_type',
                 'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type') \
             .prefetch_related(
-                'equipment_problem_types')
+                'equipment_problem_types',
+                Prefetch(
+                    lookup='alerts',
+                    queryset=
+                        Alert.objects
+                        .select_related(
+                            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                            'equipment_instance', 'equipment_instance__equipment_general_type',
+                            'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
+                            'diagnosis_status')))
     
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_problem_type_names(self, obj):

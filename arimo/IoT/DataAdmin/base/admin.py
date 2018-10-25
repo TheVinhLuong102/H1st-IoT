@@ -163,7 +163,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeGroupForm
 
-    # readonly_fields = 'equipment_data_fields',   # *** SLOW & ugly when read-only ***
+    readonly_fields = 'equipment_data_fields',
 
     def n_equipment_data_fields(self, obj):
         return obj.equipment_data_fields.count()
@@ -179,7 +179,15 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                 'equipment_general_type') \
             .prefetch_related(
                 'equipment_unique_types',
-                'equipment_data_fields')
+                Prefetch(
+                    lookup='equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, request, extra_context=None):
