@@ -282,8 +282,7 @@ class EquipmentInstanceTabularInline(TabularInline):
         return super(EquipmentInstanceTabularInline, self).get_queryset(request=request) \
             .select_related(
                 'equipment_general_type',
-                'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-                'equipment_facility')
+                'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
 
 
 class EquipmentFacilityAdmin(ModelAdmin):
@@ -304,7 +303,13 @@ class EquipmentFacilityAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super(EquipmentFacilityAdmin, self).get_queryset(request=request) \
             .prefetch_related(
-                'equipment_instances')
+                Prefetch(
+                    lookup='equipment_instances',
+                    queryset=
+                        EquipmentInstance.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_unique_type', 'equipment_unique_type__equipment_general_type')))
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, request, extra_context=None):
