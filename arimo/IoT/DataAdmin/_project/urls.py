@@ -22,18 +22,8 @@ from django.views.generic.base import RedirectView
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
-from arimo.IoT.DataAdmin.base.autocompletes import \
-    EquipmentDataFieldAutoComplete, \
-    EquipmentUniqueTypeGroupAutoComplete, \
-    EquipmentUniqueTypeAutoComplete, \
-    EquipmentFacilityAutoComplete, \
-    EquipmentInstanceAutoComplete
-from arimo.IoT.DataAdmin.base.urls import ROUTER as BASE_ROUTER
-
-from arimo.IoT.DataAdmin.PredMaint.autocompletes import \
-    EquipmentProblemTypeAutoComplete, \
-    EquipmentProblemDiagnosisAutoComplete
-from arimo.IoT.DataAdmin.PredMaint.urls import ROUTER as PRED_MAINT_ROUTER
+from ..base.urls import URL_PATTERNS as BASE_URL_PATTERNS
+from ..PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
 
 urlpatterns = [
@@ -48,43 +38,10 @@ urlpatterns = [
     url(r'^api/doc/', include_docs_urls(title='Arimo IoT DataAdmin API')),
     url(r'^api/schema/$', get_schema_view(title='Arimo IoT DataAdmin API')),
 
-    # wire up our API using automatic URL routing
-    # note that the URL path can be whatever you want
-    url(r'^api/base/', include(BASE_ROUTER.urls)),
-    url(r'^api/pred-maint/', include(PRED_MAINT_ROUTER.urls)),
-
-    # Auto-Complete URLs
-    url(r'^{}/$'.format(EquipmentDataFieldAutoComplete.name),
-        EquipmentDataFieldAutoComplete.as_view(),
-        name=EquipmentDataFieldAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentUniqueTypeGroupAutoComplete.name),
-        EquipmentUniqueTypeGroupAutoComplete.as_view(),
-        name=EquipmentUniqueTypeGroupAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentUniqueTypeAutoComplete.name),
-        EquipmentUniqueTypeAutoComplete.as_view(),
-        name=EquipmentUniqueTypeAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentFacilityAutoComplete.name),
-        EquipmentFacilityAutoComplete.as_view(),
-        name=EquipmentFacilityAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentInstanceAutoComplete.name),
-        EquipmentInstanceAutoComplete.as_view(),
-        name=EquipmentInstanceAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentProblemTypeAutoComplete.name),
-        EquipmentProblemTypeAutoComplete.as_view(),
-        name=EquipmentProblemTypeAutoComplete.name),
-
-    url(r'^{}/$'.format(EquipmentProblemDiagnosisAutoComplete.name),
-        EquipmentProblemDiagnosisAutoComplete.as_view(),
-        name=EquipmentProblemDiagnosisAutoComplete.name),
-
     # Silk Profiling URLs
     url(r'^silk/', include('silk.urls', namespace='silk'))
-]
+
+] + BASE_URL_PATTERNS + PRED_MAINT_URL_PATTERNS
 
 
 if settings.DEBUG:

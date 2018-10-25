@@ -1,5 +1,10 @@
+from django.conf.urls import include, url
+
 from rest_framework.routers import DefaultRouter
 
+from .autocompletes import \
+    EquipmentProblemTypeAutoComplete, \
+    EquipmentProblemDiagnosisAutoComplete
 from .views import \
     EquipmentUniqueTypeGroupDataFieldProfileViewSet, \
     EquipmentUniqueTypeGroupServiceConfigViewSet, \
@@ -49,3 +54,18 @@ ROUTER.register(
 ROUTER.register(
     'alerts',
     AlertViewSet)
+
+
+URL_PATTERNS = [
+    # API URLs
+    url(r'^api/pred-maint/', include(ROUTER.urls)),
+
+    # Auto-Complete URLs
+    url(r'^{}/$'.format(EquipmentProblemTypeAutoComplete.name),
+        EquipmentProblemTypeAutoComplete.as_view(),
+        name=EquipmentProblemTypeAutoComplete.name),
+
+    url(r'^{}/$'.format(EquipmentProblemDiagnosisAutoComplete.name),
+        EquipmentProblemDiagnosisAutoComplete.as_view(),
+        name=EquipmentProblemDiagnosisAutoComplete.name)
+]

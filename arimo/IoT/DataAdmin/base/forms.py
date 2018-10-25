@@ -3,6 +3,7 @@ from django.forms import ModelChoiceField, ModelMultipleChoiceField
 from dal.autocomplete import FutureModelForm, ModelSelect2, ModelSelect2Multiple
 
 from .autocompletes import \
+    EquipmentGeneralTypeAutoComplete, \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
@@ -112,6 +113,10 @@ class EquipmentInstanceForm(FutureModelForm):
         fields = '__all__'
 
         widgets = dict(
+            equipment_general_type=
+                ModelSelect2(
+                    url=EquipmentGeneralTypeAutoComplete.name),
+
             equipment_facility=
                 ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,

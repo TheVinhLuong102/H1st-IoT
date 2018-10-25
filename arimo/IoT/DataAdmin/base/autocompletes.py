@@ -1,11 +1,27 @@
 from dal.autocomplete import Select2QuerySetView
 
 from .models import \
+    EquipmentGeneralType, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance
+
+
+class EquipmentGeneralTypeAutoComplete(Select2QuerySetView):
+    name = 'EquipmentGeneralType-AutoComplete'
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            query_set = EquipmentGeneralType.objects.all()
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+                else query_set
+
+        else:
+            return EquipmentGeneralType.objects.none()
 
 
 class EquipmentDataFieldAutoComplete(Select2QuerySetView):
