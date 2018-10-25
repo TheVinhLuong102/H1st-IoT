@@ -13,6 +13,7 @@ from ..util import MAX_CHAR_LEN, clean_lower_str
 class DataType(Model):
     name = \
         CharField(
+            verbose_name='Data Type Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -33,6 +34,7 @@ class DataType(Model):
 class NumericMeasurementUnit(Model):
     name = \
         CharField(
+            verbose_name='Numeric Measurement Unit Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -57,6 +59,7 @@ class NumericMeasurementUnit(Model):
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
+            verbose_name='Equipment Data Field Type Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -77,6 +80,7 @@ class EquipmentDataFieldType(Model):
 class EquipmentGeneralType(Model):
     name = \
         CharField(
+            verbose_name='Equipment General Type Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -125,6 +129,7 @@ class EquipmentDataField(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment Data Field Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -236,6 +241,7 @@ class EquipmentUniqueTypeGroup(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment Unique Type Group Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -308,6 +314,7 @@ class EquipmentUniqueType(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment Unique Type Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -364,6 +371,7 @@ class EquipmentFacility(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment Facility Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -418,6 +426,7 @@ class EquipmentInstance(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment Instance Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -482,6 +491,7 @@ class EquipmentSystem(Model):
 
     name = \
         CharField(
+            verbose_name='Equipment System Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,

@@ -95,10 +95,10 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
-        'equipment_data_field_type', \
-        'data_type', \
-        'numeric_measurement_unit', \
+        'equipment_general_type__name', \
+        'equipment_data_field_type__name', \
+        'data_type__name', \
+        'numeric_measurement_unit__name', \
         'lower_numeric_null', \
         'upper_numeric_null', \
         'default_val', \
@@ -151,7 +151,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'n_equipment_data_fields', \
         'last_updated'
 
-    list_filter = 'equipment_general_type',
+    list_filter = 'equipment_general_type__name',
 
     # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
 
@@ -217,7 +217,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_unique_type_groups', \
         'last_updated'
 
-    list_filter = 'equipment_general_type',
+    list_filter = 'equipment_general_type__name',
 
     # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
 
@@ -346,9 +346,9 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
-        'equipment_general_type', \
+        'equipment_general_type__name', \
         'equipment_unique_type__name', \
-        'equipment_facility'
+        'equipment_facility__name'
 
     list_select_related = \
         'equipment_general_type', \
@@ -394,7 +394,7 @@ class EquipmentSystemAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
-        'equipment_facility', \
+        'equipment_facility__name', \
         'name', \
         'date'
 

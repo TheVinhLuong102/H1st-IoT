@@ -402,6 +402,7 @@ class EquipmentInstanceDailyRiskScore(Model):
 class EquipmentProblemType(Model):
     name = \
         CharField(
+            verbose_name='Equipment Problem Type Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -587,6 +588,7 @@ class AlertDiagnosisStatus(Model):
 
     name = \
         CharField(
+            verbose_name='Alert Diagnosis Status Name',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
