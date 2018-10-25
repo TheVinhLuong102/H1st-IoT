@@ -144,12 +144,9 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
                     obj.equipment_unique_type_group_monitored_data_field_configs
-                    .filter(
-                        active=True)
-                    .select_related(
-                        'monitored_equipment_data_field')
-                    .prefetch_related(
-                        'excluded_equipment_data_fields')),
+                if equipment_unique_type_group_monitored_data_field_config.active
+                    # ^^^ USE ABOVE "IF" STATEMENT INSTEAD OF .filter(active=True) TO AVOID VOIDING THE CACHED PREFETCHED DATA ^^^
+            ),
             ' | global excl: {}'.format(
                 ', '.join(excluded_equipment_data_field.name
                           for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
