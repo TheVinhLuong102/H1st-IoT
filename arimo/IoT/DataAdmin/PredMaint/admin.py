@@ -109,6 +109,25 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
 
     extra = 0
 
+    def get_queryset(self, request):
+        return super(EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline, self).get_queryset(request=request) \
+            .select_related(
+                'monitored_equipment_data_field',
+                'monitored_equipment_data_field__equipment_general_type',
+                'monitored_equipment_data_field__equipment_data_field_type',
+                'monitored_equipment_data_field__data_type',
+                'monitored_equipment_data_field__numeric_measurement_unit') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='excluded_equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')))
+
 
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
