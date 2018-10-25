@@ -1,4 +1,4 @@
-from dal.autocomplete import Select2QuerySetView
+from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomplete AS THEY CHANGE BETWEEN VERSIONS ***
 
 from .models import \
     EquipmentGeneralType, \
@@ -9,7 +9,7 @@ from .models import \
     EquipmentInstance
 
 
-class EquipmentGeneralTypeAutoComplete(Select2QuerySetView):
+class EquipmentGeneralTypeAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentGeneralType-AutoComplete'
 
     def get_queryset(self):
@@ -24,7 +24,7 @@ class EquipmentGeneralTypeAutoComplete(Select2QuerySetView):
             return EquipmentGeneralType.objects.none()
 
 
-class EquipmentDataFieldAutoComplete(Select2QuerySetView):
+class EquipmentDataFieldAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentDataField-AutoComplete'
 
     def get_queryset(self):
@@ -39,7 +39,7 @@ class EquipmentDataFieldAutoComplete(Select2QuerySetView):
             return EquipmentDataField.objects.none()
 
 
-class EquipmentUniqueTypeGroupAutoComplete(Select2QuerySetView):
+class EquipmentUniqueTypeGroupAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentUniqueTypeGroup-AutoComplete'
 
     def get_queryset(self):
@@ -54,7 +54,7 @@ class EquipmentUniqueTypeGroupAutoComplete(Select2QuerySetView):
             return EquipmentUniqueTypeGroup.objects.none()
 
 
-class EquipmentUniqueTypeAutoComplete(Select2QuerySetView):
+class EquipmentUniqueTypeAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentUniqueType-AutoComplete'
 
     def get_queryset(self):
@@ -69,7 +69,7 @@ class EquipmentUniqueTypeAutoComplete(Select2QuerySetView):
             return EquipmentUniqueType.objects.none()
 
 
-class EquipmentFacilityAutoComplete(Select2QuerySetView):
+class EquipmentFacilityAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentFacility-AutoComplete'
 
     def get_queryset(self):
@@ -84,7 +84,7 @@ class EquipmentFacilityAutoComplete(Select2QuerySetView):
             return EquipmentFacility.objects.none()
 
 
-class EquipmentInstanceAutoComplete(Select2QuerySetView):
+class EquipmentInstanceAutoComplete(autocomplete.Select2QuerySetView):
     name = 'EquipmentInstance-AutoComplete'
 
     def get_queryset(self):
