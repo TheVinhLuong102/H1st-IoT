@@ -1,6 +1,6 @@
 from django.forms import ModelChoiceField, ModelMultipleChoiceField
 
-from dal.autocomplete import FutureModelForm, ModelSelect2, ModelSelect2Multiple
+from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomplete AS THEY CHANGE BETWEEN VERSIONS ***
 
 from .autocompletes import \
     EquipmentGeneralTypeAutoComplete, \
@@ -17,7 +17,7 @@ from .models import \
     EquipmentSystem
 
 
-class EquipmentDataFieldForm(FutureModelForm):
+class EquipmentDataFieldForm(autocomplete.FutureModelForm):
     equipment_unique_types = \
         ModelMultipleChoiceField(
             queryset=
@@ -26,7 +26,7 @@ class EquipmentDataFieldForm(FutureModelForm):
                     'equipment_general_type'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -37,7 +37,7 @@ class EquipmentDataFieldForm(FutureModelForm):
         fields = '__all__'
 
 
-class EquipmentUniqueTypeGroupForm(FutureModelForm):
+class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
     equipment_unique_types = \
         ModelMultipleChoiceField(
             queryset=
@@ -46,7 +46,7 @@ class EquipmentUniqueTypeGroupForm(FutureModelForm):
                     'equipment_general_type'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -57,7 +57,7 @@ class EquipmentUniqueTypeGroupForm(FutureModelForm):
         fields = '__all__'
 
 
-class EquipmentUniqueTypeForm(FutureModelForm):
+class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
     data_fields = \
         ModelMultipleChoiceField(
             queryset=
@@ -69,7 +69,7 @@ class EquipmentUniqueTypeForm(FutureModelForm):
                     'numeric_measurement_unit'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -82,7 +82,7 @@ class EquipmentUniqueTypeForm(FutureModelForm):
                     'equipment_general_type'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentUniqueTypeGroupAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -93,7 +93,7 @@ class EquipmentUniqueTypeForm(FutureModelForm):
         fields = '__all__'
 
 
-class EquipmentInstanceForm(FutureModelForm):
+class EquipmentInstanceForm(autocomplete.FutureModelForm):
     equipment_unique_type = \
         ModelChoiceField(
             queryset=
@@ -102,7 +102,7 @@ class EquipmentInstanceForm(FutureModelForm):
                     'equipment_general_type'),
 
             widget=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentUniqueTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -114,17 +114,17 @@ class EquipmentInstanceForm(FutureModelForm):
 
         widgets = dict(
             equipment_general_type=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentGeneralTypeAutoComplete.name),
 
             equipment_facility=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
 
-class EquipmentSystemForm(FutureModelForm):
+class EquipmentSystemForm(autocomplete.FutureModelForm):
     equipment_instances = \
         ModelMultipleChoiceField(
             queryset=
@@ -135,7 +135,7 @@ class EquipmentSystemForm(FutureModelForm):
                     'equipment_facility'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentInstanceAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -147,7 +147,7 @@ class EquipmentSystemForm(FutureModelForm):
 
         widgets = dict(
             equipment_facility=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))

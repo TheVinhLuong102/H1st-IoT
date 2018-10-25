@@ -1,6 +1,6 @@
 from django.forms import ModelChoiceField, ModelMultipleChoiceField
 
-from dal.autocomplete import FutureModelForm, ModelSelect2, ModelSelect2Multiple
+from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomplete AS THEY CHANGE BETWEEN VERSIONS ***
 
 from .autocompletes import \
     EquipmentProblemTypeAutoComplete, \
@@ -17,7 +17,7 @@ from ..base.models import \
     EquipmentInstance
 
 
-class EquipmentUniqueTypeGroupServiceConfigForm(FutureModelForm):
+class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
     global_excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
             queryset=
@@ -29,7 +29,7 @@ class EquipmentUniqueTypeGroupServiceConfigForm(FutureModelForm):
                     'numeric_measurement_unit'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -40,7 +40,7 @@ class EquipmentUniqueTypeGroupServiceConfigForm(FutureModelForm):
         fields = '__all__'
 
 
-class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(FutureModelForm):
+class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureModelForm):
     monitored_equipment_data_field = \
         ModelChoiceField(
             queryset=
@@ -52,7 +52,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(FutureModelForm):
                     'numeric_measurement_unit'),
 
             widget=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -68,7 +68,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(FutureModelForm):
                     'numeric_measurement_unit'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -79,7 +79,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(FutureModelForm):
         fields = '__all__'
 
 
-class EquipmentProblemDiagnosisForm(FutureModelForm):
+class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
     equipment_instance = \
         ModelChoiceField(
             queryset=
@@ -90,7 +90,7 @@ class EquipmentProblemDiagnosisForm(FutureModelForm):
                     'equipment_facility'),
 
             widget=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -112,13 +112,13 @@ class EquipmentProblemDiagnosisForm(FutureModelForm):
 
         widgets = dict(
             equipment_problem_types=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentProblemTypeAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
 
 
-class AlertForm(FutureModelForm):
+class AlertForm(autocomplete.FutureModelForm):
     equipment_instance = \
         ModelChoiceField(
             queryset=
@@ -129,7 +129,7 @@ class AlertForm(FutureModelForm):
                     'equipment_facility'),
 
             widget=
-                ModelSelect2(
+                autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
@@ -145,7 +145,7 @@ class AlertForm(FutureModelForm):
                     'equipment_problem_types'),
 
             widget=
-                ModelSelect2Multiple(
+                autocomplete.ModelSelect2Multiple(
                     url=EquipmentProblemDiagnosisAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}))
