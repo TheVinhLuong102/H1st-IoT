@@ -1,6 +1,6 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
 from django.db.models import Prefetch
-from django.db.models.query import prefetch_related_objects
+from django.forms import BaseInlineFormSet, inlineformset_factory
 
 from silk.profiling.profiler import silk_profile
 
@@ -265,6 +265,16 @@ site.register(
     admin_class=EquipmentUniqueTypeAdmin)
 
 
+class EquipmentInstanceInLineFormSet(BaseInlineFormSet):
+    model = EquipmentInstance
+
+    # def get_queryset(self):
+    #     return super(EquipmentInstanceInLineFormSet, self).get_queryset() \
+    #         .select_related(
+    #             'equipment_general_type',
+    #             'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
+
+
 class EquipmentInstanceTabularInline(TabularInline):
     model = EquipmentInstance
 
@@ -275,6 +285,8 @@ class EquipmentInstanceTabularInline(TabularInline):
         # 'last_updated' cannot be specified for EquipmentInstance model form as it is a non-editable field
 
     form = EquipmentInstanceForm
+
+    formset = EquipmentInstanceInLineFormSet
 
     extra = 0
 
@@ -303,13 +315,7 @@ class EquipmentFacilityAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super(EquipmentFacilityAdmin, self).get_queryset(request=request) \
             .prefetch_related(
-                Prefetch(
-                    lookup='equipment_instances',
-                    queryset=
-                        EquipmentInstance.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_unique_type', 'equipment_unique_type__equipment_general_type')))
+                'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, request, extra_context=None):
