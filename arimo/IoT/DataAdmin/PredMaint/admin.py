@@ -143,7 +143,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         if equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.count()
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
-                    obj.equipment_unique_type_group_monitored_data_field_configs
+                    obj.equipment_unique_type_group_monitored_data_field_configs.all()
                 if equipment_unique_type_group_monitored_data_field_config.active
                     # ^^^ USE ABOVE "IF" STATEMENT INSTEAD OF .filter(active=True) TO AVOID VOIDING THE CACHED PREFETCHED DATA ^^^
             ),
