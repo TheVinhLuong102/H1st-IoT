@@ -1,5 +1,6 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
-from django.db.models import Prefetch
+from django.db.models.aggregates import Count
+from django.db.models.query import Prefetch
 from django.forms import BaseInlineFormSet, inlineformset_factory
 
 from silk.profiling.profiler import silk_profile
@@ -149,6 +150,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'name', \
         'equipment_unique_type_names', \
         'n_equipment_data_fields', \
+        'n_equipment_instances', \
         'last_updated'
 
     list_filter = 'equipment_general_type__name',
@@ -165,20 +167,35 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     readonly_fields = 'equipment_data_fields',
 
-    def n_equipment_data_fields(self, obj):
-        return obj.equipment_data_fields.count()
-
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_unique_type_names(self, obj):
         return ', '.join(equipment_unique_type.name
                          for equipment_unique_type in obj.equipment_unique_types.all())
+
+    def n_equipment_data_fields(self, obj):
+        return obj.equipment_data_fields.count()
+
+    def n_equipment_instances(self, obj):
+        return sum(i['n_equipment_instances']
+                   for i in obj.equipment_unique_types.annotate(n_equipment_instances=Count('equipment_instance')).values('n_equipment_instances')) \
+            if obj.equipment_unique_types.count() \
+          else 0
 
     def get_queryset(self, request):
         return super(EquipmentUniqueTypeGroupAdmin, self).get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
-                'equipment_unique_types',
+                Prefetch(
+                    'equipment_unique_types',
+                    # queryset=
+                    #     EquipmentUniqueType.objects
+                    #     .prefetch_related(
+                    #         'equipment_instances')
+                ),
+
+                # 'equipment_unique_types__equipment_instances',
+
                 Prefetch(
                     lookup='equipment_data_fields',
                     queryset=
@@ -214,6 +231,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'n_equipment_data_fields', \
+        'n_equipment_instances', \
         'equipment_unique_type_groups', \
         'last_updated'
 
@@ -232,6 +250,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     def n_equipment_data_fields(self, obj):
         return obj.data_fields.count()
 
+    def n_equipment_instances(self, obj):
+        return obj.equipment_instances.count()
+
     # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_unique_type_groups(self, obj):
         return ', '.join(equipment_unique_type_group.name
@@ -243,6 +264,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                 'equipment_general_type') \
             .prefetch_related(
                 'data_fields',
+                'equipment_instances',
                 'groups')
 
     @silk_profile(name='Admin: Equipment Unique Types')
