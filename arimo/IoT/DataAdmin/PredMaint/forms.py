@@ -27,12 +27,12 @@ class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
                     'equipment_data_field_type',
                     'data_type',
                     'numeric_measurement_unit'),
-
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                           'data-minimum-input-length': 1}),
+            required=False)
 
     class Meta:
         model = EquipmentUniqueTypeGroupServiceConfig
@@ -50,12 +50,12 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
                     'equipment_data_field_type',
                     'data_type',
                     'numeric_measurement_unit'),
-
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                           'data-minimum-input-length': 1}),
+            required=True)
 
     excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
@@ -66,12 +66,12 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
                     'equipment_data_field_type',
                     'data_type',
                     'numeric_measurement_unit'),
-
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                           'data-minimum-input-length': 1}),
+            required=False)
 
     class Meta:
         model = EquipmentUniqueTypeGroupMonitoredDataFieldConfig
@@ -88,22 +88,12 @@ class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
                     'equipment_general_type',
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
                     'equipment_facility'),
-
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
-
-    alerts = \
-        ModelMultipleChoiceField(
-            queryset=
-                Alert.objects
-                .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_instance', 'equipment_instance__equipment_general_type',
-                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
-                    'diagnosis_status'))
+                           'data-minimum-input-length': 1}),
+            required=True)
 
     class Meta:
         model = EquipmentProblemDiagnosis
@@ -119,21 +109,6 @@ class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
 
 
 class AlertForm(autocomplete.FutureModelForm):
-    equipment_instance = \
-        ModelChoiceField(
-            queryset=
-                EquipmentInstance.objects
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-                    'equipment_facility'),
-
-            widget=
-                autocomplete.ModelSelect2(
-                    url=EquipmentInstanceAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
-
     equipment_problem_diagnoses = \
         ModelMultipleChoiceField(
             queryset=
@@ -143,12 +118,12 @@ class AlertForm(autocomplete.FutureModelForm):
                     'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type')
                 .prefetch_related(
                     'equipment_problem_types'),
-
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentProblemDiagnosisAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                           'data-minimum-input-length': 1}),
+            required=False)
 
     class Meta:
         model = Alert

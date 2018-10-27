@@ -538,7 +538,7 @@ class Project(object):
         return adf
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
-        from arimo.data.spark_from_files import S3ParquetDistributedDataFrame
+        from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
         from arimo.util.types.spark_sql import _DATE_TYPE
 
