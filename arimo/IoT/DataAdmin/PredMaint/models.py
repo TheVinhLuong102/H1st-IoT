@@ -736,7 +736,7 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.save()
             
-        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (Last: {:,.1f}) (based on {} > {}) for {:,} Days'.format(
+        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (Last: {:,.1f}) (based on {} > {}) for {:,} Day(s)'.format(
                 self.diagnosis_status.name.upper(),
                 'ONGOING '
                     if self.ongoing
