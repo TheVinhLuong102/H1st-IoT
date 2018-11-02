@@ -45,6 +45,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         '-n_distinct_values'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'to_date', \
         'equipment_data_field__name'
@@ -57,6 +58,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
 
@@ -137,6 +139,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'active'
 
@@ -144,7 +147,9 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     show_full_result_count = False   # too many
 
-    search_fields = 'equipment_unique_type_group__name',
+    search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
+        'equipment_unique_type_group__name',
 
     form = EquipmentUniqueTypeGroupServiceConfigForm
 
@@ -218,17 +223,20 @@ class BlueprintAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'trained_to_date', \
         'timestamp', \
         'active'
 
     list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
+        'equipment_unique_type_group', \
+        'equipment_unique_type_group__equipment_general_type'
 
     show_full_result_count = False   # too many
 
     search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'uuid'
 
@@ -272,6 +280,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'last_updated'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'trained_to_date'
 
@@ -283,6 +292,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
     show_full_result_count = False   # too many
 
     search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
 
@@ -327,6 +337,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'risk_score_name', \
         'date'
@@ -347,6 +358,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
@@ -412,6 +424,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'last_updated'
 
     list_filter = \
+        'equipment_instance__equipment_general_type__name', \
         'ongoing', \
         'from_date', \
         'to_date', \
@@ -498,6 +511,7 @@ class AlertAdmin(ModelAdmin):
         'diagnosis_status'
 
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'risk_score_name', \
         'threshold', \
@@ -510,6 +524,7 @@ class AlertAdmin(ModelAdmin):
     show_full_result_count = False   # too many
 
     search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
