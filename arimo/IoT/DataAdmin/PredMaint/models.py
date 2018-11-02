@@ -561,6 +561,9 @@ def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
 
+    alerts.update(
+        has_associated_equipment_problem_diagnoses=True)
+
     EquipmentProblemDiagnosis.objects.filter(pk=instance.pk).update(
         has_equipment_problems=bool(instance.equipment_problem_types.count()),
         has_associated_alerts=bool(alerts.count()))
@@ -782,6 +785,9 @@ def alert_post_save(sender, instance, *args, **kwargs):
         equipment_problem_diagnoses,
         # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
         clear=False)
+
+    equipment_problem_diagnoses.update(
+        has_associated_alerts=True)
 
     Alert.objects.filter(pk=instance.pk).update(
         has_associated_equipment_problem_diagnoses=bool(equipment_problem_diagnoses.count()))
