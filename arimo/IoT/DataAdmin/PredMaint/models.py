@@ -520,17 +520,20 @@ class EquipmentProblemPeriod(Model):
 
     def __str__(self):
         return 'EqInst #{} from {} to {}{}: {}{}'.format(
-            self.equipment_instance.name,
-            self.from_date,
-            self.to_date,
-            ' ONGOING'
-                if self.ongoing
-                else '',
-            ', '.join(equipment_problem_type.name.upper()
-                      for equipment_problem_type in self.equipment_problem_types.all()),
-            ' (DISMISSED)'
-                if self.dismissed
-                else '')
+                self.equipment_instance.name,
+                self.from_date,
+                self.to_date,
+                ' (ONGOING)'
+                    if self.ongoing
+                    else '',
+                ': {}'.format(
+                    ', '.join(equipment_problem_type.name.upper()
+                              for equipment_problem_type in self.equipment_problem_types.all()))
+                    if self.equipment_problem_types.count()
+                    else '',
+                ' (DISMISSED)'
+                    if self.dismissed
+                    else '')
 
     def save(self, *args, **kwargs):
         self.date_range = \
