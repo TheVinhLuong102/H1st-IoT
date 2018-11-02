@@ -262,9 +262,10 @@ class AlertSerializer(ModelSerializer):
 
     diagnosis_status = \
         SlugRelatedField(
-            read_only=True,
+            queryset=AlertDiagnosisStatus.objects.all(), read_only=False,
             slug_field='name',
-            many=False)
+            many=False,
+            required=False)
 
     equipment_problem_diagnoses = \
         EquipmentProblemDiagnosisShortFormRelatedField(
