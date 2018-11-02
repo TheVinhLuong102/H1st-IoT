@@ -529,7 +529,7 @@ class EquipmentProblemPeriod(Model):
                 ': {}'.format(
                     ', '.join(equipment_problem_type.name.upper()
                               for equipment_problem_type in self.equipment_problem_types.all()))
-                    if self.equipment_problem_types.count()
+                    if self.equipment_problem_types.count() > 0
                     else '',
                 ' (DISMISSED)'
                     if self.dismissed
