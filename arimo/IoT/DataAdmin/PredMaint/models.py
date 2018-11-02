@@ -12,7 +12,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from psycopg2.extras import DateRange
 
 from ..base.models import \
-    EquipmentGeneralType, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentInstance
