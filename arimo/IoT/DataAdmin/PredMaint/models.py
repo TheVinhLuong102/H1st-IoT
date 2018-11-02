@@ -519,8 +519,8 @@ class EquipmentProblemPeriod(Model):
             'dismissed'
 
     def __str__(self):
-        return 'EqInst #{} from {} to {}{}: {}{}'.format(
-                self.equipment_instance.name,
+        return '{} from {} to {}{}: {}{}'.format(
+                self.equipment_instance,
                 self.from_date,
                 self.to_date,
                 ' (ONGOING)'
