@@ -519,7 +519,7 @@ class EquipmentProblemPeriod(Model):
             'dismissed'
 
     def __str__(self):
-        return '{} from {} to {}{}: {}{}'.format(
+        return '{} from {} to {}{}{}{}'.format(
                 self.equipment_instance,
                 self.from_date,
                 self.to_date,
@@ -529,7 +529,7 @@ class EquipmentProblemPeriod(Model):
                 ': {}'.format(
                     ', '.join(equipment_problem_type.name.upper()
                               for equipment_problem_type in self.equipment_problem_types.all()))
-                    if self.equipment_problem_types.count() > 0
+                    if self.equipment_problem_types.count()
                     else '',
                 ' (DISMISSED)'
                     if self.dismissed
