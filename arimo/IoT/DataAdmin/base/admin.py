@@ -20,6 +20,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
+    EquipmentInstanceDataFieldDailyAggregate, \
     EquipmentSystem
 
 
@@ -405,6 +406,62 @@ class EquipmentInstanceAdmin(ModelAdmin):
 site.register(
     EquipmentInstance,
     admin_class=EquipmentInstanceAdmin)
+
+
+class EquipmentInstanceDataFieldDailyAggregateAdmin(ModelAdmin):
+    list_display = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'daily_count', \
+        'daily_distinct_value_counts', \
+        'daily_min', \
+        'daily_quartile', \
+        'daily_median', \
+        'daily_mean', \
+        'daily_3rd_quartile', \
+        'daily_max'
+
+    list_select_related = \
+        'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type', \
+        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
+                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
+
+    show_full_result_count = False   # too many
+
+    search_fields = \
+        'equipment_instance__name', \
+        'equipment_data_field__name'
+
+    readonly_fields = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'daily_count', \
+        'daily_distinct_value_counts', \
+        'daily_min', \
+        'daily_quartile', \
+        'daily_median', \
+        'daily_mean', \
+        'daily_3rd_quartile', \
+        'daily_max'
+
+    @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregates')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentInstanceDataFieldDailyAggregateAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregate')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentInstanceDataFieldDailyAggregateAdmin, self).changeform_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
+
+site.register(
+    EquipmentInstanceDataFieldDailyAggregate,
+    admin_class=EquipmentInstanceDataFieldDailyAggregateAdmin)
 
 
 class EquipmentSystemAdmin(ModelAdmin):

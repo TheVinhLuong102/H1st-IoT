@@ -1,8 +1,9 @@
 from django.db.models import \
     Model, \
-    CharField, DateField, DateTimeField, FloatField, URLField, \
+    CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
     ForeignKey, ManyToManyField, \
     PROTECT
+from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -473,6 +474,87 @@ class EquipmentInstance(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         return super(EquipmentInstance, self).save(*args, **kwargs)
+
+
+class EquipmentInstanceDataFieldDailyAggregate(Model):
+    RELATED_NAME = 'equipment_instance_data_field_daily_aggregates'
+    RELATED_QUERY_NAME = 'equipment_instance_data_field_daily_aggregate'
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_now_add=False)
+
+    daily_count = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
+    daily_distinct_value_counts = \
+        JSONField(
+            default=dict,
+            encoder=None)
+
+    daily_min = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    daily_quartile = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    daily_median = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    daily_mean = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    daily_3rd_quartile = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    daily_max = \
+        FloatField(
+            blank=True,
+            null=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = \
+            'equipment_instance', \
+            'equipment_data_field', \
+            'date'
 
 
 @python_2_unicode_compatible
