@@ -74,6 +74,16 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
 
     filter_class = EquipmentUniqueTypeGroupDataFieldProfileFilter
 
+    ordering_fields = \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        'to_date'
+
+    ordering = \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        '-to_date'
+
     pagination_class = LimitOffsetPagination
 
     @silk_profile(name='REST API: Equipment Unique Type Group Data Field Profiles')
@@ -135,6 +145,14 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
 
     filter_class = EquipmentUniqueTypeGroupServiceConfigFilter
 
+    ordering_fields = \
+        'active', \
+        'equipment_unique_type_group'
+
+    ordering = \
+        '-active', \
+        'equipment_unique_type_group'
+
     pagination_class = None
 
     renderer_classes = \
@@ -183,6 +201,16 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     filter_class = BlueprintFilter
 
+    ordering_fields = \
+        'equipment_unique_type_group', \
+        'trained_to_date', \
+        'timestamp'
+
+    ordering = \
+        'equipment_unique_type_group', \
+        '-trained_to_date', \
+        '-timestamp'
+
     pagination_class = LimitOffsetPagination
 
     @silk_profile(name='REST API: Blueprints')
@@ -219,6 +247,16 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
     permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter
+
+    ordering_fields = \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        'trained_to_date'
+
+    ordering = \
+        'equipment_unique_type_group', \
+        'equipment_data_field', \
+        '-trained_to_date'
 
     pagination_class = LimitOffsetPagination
 
@@ -260,6 +298,18 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     permission_classes = IsAuthenticated,
 
     filter_class = EquipmentInstanceDailyRiskScoreFilter
+
+    ordering_fields = \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        'date'
+
+    ordering = \
+        'equipment_unique_type_group', \
+        'equipment_instance', \
+        'risk_score_name', \
+        '-date'
 
     pagination_class = LimitOffsetPagination
 
@@ -318,6 +368,10 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     filter_class = EquipmentProblemTypeFilter
 
+    ordering_fields = 'name',
+
+    ordering = 'name',
+
     pagination_class = None
 
     @silk_profile(name='REST API: Equipment Problem Types')
@@ -361,6 +415,20 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
 
     filter_class = EquipmentProblemDiagnosisFilter
 
+    ordering_fields = \
+        'ongoing', \
+        'from_date', \
+        'to_date', \
+        'equipment_instance', \
+        'dismissed'
+
+    ordering = \
+        '-ongoing', \
+        '-from_date', \
+        '-to_date', \
+        'equipment_instance', \
+        'dismissed'
+
     pagination_class = LimitOffsetPagination
 
     @silk_profile(name='REST API: Equipment Problem Diagnoses')
@@ -401,6 +469,10 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
         JSONRenderer
 
     filter_class = AlertDiagnosisStatusFilter
+
+    ordering_fields = 'index',
+
+    ordering = 'index',
 
     pagination_class = None
 
@@ -453,6 +525,20 @@ class AlertViewSet(ReadOnlyModelViewSet):
         JSONRenderer
 
     filter_class = AlertFilter
+
+    ordering_fields = \
+        'diagnosis_status', \
+        'ongoing', \
+        'risk_score_name', \
+        'threshold', \
+        'cumulative_excess_risk_score'
+
+    ordering = \
+        'diagnosis_status', \
+        '-ongoing', \
+        'risk_score_name', \
+        '-threshold', \
+        '-cumulative_excess_risk_score'
 
     pagination_class = LimitOffsetPagination
 

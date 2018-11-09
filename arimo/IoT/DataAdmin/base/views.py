@@ -61,7 +61,7 @@ from .serializers import \
 class DataTypeViewSet(ReadOnlyModelViewSet):
     """
     list:
-    `GET` an unfiltered, unpaginated list of 2 Data Types named "cat" and "num"
+    `GET` an filterable, unpaginated list of 2 Data Types named "cat" and "num"
 
     retrieve:
     `GET` the Data Type specified by `name` "cat" or "num"
@@ -82,7 +82,13 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'data_type_name___cat_or_num'
 
-    filter_class = pagination_class = None
+    filter_class = DataTypeFilter
+
+    ordering_fields = 'name',
+
+    ordering = 'name',
+
+    pagination_class = None
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -135,6 +141,10 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
     filter_class = NumericMeasurementUnitFilter
 
+    ordering_fields = 'name',
+
+    ordering = 'name',
+
     pagination_class = None
 
     renderer_classes = \
@@ -174,7 +184,13 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
     lookup_url_kwarg = 'equipment_data_field_type_name___control_or_measure'
 
-    filter_class = pagination_class = None
+    filter_class = EquipmentDataFieldTypeFilter
+
+    ordering_fields = 'name',
+
+    ordering = 'name',
+
+    pagination_class = None
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -226,6 +242,10 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     lookup_url_kwarg = 'equipment_general_type_name'
 
     filter_class = EquipmentGeneralTypeFilter
+
+    ordering_fields = 'name',
+
+    ordering = 'name',
 
     pagination_class = None
 
@@ -288,6 +308,16 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     permission_classes = IsAuthenticated,
 
     filter_class = EquipmentDataFieldFilter
+
+    ordering_fields = \
+        'equipment_general_type', \
+        'equipment_data_field_type', \
+        'name'
+
+    ordering = \
+        'equipment_general_type', \
+        'equipment_data_field_type', \
+        'name'
 
     pagination_class = None
 
@@ -359,6 +389,14 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     filter_class = EquipmentUniqueTypeGroupFilter
 
+    ordering_fields = \
+        'equipment_general_type', \
+        'name'
+
+    ordering = \
+        'equipment_general_type', \
+        'name'
+
     pagination_class = None
 
     renderer_classes = \
@@ -425,6 +463,14 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
 
     filter_class = EquipmentUniqueTypeFilter
 
+    ordering_fields = \
+        'equipment_general_type', \
+        'name'
+
+    ordering = \
+        'equipment_general_type', \
+        'name'
+
     pagination_class = None
 
     renderer_classes = \
@@ -480,6 +526,10 @@ class EquipmentFacilityViewSet(ModelViewSet):
     lookup_url_kwarg = 'equipment_facility_name'
 
     filter_class = EquipmentFacilityFilter
+
+    ordering_fields = 'name',
+
+    ordering = 'name',
 
     pagination_class = LimitOffsetPagination
 
@@ -539,6 +589,16 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     filter_class = EquipmentInstanceFilter
 
+    ordering_fields = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'name'
+
+    ordering = \
+        'equipment_general_type', \
+        'equipment_unique_type', \
+        'name'
+
     pagination_class = LimitOffsetPagination
 
     renderer_classes = \
@@ -592,6 +652,16 @@ class EquipmentSystemViewSet(ModelViewSet):
     permission_classes = IsAuthenticated,
 
     filter_class = EquipmentSystemFilter
+
+    ordering_fields = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'date'
+
+    ordering = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'date'
 
     pagination_class = LimitOffsetPagination
 

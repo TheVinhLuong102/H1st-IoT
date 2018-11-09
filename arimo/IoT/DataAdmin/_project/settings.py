@@ -194,6 +194,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 
     'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.OrderingFilter',
         'rest_framework_filters.backends.ComplexFilterBackend'   # RestFrameworkFilterBackend
     ]
     if six.PY3
