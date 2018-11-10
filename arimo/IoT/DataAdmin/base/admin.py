@@ -412,8 +412,8 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
         'equipment_data_field', \
+        'date', \
         'daily_count', \
-        'daily_distinct_value_counts', \
         'daily_min', \
         'daily_quartile', \
         'daily_median', \
@@ -435,6 +435,7 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
     readonly_fields = \
         'equipment_instance', \
         'equipment_data_field', \
+        'date', \
         'daily_count', \
         'daily_distinct_value_counts', \
         'daily_min', \
