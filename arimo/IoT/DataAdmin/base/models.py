@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
+    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
@@ -501,9 +501,12 @@ class EquipmentInstance(Model):
         return super(EquipmentInstance, self).save(*args, **kwargs)
 
 
-class EquipmentInstanceDataFieldDailyAggregate(Model):
-    RELATED_NAME = 'equipment_instance_data_field_daily_aggregates'
-    RELATED_QUERY_NAME = 'equipment_instance_data_field_daily_aggregate'
+class EquipmentInstanceDataFieldDailyAgg(Model):
+    RELATED_NAME = 'equipment_instance_data_field_daily_aggs'
+    RELATED_QUERY_NAME = 'equipment_instance_data_field_daily_agg'
+
+    id = BigAutoField(
+            primary_key=True)
 
     equipment_instance = \
         ForeignKey(

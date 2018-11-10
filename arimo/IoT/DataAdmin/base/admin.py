@@ -20,7 +20,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
-    EquipmentInstanceDataFieldDailyAggregate, \
+    EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
 
 
@@ -408,7 +408,7 @@ site.register(
     admin_class=EquipmentInstanceAdmin)
 
 
-class EquipmentInstanceDataFieldDailyAggregateAdmin(ModelAdmin):
+class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
         'equipment_data_field', \
@@ -446,13 +446,13 @@ class EquipmentInstanceDataFieldDailyAggregateAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregates')
     def changelist_view(self, request, extra_context=None):
-        return super(EquipmentInstanceDataFieldDailyAggregateAdmin, self).changelist_view(
+        return super(EquipmentInstanceDataFieldDailyAggAdmin, self).changelist_view(
                 request=request,
                 extra_context=extra_context)
 
     @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregate')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentInstanceDataFieldDailyAggregateAdmin, self).changeform_view(
+        return super(EquipmentInstanceDataFieldDailyAggAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -460,8 +460,8 @@ class EquipmentInstanceDataFieldDailyAggregateAdmin(ModelAdmin):
 
 
 site.register(
-    EquipmentInstanceDataFieldDailyAggregate,
-    admin_class=EquipmentInstanceDataFieldDailyAggregateAdmin)
+    EquipmentInstanceDataFieldDailyAgg,
+    admin_class=EquipmentInstanceDataFieldDailyAggAdmin)
 
 
 class EquipmentSystemAdmin(ModelAdmin):

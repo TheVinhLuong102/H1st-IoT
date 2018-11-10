@@ -79,7 +79,7 @@ class Project(object):
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, NumericMeasurementUnit, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
-            EquipmentFacility, EquipmentInstance, EquipmentSystem
+            EquipmentFacility, EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, EquipmentSystem
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
@@ -101,6 +101,7 @@ class Project(object):
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
                 EquipmentFacilities=EquipmentFacility.objects,
                 EquipmentInstances=EquipmentInstance.objects,
+                EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
                 EquipmentSystems=EquipmentSystem.objects,
 
                 EquipmentUniqueTypeGroupDataFieldProfiles=
