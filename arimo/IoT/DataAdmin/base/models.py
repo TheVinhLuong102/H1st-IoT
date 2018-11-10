@@ -549,7 +549,7 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             blank=True,
             null=True)
 
-    daily_ourlier_rst_min = \
+    daily_outlier_rst_min = \
         FloatField(
             blank=True,
             null=True)
@@ -574,7 +574,7 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             blank=True,
             null=True)
 
-    daily_ourlier_rst_max = \
+    daily_outlier_rst_max = \
         FloatField(
             blank=True,
             null=True)
