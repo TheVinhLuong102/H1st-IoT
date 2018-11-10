@@ -226,6 +226,19 @@ class EquipmentDataField(Model):
         return super(EquipmentDataField, self).save(*args, **kwargs)
 
 
+def equipment_data_field_post_save(sender, instance, *args, **kwargs):
+    for equipment_unique_type in instance.equipment_unique_types.all():
+        for equipment_unique_type_group in equipment_unique_type.groups.all():
+            equipment_unique_type_group.save()
+
+
+post_save.connect(
+    receiver=equipment_data_field_post_save,
+    sender=EquipmentDataField,
+    weak=True,
+    dispatch_uid=None)
+
+
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroup(Model):
     RELATED_NAME = 'equipment_unique_type_groups'
@@ -363,6 +376,18 @@ class EquipmentUniqueType(Model):
             equipment_unique_type_group.save()
 
         return result
+
+
+def equipment_unique_type_post_save(sender, instance, *args, **kwargs):
+    for equipment_unique_type_group in instance.groups.all():
+        equipment_unique_type_group.save()
+
+
+post_save.connect(
+    receiver=equipment_unique_type_post_save,
+    sender=EquipmentUniqueType,
+    weak=True,
+    dispatch_uid=None)
 
 
 @python_2_unicode_compatible
