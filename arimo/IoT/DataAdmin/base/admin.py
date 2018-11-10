@@ -415,10 +415,12 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
         'date', \
         'daily_count', \
         'daily_min', \
+        'daily_outlier_rst_min', \
         'daily_quartile', \
         'daily_median', \
         'daily_mean', \
         'daily_3rd_quartile', \
+        'daily_ourlier_rst_max', \
         'daily_max'
 
     list_select_related = \
@@ -439,10 +441,12 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
         'daily_count', \
         'daily_distinct_value_counts', \
         'daily_min', \
+        'daily_outlier_rst_min', \
         'daily_quartile', \
         'daily_median', \
         'daily_mean', \
         'daily_3rd_quartile', \
+        'daily_ourlier_rst_max', \
         'daily_max'
 
     @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregates')
