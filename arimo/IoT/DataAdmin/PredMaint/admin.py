@@ -30,6 +30,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'to_date', \
         'valid_proportion', \
         'n_distinct_values', \
+        'distinct_values', \
         'sample_min', \
         'outlier_rst_min', \
         'sample_quartile', \
