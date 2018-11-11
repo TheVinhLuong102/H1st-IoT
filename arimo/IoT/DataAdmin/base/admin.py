@@ -414,6 +414,7 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
         'equipment_data_field', \
         'date', \
         'daily_count', \
+        'daily_distinct_value_counts', \
         'daily_min', \
         'daily_outlier_rst_min', \
         'daily_quartile', \
