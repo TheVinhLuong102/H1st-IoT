@@ -157,6 +157,15 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             'last_updated'
 
 
+class EquipmentUniqueTypeGroupSlugRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        return EquipmentUniqueTypeGroup.objects.get(
+                name=clean_lower_str(data['name']))[0]
+
+    def to_representation(self, value):
+        return value.name
+
+
 class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
@@ -172,9 +181,8 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             required=False)
 
     groups = \
-        SlugRelatedField(
+        EquipmentUniqueTypeGroupSlugRelatedField(
             queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
-            slug_field='name',
             many=True,
             required=False)
 
