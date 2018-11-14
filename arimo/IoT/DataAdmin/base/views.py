@@ -447,12 +447,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
                     .select_related(
                         'equipment_general_type',
                         'equipment_data_field_type')),
-            Prefetch(
-                lookup='groups',
-                queryset=
-                    EquipmentUniqueTypeGroup.objects
-                    .select_related(
-                        'equipment_general_type')))
+            'groups')
 
     serializer_class = EquipmentUniqueTypeSerializer
 
