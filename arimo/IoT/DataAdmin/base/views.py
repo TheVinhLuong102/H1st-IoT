@@ -33,6 +33,7 @@ from .filters import \
     EquipmentUniqueTypeFilter, \
     EquipmentFacilityFilter, \
     EquipmentInstanceFilter, \
+    EquipmentInstanceDataFieldDailyAggFilter, \
     EquipmentSystemFilter
 from .models import \
     DataType, \
@@ -44,6 +45,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
+    EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
 from .serializers import \
     DataTypeSerializer, \
@@ -55,6 +57,7 @@ from .serializers import \
     EquipmentUniqueTypeSerializer, \
     EquipmentFacilitySerializer, \
     EquipmentInstanceSerializer, \
+    EquipmentInstanceDataFieldDailyAggSerializer, \
     EquipmentSystemSerializer
 
 
@@ -612,6 +615,57 @@ class EquipmentInstanceViewSet(ModelViewSet):
     @silk_profile(name='REST API: Equipment Instance')
     def retrieve(self, request, *args, **kwargs):
         return super(EquipmentInstanceViewSet, self).retrieve(request, *args, **kwargs)
+
+
+class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` a filterable, paginated list of Equipment Instance Data Field Daily Aggs
+
+    retrieve:
+    `GET` the Equipment Instance Data Field Daily Agg specified by `id`
+    """
+    queryset = \
+        EquipmentInstanceDataFieldDailyAgg.objects \
+        .select_related(
+            'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
+
+    serializer_class = EquipmentInstanceDataFieldDailyAggSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    filter_class = EquipmentInstanceDataFieldDailyAggFilter
+
+    ordering_fields = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'date'
+
+    ordering = \
+        'equipment_instance', \
+        'equipment_data_field', \
+        'date'
+
+    pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggs')
+    def list(self, request, *args, **kwargs):
+        return super(EquipmentInstanceDataFieldDailyAggViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Equipment Instance Data Field Daily Agg')
+    def retrieve(self, request, *args, **kwargs):
+        return super(EquipmentInstanceDataFieldDailyAggViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class EquipmentSystemViewSet(ModelViewSet):

@@ -15,6 +15,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
+    EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
 from ..util import clean_lower_str
 
@@ -235,6 +236,38 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             'equipment_unique_type', \
             'equipment_facility', \
             'name', \
+            'last_updated'
+
+
+class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
+    equipment_instance = \
+        SlugRelatedField(
+            read_only=True,
+            slug_field='name',
+            many=False)
+
+    equipment_data_field = \
+        EquipmentDataFieldShortFormRelatedField(
+            read_only=True,
+            many=False)
+
+    class Meta:
+        model = EquipmentInstanceDataFieldDailyAgg
+
+        fields = \
+            'equipment_instance', \
+            'equipment_data_field', \
+            'date', \
+            'daily_count', \
+            'daily_distinct_value_counts', \
+            'daily_min', \
+            'daily_outlier_rst_min', \
+            'daily_quartile', \
+            'daily_median', \
+            'daily_mean', \
+            'daily_3rd_quartile', \
+            'daily_outlier_rst_max', \
+            'daily_max', \
             'last_updated'
 
 

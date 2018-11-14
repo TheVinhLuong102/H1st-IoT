@@ -19,6 +19,7 @@ from .views import \
     EquipmentUniqueTypeViewSet, \
     EquipmentFacilityViewSet, \
     EquipmentInstanceViewSet, \
+    EquipmentInstanceDataFieldDailyAggViewSet, \
     EquipmentSystemViewSet
 
 
@@ -32,6 +33,7 @@ ROUTER.register('equipment-unique-type-groups', EquipmentUniqueTypeGroupViewSet)
 ROUTER.register('equipment-unique-types', EquipmentUniqueTypeViewSet)
 ROUTER.register('equipment-facilities', EquipmentFacilityViewSet)
 ROUTER.register('equipment-instances', EquipmentInstanceViewSet)
+ROUTER.register('equipment-instance-data-field-daily-aggs', EquipmentInstanceDataFieldDailyAggViewSet)
 ROUTER.register('equipment-systems', EquipmentSystemViewSet)
 
 
