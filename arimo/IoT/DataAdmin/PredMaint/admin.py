@@ -18,7 +18,8 @@ from .models import \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
     EquipmentProblemDiagnosis, \
-    Alert
+    Alert, \
+    AlertDiagnosisStatus
 
 from ..base.models import EquipmentDataField
 
@@ -566,3 +567,30 @@ class AlertAdmin(ModelAdmin):
 site.register(
     Alert,
     admin_class=AlertAdmin)
+
+
+class AlertDiagnosisStatusAdmin(ModelAdmin):
+    list_display = \
+        'index', \
+        'name'
+
+    show_full_result_count = False   # too many
+
+    @silk_profile(name='Admin: Alert Diagnosis Statuses')
+    def changelist_view(self, request, extra_context=None):
+        return super(AlertDiagnosisStatusAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Alert Diagnosis Status')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(AlertDiagnosisStatusAdmin, self).changeform_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
+
+site.register(
+    AlertDiagnosisStatus,
+    admin_class=AlertDiagnosisStatusAdmin)
