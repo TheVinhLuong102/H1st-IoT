@@ -628,7 +628,7 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
     queryset = \
         EquipmentInstanceDataFieldDailyAgg.objects \
         .select_related(
-            'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+            'equipment_instance',
             'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
 
     serializer_class = EquipmentInstanceDataFieldDailyAggSerializer
