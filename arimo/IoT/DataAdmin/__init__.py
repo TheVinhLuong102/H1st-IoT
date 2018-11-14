@@ -29,10 +29,6 @@ class Project(object):
     _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
     _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
 
-    _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
-    _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
-    _ALERT_DIAGNOSIS_STATUS_CONCLUDED_STR = 'concluded'
-
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
     _EQUIPMENT_INSTANCE_ALIAS_COL_NAME = 'equipment_instance_alias'
     _DATE_TIME_COL_NAME = 'date_time'
@@ -81,15 +77,6 @@ class Project(object):
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentFacility, EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, EquipmentSystem
 
-        from arimo.IoT.DataAdmin.PredMaint.models import \
-            EquipmentUniqueTypeGroupDataFieldProfile, \
-            EquipmentUniqueTypeGroupServiceConfig, \
-            Blueprint, \
-            EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
-            EquipmentInstanceDailyRiskScore, \
-            EquipmentProblemType, EquipmentProblemDiagnosis, \
-            AlertDiagnosisStatus, Alert
-
         self.data = \
             Namespace(
                 DataTypes=DataType.objects,
@@ -102,24 +89,7 @@ class Project(object):
                 EquipmentFacilities=EquipmentFacility.objects,
                 EquipmentInstances=EquipmentInstance.objects,
                 EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
-                EquipmentSystems=EquipmentSystem.objects,
-
-                EquipmentUniqueTypeGroupDataFieldProfiles=
-                    EquipmentUniqueTypeGroupDataFieldProfile.objects,
-                EquipmentUniqueTypeGroupPredMaintServiceConfigs=
-                    EquipmentUniqueTypeGroupServiceConfig.objects,
-
-                PredMaintBlueprints=Blueprint.objects,
-                EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
-                    EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
-
-                EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
-
-                EquipmentProblemTypes=EquipmentProblemType.objects,
-                EquipmentProblemDiagnoses=EquipmentProblemDiagnosis.objects,
-
-                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
-                PredMaintAlerts=Alert.objects)
+                EquipmentSystems=EquipmentSystem.objects)
 
         self.CAT_DATA_TYPE = \
             self.data.DataTypes.get_or_create(
@@ -140,21 +110,6 @@ class Project(object):
             self.data.EquipmentDataFieldTypes.get_or_create(
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
-
-        self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
-                name=self._ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR,
-                defaults=dict(index=0))[0]
-
-        self.ALERT_DIAGNOSIS_STATUS_MONITORING = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
-                name=self._ALERT_DIAGNOSIS_STATUS_MONITORING_STR,
-                defaults=dict(index=1))[0]
-
-        self.ALERT_DIAGNOSIS_STATUS_CONCLUDED = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
-                name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_STR,
-                defaults=dict(index=9))[0]
 
         if 's3' in self.params:
             self.params.s3.equipment_data.dir_path = \
