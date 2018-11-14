@@ -485,13 +485,16 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
         return super(AlertDiagnosisStatusViewSet, self).retrieve(request, *args, **kwargs)
 
 
-class AlertViewSet(ReadOnlyModelViewSet):
+class AlertViewSet(ModelViewSet):
     """
     list:
     `GET` a filterable, paginated list of Alerts
 
     retrieve:
     `GET` the Alert specified by `id`
+
+    partial_update:
+    `PATCH` the `diagnosis_status` of the Alert specified by `id`
     """
     queryset = \
         Alert.objects \
