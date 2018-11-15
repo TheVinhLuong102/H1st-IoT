@@ -589,7 +589,8 @@ class AlertDiagnosisStatus(Model):
             blank=False,
             null=False,
             unique=True,
-            default=0)
+            default=0,
+            db_index=True)
 
     name = \
         CharField(
