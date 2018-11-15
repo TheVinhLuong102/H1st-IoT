@@ -18,7 +18,8 @@ class DataType(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     class Meta:
         ordering = 'name',
@@ -39,7 +40,8 @@ class NumericMeasurementUnit(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
@@ -64,7 +66,8 @@ class EquipmentDataFieldType(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     class Meta:
         ordering = 'name',
@@ -85,7 +88,8 @@ class EquipmentGeneralType(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
