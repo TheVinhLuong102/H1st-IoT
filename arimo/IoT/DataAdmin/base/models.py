@@ -138,7 +138,8 @@ class EquipmentDataField(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=False)
+            unique=False,
+            db_index=True)
 
     data_type = \
         ForeignKey(
@@ -263,7 +264,8 @@ class EquipmentUniqueTypeGroup(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     equipment_unique_types = \
         ManyToManyField(
@@ -336,6 +338,7 @@ class EquipmentUniqueType(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
+            db_index=True
             # unique=True
         )
 
@@ -405,7 +408,8 @@ class EquipmentFacility(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
@@ -460,7 +464,8 @@ class EquipmentInstance(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
@@ -536,7 +541,8 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             blank=False,
             null=False,
             auto_now=False,
-            auto_now_add=False)
+            auto_now_add=False,
+            db_index=True)
 
     daily_count = \
         IntegerField(
@@ -621,6 +627,7 @@ class EquipmentSystem(Model):
             blank=False,
             null=False,
             default=None,
+            db_index=True
             # unique=True
         )
 
@@ -629,7 +636,8 @@ class EquipmentSystem(Model):
             blank=False,
             null=False,
             auto_now=False,
-            auto_now_add=False)
+            auto_now_add=False,
+            db_index=True)
 
     equipment_instances = \
         ManyToManyField(

@@ -43,7 +43,8 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
     to_date = \
         DateField(
             blank=True,
-            null=True)
+            null=True,
+            db_index=True)
 
     valid_proportion = \
         FloatField(
@@ -133,7 +134,8 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=True)
+            default=True,
+            db_index=True)
 
     comments = \
         TextField(
@@ -190,7 +192,8 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=True)
+            default=True,
+            db_index=True)
 
     comments = \
         TextField(
@@ -224,7 +227,8 @@ class Blueprint(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     uuid = \
         CharField(
@@ -292,7 +296,8 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
         DateField(
             auto_now=False,
             auto_now_add=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     n = BigIntegerField(
             blank=False,
@@ -360,7 +365,8 @@ class EquipmentInstanceDailyRiskScore(Model):
         CharField(
             max_length=MAX_CHAR_LEN,
             blank=False,
-            null=False)
+            null=False,
+            db_index=True)
 
     date = \
         DateField(
@@ -368,7 +374,8 @@ class EquipmentInstanceDailyRiskScore(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     risk_score_value = \
         FloatField(
@@ -405,7 +412,8 @@ class EquipmentProblemType(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=True)
+            unique=True,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
@@ -442,7 +450,8 @@ class EquipmentProblemPeriod(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     to_date = \
         DateField(
@@ -450,7 +459,8 @@ class EquipmentProblemPeriod(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     date_range = \
         DateRangeField(
@@ -480,13 +490,15 @@ class EquipmentProblemPeriod(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=False,
+            db_index=True)
 
     dismissed = \
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=False,
+            db_index=True)
 
     comments = \
         TextField(
@@ -504,7 +516,8 @@ class EquipmentProblemPeriod(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=False,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
@@ -644,13 +657,15 @@ class Alert(Model):
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            unique=False)
+            unique=False,
+            db_index=True)
 
     threshold = \
         FloatField(
             blank=False,
             null=False,
-            default=0)
+            default=0,
+            db_index=True)
 
     from_date = \
         DateField(
@@ -658,7 +673,8 @@ class Alert(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     to_date = \
         DateField(
@@ -666,7 +682,8 @@ class Alert(Model):
             null=False,
             auto_now=False,
             auto_created=False,
-            default=None)
+            default=None,
+            db_index=True)
 
     date_range = \
         DateRangeField(
@@ -701,7 +718,8 @@ class Alert(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=False,
+            db_index=True)
 
     diagnosis_status = \
         ForeignKey(
@@ -724,7 +742,8 @@ class Alert(Model):
         BooleanField(
             blank=False,
             null=False,
-            default=False)
+            default=False,
+            db_index=True)
 
     last_updated = \
         DateTimeField(
