@@ -599,8 +599,8 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
         DateTimeField(
             auto_now=True)
 
-    class Meta:
-        ordering = ()   # too numerous to order by default
+    # class Meta:
+    #     ordering = ()   # too numerous to order by default
 
 
 @python_2_unicode_compatible

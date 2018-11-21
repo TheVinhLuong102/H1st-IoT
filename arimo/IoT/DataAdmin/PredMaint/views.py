@@ -305,7 +305,7 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         'risk_score_name', \
         'date'
 
-    ordering = ()   # too numerous to order by default
+    # ordering = ()   # too numerous to order by default
 
     pagination_class = LimitOffsetPagination
 

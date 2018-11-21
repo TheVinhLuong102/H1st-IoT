@@ -387,8 +387,8 @@ class EquipmentInstanceDailyRiskScore(Model):
         DateTimeField(
             auto_now=True)
 
-    class Meta:
-        ordering = ()   # too numerous to order by default
+    # class Meta:
+    #     ordering = ()   # too numerous to order by default
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(
