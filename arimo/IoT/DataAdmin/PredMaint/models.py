@@ -388,11 +388,7 @@ class EquipmentInstanceDailyRiskScore(Model):
             auto_now=True)
 
     class Meta:
-        ordering = \
-            'equipment_unique_type_group', \
-            'equipment_instance', \
-            'risk_score_name', \
-            '-date'
+        ordering = ()   # too numerous to order by default
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(

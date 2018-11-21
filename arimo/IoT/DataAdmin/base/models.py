@@ -600,10 +600,7 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             auto_now=True)
 
     class Meta:
-        ordering = \
-            'equipment_instance', \
-            'equipment_data_field', \
-            'date'
+        ordering = ()   # too numerous to order by default
 
 
 @python_2_unicode_compatible
