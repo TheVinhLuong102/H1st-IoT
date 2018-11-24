@@ -299,7 +299,6 @@ def equipment_unique_type_group_post_save(sender, instance, *args, **kwargs):
                 *(equipment_unique_type.data_fields.all()
                   for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
                 all=False),
-            # bulk=True,   # For many-to-many relationships, the bulk keyword argument doesn't exist
             clear=False)
 
 
@@ -334,22 +333,16 @@ class EquipmentUniqueType(Model):
             # unique=True
         )
 
-    # *** USING 'equipment_data_fields' (corresponding to EquipmentDataField above) LEADS TO BUG ***
     data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
             through=EquipmentDataField.equipment_unique_types.through,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
-    # *** USING 'equipment_unique_type_groups' (corresponding to EquipmentUniqueTypeGroup above) LEADS TO BUG ***
     groups = \
         ManyToManyField(
             to=EquipmentUniqueTypeGroup,
             through=EquipmentUniqueTypeGroup.equipment_unique_types.through,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
     last_updated = \
