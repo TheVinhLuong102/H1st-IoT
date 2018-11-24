@@ -1,25 +1,10 @@
 from django.db.models import Prefetch
-from django.http import HttpResponse, Http404, JsonResponse
-from django.views.decorators.csrf import csrf_exempt, csrf_protect, requires_csrf_token
 
-from rest_framework.authentication import \
-    BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.decorators import action, api_view
-from rest_framework.generics import GenericAPIView, \
-    ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, \
-    ListCreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import \
-    ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.pagination import CursorPagination, LimitOffsetPagination, PageNumberPagination
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.renderers import CoreJSONRenderer, JSONRenderer, \
-    HTMLFormRenderer, StaticHTMLRenderer, TemplateHTMLRenderer
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from rest_framework.status import \
-    HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_204_NO_CONTENT
-from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.authentication import BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.renderers import CoreJSONRenderer, JSONRenderer
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from silk.profiling.profiler import silk_profile
 

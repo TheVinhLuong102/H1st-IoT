@@ -19,16 +19,7 @@ class DataTypeFilter(FilterSet):
         model = DataType
 
         fields = dict(
-            name=[
-                'exact'   # , 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
-                # 'in',
-                # 'contains', 'icontains',
-                # 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
-            ]
+            name=['exact']
         )
 
 
