@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin, site, TabularInline
 from django.db.models.aggregates import Count
 from django.db.models.query import Prefetch
-from django.forms import BaseInlineFormSet, inlineformset_factory
+from django.forms import BaseInlineFormSet
 
 from silk.profiling.profiler import silk_profile
 
@@ -29,9 +29,9 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = False   # only a few, but skip counting anyway
-
     search_fields = 'name',
+
+    show_full_result_count = False
 
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, request, extra_context=None):
@@ -58,9 +58,9 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 
     list_filter = 'name',
 
-    show_full_result_count = False   # only a few, but skip counting anyway
-
     search_fields = 'name',
+
+    show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, request, extra_context=None):
@@ -158,7 +158,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
 
-    show_full_result_count = False   # only a few, but skip counting anyway
+    show_full_result_count = False
 
     search_fields = \
         'equipment_general_type__name', \
