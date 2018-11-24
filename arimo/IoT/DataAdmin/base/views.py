@@ -707,8 +707,3 @@ class EquipmentSystemViewSet(ModelViewSet):
     @silk_profile(name='REST API: Equipment System')
     def retrieve(self, request, *args, **kwargs):
         return super(EquipmentSystemViewSet, self).retrieve(request, *args, **kwargs)
-
-
-# request.data
-# Response(serializer.data, status=HTTP_201_CREATED)
-# Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
