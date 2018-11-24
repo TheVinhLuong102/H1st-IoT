@@ -87,10 +87,6 @@ class EquipmentGeneralType(Model):
             unique=True,
             db_index=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = 'name',
 
