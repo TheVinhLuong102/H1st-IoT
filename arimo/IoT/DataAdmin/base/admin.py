@@ -144,8 +144,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
-
     show_full_result_count = False
 
     search_fields = \
@@ -156,7 +154,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     readonly_fields = 'equipment_data_fields',
 
-    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_unique_type_names(self, obj):
         return ', '.join(equipment_unique_type.name
                          for equipment_unique_type in obj.equipment_unique_types.all())
@@ -175,16 +172,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
-                Prefetch(
-                    'equipment_unique_types',
-                    # queryset=
-                    #     EquipmentUniqueType.objects
-                    #     .prefetch_related(
-                    #         'equipment_instances')
-                ),
-
-                # 'equipment_unique_types__equipment_instances',
-
+                'equipment_unique_types',
                 Prefetch(
                     lookup='equipment_data_fields',
                     queryset=
