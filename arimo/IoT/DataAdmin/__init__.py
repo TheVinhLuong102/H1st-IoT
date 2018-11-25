@@ -131,15 +131,6 @@ class Project(object):
     def __qual_name__(cls):
         return '{}.{}'.format(cls.__module__, cls.__name__)
 
-    def _collect_static(self):
-        call_command('collectstatic')
-
-    def _create_super_user(self):
-        call_command('createsuperuser')
-
-    def _make_migrations(self):
-        call_command('makemigrations')
-
     def _migrate(self):
         call_command('migrate')
 
