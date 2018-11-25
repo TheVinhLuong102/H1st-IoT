@@ -102,7 +102,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'data_type', \
         'numeric_measurement_unit'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_general_type__name', \
