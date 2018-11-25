@@ -152,10 +152,9 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             'equipment_unique_type_group'
 
     def __str__(self):
-        return '{}Pred Maint Svc Config: {} {}'.format(
+        return '{}Pred Maint Svc Config: {}'.format(
                 '' if self.active
                    else '(INACTIVE) ',
-                self.equipment_unique_type_group.equipment_general_type.name.upper(),
                 self.equipment_unique_type_group.name)
 
 

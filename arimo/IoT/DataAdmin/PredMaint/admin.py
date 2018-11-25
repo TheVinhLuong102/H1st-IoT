@@ -57,7 +57,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -145,9 +145,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'equipment_unique_type_group__name', \
         'active'
 
-    # list_select_related = ...   # already overriding get_queryset below
-
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -170,9 +168,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
                     obj.equipment_unique_type_group_monitored_data_field_configs.all()
-                if equipment_unique_type_group_monitored_data_field_config.active
-                    # ^^^ USE ABOVE "IF" STATEMENT INSTEAD OF .filter(active=True) TO AVOID VOIDING THE CACHED PREFETCHED DATA ^^^
-            ),
+                if equipment_unique_type_group_monitored_data_field_config.active),
             ' | global excl: {}'.format(
                 ', '.join(excluded_equipment_data_field.name
                           for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
@@ -235,7 +231,7 @@ class BlueprintAdmin(ModelAdmin):
         'equipment_unique_type_group', \
         'equipment_unique_type_group__equipment_general_type'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -291,7 +287,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -357,7 +353,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'risk_score_value', \
         'last_updated'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -432,8 +428,6 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'to_date', \
         'dismissed'
 
-    # list_select_related = ...   # already overriding get_queryset below
-
     readonly_fields = \
         'date_range', \
         'duration', \
@@ -441,7 +435,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'has_associated_alerts', \
         'alerts'   # too many alerts, so Select box would freeze
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = 'equipment_instance__name',
 
@@ -463,8 +457,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
                             'equipment_instance', 'equipment_instance__equipment_general_type',
                             'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
                             'diagnosis_status')))
-    
-    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
+
     def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
                          for equipment_problem_type in obj.equipment_problem_types.all())
@@ -523,7 +516,7 @@ class AlertAdmin(ModelAdmin):
         'diagnosis_status', \
         'has_associated_equipment_problem_diagnoses'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -574,7 +567,7 @@ class AlertDiagnosisStatusAdmin(ModelAdmin):
         'index', \
         'name'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     @silk_profile(name='Admin: Alert Diagnosis Statuses')
     def changelist_view(self, request, extra_context=None):
