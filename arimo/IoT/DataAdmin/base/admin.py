@@ -50,12 +50,6 @@ site.register(
 class EquipmentGeneralTypeAdmin(ModelAdmin):
     list_display = 'name',
 
-    list_filter = 'name',
-
-    search_fields = 'name',
-
-    show_full_result_count = False
-
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, request, extra_context=None):
         return super(EquipmentGeneralTypeAdmin, self).changelist_view(
