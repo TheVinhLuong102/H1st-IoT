@@ -69,8 +69,7 @@ class Project(object):
         django_db_settings['PASSWORD'] = self.params.db.admin.password
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
-
-        self._migrate()
+        call_command('migrate')
 
         from arimo.IoT.DataAdmin.base.models import \
             DataType, EquipmentDataFieldType, EquipmentDataField, NumericMeasurementUnit, \
@@ -130,9 +129,6 @@ class Project(object):
     @classmethod
     def __qual_name__(cls):
         return '{}.{}'.format(cls.__module__, cls.__name__)
-
-    def _migrate(self):
-        call_command('migrate')
 
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
