@@ -228,7 +228,6 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
 
-    # ref: https://stackoverflow.com/questions/18108521/many-to-many-in-list-display-django
     def equipment_unique_type_groups(self, obj):
         return ', '.join(equipment_unique_type_group.name
                          for equipment_unique_type_group in obj.groups.all())
@@ -300,7 +299,7 @@ class EquipmentFacilityAdmin(ModelAdmin):
         'n_equipment_instances', \
         'last_updated'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = 'name',
 
@@ -458,9 +457,7 @@ class EquipmentSystemAdmin(ModelAdmin):
         'name', \
         'date'
 
-    # list_select_related = 'equipment_facility',   # already overriding get_queryset below
-
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_facility__name', \
