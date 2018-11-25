@@ -27,12 +27,6 @@ from .models import \
 class NumericMeasurementUnitAdmin(ModelAdmin):
     list_display = 'name',
 
-    list_filter = 'name',
-
-    search_fields = 'name',
-
-    show_full_result_count = False
-
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, request, extra_context=None):
         return super(NumericMeasurementUnitAdmin, self).changelist_view(
