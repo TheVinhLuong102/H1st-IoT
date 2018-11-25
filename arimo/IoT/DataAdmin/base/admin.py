@@ -214,9 +214,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    # list_select_related = 'equipment_general_type',   # already overriding get_queryset below
-
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     search_fields = \
         'equipment_general_type__name', \
