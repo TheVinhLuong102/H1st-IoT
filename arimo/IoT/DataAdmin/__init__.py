@@ -132,24 +132,14 @@ class Project(object):
                     access_key_id=self.params.s3.access_key_id,
                     secret_access_key=self.params.s3.secret_access_key)
 
-    @classmethod
-    def __qual_name__(cls):
-        return '{}.{}'.format(cls.__module__, cls.__name__)
-
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
                 name=clean_lower_str(equipment_general_type_name),
                 defaults=None)[0]
 
     def equipment_general_type(self, equipment_general_type_name):
-        equipment_general_types = \
-            self.data.EquipmentGeneralTypes.filter(
+        return self.data.EquipmentGeneralTypes.get(
                 name=clean_lower_str(equipment_general_type_name))
-
-        assert len(equipment_general_types) == 1, \
-            '*** {}: {} ***'.format(equipment_general_type_name, equipment_general_types)
-
-        return equipment_general_types[0]
 
     def update_or_create_equipment_unique_type_group(
             self, equipment_general_type_name, equipment_unique_type_group_name,
