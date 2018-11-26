@@ -132,6 +132,10 @@ class Project(object):
                     access_key_id=self.params.s3.access_key_id,
                     secret_access_key=self.params.s3.secret_access_key)
 
+    @classmethod
+    def __qual_name__(cls):
+        return '{}.{}'.format(cls.__module__, cls.__name__)
+
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(
                 name=clean_lower_str(equipment_general_type_name),
