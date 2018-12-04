@@ -6,8 +6,8 @@ CoreAPI-CLI >= 1.0.9
 Django >= 2.1.3
 Django-AutoComplete-Light == 3.3.0   # *** 3.3.1/2 has JavaScript form rendering bug on Mac/Linux ***
 Django-Crispy-Forms >= 1.7.2
-Django-Debug-Toolbar >= 1.10.1
-Django-Extensions >= 2.1.2
+Django-Debug-Toolbar >= 1.11
+Django-Extensions >= 2.1.4
 Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
 Django-Generic-M2M >= 0.3.1
 Django-GM2M >= 0.6
@@ -23,8 +23,8 @@ Django-Taggit >= 0.23.0
 HTTPie >= 0.9.9
 Markdown >= 2.6.11, < 3   # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
 Pandas >= 0.23.4
-PsycoPG2-binary >= 2.7.5
+PsycoPG2-binary >= 2.7.6.1
 Python-DateUtil
 Ruamel.YAML >= 0.15.66
-SQLAlchemy >= 1.2.11
+SQLAlchemy >= 1.2.14
 Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
