@@ -9,6 +9,7 @@ from .models import \
 class EquipmentUniqueTypeGroupRiskScoringTaskAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
+        'date', \
         'finished'
 
     list_filter = \
