@@ -80,7 +80,8 @@ INSTALLED_APPS = [
     'silk',
 
     'arimo.IoT.DataAdmin.base',
-    'arimo.IoT.DataAdmin.PredMaint'
+    'arimo.IoT.DataAdmin.PredMaint',
+    'arimo.IoT.DataAdmin.tasks'
 ]
 
 MIDDLEWARE = [
