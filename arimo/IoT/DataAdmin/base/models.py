@@ -49,10 +49,6 @@ class NumericMeasurementUnit(Model):
     def __str__(self):
         return 'NumMeasureUnit "{}"'.format(self.name)
 
-    def save(self, *args, **kwargs):
-        self.name = clean_lower_str(self.name)
-        return super(NumericMeasurementUnit, self).save(*args, **kwargs)
-
 
 @python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
