@@ -7,7 +7,39 @@ from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
 
-from ..util import MAX_CHAR_LEN, clean_lower_str
+from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
+
+
+@python_2_unicode_compatible
+class GlobalConfig(Model):
+    key = \
+        CharField(
+            blank=False,
+            null=False,
+            unique=True,
+            max_length=MAX_CHAR_LEN)
+
+    value = \
+        JSONField(
+            blank=True,
+            null=True,
+            default=None)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = 'key',
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.key = clean_upper_str(self.key)
+
+        return super(GlobalConfig, self).save(
+                force_insert=force_insert,
+                force_update=force_update,
+                using=using,
+                update_fields=update_fields)
 
 
 @python_2_unicode_compatible

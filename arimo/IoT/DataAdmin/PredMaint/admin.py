@@ -10,6 +10,7 @@ from .forms import \
     AlertForm
 
 from .models import \
+    GlobalConfig, \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     EquipmentUniqueTypeGroupServiceConfig, \
@@ -22,6 +23,32 @@ from .models import \
     AlertDiagnosisStatus
 
 from ..base.models import EquipmentDataField
+
+
+class GlobalConfigAdmin(ModelAdmin):
+    list_display = \
+        'key', \
+        'value', \
+        'last_updated'
+
+    @silk_profile(name='ADMIN: Global Configs')
+    def changelist_view(self, request, extra_context=None):
+        return super(GlobalConfigAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='ADMIN: Global Config')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(GlobalConfigAdmin, self).changeform_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
+
+site.register(
+    GlobalConfig,
+    admin_class=GlobalConfigAdmin)
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):

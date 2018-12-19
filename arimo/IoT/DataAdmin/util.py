@@ -14,5 +14,13 @@ _YAML_FMT = 'yaml'
 _YAML_EXT = '.{}'.format(_YAML_FMT)
 
 
+def _clean_str(s):
+    return re.sub('[^\w]+', '_', s).strip('_')
+
+
 def clean_lower_str(s):
-    return re.sub('[^\w]+', '_', s).strip('_').lower()
+    return _clean_str(s).lower()
+
+
+def clean_upper_str(s):
+    return _clean_str(s).upper()
