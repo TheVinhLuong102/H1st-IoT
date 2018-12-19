@@ -36,9 +36,8 @@ class Project(object):
     _DEFAULT_PARAMS = \
         dict(
             db=dict(
-                admin=dict(
-                    host=None, db_name=None,
-                    user=None, password=None)),
+                host=None, db_name=None,
+                user=None, password=None),
 
             s3=dict(
                 bucket=None,
@@ -58,27 +57,29 @@ class Project(object):
         self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
 
-        assert self.params.db.admin.host \
-           and self.params.db.admin.db_name \
-           and self.params.db.admin.user \
-           and self.params.db.admin.password
+        assert self.params.db.host \
+           and self.params.db.db_name \
+           and self.params.db.user \
+           and self.params.db.password
 
         django_db_settings = arimo.IoT.DataAdmin._project.settings.DATABASES['default']
-        django_db_settings['HOST'] = self.params.db.admin.host
-        django_db_settings['NAME'] = self.params.db.admin.db_name
-        django_db_settings['USER'] = self.params.db.admin.user
-        django_db_settings['PASSWORD'] = self.params.db.admin.password
+        django_db_settings['HOST'] = self.params.db.host
+        django_db_settings['NAME'] = self.params.db.db_name
+        django_db_settings['USER'] = self.params.db.user
+        django_db_settings['PASSWORD'] = self.params.db.password
         settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
         get_wsgi_application()
         call_command('migrate')
 
         from arimo.IoT.DataAdmin.base.models import \
+            GlobalConfig, \
             DataType, EquipmentDataFieldType, EquipmentDataField, NumericMeasurementUnit, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentFacility, EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, EquipmentSystem
 
         self.data = \
             Namespace(
+                GlobalConfigs=GlobalConfig.objects,
                 DataTypes=DataType.objects,
                 EquipmentDataFieldTypes=EquipmentDataFieldType.objects,
                 EquipmentDataFields=EquipmentDataField.objects,
@@ -111,7 +112,13 @@ class Project(object):
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
-        if 's3' in self.params:
+        self.params.s3.bucket = \
+            self.data.GlobalConfigs.get_or_create(
+                key='S3_BUCKET')
+
+        if self.params.s3.bucket:
+            assert isinstance(self.params.s3.bucket, _STR_CLASSES)
+
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
