@@ -32,6 +32,9 @@ class GlobalConfig(Model):
     class Meta:
         ordering = 'key',
 
+    def __str__(self):
+        return '{} = {}'.format(self.key, self.value)
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.key = clean_upper_str(self.key)
 
