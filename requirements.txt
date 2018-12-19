@@ -15,7 +15,7 @@ Django-Guardian >= 1.4.9
 Django-Nested-InLines >= 0.1
 Django-QuerySetSequence >= 0.8
 DjangoRESTFramework >= 3.8.2
-DjangoRESTFramework-Filters >= 0.10.2   # *** TODO: FIX: v0.10.2 incompat w/ Django-Filter v2 ***
+DjangoRESTFramework-Filters == 1.0.0.dev0   # *** v0 incompat w/ Django-Filter v2 ***
 DRF-Writable-Nested >= 0.5.1
 Django-Silk >= 3.0.1
 Django-Tagging >= 0.4.6
