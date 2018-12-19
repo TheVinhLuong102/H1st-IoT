@@ -114,10 +114,11 @@ class Project(object):
 
         self.params.s3.bucket = \
             self.data.GlobalConfigs.get_or_create(
-                key='S3_BUCKET')
+                key='S3_BUCKET')[0]
 
         if self.params.s3.bucket:
-            assert isinstance(self.params.s3.bucket, _STR_CLASSES)
+            assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
+                '*** {} ***'.format(self.params.s3.bucket)
 
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
