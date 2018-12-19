@@ -1,6 +1,5 @@
 db:
-  admin:
-    host: test-iotdataadmin.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
-    db_name: TEST_IoTDataAdmin
-    user: ~
-    password: ~
+  host: test.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
+  db_name: test
+  user: ~
+  password: ~
