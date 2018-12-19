@@ -7,7 +7,7 @@ from ruamel import yaml
 import shutil
 
 from arimo.IoT.DataAdmin import Project
-from arimo.IoT.DataAdmin._project.settings import _DB_DETAILS_FILE_PATH
+from arimo.IoT.DataAdmin._project.settings import _DB_CREDS_FILE_PATH
 from arimo.IoT.DataAdmin.util import _YAML_EXT
 
 
@@ -37,19 +37,19 @@ assert db_creds['host'] \
    and db_creds['user'] \
    and db_creds['password']
 
-DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
+DB_CREDS_ORIG_FILE_PATH = _DB_CREDS_FILE_PATH + '.orig'
 
-assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
+assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
 
 shutil.copyfile(
-    src=_DB_DETAILS_FILE_PATH,
-    dst=DB_DETAILS_ORIG_FILE_PATH)
+    src=_DB_CREDS_FILE_PATH,
+    dst=DB_CREDS_ORIG_FILE_PATH)
 
-assert os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
+assert os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
 
 shutil.copyfile(
     src=db_creds_file_path,
-    dst=_DB_DETAILS_FILE_PATH)
+    dst=_DB_CREDS_FILE_PATH)
 
 os.system(
     'eb {} {}'.format(
@@ -57,9 +57,9 @@ os.system(
         args.project))
 
 shutil.copyfile(
-    src=DB_DETAILS_ORIG_FILE_PATH,
-    dst=_DB_DETAILS_FILE_PATH)
+    src=DB_CREDS_ORIG_FILE_PATH,
+    dst=_DB_CREDS_FILE_PATH)
 
-os.remove(DB_DETAILS_ORIG_FILE_PATH)
+os.remove(DB_CREDS_ORIG_FILE_PATH)
 
-assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
+assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
