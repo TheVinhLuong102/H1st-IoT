@@ -14,19 +14,8 @@ from arimo.IoT.DataAdmin.util import _YAML_EXT
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    'project',   # name or flags - Either a name or a list of option strings, e.g. foo or -f, --foo.
-    action=None,   # The basic type of action to be taken when this argument is encountered at the command line.
-    nargs='?',   # The number of command-line arguments that should be consumed.
-    const=None,   # A constant value required by some action and nargs selections.
-    default='TEST',   # The value produced if the argument is absent from the command line.
-    type=str,   # The type to which the command-line argument should be converted.
-    help=None,   # A brief description of what the argument does.
-    metavar=None,  # A name for the argument in usage messages.
-    # dest='project',   # The name of the attribute to be added to the object returned by parse_args().
-        # *** DISABLED: ValueError: dest supplied twice for positional argument ***
-    # required=False
-        # *** DISABLED: TypeError: 'required' is an invalid argument for positionals ***
-)
+    'project',
+    default='TEST')
 
 parser.add_argument(
     '--create',
@@ -35,48 +24,42 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-if args.project:
-    db_details_file_path = \
-        os.path.join(
-            Project.CONFIG_DIR_PATH,
-            args.project + _YAML_EXT)
+db_details_file_path = \
+    os.path.join(
+        Project.CONFIG_DIR_PATH,
+        args.project + _YAML_EXT)
 
-    db_details = \
-        yaml.safe_load(stream=open(db_details_file_path, 'r'))['db']
+db_details = \
+    yaml.safe_load(stream=open(db_details_file_path, 'r'))['db']
 
-    assert db_details['host'] \
-       and db_details['db_name'] \
-       and db_details['user'] \
-       and db_details['password']
+assert db_details['host'] \
+   and db_details['db_name'] \
+   and db_details['user'] \
+   and db_details['password']
 
-    DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
+DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
 
-    assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
+assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
 
-    shutil.copyfile(
-        src=_DB_DETAILS_FILE_PATH,
-        dst=DB_DETAILS_ORIG_FILE_PATH)
+shutil.copyfile(
+    src=_DB_DETAILS_FILE_PATH,
+    dst=DB_DETAILS_ORIG_FILE_PATH)
 
-    assert os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
+assert os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
 
-    shutil.copyfile(
-        src=db_details_file_path,
-        dst=_DB_DETAILS_FILE_PATH)
+shutil.copyfile(
+    src=db_details_file_path,
+    dst=_DB_DETAILS_FILE_PATH)
 
-    os.system(
-        'eb {} {}'.format(
-            'create' if args.create else 'deploy',
-            args.project))
+os.system(
+    'eb {} {}'.format(
+        'create' if args.create else 'deploy',
+        args.project))
 
-    shutil.copyfile(
-        src=DB_DETAILS_ORIG_FILE_PATH,
-        dst=_DB_DETAILS_FILE_PATH)
+shutil.copyfile(
+    src=DB_DETAILS_ORIG_FILE_PATH,
+    dst=_DB_DETAILS_FILE_PATH)
 
-    os.remove(DB_DETAILS_ORIG_FILE_PATH)
+os.remove(DB_DETAILS_ORIG_FILE_PATH)
 
-    assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
-
-else:
-    os.system(
-        'eb {} TEST'.format(
-            'create' if args.create else 'deploy'))
+assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
