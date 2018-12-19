@@ -49,15 +49,15 @@ if args.project:
        and db_details['user'] \
        and db_details['password']
 
-    IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
+    DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
 
-    assert not os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+    assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
 
     shutil.copyfile(
         src=_DB_DETAILS_FILE_PATH,
-        dst=IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+        dst=DB_DETAILS_ORIG_FILE_PATH)
 
-    assert os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+    assert os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
 
     shutil.copyfile(
         src=db_details_file_path,
@@ -69,12 +69,12 @@ if args.project:
             args.project))
 
     shutil.copyfile(
-        src=IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH,
+        src=DB_DETAILS_ORIG_FILE_PATH,
         dst=_DB_DETAILS_FILE_PATH)
 
-    os.remove(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+    os.remove(DB_DETAILS_ORIG_FILE_PATH)
 
-    assert not os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
+    assert not os.path.isfile(DB_DETAILS_ORIG_FILE_PATH)
 
 else:
     os.system(

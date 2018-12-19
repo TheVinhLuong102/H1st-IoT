@@ -126,7 +126,7 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
 _DB_DETAILS_FILE_NAME = 'db.yaml'
 _DB_DETAILS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_DETAILS_FILE_NAME)
 
-_db_details = yaml.safe_load(stream=open(_DB_DETAILS_FILE_PATH, 'r'))['db']['admin']
+_db_details = yaml.safe_load(stream=open(_DB_DETAILS_FILE_PATH, 'r'))['db']
 
 DATABASES = \
     dict(default=
