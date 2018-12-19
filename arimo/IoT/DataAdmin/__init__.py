@@ -114,7 +114,7 @@ class Project(object):
 
         self.params.s3.bucket = \
             self.data.GlobalConfigs.get_or_create(
-                key='S3_BUCKET')[0]
+                key='S3_BUCKET')[0].value
 
         if self.params.s3.bucket:
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
