@@ -36,18 +36,18 @@ args = parser.parse_args()
 
 
 if args.project:
-    iot_dataadmin_db_details_file_path = \
+    db_details_file_path = \
         os.path.join(
             Project.CONFIG_DIR_PATH,
             args.project + _YAML_EXT)
 
-    iot_dataadmin_db_details = \
-        yaml.safe_load(stream=open(iot_dataadmin_db_details_file_path, 'r'))['db']['admin']
+    db_details = \
+        yaml.safe_load(stream=open(db_details_file_path, 'r'))['db']
 
-    assert iot_dataadmin_db_details['host'] \
-       and iot_dataadmin_db_details['db_name'] \
-       and iot_dataadmin_db_details['user'] \
-       and iot_dataadmin_db_details['password']
+    assert db_details['host'] \
+       and db_details['db_name'] \
+       and db_details['user'] \
+       and db_details['password']
 
     IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH = _DB_DETAILS_FILE_PATH + '.orig'
 
@@ -60,7 +60,7 @@ if args.project:
     assert os.path.isfile(IoT_DATA_ADMIN_DB_DETAILS_ORIG_FILE_PATH)
 
     shutil.copyfile(
-        src=iot_dataadmin_db_details_file_path,
+        src=db_details_file_path,
         dst=_DB_DETAILS_FILE_PATH)
 
     os.system(
