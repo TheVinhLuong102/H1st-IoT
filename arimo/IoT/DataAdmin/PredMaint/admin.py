@@ -164,6 +164,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
         'monitored_and_excluded_equipment_data_fields', \
+        'from_date', \
+        'to_date', \
         'active', \
         'last_updated'
 

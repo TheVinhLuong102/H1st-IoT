@@ -165,6 +165,16 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    from_date = \
+        DateField(
+            blank=True,
+            null=True)
+
+    to_date = \
+        DateField(
+            blank=True,
+            null=True)
+
     active = \
         BooleanField(
             blank=False,

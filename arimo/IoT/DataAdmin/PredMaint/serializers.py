@@ -84,6 +84,8 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
             'equipment_unique_type_group', \
             'equipment_unique_type_group_monitored_data_field_configs', \
             'global_excluded_equipment_data_fields', \
+            'from_date', \
+            'to_date', \
             'active', \
             'comments', \
             'last_updated'
