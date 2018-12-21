@@ -1,6 +1,6 @@
 AWSEBCLI >= 3.14.8
-AWSCLI >= 1.16.78
-Boto3 >= 1.9.68
+AWSCLI >= 1.16.80
+Boto3 >= 1.9.70
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
 Django >= 2.1.3
