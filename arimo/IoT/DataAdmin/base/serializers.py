@@ -1,7 +1,5 @@
 from rest_framework.serializers import \
-    Serializer, CharField, ListField, \
-    ModelSerializer, RelatedField, ManyRelatedField, PrimaryKeyRelatedField, SlugRelatedField, StringRelatedField, \
-    HyperlinkedModelSerializer, HyperlinkedIdentityField, HyperlinkedRelatedField
+    ModelSerializer, RelatedField, SlugRelatedField
 
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
@@ -296,11 +294,3 @@ class EquipmentSystemSerializer(ModelSerializer):
             'date', \
             'equipment_instances', \
             'last_updated'
-
-
-# serializer(obj)
-# serializer(data=data)
-# serializer(objs, many=True)
-# serializer.data
-# serializer.errors
-# serializer.save()
