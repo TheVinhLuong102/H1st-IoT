@@ -184,6 +184,8 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
 
     configs = \
         JSONField(
+            blank=True,
+            null=True,
             default=dict,
             encoder=None)
 
