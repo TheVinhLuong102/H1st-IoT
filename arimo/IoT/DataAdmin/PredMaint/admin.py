@@ -167,6 +167,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'active', \
+        'configs', \
+        'comments', \
         'last_updated'
 
     list_filter = \

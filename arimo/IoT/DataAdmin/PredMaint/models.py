@@ -182,6 +182,11 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             default=True,
             db_index=True)
 
+    configs = \
+        JSONField(
+            default=dict,
+            encoder=None)
+
     comments = \
         TextField(
             blank=True,
