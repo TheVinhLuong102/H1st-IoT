@@ -32,8 +32,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     # API URLs
-    # if you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views
-    # include login URLs for the browsable API
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/doc/', include_docs_urls(title='Arimo IoT DataAdmin API')),
     url(r'^api/schema/$', get_schema_view(title='Arimo IoT DataAdmin API')),
