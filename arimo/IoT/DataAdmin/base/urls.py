@@ -3,13 +3,16 @@ from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 
 from .autocompletes import \
+    NumericMeasurementUnitAutoComplete, \
     EquipmentGeneralTypeAutoComplete, \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
+
 from .views import \
+    GlobalConfigViewSet, \
     DataTypeViewSet, \
     NumericMeasurementUnitViewSet, \
     EquipmentDataFieldTypeViewSet, \
@@ -24,6 +27,7 @@ from .views import \
 
 
 ROUTER = DefaultRouter()
+ROUTER.register('global-configs', GlobalConfigViewSet)
 ROUTER.register('data-types', DataTypeViewSet)
 ROUTER.register('numeric-measurement-units', NumericMeasurementUnitViewSet)
 ROUTER.register('equipment-data-field-types', EquipmentDataFieldTypeViewSet)
@@ -39,11 +43,13 @@ ROUTER.register('equipment-systems', EquipmentSystemViewSet)
 
 URL_PATTERNS = [
     # API URLs
-    # wire up our API using automatic URL routing
-    # note that the URL path can be whatever you want
     url(r'^api/base/', include(ROUTER.urls)),
 
     # Auto-Complete URLs
+    url(r'^{}/$'.format(NumericMeasurementUnitAutoComplete.name),
+        NumericMeasurementUnitAutoComplete.as_view(),
+        name=NumericMeasurementUnitAutoComplete.name),
+
     url(r'^{}/$'.format(EquipmentGeneralTypeAutoComplete.name),
         EquipmentGeneralTypeAutoComplete.as_view(),
         name=EquipmentGeneralTypeAutoComplete.name),

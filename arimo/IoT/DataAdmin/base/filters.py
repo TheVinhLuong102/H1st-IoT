@@ -1,6 +1,7 @@
-from rest_framework_filters import FilterSet, RelatedFilter, AllLookupsFilter
+from rest_framework_filters import FilterSet, RelatedFilter
 
 from .models import \
+    GlobalConfig, \
     DataType, \
     NumericMeasurementUnit, \
     EquipmentDataFieldType, \
@@ -12,6 +13,21 @@ from .models import \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
+
+
+class GlobalConfigFilter(FilterSet):
+    class Meta:
+        model = GlobalConfig
+
+        fields = dict(
+            key=[
+                'exact', 'iexact',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                'regex', 'iregex'
+            ]
+        )
 
 
 class DataTypeFilter(FilterSet):
@@ -30,13 +46,10 @@ class NumericMeasurementUnitFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ]
         )
 
@@ -46,16 +59,7 @@ class EquipmentDataFieldTypeFilter(FilterSet):
         model = EquipmentDataFieldType
 
         fields = dict(
-            name=[
-                'exact'   # , 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
-                # 'in',
-                # 'contains', 'icontains',
-                # 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
-            ]
+            name=['exact']
         )
 
 
@@ -66,13 +70,10 @@ class EquipmentGeneralTypeFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ]
         )
 
@@ -109,78 +110,63 @@ class EquipmentDataFieldFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ],
 
             lower_numeric_null=[
-                'exact',   # 'iexact',
+                'exact',
                 'gt', 'gte', 'lt', 'lte',
                 'in',
-                'contains',   # 'icontains',
-                'startswith',   # 'istartswith',
-                'endswith',   # 'iendswith',
+                'contains',
+                'startswith',
+                'endswith',
                 'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
             ],
 
             upper_numeric_null=[
-                'exact',   # 'iexact',
+                'exact',
                 'gt', 'gte', 'lt', 'lte',
                 'in',
-                'contains',   # 'icontains',
-                'startswith',   # 'istartswith',
-                'endswith',   # 'iendswith',
+                'contains',
+                'startswith',
+                'endswith',
                 'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
             ],
 
             default_val=[
-                'exact',   # 'iexact',
+                'exact',
                 'gt', 'gte', 'lt', 'lte',
                 'in',
-                'contains',   # 'icontains',
-                'startswith',   # 'istartswith',
-                'endswith',   # 'iendswith',
+                'contains',
+                'startswith',
+                'endswith',
                 'range',
                 'isnull'
-                # 'regex', 'iregex',
-                # 'contained_by'
             ],
 
             min_val=[
-                'exact',   # 'iexact',
+                'exact',
                 'gt', 'gte', 'lt', 'lte',
                 'in',
-                'contains',   # 'icontains',
-                'startswith',   # 'istartswith',
-                'endswith',   # 'iendswith',
+                'contains',
+                'startswith',
+                'endswith',
                 'range',
                 'isnull'
-                # 'regex', 'iregex',
-                # 'contained_by'
             ],
 
             max_val=[
-                'exact',   # 'iexact',
+                'exact',
                 'gt', 'gte', 'lt', 'lte',
                 'in',
-                'contains',   # 'icontains',
-                'startswith',   # 'istartswith',
-                'endswith',   # 'iendswith',
+                'contains',
+                'startswith',
+                'endswith',
                 'range',
                 'isnull'
-                # 'regex', 'iregex',
-                # 'contained_by'
             ])
 
 
@@ -206,13 +192,10 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ])
 
 
@@ -238,13 +221,10 @@ class EquipmentUniqueTypeFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ])
 
 
@@ -260,13 +240,10 @@ class EquipmentFacilityFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
+                'regex', 'iregex'
             ])
 
 
@@ -292,12 +269,9 @@ class EquipmentInstanceFilter(FilterSet):
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
                 'regex', 'iregex'
             ])
 

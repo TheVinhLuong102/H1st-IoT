@@ -9,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from silk.profiling.profiler import silk_profile
 
 from .filters import \
+    GlobalConfigFilter, \
     DataTypeFilter, \
     NumericMeasurementUnitFilter, \
     EquipmentDataFieldTypeFilter, \
@@ -20,7 +21,9 @@ from .filters import \
     EquipmentInstanceFilter, \
     EquipmentInstanceDataFieldDailyAggFilter, \
     EquipmentSystemFilter
+
 from .models import \
+    GlobalConfig, \
     DataType, \
     NumericMeasurementUnit, \
     EquipmentDataFieldType, \
@@ -32,7 +35,9 @@ from .models import \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
+
 from .serializers import \
+    GlobalConfigSerializer, \
     DataTypeSerializer, \
     NumericMeasurementUnitSerializer, \
     EquipmentDataFieldTypeSerializer, \
@@ -44,6 +49,63 @@ from .serializers import \
     EquipmentInstanceSerializer, \
     EquipmentInstanceDataFieldDailyAggSerializer, \
     EquipmentSystemSerializer
+
+
+class GlobalConfigViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Global Configs
+
+    retrieve:
+    `GET` the Global Config specified by `key`
+
+    create:
+    `POST` a new Global Config by `key`
+
+    update:
+    `PUT` updated data for the Global Config specified by `key`
+
+    partial_update:
+    `PATCH` the Global Config specified by `key`
+
+    destroy:
+    `DELETE` the Global Config specified by `key`
+    """
+    queryset = GlobalConfig.objects.all()
+
+    serializer_class = GlobalConfigSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'global_config_key'
+
+    filter_class = GlobalConfigFilter
+
+    ordering_fields = 'key',
+
+    ordering = 'key',
+
+    pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='REST API: Global Configs')
+    def list(self, request, *args, **kwargs):
+        return super(GlobalConfigViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Global Config')
+    def retrieve(self, request, *args, **kwargs):
+        return super(GlobalConfigViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class DataTypeViewSet(ReadOnlyModelViewSet):

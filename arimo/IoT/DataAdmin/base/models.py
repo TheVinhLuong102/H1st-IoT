@@ -17,6 +17,7 @@ class GlobalConfig(Model):
             blank=False,
             null=False,
             unique=True,
+            db_index=True,
             max_length=MAX_CHAR_LEN)
 
     value = \
@@ -50,11 +51,11 @@ class DataType(Model):
     name = \
         CharField(
             verbose_name='Data Type Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     class Meta:
         ordering = 'name',
@@ -72,11 +73,11 @@ class NumericMeasurementUnit(Model):
     name = \
         CharField(
             verbose_name='Numeric Measurement Unit Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     class Meta:
         ordering = 'name',
@@ -90,11 +91,11 @@ class EquipmentDataFieldType(Model):
     name = \
         CharField(
             verbose_name='Equipment Data Field Type Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     class Meta:
         ordering = 'name',
@@ -112,11 +113,11 @@ class EquipmentGeneralType(Model):
     name = \
         CharField(
             verbose_name='Equipment General Type Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     class Meta:
         ordering = 'name',
@@ -158,11 +159,11 @@ class EquipmentDataField(Model):
     name = \
         CharField(
             verbose_name='Equipment Data Field Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=False,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     data_type = \
         ForeignKey(
@@ -284,11 +285,11 @@ class EquipmentUniqueTypeGroup(Model):
     name = \
         CharField(
             verbose_name='Equipment Unique Type Group Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     equipment_unique_types = \
         ManyToManyField(
@@ -357,12 +358,11 @@ class EquipmentUniqueType(Model):
     name = \
         CharField(
             verbose_name='Equipment Unique Type Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            db_index=True
-            # unique=True
-        )
+            db_index=True,
+            # unique=True,
+            max_length=MAX_CHAR_LEN)
 
     data_fields = \
         ManyToManyField(
@@ -415,11 +415,11 @@ class EquipmentFacility(Model):
     name = \
         CharField(
             verbose_name='Equipment Facility Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     last_updated = \
         DateTimeField(
@@ -471,11 +471,11 @@ class EquipmentInstance(Model):
     name = \
         CharField(
             verbose_name='Equipment Instance Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             unique=True,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     last_updated = \
         DateTimeField(

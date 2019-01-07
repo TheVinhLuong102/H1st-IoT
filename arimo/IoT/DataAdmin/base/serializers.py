@@ -1,9 +1,9 @@
-from rest_framework.serializers import \
-    ModelSerializer, RelatedField, SlugRelatedField
+from rest_framework.serializers import ModelSerializer, RelatedField, SlugRelatedField
 
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import \
+    GlobalConfig, \
     DataType, \
     NumericMeasurementUnit, \
     EquipmentDataFieldType, \
@@ -15,7 +15,18 @@ from .models import \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
+
 from ..util import clean_lower_str
+
+
+class GlobalConfigSerializer(ModelSerializer):
+    class Meta:
+        model = GlobalConfig
+
+        fields = \
+            'key', \
+            'value', \
+            'last_updated'
 
 
 class DataTypeSerializer(ModelSerializer):
@@ -113,7 +124,7 @@ class EquipmentDataFieldShortFormRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentDataField.objects.get_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                equipment_data_field_type=EquipmentDataFieldType.objects.get_or_create(name=clean_lower_str(data['equipment_data_field_type']))[0],
+                equipment_data_field_type=EquipmentDataFieldType.objects.get(name=clean_lower_str(data['equipment_data_field_type'])),
                 name=clean_lower_str(data['name']))[0]
 
     def to_representation(self, value):
