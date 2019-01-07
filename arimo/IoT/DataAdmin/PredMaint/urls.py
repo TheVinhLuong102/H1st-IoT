@@ -5,7 +5,9 @@ from rest_framework.routers import DefaultRouter
 from .autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentProblemDiagnosisAutoComplete
+
 from .views import \
+    GlobalConfigViewSet, \
     EquipmentUniqueTypeGroupDataFieldProfileViewSet, \
     EquipmentUniqueTypeGroupServiceConfigViewSet, \
     BlueprintViewSet, \
@@ -18,6 +20,10 @@ from .views import \
 
 
 ROUTER = DefaultRouter()
+
+ROUTER.register(
+    'global-configs',
+    GlobalConfigViewSet)
 
 ROUTER.register(
     'equipment-unique-type-group-data-field-profiles',

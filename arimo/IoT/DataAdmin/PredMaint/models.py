@@ -165,6 +165,13 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    active = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True,
+            db_index=True)
+
     from_date = \
         DateField(
             blank=True,
@@ -174,13 +181,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
         DateField(
             blank=True,
             null=True)
-
-    active = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=True,
-            db_index=True)
 
     configs = \
         JSONField(
@@ -315,10 +315,10 @@ class Blueprint(Model):
 
     def __str__(self):
         return 'Blueprint "{}" ({}){}'.format(
-            self.uuid,
-            self.timestamp,
-            '' if self.active
-               else ' (INACTIVE)')
+                self.uuid,
+                self.timestamp,
+                '' if self.active
+                   else ' (INACTIVE)')
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
@@ -392,7 +392,7 @@ class EquipmentInstanceDailyRiskScore(Model):
     RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
 
     id = BigAutoField(
-        primary_key=True)
+            primary_key=True)
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -437,9 +437,6 @@ class EquipmentInstanceDailyRiskScore(Model):
     last_updated = \
         DateTimeField(
             auto_now=True)
-
-    # class Meta:
-    #     ordering = ()   # too numerous to order by default
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(

@@ -164,9 +164,9 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
         'monitored_and_excluded_equipment_data_fields', \
+        'active', \
         'from_date', \
         'to_date', \
-        'active', \
         'configs', \
         'comments', \
         'last_updated'
@@ -374,7 +374,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
     list_select_related = \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
         'equipment_instance', 'equipment_instance__equipment_general_type', \
-        'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type'
+                              'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type'
 
     readonly_fields = \
         'equipment_unique_type_group', \

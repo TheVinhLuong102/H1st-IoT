@@ -1,7 +1,6 @@
 from django.db.models import Prefetch
 
-from rest_framework.authentication import \
-    BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
+from rest_framework.authentication import BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.renderers import CoreJSONRenderer, JSONRenderer
@@ -10,6 +9,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from silk.profiling.profiler import silk_profile
 
 from .filters import \
+    GlobalConfigFilter, \
     EquipmentUniqueTypeGroupDataFieldProfileFilter, \
     EquipmentUniqueTypeGroupServiceConfigFilter, \
     BlueprintFilter, \
@@ -19,7 +19,9 @@ from .filters import \
     EquipmentProblemDiagnosisFilter, \
     AlertDiagnosisStatusFilter, \
     AlertFilter
+
 from .models import \
+    GlobalConfig, \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupServiceConfig, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
@@ -30,7 +32,9 @@ from .models import \
     EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
+
 from .serializers import \
+    GlobalConfigSerializer, \
     EquipmentUniqueTypeGroupDataFieldProfileSerializer, \
     EquipmentUniqueTypeGroupServiceConfigSerializer, \
     BlueprintSerializer, \
@@ -42,6 +46,63 @@ from .serializers import \
     AlertSerializer
 
 from ..base.models import EquipmentDataField
+
+
+class GlobalConfigViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, unpaginated list of Global Configs
+
+    retrieve:
+    `GET` the Global Config specified by `key`
+
+    create:
+    `POST` a new Global Config by `key`
+
+    update:
+    `PUT` updated data for the Global Config specified by `key`
+
+    partial_update:
+    `PATCH` the Global Config specified by `key`
+
+    destroy:
+    `DELETE` the Global Config specified by `key`
+    """
+    queryset = GlobalConfig.objects.all()
+
+    serializer_class = GlobalConfigSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'global_config_key'
+
+    filter_class = GlobalConfigFilter
+
+    ordering_fields = 'key',
+
+    ordering = 'key',
+
+    pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='REST API: Global Configs')
+    def list(self, request, *args, **kwargs):
+        return super(GlobalConfigViewSet, self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Global Config')
+    def retrieve(self, request, *args, **kwargs):
+        return super(GlobalConfigViewSet, self).retrieve(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
@@ -304,8 +365,6 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         'equipment_instance', \
         'risk_score_name', \
         'date'
-
-    # ordering = ()   # too numerous to order by default
 
     pagination_class = LimitOffsetPagination
 

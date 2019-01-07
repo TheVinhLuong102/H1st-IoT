@@ -3,6 +3,7 @@ from rest_framework.serializers import ModelSerializer, RelatedField, SlugRelate
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from .models import \
+    GlobalConfig, \
     EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
@@ -12,9 +13,22 @@ from .models import \
     EquipmentProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
+
 from ..base.models import \
     EquipmentInstance
-from ..base.serializers import EquipmentDataFieldShortFormRelatedField
+
+from ..base.serializers import \
+    EquipmentDataFieldShortFormRelatedField
+
+
+class GlobalConfigSerializer(ModelSerializer):
+    class Meta:
+        model = GlobalConfig
+
+        fields = \
+            'key', \
+            'value', \
+            'last_updated'
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
@@ -84,9 +98,10 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
             'equipment_unique_type_group', \
             'equipment_unique_type_group_monitored_data_field_configs', \
             'global_excluded_equipment_data_fields', \
+            'active', \
             'from_date', \
             'to_date', \
-            'active', \
+            'configs', \
             'comments', \
             'last_updated'
 
