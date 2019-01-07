@@ -698,11 +698,11 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggs')
+    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggregates')
     def list(self, request, *args, **kwargs):
         return super(EquipmentInstanceDataFieldDailyAggViewSet, self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance Data Field Daily Agg')
+    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggregate')
     def retrieve(self, request, *args, **kwargs):
         return super(EquipmentInstanceDataFieldDailyAggViewSet, self).retrieve(request, *args, **kwargs)
 

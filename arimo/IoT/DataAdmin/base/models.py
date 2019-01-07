@@ -627,13 +627,12 @@ class EquipmentSystem(Model):
     name = \
         CharField(
             verbose_name='Equipment System Name',
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
             default=None,
-            db_index=True
-            # unique=True
-        )
+            db_index=True,
+            # unique=True,
+            max_length=MAX_CHAR_LEN)
 
     date = \
         DateField(
