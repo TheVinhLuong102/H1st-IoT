@@ -56,6 +56,8 @@ site.register(
 class NumericMeasurementUnitAdmin(ModelAdmin):
     list_display = 'name',
 
+    show_full_result_count = False
+
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, request, extra_context=None):
         return super(NumericMeasurementUnitAdmin, self).changelist_view(
@@ -78,6 +80,8 @@ site.register(
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
     list_display = 'name',
+
+    show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, request, extra_context=None):
