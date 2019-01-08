@@ -747,13 +747,11 @@ class EquipmentSystemViewSet(ModelViewSet):
     filter_class = EquipmentSystemFilter
 
     ordering_fields = \
-        'equipment_instance', \
-        'equipment_data_field', \
+        'name', \
         'date'
 
     ordering = \
-        'equipment_instance', \
-        'equipment_data_field', \
+        'name', \
         'date'
 
     pagination_class = LimitOffsetPagination
