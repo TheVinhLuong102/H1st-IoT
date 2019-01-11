@@ -76,7 +76,6 @@ INSTALLED_APPS = [
     'rest_framework_filters',
     'crispy_forms',
 
-    'debug_toolbar',
     'silk',
 
     'arimo.IoT.DataAdmin.base',
