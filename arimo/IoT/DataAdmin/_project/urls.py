@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
@@ -40,8 +39,3 @@ urlpatterns = [
     url(r'^silk/', include('silk.urls', namespace='silk'))
 
 ] + BASE_URL_PATTERNS + PRED_MAINT_URL_PATTERNS
-
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns.insert(0, url(r'^__debug__/', include(debug_toolbar.urls)))

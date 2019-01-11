@@ -92,10 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-        # You should include the Debug Toolbar middleware as early as possible in the list.
-        # However, it must come after any other middleware that encodes the response's content, such as GZipMiddleware
+    
     'silk.middleware.SilkyMiddleware'
 ]
 
