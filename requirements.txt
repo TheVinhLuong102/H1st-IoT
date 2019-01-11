@@ -1,5 +1,5 @@
-AWSEBCLI >= 3.14.8
-AWSCLI >= 1.16.84
+AWSEBCLI >= 3.14.88
+AWSCLI >= 1.16.88
 Boto3 >= 1.9.74
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
