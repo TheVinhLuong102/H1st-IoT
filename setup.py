@@ -26,7 +26,7 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
         s = s.strip()
         lower_s = s.lower()
         install_requires.append(
-            'Django'
+            'Django >= 1.11.18'
             if lower_s.startswith('django >=')
             else ('Django-AutoComplete-Light == 3.2.10'
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
