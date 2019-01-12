@@ -21,6 +21,6 @@ Django-Taggit >= 0.23.0
 Markdown >= 2.6.11, < 3   # *** v3.0 breaks DjangoRESTFramework: https://github.com/encode/django-rest-framework/issues/6203 ***
 Pandas >= 0.23.4
 PsycoPG2-binary >= 2.7.6.1
-Python-DateUtil
+Python-DateUtil >= 2.7.5
 Ruamel.YAML >= 0.15.85
 Tornado == 4.5.1   # *** later ver breaks Jupyter (SSL err) ***
