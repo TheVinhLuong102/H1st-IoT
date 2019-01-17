@@ -3,7 +3,7 @@ AWSCLI >= 1.16.88
 Boto3 >= 1.9.78
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
-Django >= 2.1.4
+Django >= 2.1.5
 Django-AutoComplete-Light == 3.3.0   # *** 3.3.1/2 has JavaScript form rendering bug on Mac/Linux ***
 Django-Extensions >= 2.1.4
 Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
