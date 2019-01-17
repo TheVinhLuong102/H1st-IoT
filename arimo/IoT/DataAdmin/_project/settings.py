@@ -74,7 +74,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_filters',
-    'crispy_forms',
 
     'silk',
 
