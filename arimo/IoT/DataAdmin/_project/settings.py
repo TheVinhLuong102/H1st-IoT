@@ -53,24 +53,12 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
 
-    'dal_contenttypes',
-    'dal_genericm2m',
-    'dal_genericm2m_queryset_sequence',
-    'dal_gm2m',
-    'dal_gm2m_queryset_sequence',
-    'dal_queryset_sequence',
-    'dal_select2_queryset_sequence',
-    'dal_select2_tagging',
-    'dal_select2_taggit',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'django_extensions',
 
     'rest_framework',
     'rest_framework_filters',
