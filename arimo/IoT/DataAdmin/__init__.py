@@ -122,14 +122,14 @@ class Project(object):
             self.data.GlobalConfigs.get_or_create(
                 key='S3_BUCKET')[0].value
 
-        self.s3_client = \
-            s3.client(
-                access_key_id=self.params.s3.access_key_id,
-                secret_access_key=self.params.s3.secret_access_key)
-
         if self.params.s3.bucket:
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
                 '*** {} ***'.format(self.params.s3.bucket)
+
+            self.s3_client = \
+                s3.client(
+                    access_key_id=self.params.s3.access_key_id,
+                    secret_access_key=self.params.s3.secret_access_key)
 
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
