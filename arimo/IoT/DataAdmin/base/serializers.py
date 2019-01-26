@@ -247,6 +247,7 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             'equipment_unique_type', \
             'equipment_facility', \
             'name', \
+            'info', \
             'last_updated'
 
 

@@ -374,6 +374,7 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_unique_type', \
         'equipment_facility', \
         'name', \
+        'info', \
         'last_updated'
 
     list_filter = \
