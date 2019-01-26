@@ -210,6 +210,20 @@ class EquipmentDataField(Model):
             blank=True,
             null=True)
 
+    description = \
+        CharField(
+            blank=True,
+            null=True,
+            unique=False,
+            max_length=MAX_CHAR_LEN)
+
+    foreign_lang_description = \
+        CharField(
+            blank=True,
+            null=True,
+            unique=False,
+            max_length=MAX_CHAR_LEN)
+
     equipment_unique_types = \
         ManyToManyField(
             to='EquipmentUniqueType',
