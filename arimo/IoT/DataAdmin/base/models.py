@@ -270,9 +270,18 @@ class EquipmentDataField(Model):
 
 
 def equipment_data_field_post_save(sender, instance, *args, **kwargs):
-    for equipment_unique_type in instance.equipment_unique_types.all():
-        for equipment_unique_type_group in equipment_unique_type.groups.all():
-            equipment_unique_type_group.save()
+    if instance.equipment_unique_types.count():
+        for equipment_unique_type_group in \
+                instance.equipment_unique_types.all()[0].groups.all().union(
+                    *(equipment_unique_type.groups.all()
+                      for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
+                    all=False):
+            equipment_unique_type_group.equipment_data_fields.set(
+                equipment_unique_type_group.equipment_unique_types.all()[0].data_fields.all().union(
+                    *(equipment_unique_type.data_fields.all()
+                      for equipment_unique_type in equipment_unique_type_group.equipment_unique_types.all()[1:]),
+                    all=False),
+                clear=False)
 
 
 post_save.connect(
@@ -411,7 +420,12 @@ class EquipmentUniqueType(Model):
 
 def equipment_unique_type_post_save(sender, instance, *args, **kwargs):
     for equipment_unique_type_group in instance.groups.all():
-        equipment_unique_type_group.save()
+        equipment_unique_type_group.equipment_data_fields.set(
+            equipment_unique_type_group.equipment_unique_types.all()[0].data_fields.all().union(
+                *(equipment_unique_type.data_fields.all()
+                  for equipment_unique_type in equipment_unique_type_group.equipment_unique_types.all()[1:]),
+                all=False),
+            clear=False)
 
 
 post_save.connect(
