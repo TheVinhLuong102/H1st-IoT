@@ -514,27 +514,6 @@ class EquipmentInstance(Model):
         DateTimeField(
             auto_now=True)
 
-    data_file_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    control_data_file_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
-    measure_data_file_url = \
-        URLField(
-            max_length=MAX_CHAR_LEN,
-            blank=True,
-            null=True,
-            default=None)
-
     class Meta:
         ordering = \
             'equipment_general_type', \
