@@ -251,6 +251,7 @@ class BlueprintAdmin(ModelAdmin):
         'uuid', \
         'timestamp', \
         'active', \
+        'benchmark_metrics_summary', \
         'last_updated'
 
     list_filter = \
@@ -277,6 +278,47 @@ class BlueprintAdmin(ModelAdmin):
         'uuid', \
         'timestamp', \
         'last_updated'
+
+    def benchmark_metrics_summary(self, obj):
+        if obj.benchmark_metrics:
+            d = {}
+
+            for label_var_name, benchmark_metrics in obj.benchmark_metrics.items():
+                global_benchmark_metrics = benchmark_metrics['GLOBAL']
+
+                good = True
+
+                r2 = global_benchmark_metrics['R2']
+                r2_text = '{:.1f}%'.format(100 * r2)
+                if r2 < .68:
+                    good = False
+                    r2_text += ' (< 68%)'
+
+                mae = global_benchmark_metrics['MAE']
+                medae = global_benchmark_metrics['MedAE']
+                mae_medae_ratio = mae / medae
+                mae_medae_ratio_text = '{:.3g}x'.format(mae_medae_ratio)
+                if mae_medae_ratio > 3:
+                    good = False
+                    mae_medae_ratio_text += ' (> 3x)'
+
+                d[label_var_name.upper()
+                  if good
+                  else label_var_name] = \
+                    dict(good=good,
+                         R2_text=r2_text,
+                         MAE=mae,
+                         MedAE=medae,
+                         MAE_MedAE_ratio_text=mae_medae_ratio_text)
+
+            return '; '.join(
+                '{}: R2 {}, MAE {:.3g} / MedAE {:.3g} = {}'.format(
+                    k,
+                    v['R2_text'],
+                    v['MAE'],
+                    v['MedAE'],
+                    v['MAE_MedAE_ratio_text'])
+                for k, v in sorted(d.items(), key=lambda i: i[1]['good'], reverse=True))
 
     @silk_profile(name='Admin: Blueprints')
     def changelist_view(self, request, extra_context=None):
