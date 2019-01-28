@@ -9,7 +9,7 @@ DjangoRESTFramework-Filters == 1.0.0.dev0   # *** v0 incompat w/ Django-Filter v
 DRF-Writable-Nested >= 0.5.1
 Django-Silk >= 3.0.1
 Markdown >= 3.0.1
-Pandas >= 0.23.4
-PsycoPG2-binary >= 2.7.6.1
+Pandas >= 0.24.0
+PsycoPG2-binary >= 2.7.7
 Python-DateUtil >= 2.7.5
 Ruamel.YAML >= 0.15.87
