@@ -1,6 +1,6 @@
 from django.db.models import \
     Model, \
-    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
+    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, TextField, URLField, \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
@@ -211,18 +211,14 @@ class EquipmentDataField(Model):
             null=True)
 
     description = \
-        CharField(
+        TextField(
             blank=True,
-            null=True,
-            unique=False,
-            max_length=MAX_CHAR_LEN)
+            null=True)
 
     foreign_lang_description = \
-        CharField(
+        TextField(
             blank=True,
-            null=True,
-            unique=False,
-            max_length=MAX_CHAR_LEN)
+            null=True)
 
     equipment_unique_types = \
         ManyToManyField(
