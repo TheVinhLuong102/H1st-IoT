@@ -28,6 +28,7 @@ class Project(object):
 
     _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
     _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
+    _CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'calc'
     _ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'alarm'
 
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
@@ -111,6 +112,11 @@ class Project(object):
         self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
             self.data.EquipmentDataFieldTypes.get_or_create(
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
+                defaults=None)[0]
+
+        self.CALC_EQUIPMENT_DATA_FIELD_TYPE = \
+            self.data.EquipmentDataFieldTypes.get_or_create(
+                name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
