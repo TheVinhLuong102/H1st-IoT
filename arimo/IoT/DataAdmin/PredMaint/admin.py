@@ -12,6 +12,7 @@ from .forms import \
 from .models import \
     GlobalConfig, \
     EquipmentUniqueTypeGroupDataFieldProfile, \
+    EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
@@ -127,6 +128,68 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 site.register(
     EquipmentUniqueTypeGroupDataFieldProfile,
     admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
+
+
+class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
+    list_display = \
+        'equipment_unique_type_group', \
+        'to_date', \
+        'equipment_data_field', \
+        'equipment_data_field_2', \
+        'sample_correlation', \
+        'last_updated'
+
+    ordering = \
+        'equipment_unique_type_group', \
+        '-to_date', \
+        '-sample_correlation'
+
+    list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'to_date', \
+        'equipment_data_field__name'
+
+    list_select_related = \
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
+        'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit', \
+        'equipment_data_field_2', 'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type', \
+        'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit'
+
+    show_full_result_count = False
+
+    search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_data_field__name'
+
+    readonly_fields = \
+        'equipment_unique_type_group', \
+        'to_date', \
+        'equipment_data_field', \
+        'equipment_data_field_2', \
+        'sample_correlation', \
+        'last_updated'
+
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlation')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin, self).changeform_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
+
+site.register(
+    EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation,
+    admin_class=EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin)
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInline):

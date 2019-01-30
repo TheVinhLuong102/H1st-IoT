@@ -144,6 +144,59 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
             '-to_date'
 
 
+class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
+    RELATED_NAME = 'equipment_unique_type_group_data_field_pairwise_correlations'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_pairwise_correlation'
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    to_date = \
+        DateField(
+            blank=True,
+            null=True,
+            db_index=True)
+
+    equipment_data_field = \
+        ForeignKey(
+            to=EquipmentDataField,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_data_field_2 = \
+        ForeignKey(
+            to=EquipmentDataField,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    sample_correlation = \
+        FloatField(
+            blank=False,
+            null=False)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = \
+            'equipment_unique_type_group', \
+            '-to_date', \
+            '-sample_correlation'
+
+
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_service_configs'
