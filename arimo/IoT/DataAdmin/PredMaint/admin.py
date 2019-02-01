@@ -133,7 +133,6 @@ site.register(
 class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
-        'to_date', \
         'equipment_data_field', \
         'equipment_data_field_2', \
         'sample_correlation', \
@@ -141,13 +140,11 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
 
     ordering = \
         'equipment_unique_type_group', \
-        '-to_date', \
         '-sample_correlation'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
-        'to_date', \
         'equipment_data_field__name'
 
     list_select_related = \
@@ -166,7 +163,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
 
     readonly_fields = \
         'equipment_unique_type_group', \
-        'to_date', \
         'equipment_data_field', \
         'equipment_data_field_2', \
         'sample_correlation', \

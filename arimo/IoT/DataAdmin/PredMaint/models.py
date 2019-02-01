@@ -157,12 +157,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
             null=False,
             on_delete=PROTECT)
 
-    to_date = \
-        DateField(
-            blank=True,
-            null=True,
-            db_index=True)
-
     equipment_data_field = \
         ForeignKey(
             to=EquipmentDataField,
@@ -193,7 +187,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
     class Meta:
         ordering = \
             'equipment_unique_type_group', \
-            '-to_date', \
             '-sample_correlation'
 
 
