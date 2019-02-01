@@ -218,7 +218,25 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
                 'monitored_equipment_data_field__numeric_measurement_unit') \
             .prefetch_related(
                 Prefetch(
-                    lookup='excluded_equipment_data_fields',
+                    lookup='auto_included_numeric_equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')),
+                Prefetch(
+                    lookup='manually_included_equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')),
+                Prefetch(
+                    lookup='manually_excluded_equipment_data_fields',
                     queryset=
                         EquipmentDataField.objects
                         .select_related(
@@ -262,8 +280,8 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                     ' (excl: {})'.format(
                         ', '.join(excluded_equipment_data_field.name
                                   for excluded_equipment_data_field in
-                                    equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.all()))
-                        if equipment_unique_type_group_monitored_data_field_config.excluded_equipment_data_fields.count()
+                                    equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.all()))
+                        if equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.count()
                         else '')
                 for equipment_unique_type_group_monitored_data_field_config in
                     obj.equipment_unique_type_group_monitored_data_field_configs.all()
@@ -286,7 +304,9 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         .select_related(
                             'monitored_equipment_data_field')
                         .prefetch_related(
-                            'excluded_equipment_data_fields')),
+                            'auto_included_numeric_equipment_data_fields',
+                            'manually_included_equipment_data_fields',
+                            'manually_excluded_equipment_data_fields')),
 
                 'global_excluded_equipment_data_fields')
 
