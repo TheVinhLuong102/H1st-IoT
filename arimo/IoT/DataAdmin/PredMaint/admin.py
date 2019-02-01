@@ -197,7 +197,10 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
 
     fields = \
         'monitored_equipment_data_field', \
-        'excluded_equipment_data_fields', \
+        'auto_included_equipment_data_fields', \
+        'includ_categorical_equipment_data_fields', \
+        'manually_included_equipment_data_fields', \
+        'manually_excluded_equipment_data_fields', \
         'active', \
         'comments'
 

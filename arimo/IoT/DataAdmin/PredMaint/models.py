@@ -285,11 +285,31 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             null=False,
             on_delete=PROTECT)
 
-    excluded_equipment_data_fields = \
+    auto_included_numeric_equipment_data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
-            related_name='equipment_unique_type_group_monitored_data_field_configs_excl',
-            related_query_name='equipment_unique_type_group_monitored_data_field_config_excl',
+            related_name='equipment_unique_type_group_monitored_data_field_configs_auto_incl',
+            related_query_name='equipment_unique_type_group_monitored_data_field_config_auto_incl',
+            blank=True)
+
+    include_categorical_equipment_data_fields = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
+
+    manually_included_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name='equipment_unique_type_group_monitored_data_field_configs_extra_manual_incl',
+            related_query_name='equipment_unique_type_group_monitored_data_field_config_extra_manual_incl',
+            blank=True)
+
+    manually_excluded_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name='equipment_unique_type_group_monitored_data_field_configs_manual_excl',
+            related_query_name='equipment_unique_type_group_monitored_data_field_config_manual_excl',
             blank=True)
 
     active = \

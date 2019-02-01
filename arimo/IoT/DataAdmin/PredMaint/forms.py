@@ -57,7 +57,39 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
                            'data-minimum-input-length': 1}),
             required=True)
 
-    excluded_equipment_data_fields = \
+    auto_included_numeric_equipment_data_fields = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentDataField.objects
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_data_field_type',
+                    'data_type',
+                    'numeric_measurement_unit'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentDataFieldAutoComplete.name,
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+            required=False)
+
+    manually_included_numeric_equipment_data_fields = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentDataField.objects
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_data_field_type',
+                    'data_type',
+                    'numeric_measurement_unit'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentDataFieldAutoComplete.name,
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+            required=False)
+
+    manually_excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentDataField.objects
