@@ -198,6 +198,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
     fields = \
         'monitored_equipment_data_field', \
         'auto_included_numeric_equipment_data_fields', \
+        'highly_correlated_numeric_equipment_data_fields', \
         'manually_included_equipment_data_fields', \
         'manually_excluded_equipment_data_fields', \
         'active', \
@@ -218,6 +219,15 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
             .prefetch_related(
                 Prefetch(
                     lookup='auto_included_numeric_equipment_data_fields',
+                    queryset=
+                        EquipmentDataField.objects
+                        .select_related(
+                            'equipment_general_type',
+                            'equipment_data_field_type',
+                            'data_type',
+                            'numeric_measurement_unit')),
+                Prefetch(
+                    lookup='highly_correlated_numeric_equipment_data_fields',
                     queryset=
                         EquipmentDataField.objects
                         .select_related(
@@ -305,6 +315,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                             'monitored_equipment_data_field')
                         .prefetch_related(
                             'auto_included_numeric_equipment_data_fields',
+                            'highly_correlated_numeric_equipment_data_fields',
                             'manually_included_equipment_data_fields',
                             'manually_excluded_equipment_data_fields')),
 

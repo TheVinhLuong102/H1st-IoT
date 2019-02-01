@@ -298,6 +298,13 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             related_query_name='equipment_unique_type_group_monitored_data_field_config_auto_incl',
             blank=True)
 
+    highly_correlated_numeric_equipment_data_fields = \
+        ManyToManyField(
+            to=EquipmentDataField,
+            related_name='equipment_unique_type_group_monitored_data_field_configs_high_corr',
+            related_query_name='equipment_unique_type_group_monitored_data_field_config_high_corr',
+            blank=True)
+
     manually_included_equipment_data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
