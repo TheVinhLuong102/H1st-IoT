@@ -211,6 +211,12 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             null=False,
             on_delete=PROTECT)
 
+    include_categorical_equipment_data_fields = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=True)
+
     global_excluded_equipment_data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
@@ -291,12 +297,6 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             related_name='equipment_unique_type_group_monitored_data_field_configs_auto_incl',
             related_query_name='equipment_unique_type_group_monitored_data_field_config_auto_incl',
             blank=True)
-
-    include_categorical_equipment_data_fields = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=True)
 
     manually_included_equipment_data_fields = \
         ManyToManyField(
