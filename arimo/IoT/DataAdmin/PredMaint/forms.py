@@ -73,7 +73,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
                            'data-minimum-input-length': 1}),
             required=False)
 
-    manually_included_numeric_equipment_data_fields = \
+    manually_included_equipment_data_fields = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentDataField.objects
