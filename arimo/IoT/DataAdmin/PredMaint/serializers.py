@@ -68,7 +68,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(RelatedField)
     def to_representation(self, value):
         return dict(
                 monitored_equipment_data_field=value.monitored_equipment_data_field.name,
-                excluded_equipment_data_fields=[i.name for i in value.excluded_equipment_data_fields.all()],
+                manually_excluded_equipment_data_fields=[i.name for i in value.manually_excluded_equipment_data_fields.all()],
                 active=value.active,
                 comments=value.comments)
 

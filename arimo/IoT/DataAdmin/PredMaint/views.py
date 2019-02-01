@@ -179,7 +179,7 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
                         'monitored_equipment_data_field__equipment_data_field_type')
                     .prefetch_related(
                         Prefetch(
-                            lookup='excluded_equipment_data_fields',
+                            lookup='manually_excluded_equipment_data_fields',
                             queryset=
                                 EquipmentDataField.objects
                                 .select_related(
