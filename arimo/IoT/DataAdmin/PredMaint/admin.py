@@ -302,8 +302,6 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                         .select_related(
                             'monitored_equipment_data_field')
                         .prefetch_related(
-                            'auto_included_numeric_equipment_data_fields',
-                            'highly_correlated_numeric_equipment_data_fields',
                             'manually_included_equipment_data_fields',
                             'manually_excluded_equipment_data_fields')),
 
