@@ -343,14 +343,18 @@ class Project(object):
         return equipment_data_field
 
     def equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, control=False):
+        kwargs = \
+            dict(equipment_data_field_type=self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE) \
+            if control \
+            else dict(equipment_data_field_type__in=
+                        [self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                         self.CALC_EQUIPMENT_DATA_FIELD_TYPE])
+
         equipment_data_fields = \
             self.data.EquipmentDataFields.filter(
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
-                equipment_data_field_type=
-                    self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
-                    if control
-                    else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
-                name=clean_lower_str(equipment_data_field_name))
+                name=clean_lower_str(equipment_data_field_name),
+                **kwargs)
 
         assert len(equipment_data_fields) == 1, \
             '*** {} ***'.format(equipment_data_fields)
