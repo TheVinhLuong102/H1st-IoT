@@ -1,7 +1,7 @@
 AWSEBCLI >= 3.14.10
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
-Django >= 2.1.5
+Django == 2.1.5   # *** 2.2a1: UnicodeEncodeError: 'ascii' codec can't encode character in position 48 ***
 Django-AutoComplete-Light >= 3.3.2
 Django-Filter >= 2.1.0   # *** v1 incompat w/ Django v2 ***
 DjangoRESTFramework >= 3.9.1
