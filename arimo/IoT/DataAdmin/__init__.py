@@ -37,13 +37,7 @@ class Project(object):
 
     _DEFAULT_PARAMS = \
         dict(
-            db=dict(
-                host=None, db_name=None,
-                user=None, password=None),
-
             s3=dict(
-                bucket=None,
-
                 equipment_data=dict(
                     dir_prefix='.arimo/PredMaint/EquipmentData',
                     raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
