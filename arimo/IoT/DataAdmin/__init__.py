@@ -356,13 +356,13 @@ class Project(object):
                     equipment_unique_type_name=equipment_unique_type_name)
 
         try:
-            equipment_instance, _ = \
+            equipment_instance = \
                 self.data.EquipmentInstances.update_or_create(
                     equipment_general_type=
                         self.equipment_general_type(
                             equipment_general_type_name=equipment_general_type_name),
                     name=clean_lower_str(name),
-                    defaults=kwargs)
+                    defaults=kwargs)[0]
             
         except Exception as err:
             print('*** {} #{} ***'.format(equipment_general_type_name, name))
