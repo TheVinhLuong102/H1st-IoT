@@ -832,11 +832,8 @@ class Project(object):
 
 
 def project(name='TEST'):
-    from arimo.util.aws import key_pair
-
-    params = yaml.safe_load(open(os.path.join(Project.CONFIG_DIR_PATH, name + _YAML_EXT), 'r'))
-
-    if 's3' in params:
-        params['s3']['access_key_id'], params['s3']['secret_access_key'] = key_pair(profile=name)
-
-    return Project(params=params)
+    return Project(
+        params=yaml.safe_load(
+                open(os.path.join(
+                        Project.CONFIG_DIR_PATH,
+                        name + _YAML_EXT))))
