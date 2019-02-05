@@ -39,6 +39,7 @@ class Project(object):
         dict(
             s3=dict(
                 equipment_data=dict(
+                    # TODO: make these more generic, nost just for PredMaint
                     dir_prefix='.arimo/PredMaint/EquipmentData',
                     raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
                     daily_agg_dir_prefix='.arimo/PredMaint/EquipmentData/DailyAgg')))
