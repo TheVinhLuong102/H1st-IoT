@@ -272,9 +272,15 @@ class Project(object):
                 name=clean_lower_str(equipment_unique_type_name))
 
     def update_or_create_equipment_data_field(
-            self, equipment_general_type_name, equipment_data_field_name, control=False, cat=None,
+            self, equipment_general_type_name, equipment_data_field_name, equipment_data_field_type='measure', cat=None,
             equipment_unique_type_names_incl=set(), equipment_unique_type_names_excl=set(),
             **kwargs):
+        equipment_data_field_types = \
+            dict(control=self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE,
+                 measure=self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                 calc=self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
+                 alarm=self.ALARM_EQUIPMENT_DATA_FIELD_TYPE)
+
         if cat is not None:
             kwargs['data_type'] = \
                 self.CAT_DATA_TYPE \
@@ -287,9 +293,7 @@ class Project(object):
                     self.equipment_general_type(
                         equipment_general_type_name=equipment_general_type_name),
                 equipment_data_field_type=
-                    self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE
-                    if control
-                    else self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                    equipment_data_field_types[equipment_data_field_type],
                 name=clean_lower_str(equipment_data_field_name),
                 defaults=kwargs)[0]
 
@@ -334,18 +338,13 @@ class Project(object):
             if control \
             else dict(equipment_data_field_type__in=
                         [self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
-                         self.CALC_EQUIPMENT_DATA_FIELD_TYPE])
+                         self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
+                         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE])
 
-        equipment_data_fields = \
-            self.data.EquipmentDataFields.filter(
+        return self.data.EquipmentDataFields.get(
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_data_field_name),
                 **kwargs)
-
-        assert len(equipment_data_fields) == 1, \
-            '*** {} ***'.format(equipment_data_fields)
-
-        return equipment_data_fields[0]
 
     def update_or_create_equipment_instance(
             self, equipment_general_type_name, name, equipment_unique_type_name=None,
