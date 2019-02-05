@@ -124,8 +124,13 @@ class Project(object):
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
                 '*** {} ***'.format(self.params.s3.bucket)
 
-            self.params.s3.access_key_id, self.params.s3.secret_access_key = \
-                key_pair(profile='arimo')
+            if 'access_key_id' in self.params.s3:
+                assert self.params.s3.access_key_id \
+                   and self.params.s3.secret_access_key
+
+            else:
+                self.params.s3.access_key_id, self.params.s3.secret_access_key = \
+                    key_pair(profile='arimo')
 
             self.s3_client = \
                 s3.client(
