@@ -375,57 +375,6 @@ class Project(object):
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_instance_name))
 
-    def save_equipment_data(
-            self, df, equipment_instance_id_or_data_set_name,
-            mode='overwrite', _spark=False, verbose=True):
-        import pandas
-        import pyspark.sql
-        from arimo.data.spark import DDF
-        from arimo.util.date_time import DATE_COL
-
-        if isinstance(df, _STR_CLASSES):
-            adf = DDF.load(
-                path=df,
-                aws_access_key_id=self.params.s3.access_key_id,
-                aws_secret_access_key=self.params.s3.secret_access_key,
-                verbose=verbose)
-
-        elif isinstance(df, pandas.DataFrame):
-            adf = DDF.create(data=df)
-
-        elif isinstance(df, pyspark.sql.DataFrame):
-            adf = DDF(sparkDF=df)
-
-        else:
-            assert isinstance(df, DDF)
-            adf = df
-
-        if DDF._DEFAULT_I_COL in adf.columns:
-            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME not in adf.columns
-
-            adf.rename(
-                inplace=True,
-                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
-                **{self._EQUIPMENT_INSTANCE_ID_COL_NAME: DDF._DEFAULT_I_COL})
-
-        else:
-            assert self._EQUIPMENT_INSTANCE_ID_COL_NAME in adf.columns
-            adf.tCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
-
-        assert self._DATE_TIME_COL_NAME in adf.columns
-        adf.tCol = self._DATE_TIME_COL_NAME
-
-        adf.save(
-            path=os.path.join(
-                self.params.s3.equipment_data.dir_path,
-                equipment_instance_id_or_data_set_name + _PARQUET_EXT),
-            format='parquet',
-            mode=mode,
-            partitionBy=DATE_COL,
-            aws_access_key_id=self.params.s3.access_key_id,
-            aws_secret_access_key=self.params.s3.secret_access_key,
-            verbose=verbose)
-
     def load_equipment_data(
             self, equipment_instance_id_or_data_set_name,
             _from_files=True, _spark=False,
@@ -536,18 +485,6 @@ class Project(object):
                 for equipment_unique_type in
                     self.data.EquipmentUniqueTypes.filter(
                         equipment_general_type__name=clean_lower_str(equipment_general_type_name))}
-
-    def equipment_unique_type_group_data_fields(self, equipment_general_type_name, equipment_unique_type_group_name):
-        equipment_unique_types = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name) \
-            .equipment_unique_types.all()
-
-        return equipment_unique_types[0].data_fields.all().union(
-                *(equipment_unique_type.data_fields.all()
-                  for equipment_unique_type in equipment_unique_types[1:]),
-                all=False)
 
     def associated_equipment_instances(self, equipment_instance_name, from_date=None, to_date=None):
         kwargs = {}
