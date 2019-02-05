@@ -371,17 +371,9 @@ class Project(object):
         return equipment_instance
 
     def equipment_instance(self, equipment_general_type_name, equipment_instance_name):
-        equipment_instances = \
-            self.data.EquipmentInstances.filter(
+        return self.data.EquipmentInstances.get(
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_instance_name))
-
-        assert len(equipment_instances) == 1, \
-            '*** MULTIPLE {} ***'.format(equipment_instances) \
-            if bool(equipment_instances) \
-            else '*** {} #{} DOES NOT EXIST ***'.format(equipment_general_type_name, equipment_instance_name)
-
-        return equipment_instances[0]
 
     def save_equipment_data(
             self, df, equipment_instance_id_or_data_set_name,
