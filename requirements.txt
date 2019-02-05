@@ -2,8 +2,8 @@ AWSEBCLI >= 3.14.10
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
 Django >= 2.1.5
-Django-AutoComplete-Light == 3.3.0   # *** 3.3.1/2 has JavaScript form rendering bug on Mac/Linux ***
-Django-Filter >= 2.0.0   # *** v1 incompat w/ Django v2 ***
+Django-AutoComplete-Light >= 3.3.2
+Django-Filter >= 2.1.0   # *** v1 incompat w/ Django v2 ***
 DjangoRESTFramework >= 3.9.1
 DjangoRESTFramework-Filters == 1.0.0.dev0   # *** v0 incompat w/ Django-Filter v2 ***
 DRF-Writable-Nested >= 0.5.1
