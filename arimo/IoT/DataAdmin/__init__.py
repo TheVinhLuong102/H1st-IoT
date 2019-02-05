@@ -44,9 +44,6 @@ class Project(object):
             s3=dict(
                 bucket=None,
 
-                access_key_id=None,
-                secret_access_key=None,
-
                 equipment_data=dict(
                     dir_prefix='.arimo/PredMaint/EquipmentData',
                     raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
