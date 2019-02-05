@@ -31,12 +31,16 @@ class Project(object):
     _CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'calc'
     _ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'alarm'
 
+    _AWS_PROFILE_NAME = 'arimo'
+
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
     _DATE_TIME_COL_NAME = 'date_time'
 
     _DEFAULT_PARAMS = \
         dict(
             s3=dict(
+                BUCKET_NAME_GLOBAL_CONFIG_KEY='S3_BUCKET',
+
                 equipment_data=dict(
                     dir_prefix='.arimo/IoT/EquipmentData',
                     raw_dir_prefix='.arimo/IoT/EquipmentData/raw',
@@ -65,70 +69,72 @@ class Project(object):
 
         from arimo.IoT.DataAdmin.base.models import \
             GlobalConfig, \
-            DataType, EquipmentDataFieldType, EquipmentDataField, NumericMeasurementUnit, \
-            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, \
-            EquipmentFacility, EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, EquipmentSystem
+            DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
+            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentDataField, \
+            EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, \
+            EquipmentFacility, EquipmentSystem
 
         self.data = \
             Namespace(
                 GlobalConfigs=GlobalConfig.objects,
-                DataTypes=DataType.objects,
-                EquipmentDataFieldTypes=EquipmentDataFieldType.objects,
-                EquipmentDataFields=EquipmentDataField.objects,
+
                 NumericMeasurementUnits=NumericMeasurementUnit.objects,
+
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
-                EquipmentFacilities=EquipmentFacility.objects,
+                EquipmentDataFields=EquipmentDataField.objects,
+
                 EquipmentInstances=EquipmentInstance.objects,
                 EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
+
+                EquipmentFacilities=EquipmentFacility.objects,
                 EquipmentSystems=EquipmentSystem.objects)
 
         self.CAT_DATA_TYPE = \
-            self.data.DataTypes.get_or_create(
+            DataType.objects.get_or_create(
                 name=self._CAT_DATA_TYPE_NAME,
                 defaults=None)[0]
 
         self.NUM_DATA_TYPE = \
-            self.data.DataTypes.get_or_create(
+            DataType.objects.get_or_create(
                 name=self._NUM_DATA_TYPE_NAME,
                 defaults=None)[0]
 
         self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE = \
-            self.data.EquipmentDataFieldTypes.get_or_create(
+            EquipmentDataFieldType.objects.get_or_create(
                 name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
         self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
-            self.data.EquipmentDataFieldTypes.get_or_create(
+            EquipmentDataFieldType.objects.get_or_create(
                 name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
         self.CALC_EQUIPMENT_DATA_FIELD_TYPE = \
-            self.data.EquipmentDataFieldTypes.get_or_create(
+            EquipmentDataFieldType.objects.get_or_create(
                 name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
-            self.data.EquipmentDataFieldTypes.get_or_create(
+            EquipmentDataFieldType.objects.get_or_create(
                 name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME,
                 defaults=None)[0]
 
         self.params.s3.bucket = \
             self.data.GlobalConfigs.get_or_create(
-                key='S3_BUCKET')[0].value
+                key=self.params.s3.BUCKET_NAME_GLOBAL_CONFIG_KEY)[0].value
 
         if self.params.s3.bucket:
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
                 '*** {} ***'.format(self.params.s3.bucket)
 
             if 'access_key_id' in self.params.s3:
-                assert self.params.s3.access_key_id \
-                   and self.params.s3.secret_access_key
+                assert self.params.s3.access_key_id and self.params.s3.secret_access_key
 
             else:
                 self.params.s3.access_key_id, self.params.s3.secret_access_key = \
-                    key_pair(profile='arimo')
+                    key_pair(profile=self._AWS_PROFILE_NAME)
 
             self.s3_client = \
                 s3.client(
