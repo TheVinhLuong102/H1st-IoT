@@ -54,7 +54,7 @@ class Project(object):
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
-        from arimo.util.aws import s3
+        from arimo.util.aws import key_pair, s3
 
         self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
@@ -131,6 +131,9 @@ class Project(object):
         if self.params.s3.bucket:
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
                 '*** {} ***'.format(self.params.s3.bucket)
+
+            self.params.s3.access_key_id, self.params.s3.secret_access_key = \
+                key_pair(profile='arimo')
 
             self.s3_client = \
                 s3.client(
