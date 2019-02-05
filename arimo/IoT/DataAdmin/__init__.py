@@ -216,18 +216,9 @@ class Project(object):
         return equipment_unique_type_group
 
     def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
-        equipment_general_type_groups = \
-            self.data.EquipmentUniqueTypeGroups.filter(
+        return self.data.EquipmentUniqueTypeGroups.get(
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_unique_type_group_name))
-
-        assert len(equipment_general_type_groups) == 1, \
-            '*** {} {}: {} ***'.format(
-                equipment_general_type_name,
-                equipment_unique_type_group_name,
-                equipment_general_type_groups)
-
-        return equipment_general_type_groups[0]
 
     def update_or_create_equipment_unique_type(
             self, equipment_general_type_name, equipment_unique_type_name,
@@ -276,18 +267,9 @@ class Project(object):
         return equipment_unique_type
 
     def equipment_unique_type(self, equipment_general_type_name, equipment_unique_type_name):
-        equipment_unique_types = \
-            self.data.EquipmentUniqueTypes.filter(
+        return self.data.EquipmentUniqueTypes.get(
                 equipment_general_type__name=clean_lower_str(equipment_general_type_name),
                 name=clean_lower_str(equipment_unique_type_name))
-
-        assert len(equipment_unique_types) == 1, \
-            '*** {} {}: {} ***'.format(
-                equipment_general_type_name,
-                equipment_unique_type_name,
-                equipment_unique_types)
-
-        return equipment_unique_types[0]
 
     def update_or_create_equipment_data_field(
             self, equipment_general_type_name, equipment_data_field_name, control=False, cat=None,
