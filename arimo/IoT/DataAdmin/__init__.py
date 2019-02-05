@@ -32,17 +32,15 @@ class Project(object):
     _ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'alarm'
 
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
-    _EQUIPMENT_INSTANCE_ALIAS_COL_NAME = 'equipment_instance_alias'
     _DATE_TIME_COL_NAME = 'date_time'
 
     _DEFAULT_PARAMS = \
         dict(
             s3=dict(
                 equipment_data=dict(
-                    # TODO: make these more generic, nost just for PredMaint
-                    dir_prefix='.arimo/PredMaint/EquipmentData',
-                    raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
-                    daily_agg_dir_prefix='.arimo/PredMaint/EquipmentData/DailyAgg')))
+                    dir_prefix='.arimo/IoT/EquipmentData',
+                    raw_dir_prefix='.arimo/IoT/EquipmentData/raw',
+                    daily_agg_dir_prefix='.arimo/IoT/EquipmentData/DailyAgg')))
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
