@@ -430,6 +430,8 @@ class Project(object):
 
         return adf
 
+    # *** BELOW METHODS ARE EXPERIMENTAL >>>
+
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
         from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
