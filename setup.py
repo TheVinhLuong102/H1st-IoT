@@ -26,13 +26,13 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
         s = s.strip()
         lower_s = s.lower()
         install_requires.append(
-            'Django >= 1.11.18'
+            'Django >= 1.11.18, < 2'   # last 1.x ver compat w/ Py2
             if lower_s.startswith('django >=')
-            else ('Django-AutoComplete-Light == 3.2.10'
+            else ('Django-AutoComplete-Light >= 3.2.10, < 3.3'   # last 3.2.x ver compat w/ Py2
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
-                  else ('DjangoRESTFramework-Filters == 0.10.2'
+                  else ('DjangoRESTFramework-Filters >= 0.10.2, < 1'   # last 0.x ver compat w/ Py2
                         if six.PY2 and lower_s.startswith('djangorestframework-filters')
-                        else ('Django-Filter == 1.1.0'
+                        else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
                               if six.PY2 and lower_s.startswith('django-filter')
                               else s))))
 
