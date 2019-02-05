@@ -7,7 +7,7 @@ from ruamel import yaml
 import shutil
 
 from arimo.IoT.DataAdmin import Project
-from arimo.IoT.DataAdmin._project.settings import _DB_CREDS_FILE_PATH
+from arimo.IoT.DataAdmin._django_root.settings import _DB_CREDS_FILE_PATH
 from arimo.IoT.DataAdmin.util import _YAML_EXT
 
 

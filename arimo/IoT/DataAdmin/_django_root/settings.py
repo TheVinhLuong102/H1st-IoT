@@ -82,7 +82,7 @@ MIDDLEWARE = [
     'silk.middleware.SilkyMiddleware'
 ]
 
-ROOT_URLCONF = 'arimo.IoT.DataAdmin._project.urls'
+ROOT_URLCONF = 'arimo.IoT.DataAdmin._django_root.urls'
 
 TEMPLATES = [
     {
@@ -100,7 +100,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'arimo.IoT.DataAdmin._project.wsgi.application'
+WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
 
 
 # Database

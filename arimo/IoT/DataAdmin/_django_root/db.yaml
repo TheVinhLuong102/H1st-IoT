@@ -1,0 +1,5 @@
+db:
+  host: hussmann-oceania-cc-iotdataadmin.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
+  db_name: HussmannOceania_IoTDataAdmin
+  user: arimo
+  password: arimoiscool

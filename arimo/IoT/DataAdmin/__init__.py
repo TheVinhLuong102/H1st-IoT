@@ -10,7 +10,7 @@ from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 from django.db.models import Count
 
-import arimo.IoT.DataAdmin._project.settings
+import arimo.IoT.DataAdmin._django_root.settings
 from arimo.IoT.DataAdmin.util import clean_lower_str, _JSON_EXT, _PARQUET_EXT, _YAML_EXT
 
 
@@ -58,12 +58,12 @@ class Project(object):
            and self.params.db.user \
            and self.params.db.password
 
-        django_db_settings = arimo.IoT.DataAdmin._project.settings.DATABASES['default']
+        django_db_settings = arimo.IoT.DataAdmin._django_root.settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.host
         django_db_settings['NAME'] = self.params.db.db_name
         django_db_settings['USER'] = self.params.db.user
         django_db_settings['PASSWORD'] = self.params.db.password
-        settings.configure(**arimo.IoT.DataAdmin._project.settings.__dict__)
+        settings.configure(**arimo.IoT.DataAdmin._django_root.settings.__dict__)
         get_wsgi_application()
         call_command('migrate')
 

@@ -1,5 +1,0 @@
-db:
-  host: test.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
-  db_name: test
-  user: ~
-  password: ~
