@@ -329,6 +329,10 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             null=True)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group_service_config', \
+            'monitored_equipment_data_field'
+
         ordering = \
             '-active', \
             'equipment_unique_type_group_service_config', \
