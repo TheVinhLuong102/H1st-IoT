@@ -303,6 +303,7 @@ class AlertSerializer(ModelSerializer):
             'approx_average_risk_score', \
             'last_risk_score', \
             'ongoing', \
+            'info', \
             'diagnosis_status', \
             'has_associated_equipment_problem_diagnoses', \
             'equipment_problem_diagnoses', \

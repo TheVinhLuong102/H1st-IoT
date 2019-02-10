@@ -845,6 +845,12 @@ class Alert(Model):
             default=False,
             db_index=True)
 
+    info = \
+        JSONField(
+            blank=True,
+            null=True,
+            default=dict)
+
     diagnosis_status = \
         ForeignKey(
             to=AlertDiagnosisStatus,
