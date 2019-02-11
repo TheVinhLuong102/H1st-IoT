@@ -693,6 +693,7 @@ class AlertAdmin(ModelAdmin):
         'last_risk_score', \
         'cumulative_excess_risk_score', \
         'ongoing', \
+        'info', \
         'has_associated_equipment_problem_diagnoses', \
         'last_updated'
 
