@@ -331,6 +331,7 @@ class EquipmentInstanceTabularInline(TabularInline):
 class EquipmentFacilityAdmin(ModelAdmin):
     list_display = \
         'name', \
+        'info', \
         'n_equipment_instances', \
         'last_updated'
 

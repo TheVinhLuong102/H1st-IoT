@@ -445,6 +445,11 @@ class EquipmentFacility(Model):
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
+    info = \
+        JSONField(
+            blank=True,
+            null=True)
+
     last_updated = \
         DateTimeField(
             auto_now=True)

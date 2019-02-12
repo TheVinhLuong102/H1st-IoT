@@ -214,6 +214,7 @@ class EquipmentFacilitySerializer(ModelSerializer):
 
         fields = \
             'name', \
+            'info', \
             'equipment_instances', \
             'last_updated'
 
