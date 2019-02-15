@@ -220,12 +220,7 @@ class EquipmentDataField(Model):
             null=True)
 
     description = \
-        TextField(
-            blank=True,
-            null=True)
-
-    foreign_lang_description = \
-        TextField(
+        JSONField(
             blank=True,
             null=True)
 

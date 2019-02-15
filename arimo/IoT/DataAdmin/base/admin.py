@@ -118,7 +118,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'min_val', \
         'max_val', \
         'description', \
-        'foreign_lang_description', \
         'last_updated'
 
     list_filter = \
