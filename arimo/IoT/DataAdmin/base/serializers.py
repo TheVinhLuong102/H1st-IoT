@@ -163,6 +163,7 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
         fields = \
             'equipment_general_type', \
             'name', \
+            'description', \
             'equipment_unique_types', \
             'equipment_data_fields', \
             'last_updated'
@@ -196,6 +197,8 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'id', \
             'equipment_general_type', \
             'name', \
+            'description', \
+            'foreign_lang_description', \
             'data_fields', \
             'groups', \
             'last_updated'

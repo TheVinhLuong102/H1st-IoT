@@ -172,6 +172,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
+        'description', \
         'equipment_unique_type_names', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
@@ -242,6 +243,8 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
+        'description', \
+        'foreign_lang_description', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
         'equipment_unique_type_groups', \

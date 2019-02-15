@@ -314,6 +314,11 @@ class EquipmentUniqueTypeGroup(Model):
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
+    description = \
+        TextField(
+            blank=True,
+            null=True)
+
     equipment_unique_types = \
         ManyToManyField(
             to='EquipmentUniqueType',
@@ -386,6 +391,16 @@ class EquipmentUniqueType(Model):
             db_index=True,
             # unique=True,
             max_length=MAX_CHAR_LEN)
+
+    description = \
+        TextField(
+            blank=True,
+            null=True)
+
+    foreign_lang_description = \
+        TextField(
+            blank=True,
+            null=True)
 
     data_fields = \
         ManyToManyField(
