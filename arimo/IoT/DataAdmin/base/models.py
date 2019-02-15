@@ -320,7 +320,7 @@ class EquipmentUniqueTypeGroup(Model):
             max_length=MAX_CHAR_LEN)
 
     description = \
-        TextField(
+        JSONField(
             blank=True,
             null=True)
 
@@ -398,12 +398,7 @@ class EquipmentUniqueType(Model):
             max_length=MAX_CHAR_LEN)
 
     description = \
-        TextField(
-            blank=True,
-            null=True)
-
-    foreign_lang_description = \
-        TextField(
+        JSONField(
             blank=True,
             null=True)
 

@@ -120,7 +120,6 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'min_val', \
             'max_val', \
             'description', \
-            'foreign_lang_description', \
             'equipment_unique_types', \
             'last_updated'
 

@@ -246,7 +246,6 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
-        'foreign_lang_description', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
         'equipment_unique_type_groups', \
