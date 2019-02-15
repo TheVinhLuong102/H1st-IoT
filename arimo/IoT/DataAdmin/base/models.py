@@ -83,7 +83,7 @@ class NumericMeasurementUnit(Model):
         ordering = 'name',
 
     def __str__(self):
-        return 'NumMeasureUnit "{}"'.format(self.name)
+        return u'NumMeasureUnit "{}"'.format(self.name)
 
     def save(self, *args, **kwargs):
         self.name = self.name.strip()   # remove leading & trailing spaces
