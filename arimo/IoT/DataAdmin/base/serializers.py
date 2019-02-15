@@ -38,7 +38,10 @@ class DataTypeSerializer(ModelSerializer):
 class NumericMeasurementUnitSerializer(ModelSerializer):
     class Meta:
         model = NumericMeasurementUnit
-        fields = 'name',
+
+        fields = \
+            'name', \
+            'description'
 
 
 class EquipmentDataFieldTypeSerializer(ModelSerializer):

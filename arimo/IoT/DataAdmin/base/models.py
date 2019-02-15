@@ -79,6 +79,11 @@ class NumericMeasurementUnit(Model):
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
+    description = \
+        JSONField(
+            blank=True,
+            null=True)
+
     class Meta:
         ordering = 'name',
 

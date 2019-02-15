@@ -54,7 +54,9 @@ site.register(
 
 
 class NumericMeasurementUnitAdmin(ModelAdmin):
-    list_display = 'name',
+    list_display = \
+        'name', \
+        'description'
 
     show_full_result_count = False
 
