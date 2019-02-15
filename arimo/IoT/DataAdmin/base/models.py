@@ -85,6 +85,10 @@ class NumericMeasurementUnit(Model):
     def __str__(self):
         return 'NumMeasureUnit "{}"'.format(self.name)
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.strip()   # remove leading & trailing spaces
+        return super(NumericMeasurementUnit, self).save(*args, **kwargs)
+
 
 @python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
