@@ -249,7 +249,7 @@ class EquipmentDataField(Model):
                 self.data_type.name
                     if self.data_type
                     else 'UNTYPED',
-                ', unit {}'.format(self.numeric_measurement_unit.name.upper())
+                u', unit {}'.format(self.numeric_measurement_unit.name.upper())
                     if self.numeric_measurement_unit and self.numeric_measurement_unit.name
                     else '',
                 ('' if self.upper_numeric_null is None
