@@ -242,7 +242,7 @@ class EquipmentDataField(Model):
             'name'
 
     def __str__(self):
-        return '{} [{}] {} [{}{}{}{}{}{}]'.format(
+        return u'{} [{}] {} [{}{}{}{}{}{}]'.format(
                 self.equipment_general_type.name.upper(),
                 self.equipment_data_field_type.name,
                 self.name,
