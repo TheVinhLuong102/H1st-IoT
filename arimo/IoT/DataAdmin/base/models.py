@@ -389,8 +389,8 @@ class EquipmentUniqueType(Model):
             verbose_name='Equipment Unique Type Name',
             blank=False,
             null=False,
+            unique=True,
             db_index=True,
-            # unique=True,
             max_length=MAX_CHAR_LEN)
 
     description = \
