@@ -1,4 +1,6 @@
-from rest_framework_filters import FilterSet, RelatedFilter
+from django.contrib.postgres.fields import JSONField
+
+from rest_framework_filters import CharFilter, FilterSet, RelatedFilter
 
 from .models import \
     GlobalConfig, \
@@ -171,6 +173,13 @@ class EquipmentDataFieldFilter(FilterSet):
 
             description='__all__')
 
+        filter_overrides = {
+            JSONField: {
+                'filter_class': CharFilter,
+                # 'extra': lambda f: {'lookup_expr': 'icontains'},
+            }
+        }
+
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):
     equipment_general_type = \
@@ -201,6 +210,13 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
             ],
 
             description='__all__')
+
+        filter_overrides = {
+            JSONField: {
+                'filter_class': CharFilter,
+                # 'extra': lambda f: {'lookup_expr': 'icontains'},
+            }
+        }
 
 
 class EquipmentUniqueTypeFilter(FilterSet):
@@ -233,6 +249,13 @@ class EquipmentUniqueTypeFilter(FilterSet):
 
             description='__all__')
 
+        filter_overrides = {
+            JSONField: {
+                'filter_class': CharFilter,
+                # 'extra': lambda f: {'lookup_expr': 'icontains'},
+            }
+        }
+
 
 class EquipmentFacilityFilter(FilterSet):
     equipment_instances = \
@@ -253,6 +276,13 @@ class EquipmentFacilityFilter(FilterSet):
             ],
 
             info='__all__')
+
+        filter_overrides = {
+            JSONField: {
+                'filter_class': CharFilter,
+                # 'extra': lambda f: {'lookup_expr': 'icontains'},
+            }
+        }
 
 
 class EquipmentInstanceFilter(FilterSet):
@@ -284,6 +314,13 @@ class EquipmentInstanceFilter(FilterSet):
             ],
 
             info='__all__')
+
+        filter_overrides = {
+            JSONField: {
+                'filter_class': CharFilter,
+                # 'extra': lambda f: {'lookup_expr': 'icontains'},
+            }
+        }
 
 
 class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
