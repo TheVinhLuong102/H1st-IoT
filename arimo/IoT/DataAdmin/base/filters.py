@@ -174,10 +174,10 @@ class EquipmentDataFieldFilter(FilterSet):
             description='__all__')
 
         filter_overrides = {
-            JSONField: {
-                'filter_class': CharFilter,
-                # 'extra': lambda f: {'lookup_expr': 'icontains'},
-            }
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
         }
 
 
@@ -212,10 +212,10 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
             description='__all__')
 
         filter_overrides = {
-            JSONField: {
-                'filter_class': CharFilter,
-                # 'extra': lambda f: {'lookup_expr': 'icontains'},
-            }
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
         }
 
 
@@ -250,10 +250,10 @@ class EquipmentUniqueTypeFilter(FilterSet):
             description='__all__')
 
         filter_overrides = {
-            JSONField: {
-                'filter_class': CharFilter,
-                # 'extra': lambda f: {'lookup_expr': 'icontains'},
-            }
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
         }
 
 
@@ -278,10 +278,10 @@ class EquipmentFacilityFilter(FilterSet):
             info='__all__')
 
         filter_overrides = {
-            JSONField: {
-                'filter_class': CharFilter,
-                # 'extra': lambda f: {'lookup_expr': 'icontains'},
-            }
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
         }
 
 
@@ -316,10 +316,10 @@ class EquipmentInstanceFilter(FilterSet):
             info='__all__')
 
         filter_overrides = {
-            JSONField: {
-                'filter_class': CharFilter,
-                # 'extra': lambda f: {'lookup_expr': 'icontains'},
-            }
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
         }
 
 
