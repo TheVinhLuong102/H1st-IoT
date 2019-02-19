@@ -167,9 +167,7 @@ class EquipmentDataFieldFilter(FilterSet):
                 'endswith',
                 'range',
                 'isnull'
-            ],
-
-            description='__all__')
+            ])
 
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):
@@ -198,9 +196,7 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
                 'regex', 'iregex'
-            ],
-
-            description='__all__')
+            ])
 
 
 class EquipmentUniqueTypeFilter(FilterSet):
@@ -229,9 +225,7 @@ class EquipmentUniqueTypeFilter(FilterSet):
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
                 'regex', 'iregex'
-            ],
-
-            description='__all__')
+            ])
 
 
 class EquipmentFacilityFilter(FilterSet):
@@ -250,9 +244,7 @@ class EquipmentFacilityFilter(FilterSet):
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
                 'regex', 'iregex'
-            ],
-
-            info='__all__')
+            ])
 
 
 class EquipmentInstanceFilter(FilterSet):
@@ -281,9 +273,7 @@ class EquipmentInstanceFilter(FilterSet):
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
                 'regex', 'iregex'
-            ],
-
-            info='__all__')
+            ])
 
 
 class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
