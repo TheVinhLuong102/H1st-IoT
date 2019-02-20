@@ -241,6 +241,10 @@ class EquipmentDataField(Model):
             'equipment_data_field_type', \
             'name'
 
+        unique_together = \
+            'equipment_general_type', \
+            'name'
+        
     def __str__(self):
         return u'{} [{}] {} [{}{}{}{}{}{}]'.format(
                 self.equipment_general_type.name.upper(),
