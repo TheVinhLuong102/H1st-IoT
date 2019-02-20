@@ -54,19 +54,6 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
                            'data-minimum-input-length': 1}),
             required=False)
 
-    groups = \
-        ModelMultipleChoiceField(
-            queryset=
-                EquipmentUniqueTypeGroup.objects
-                .select_related(
-                    'equipment_general_type'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
-                    url=EquipmentUniqueTypeGroupAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
-            required=False)
-
     class Meta:
         model = EquipmentUniqueType
 

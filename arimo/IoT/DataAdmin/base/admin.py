@@ -260,6 +260,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeForm
 
+    readonly_fields = \
+        'groups',
+
     def n_equipment_data_fields(self, obj):
         return obj.data_fields.count()
 
