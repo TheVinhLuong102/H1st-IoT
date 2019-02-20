@@ -17,26 +17,6 @@ from .models import \
     EquipmentSystem
 
 
-class EquipmentDataFieldForm(autocomplete.FutureModelForm):
-    equipment_unique_types = \
-        ModelMultipleChoiceField(
-            queryset=
-                EquipmentUniqueType.objects
-                .select_related(
-                    'equipment_general_type'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
-                    url=EquipmentUniqueTypeAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
-            required=False)
-
-    class Meta:
-        model = EquipmentDataField
-
-        fields = '__all__'
-
-
 class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
     equipment_unique_types = \
         ModelMultipleChoiceField(

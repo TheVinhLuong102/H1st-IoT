@@ -6,7 +6,6 @@ from django.forms import BaseInlineFormSet
 from silk.profiling.profiler import silk_profile
 
 from .forms import \
-    EquipmentDataFieldForm, \
     EquipmentUniqueTypeGroupForm, \
     EquipmentUniqueTypeForm, \
     EquipmentInstanceForm, \
@@ -147,7 +146,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'data_type__name', \
         'numeric_measurement_unit__name'
 
-    form = EquipmentDataFieldForm
+    readonly_fields = \
+        'equipment_unique_types',
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, request, extra_context=None):
