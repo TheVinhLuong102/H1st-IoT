@@ -289,11 +289,12 @@ def equipment_data_field_post_save(sender, instance, *args, **kwargs):
                 clear=False)
 
 
-post_save.connect(
-    receiver=equipment_data_field_post_save,
-    sender=EquipmentDataField,
-    weak=True,
-    dispatch_uid=None)
+# *** DISABLED below because EquipmentDataField.equipment_unique_types is read-only in forms ***
+# post_save.connect(
+#     receiver=equipment_data_field_post_save,
+#     sender=EquipmentDataField,
+#     weak=True,
+#     dispatch_uid=None)
 
 
 @python_2_unicode_compatible
