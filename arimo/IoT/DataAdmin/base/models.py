@@ -4,7 +4,7 @@ from django.db.models import \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
-from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed, post_save
 from django.utils.encoding import python_2_unicode_compatible
 
 from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
@@ -294,7 +294,8 @@ def equipment_data_field_post_save(sender, instance, *args, **kwargs):
 #     receiver=equipment_data_field_post_save,
 #     sender=EquipmentDataField,
 #     weak=True,
-#     dispatch_uid=None)
+#     dispatch_uid=None,
+#     apps=None)
 
 
 @python_2_unicode_compatible
@@ -372,7 +373,8 @@ post_save.connect(
     receiver=equipment_unique_type_group_post_save,
     sender=EquipmentUniqueTypeGroup,
     weak=True,
-    dispatch_uid=None)
+    dispatch_uid=None,
+    apps=None)
 
 
 @python_2_unicode_compatible
@@ -448,7 +450,80 @@ post_save.connect(
     receiver=equipment_unique_type_post_save,
     sender=EquipmentUniqueType,
     weak=True,
-    dispatch_uid=None)
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_unique_types_equipment_data_fields_m2m_changed(sender, instance, action, *args, **kwargs):
+    if action == 'pre_add':
+        pk_set = kwargs['pk_set']
+
+        pk_set.intersection_update(
+            i['pk']
+            for i in
+                (EquipmentDataField
+                 if isinstance(instance, EquipmentUniqueType)
+                 else EquipmentUniqueType).objects
+                .filter(
+                    pk__in=pk_set,
+                    equipment_general_type=instance.equipment_general_type)
+                .values('pk'))
+
+
+m2m_changed.connect(
+    receiver=equipment_unique_types_equipment_data_fields_m2m_changed,
+    sender=EquipmentUniqueType.data_fields.through,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_unique_type_groups_equipment_unique_types_m2m_changed(sender, instance, action, *args, **kwargs):
+    if action == 'pre_add':
+        pk_set = kwargs['pk_set']
+
+        pk_set.intersection_update(
+            i['pk']
+            for i in
+                (EquipmentUniqueType
+                 if isinstance(instance, EquipmentUniqueTypeGroup)
+                 else EquipmentUniqueTypeGroup).objects
+                .filter(
+                    pk__in=pk_set,
+                    equipment_general_type=instance.equipment_general_type)
+                .values('pk'))
+
+
+m2m_changed.connect(
+    receiver=equipment_unique_type_groups_equipment_unique_types_m2m_changed,
+    sender=EquipmentUniqueTypeGroup.equipment_unique_types.through,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_unique_type_groups_equipment_data_fields_m2m_changed(sender, instance, action, *args, **kwargs):
+    if action == 'pre_add':
+        pk_set = kwargs['pk_set']
+
+        pk_set.intersection_update(
+            i['pk']
+            for i in
+                (EquipmentDataField
+                 if isinstance(instance, EquipmentUniqueTypeGroup)
+                 else EquipmentUniqueTypeGroup).objects
+                .filter(
+                    pk__in=pk_set,
+                    equipment_general_type=instance.equipment_general_type)
+                .values('pk'))
+
+
+m2m_changed.connect(
+    receiver=equipment_unique_type_groups_equipment_data_fields_m2m_changed,
+    sender=EquipmentUniqueTypeGroup.equipment_data_fields.through,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)
 
 
 @python_2_unicode_compatible
