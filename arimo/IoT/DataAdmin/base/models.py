@@ -271,6 +271,11 @@ class EquipmentDataField(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
+
+        self.equipment_unique_types.set(
+            self.equipment_unique_types.filter(
+                equipment_general_type=self.equipment_general_type))
+
         return super(EquipmentDataField, self).save(*args, **kwargs)
 
 
@@ -355,6 +360,11 @@ class EquipmentUniqueTypeGroup(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
+
+        self.equipment_unique_types.set(
+            self.equipment_unique_types.filter(
+                equipment_general_type=self.equipment_general_type))
+
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
 
 
@@ -431,6 +441,15 @@ class EquipmentUniqueType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
+
+        self.data_fields.set(
+            self.data_fields.filter(
+                equipment_general_type=self.equipment_general_type))
+
+        self.groups.set(
+            self.groups.filter(
+                equipment_general_type=self.equipment_general_type))
+
         return super(EquipmentUniqueType, self).save(*args, **kwargs)
 
 
