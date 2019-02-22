@@ -107,8 +107,9 @@ site.register(
 class EquipmentDataFieldAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
-        'equipment_data_field_type', \
         'name', \
+        'description', \
+        'equipment_data_field_type', \
         'data_type', \
         'numeric_measurement_unit', \
         'lower_numeric_null', \
@@ -116,7 +117,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'default_val', \
         'min_val', \
         'max_val', \
-        'description', \
         'last_updated'
 
     list_filter = \

@@ -160,15 +160,6 @@ class EquipmentDataField(Model):
             null=False,
             on_delete=PROTECT)
 
-    equipment_data_field_type = \
-        ForeignKey(
-            to=EquipmentDataFieldType,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
-
     name = \
         CharField(
             verbose_name='Equipment Data Field Name',
@@ -177,6 +168,20 @@ class EquipmentDataField(Model):
             unique=False,
             db_index=True,
             max_length=MAX_CHAR_LEN)
+
+    description = \
+        JSONField(
+            blank=True,
+            null=True)
+
+    equipment_data_field_type = \
+        ForeignKey(
+            to=EquipmentDataFieldType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
 
     data_type = \
         ForeignKey(
@@ -220,11 +225,6 @@ class EquipmentDataField(Model):
 
     max_val = \
         FloatField(
-            blank=True,
-            null=True)
-
-    description = \
-        JSONField(
             blank=True,
             null=True)
 

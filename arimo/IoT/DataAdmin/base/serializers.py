@@ -110,8 +110,9 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
         fields = \
             'id', \
             'equipment_general_type', \
-            'equipment_data_field_type', \
             'name', \
+            'equipment_data_field_type', \
+            'description', \
             'data_type', \
             'numeric_measurement_unit', \
             'lower_numeric_null', \
@@ -119,7 +120,6 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'default_val', \
             'min_val', \
             'max_val', \
-            'description', \
             'equipment_unique_types', \
             'last_updated'
 
@@ -200,7 +200,6 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'equipment_general_type', \
             'name', \
             'description', \
-            'foreign_lang_description', \
             'data_fields', \
             'groups', \
             'last_updated'
