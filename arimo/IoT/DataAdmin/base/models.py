@@ -278,30 +278,6 @@ class EquipmentDataField(Model):
         return super(EquipmentDataField, self).save(*args, **kwargs)
 
 
-def equipment_data_field_post_save(sender, instance, *args, **kwargs):
-    if instance.equipment_unique_types.count():
-        for equipment_unique_type_group in \
-                instance.equipment_unique_types.all()[0].groups.all().union(
-                    *(equipment_unique_type.groups.all()
-                      for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
-                    all=False):
-            equipment_unique_type_group.equipment_data_fields.set(
-                equipment_unique_type_group.equipment_unique_types.all()[0].data_fields.all().union(
-                    *(equipment_unique_type.data_fields.all()
-                      for equipment_unique_type in equipment_unique_type_group.equipment_unique_types.all()[1:]),
-                    all=False),
-                clear=False)
-
-
-# *** DISABLED below because EquipmentDataField.equipment_unique_types is read-only in forms ***
-# post_save.connect(
-#     receiver=equipment_data_field_post_save,
-#     sender=EquipmentDataField,
-#     weak=True,
-#     dispatch_uid=None,
-#     apps=None)
-
-
 @python_2_unicode_compatible
 class EquipmentUniqueTypeGroup(Model):
     RELATED_NAME = 'equipment_unique_type_groups'
@@ -363,24 +339,6 @@ class EquipmentUniqueTypeGroup(Model):
         return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
 
 
-def equipment_unique_type_group_post_save(sender, instance, *args, **kwargs):
-    if instance.equipment_unique_types.count():
-        instance.equipment_data_fields.set(
-            instance.equipment_unique_types.all()[0].data_fields.all().union(
-                *(equipment_unique_type.data_fields.all()
-                  for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
-                all=False),
-            clear=False)
-
-
-post_save.connect(
-    receiver=equipment_unique_type_group_post_save,
-    sender=EquipmentUniqueTypeGroup,
-    weak=True,
-    dispatch_uid=None,
-    apps=None)
-
-
 @python_2_unicode_compatible
 class EquipmentUniqueType(Model):
     RELATED_NAME = 'equipment_unique_types'
@@ -438,16 +396,6 @@ class EquipmentUniqueType(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         return super(EquipmentUniqueType, self).save(*args, **kwargs)
-
-
-def equipment_unique_type_post_save(sender, instance, *args, **kwargs):
-    for equipment_unique_type_group in instance.groups.all():
-        equipment_unique_type_group.equipment_data_fields.set(
-            equipment_unique_type_group.equipment_unique_types.all()[0].data_fields.all().union(
-                *(equipment_unique_type.data_fields.all()
-                  for equipment_unique_type in equipment_unique_type_group.equipment_unique_types.all()[1:]),
-                all=False),
-            clear=False)
 
 
 def equipment_unique_types_equipment_data_fields_m2m_changed(
