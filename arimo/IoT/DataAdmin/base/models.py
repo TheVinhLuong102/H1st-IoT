@@ -823,8 +823,8 @@ class EquipmentSystem(Model):
             blank=False,
             null=False,
             default=None,
+            unique=False,
             db_index=True,
-            # unique=True,
             max_length=MAX_CHAR_LEN)
 
     date = \
