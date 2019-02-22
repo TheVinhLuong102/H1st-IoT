@@ -6,7 +6,7 @@ from django.db.models import \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, pre_delete
 from django.utils.encoding import python_2_unicode_compatible
 
 import warnings
@@ -606,6 +606,40 @@ def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
 m2m_changed.connect(
     receiver=equipment_unique_type_groups_equipment_unique_types_m2m_changed,
     sender=EquipmentUniqueTypeGroup.equipment_unique_types.through,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_unique_type_pre_delete(sender, instance, using, *args, **kwargs):
+    if instance.groups.count():
+        equipment_unique_type_groups_to_update = instance.groups.all()
+
+        print('*** DELETING {}: Updating Machine Data Streams of {}... ***'
+            .format(instance, equipment_unique_type_groups_to_update))
+
+        for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+            remaining_equipment_unique_types = \
+                equipment_unique_type_groups_to_update.equipment_unique_types.exclude(pk=instance.pk)
+
+            if remaining_equipment_unique_types.count():
+                equipment_unique_type_group_to_update.equipment_data_fields.set(
+                    remaining_equipment_unique_types.all()[0].data_fields.all().union(
+                        *(equipment_unique_type.data_fields.all()
+                          for equipment_unique_type in remaining_equipment_unique_types[1:]),
+                        all=False),
+                    clear=False)
+
+            else:
+                print('*** DELETING {}: CLEARING Machine Data Streams of {}... ***'
+                    .format(instance, equipment_unique_type_group_to_update))
+
+                equipment_unique_type_group_to_update.equipment_data_fields.clear()
+
+
+pre_delete.connect(
+    receiver=equipment_unique_type_pre_delete,
+    sender=EquipmentUniqueType,
     weak=True,
     dispatch_uid=None,
     apps=None)
