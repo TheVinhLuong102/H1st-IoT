@@ -435,36 +435,70 @@ class Project(object):
             equipment_instance_name,
             equipment_general_type_name=None, equipment_unique_type_group_name=None,
             date=None, to_date=None):
+        from arimo.data.distributed import DDF
         from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
 
         if equipment_general_type_name or equipment_unique_type_group_name:
             assert equipment_general_type_name and equipment_unique_type_group_name
 
-            s3_parquet_ddf = \
-                self.load_equipment_data(
-                    '{}---{}'.format(
-                        equipment_general_type_name.upper(),
-                        equipment_unique_type_group_name),
-                    _from_files=True,
-                    _spark=True,
-                    set_i_col=False,
-                    set_t_col=False)
+            equipment_instance_id_or_data_set_name = \
+                '{}---{}'.format(
+                    equipment_general_type_name.upper(),
+                    equipment_unique_type_group_name)
 
-            if date:
+            if date and (not to_date):
+                return DDF.load(
+                        path=os.path.join(
+                                self.params.s3.equipment_data.dir_path,
+                                equipment_instance_id_or_data_set_name + _PARQUET_EXT,
+                                '{}={}'.format(DATE_COL, date)),
+                        mergeSchema=True,
+                        aws_access_key_id=self.params.s3.access_key_id,
+                        aws_secret_access_key=self.params.s3.secret_access_key,
+                        iCol=None,
+                        tCol=None,
+                        verbose=True) \
+                    .filter(
+                        condition='{}={}'.format(
+                                    self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                                    equipment_instance_name))
+
+            else:
                 s3_parquet_ddf = \
-                    s3_parquet_ddf.filterByPartitionKeys(
-                        (DATE_COL,
-                         date,
-                         to_date)
-                        if to_date
-                        else (DATE_COL,
-                              date))
+                    self.load_equipment_data(
+                        equipment_instance_id_or_data_set_name,
+                        _from_files=True,
+                        _spark=True,
+                        set_i_col=False,
+                        set_t_col=False)
 
-            return s3_parquet_ddf.filter(
-                    condition="{}='{}'".format(
+                if date and to_date:
+                    s3_parquet_ddf = \
+                        s3_parquet_ddf.filterByPartitionKeys(
+                            (DATE_COL,
+                             date,
+                             to_date))
+
+                return s3_parquet_ddf.filter(
+                        condition="{}='{}'".format(
+                                    self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                                    equipment_instance_name))
+
+        elif date and (not to_date):
+            return DDF.load(
+                    path=os.path.join(
+                            self.params.s3.equipment_data.raw_dir_path,
+                            '{}={}'.format(
                                 self._EQUIPMENT_INSTANCE_ID_COL_NAME,
-                                equipment_instance_name))
+                                equipment_instance_name),
+                            '{}={}'.format(DATE_COL, date)),
+                    mergeSchema=True,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=None,
+                    tCol=None,
+                    verbose=True)
 
         else:
             s3_parquet_ddf = \
@@ -484,11 +518,8 @@ class Project(object):
             return s3_parquet_ddf.filterByPartitionKeys(
                         (DATE_COL,
                          date,
-                         to_date)
-                        if to_date
-                        else (DATE_COL,
-                              date)) \
-                if date \
+                         to_date)) \
+                if date and to_date \
               else s3_parquet_ddf
 
     # *** BELOW METHODS ARE EXPERIMENTAL >>>
