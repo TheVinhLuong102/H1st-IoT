@@ -1,11 +1,15 @@
+from __future__ import print_function
+
 from django.db.models import \
     Model, \
     BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, TextField, URLField, \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
-from django.db.models.signals import m2m_changed, post_save
+from django.db.models.signals import m2m_changed
 from django.utils.encoding import python_2_unicode_compatible
+
+import warnings
 
 from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
@@ -446,28 +450,112 @@ def equipment_unique_type_post_save(sender, instance, *args, **kwargs):
             clear=False)
 
 
-post_save.connect(
-    receiver=equipment_unique_type_post_save,
-    sender=EquipmentUniqueType,
-    weak=True,
-    dispatch_uid=None,
-    apps=None)
-
-
-def equipment_unique_types_equipment_data_fields_m2m_changed(sender, instance, action, *args, **kwargs):
+def equipment_unique_types_equipment_data_fields_m2m_changed(
+        sender, instance, action, reverse, model, pk_set, using, *args, **kwargs):
     if action == 'pre_add':
-        pk_set = kwargs['pk_set']
+        invalid_objs = \
+            model.objects \
+            .filter(pk__in=pk_set) \
+            .exclude(equipment_general_type=instance.equipment_general_type)
 
-        pk_set.intersection_update(
-            i['pk']
-            for i in
-                (EquipmentDataField
-                 if isinstance(instance, EquipmentUniqueType)
-                 else EquipmentUniqueType).objects
-                .filter(
-                    pk__in=pk_set,
-                    equipment_general_type=instance.equipment_general_type)
-                .values('pk'))
+        if invalid_objs:
+            warnings.warn(
+                messsag='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
+                        instance, invalid_objs))
+
+            pk_set.difference_update(
+                i['pk']
+                for i in invalid_objs.values('pk'))
+
+    elif action in ('post_add', 'post_remove'):
+        if (model is EquipmentDataField) and instance.groups.count():
+            equipment_unique_type_groups_to_update = instance.groups.all()
+
+            print('{}: Changed Equipment Data Fields: {}: Updating Equipment Data Fields of {}...'
+                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+
+            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                equipment_unique_type_group_to_update.equipment_data_fields.set(
+                    equipment_unique_type_group_to_update.equipment_unique_types.all()[0].data_fields.all().union(
+                        *(equipment_unique_type.data_fields.all()
+                          for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                        all=False),
+                    clear=False)
+
+        elif model is EquipmentUniqueType:
+            changed_equipment_unique_types = model.objects.filter(pk__in=pk_set)
+
+            equipment_unique_type_groups_to_update = \
+                changed_equipment_unique_types[0].groups.all().union(
+                    *(equipment_unique_type.groups.all()
+                      for equipment_unique_type in changed_equipment_unique_types[1:]),
+                    all=False)
+
+            if equipment_unique_type_groups_to_update:
+                print('{}: Changed Equipment Unique Types: {}: Updating Equipment Data Fields of {} Related to Added/Removed {}...'
+                    .format(instance, action.upper(), equipment_unique_type_groups_to_update, changed_equipment_unique_types))
+
+                for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(
+                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].data_fields.all().union(
+                            *(equipment_unique_type.data_fields.all()
+                              for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                            all=False),
+                        clear=False)
+
+    elif action == 'pre_clear':
+        if (model is EquipmentDataField) and instance.groups.count():
+            equipment_unique_type_groups_to_update = instance.groups.all()
+
+            print('*** {}: CLEARING Equipment Data Fields: {}: Updating Equipment Data Fields of {}... ***'
+                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+
+            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                remaining_equipment_unique_types = \
+                    equipment_unique_type_group_to_update.equipment_unique_types.exclude(pk=instance.pk)
+
+                if remaining_equipment_unique_types.count():
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(
+                        remaining_equipment_unique_types[0].data_fields.all().union(
+                            *(remaining_equipment_unique_type.data_fields.all()
+                              for remaining_equipment_unique_type in remaining_equipment_unique_types[1:]),
+                            all=False),
+                        clear=False)
+
+                else:
+                    print('*** {}: CLEARING Equipment Data Fields: {}: CLEARING Equipment Data Fields of {}... ***'
+                        .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
+
+        elif (model is EquipmentUniqueType) and instance.equipment_unique_types.count():
+            equipment_unique_types_to_clear = instance.equipment_unique_types.all()
+
+            equipment_unique_type_groups_to_update = \
+                equipment_unique_types_to_clear[0].groups.all().union(
+                    *(equipment_unique_type_to_clear.groups.all()
+                      for equipment_unique_type_to_clear in equipment_unique_types_to_clear[1:]),
+                    all=False)
+
+            if equipment_unique_type_groups_to_update:
+                print('*** {}: CLEARING Equipment Unique Types: {}: Updating Equipment Data Fields of {} Related to {} to Clear...'
+                    .format(instance, action.upper(), equipment_unique_type_groups_to_update, equipment_unique_types_to_clear))
+
+                for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                    first_equipment_unique_type = \
+                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0]
+
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(
+                        (first_equipment_unique_type.data_fields.exclude(pk=instance.pk)
+                         if first_equipment_unique_type in equipment_unique_types_to_clear
+                         else first_equipment_unique_type.data_fields.all()).union(
+                            *((equipment_unique_type_group_equipment_unique_type.data_fields.exclude(pk=instance.pk)
+                               if equipment_unique_type_group_equipment_unique_type in equipment_unique_types_to_clear
+                               else equipment_unique_type_group_equipment_unique_type.data_fields.all())
+                              for equipment_unique_type_group_equipment_unique_type in
+                                equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                            all=False),
+                        clear=False)
 
 
 m2m_changed.connect(
@@ -478,49 +566,98 @@ m2m_changed.connect(
     apps=None)
 
 
-def equipment_unique_type_groups_equipment_unique_types_m2m_changed(sender, instance, action, *args, **kwargs):
+def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
+        sender, instance, action, reverse, model, pk_set, using, *args, **kwargs):
     if action == 'pre_add':
-        pk_set = kwargs['pk_set']
+        invalid_objs = \
+            model.objects \
+                .filter(pk__in=pk_set) \
+                .exclude(equipment_general_type=instance.equipment_general_type)
 
-        pk_set.intersection_update(
-            i['pk']
-            for i in
-                (EquipmentUniqueType
-                 if isinstance(instance, EquipmentUniqueTypeGroup)
-                 else EquipmentUniqueTypeGroup).objects
-                .filter(
-                    pk__in=pk_set,
-                    equipment_general_type=instance.equipment_general_type)
-                .values('pk'))
+        if invalid_objs:
+            warnings.warn(
+                messsag='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
+                    instance, invalid_objs))
+
+            pk_set.difference_update(
+                i['pk']
+                for i in invalid_objs.values('pk'))
+
+    elif action in ('post_add', 'post_remove'):
+        if model is EquipmentUniqueType:
+            if instance.equipment_unique_types.count():
+                print('{}: Changed Equipment Unique Types: {}: Updating Equipment Data Fields...'
+                    .format(instance, action.upper()))
+
+                instance.equipment_data_fields.set(
+                    instance.equipment_unique_types.all()[0].data_fields.all().union(
+                        *(equipment_unique_type.data_fields.all()
+                          for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
+                        all=False),
+                    clear=False)
+
+            else:
+                print('*** {}: REMOVED Equipment Unique Types: {}: CLEARING Equipment Data Fields... ***'
+                    .format(instance, action.upper()))
+
+                instance.data_fields.clear()
+
+        elif model is EquipmentUniqueTypeGroup:
+            equipment_unique_type_groups_to_update = model.objects.filter(pk__in=pk_set)
+
+            print('{}: Changed Equipment Unique Type Groups: {}: Updating Equipment Data Fields of Added/Removed {}...'
+                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+
+            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                if equipment_unique_type_group_to_update.equipment_unique_types.count():
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(
+                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].data_fields.all().union(
+                            *(equipment_unique_type.data_fields.all()
+                              for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                            all=False),
+                        clear=False)
+
+                else:
+                    print('*** {}: REMOVED Equipment Unique Types: {}: CLEARING Equipment Data Fields... ***'
+                        .format(equipment_unique_type_group_to_update, action.upper()))
+
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
+
+    elif action == 'pre_clear':
+        if model is EquipmentUniqueType:
+            print('*** {}: CLEARING Equipment Unique Types: {}: CLEARING Equipment Data Fields... ***'
+                .format(instance, action.upper()))
+
+            instance.equipment_data_fields.clear()
+
+        elif (model is EquipmentUniqueTypeGroup) and instance.groups.count():
+            equipment_unique_type_groups_to_update = instance.groups.all()
+
+            print('{}: CLEARING Equipment Unique Type Groups: {}: Updating Equipment Data Fields of {} to Clear...'
+                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+
+            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
+                remaining_equipment_unique_types = \
+                    equipment_unique_type_group_to_update.equipment_unique_types.exclude(pk=instance.pk)
+
+                if remaining_equipment_unique_types.count():
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(
+                        remaining_equipment_unique_types.all()[0].data_fields.all().union(
+                            *(equipment_unique_type.data_fields.all()
+                              for equipment_unique_type in remaining_equipment_unique_types[1:]),
+                            all=False),
+                        clear=False)
+
+                else:
+                    print('*** {}: REMOVING Equipment Unique Types: {}: CLEARING Equipment Data Fields... ***'
+                        .format(equipment_unique_type_group_to_update, action.upper()))
+
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
 
 
 m2m_changed.connect(
     receiver=equipment_unique_type_groups_equipment_unique_types_m2m_changed,
     sender=EquipmentUniqueTypeGroup.equipment_unique_types.through,
-    weak=True,
-    dispatch_uid=None,
-    apps=None)
-
-
-def equipment_unique_type_groups_equipment_data_fields_m2m_changed(sender, instance, action, *args, **kwargs):
-    if action == 'pre_add':
-        pk_set = kwargs['pk_set']
-
-        pk_set.intersection_update(
-            i['pk']
-            for i in
-                (EquipmentDataField
-                 if isinstance(instance, EquipmentUniqueTypeGroup)
-                 else EquipmentUniqueTypeGroup).objects
-                .filter(
-                    pk__in=pk_set,
-                    equipment_general_type=instance.equipment_general_type)
-                .values('pk'))
-
-
-m2m_changed.connect(
-    receiver=equipment_unique_type_groups_equipment_data_fields_m2m_changed,
-    sender=EquipmentUniqueTypeGroup.equipment_data_fields.through,
     weak=True,
     dispatch_uid=None,
     apps=None)
