@@ -415,7 +415,7 @@ def equipment_unique_types_equipment_data_fields_m2m_changed(
                 i['pk']
                 for i in invalid_objs.values('pk'))
 
-    elif action in ('post_add', 'post_remove'):
+    elif action in ('post_add', 'post_remove') and pk_set:
         if (model is EquipmentDataField) and instance.groups.count():
             equipment_unique_type_groups_to_update = instance.groups.all()
 
@@ -531,7 +531,7 @@ def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
                 i['pk']
                 for i in invalid_objs.values('pk'))
 
-    elif action in ('post_add', 'post_remove'):
+    elif action in ('post_add', 'post_remove') and pk_set:
         if model is EquipmentUniqueType:
             if instance.equipment_unique_types.count():
                 print('{}: Changed Equipment Unique Types: {}: Updating Equipment Data Fields...'
