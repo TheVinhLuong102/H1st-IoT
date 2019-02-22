@@ -389,7 +389,7 @@ class Project(object):
             self.params.s3.equipment_data.dir_path,
             equipment_instance_id_or_data_set_name + _PARQUET_EXT)
 
-        adf = (S3ParquetDistributedDataFrame(
+        df = (S3ParquetDistributedDataFrame(
                 path=path, mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
@@ -426,9 +426,70 @@ class Project(object):
                     else None,
                 verbose=verbose, **kwargs)
 
-        assert {self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL, self._DATE_TIME_COL_NAME}.issubset(adf.columns)
+        assert {self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL, self._DATE_TIME_COL_NAME}.issubset(df.columns)
 
-        return adf
+        return df
+
+    def _load_equipment_instance_data(
+            self,
+            equipment_instance_name,
+            equipment_general_type_name=None, equipment_unique_type_group_name=None,
+            date=None, to_date=None):
+        from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
+        from arimo.util.date_time import DATE_COL
+
+        if equipment_general_type_name or equipment_unique_type_group_name:
+            assert equipment_general_type_name and equipment_unique_type_group_name
+
+            s3_parquet_ddf = \
+                self.load_equipment_data(
+                    '{}---{}'.format(
+                        equipment_general_type_name.upper(),
+                        equipment_unique_type_group_name),
+                    _from_files=True,
+                    _spark=True,
+                    set_i_col=False,
+                    set_t_col=False)
+
+            if date:
+                s3_parquet_ddf = \
+                    s3_parquet_ddf.filterByPartitionKeys(
+                        (DATE_COL,
+                         date,
+                         to_date)
+                        if to_date
+                        else (DATE_COL,
+                              date))
+
+            return s3_parquet_ddf.filter(
+                    condition="{}='{}'".format(
+                                self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                                equipment_instance_name))
+
+        else:
+            s3_parquet_ddf = \
+                S3ParquetDistributedDataFrame(
+                    path=os.path.join(
+                            self.params.s3.equipment_data.raw_dir_path,
+                            '{}={}'.format(
+                                self._EQUIPMENT_INSTANCE_ID_COL_NAME,
+                                equipment_instance_name)),
+                    mergeSchema=True,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=None,
+                    tCol=None,
+                    verbose=True)
+
+            return s3_parquet_ddf.filterByPartitionKeys(
+                        (DATE_COL,
+                         date,
+                         to_date)
+                        if to_date
+                        else (DATE_COL,
+                              date)) \
+                if date \
+              else s3_parquet_ddf
 
     # *** BELOW METHODS ARE EXPERIMENTAL >>>
 
