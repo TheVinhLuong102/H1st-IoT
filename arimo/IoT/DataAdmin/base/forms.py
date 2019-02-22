@@ -5,7 +5,6 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 from .autocompletes import \
     EquipmentGeneralTypeAutoComplete, \
     EquipmentDataFieldAutoComplete, \
-    EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
