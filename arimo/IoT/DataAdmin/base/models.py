@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from django.db.models import \
     Model, \
-    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, TextField, URLField, \
+    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
