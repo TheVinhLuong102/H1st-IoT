@@ -1,6 +1,7 @@
 branch-defaults:
   master:
     environment: TEST
+
 global:
   application_name: ArimoIoTDataAdmin-app
   branch: null
