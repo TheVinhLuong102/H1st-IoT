@@ -763,10 +763,8 @@ class EquipmentInstanceDailyMetadata(Model):
 
     date = \
         DateField(
-            blank=False,
-            null=False,
-            auto_now=False,
-            auto_now_add=False,
+            blank=True,
+            null=True,
             db_index=True)
 
     url = \
@@ -832,8 +830,6 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
         DateField(
             blank=False,
             null=False,
-            auto_now=False,
-            auto_now_add=False,
             db_index=True)
 
     daily_count = \
@@ -920,8 +916,6 @@ class EquipmentSystem(Model):
         DateField(
             blank=False,
             null=False,
-            auto_now=False,
-            auto_now_add=False,
             db_index=True)
 
     equipment_instances = \
