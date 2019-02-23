@@ -800,6 +800,14 @@ class EquipmentInstanceDailyMetadata(Model):
             'equipment_instance', \
             'date'
 
+    def __str__(self):
+        return '{} on {} @ {} ({} columns x {} rows)'.format(
+                self.equipment_instance,
+                self.date,
+                self.url,
+                self.n_columns,
+                self.n_rows)
+
 
 class EquipmentInstanceDataFieldDailyAgg(Model):
     RELATED_NAME = 'equipment_instance_data_field_daily_aggs'
