@@ -430,8 +430,8 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'equipment_instance', \
         'date', \
         'url', \
-        'n_rows', \
         'n_columns', \
+        'n_rows', \
         'last_updated'
 
     list_filter = \
@@ -452,13 +452,12 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'equipment_instance__name'
 
     readonly_fields = \
+        'equipment_instance', \
+        'date', \
         'url', \
-        'schema',
-
-    def n_columns(self, obj):
-        return len(obj.schema) \
-            if obj.schema \
-          else 0
+        'n_columns', \
+        'n_rows', \
+        'last_updated'
 
     @silk_profile(name='Admin: Equipment Instances Daily Metadata')
     def changelist_view(self, request, extra_context=None):

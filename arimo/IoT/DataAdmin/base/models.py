@@ -784,6 +784,12 @@ class EquipmentInstanceDailyMetadata(Model):
             default=None,
             encoder=None)
 
+    n_columns = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
     n_rows = \
         IntegerField(
             blank=False,
