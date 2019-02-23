@@ -440,15 +440,14 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
 
     list_select_related = \
         'equipment_instance', \
-        'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
-        'equipment_instance__equipment_general_type__equipment_unique_type__name',
+        'equipment_instance__equipment_general_type', \
+        'equipment_instance__equipment_unique_type'
 
     show_full_result_count = False
 
     search_fields = \
         'equipment_instance__equipment_general_type__name', \
-        'equipment_instance___equipment_unique_type__name', \
+        'equipment_instance__equipment_unique_type__name', \
         'equipment_instance__name'
 
     readonly_fields = \
