@@ -27,8 +27,7 @@ class GlobalConfig(Model):
     value = \
         JSONField(
             blank=True,
-            null=True,
-            default=None)
+            null=True)
 
     last_updated = \
         DateTimeField(
@@ -40,21 +39,16 @@ class GlobalConfig(Model):
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
-
-        return super(GlobalConfig, self).save(
-                force_insert=force_insert,
-                force_update=force_update,
-                using=using,
-                update_fields=update_fields)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
 class DataType(Model):
     name = \
         CharField(
-            verbose_name='Data Type Name',
+            verbose_name='Data Type',
             blank=False,
             null=False,
             unique=True,
@@ -69,14 +63,14 @@ class DataType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(DataType, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
 class NumericMeasurementUnit(Model):
     name = \
         CharField(
-            verbose_name='Numeric Measurement Unit Name',
+            verbose_name='Numeric Measurement Unit',
             blank=False,
             null=False,
             unique=True,
@@ -95,15 +89,15 @@ class NumericMeasurementUnit(Model):
         return u'NumMeasureUnit "{}"'.format(self.name)
 
     def save(self, *args, **kwargs):
-        self.name = self.name.strip()   # remove leading & trailing spaces
-        return super(NumericMeasurementUnit, self).save(*args, **kwargs)
+        self.name = self.name.strip()
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
-            verbose_name='Equipment Data Field Type Name',
+            verbose_name='Equipment Data Field Type',
             blank=False,
             null=False,
             unique=True,
@@ -118,14 +112,14 @@ class EquipmentDataFieldType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentDataFieldType, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
 class EquipmentGeneralType(Model):
     name = \
         CharField(
-            verbose_name='Equipment General Type Name',
+            verbose_name='Equipment General Type',
             blank=False,
             null=False,
             unique=True,
@@ -140,7 +134,7 @@ class EquipmentGeneralType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentGeneralType, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -162,10 +156,9 @@ class EquipmentDataField(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment Data Field Name',
+            verbose_name='Equipment Data Field',
             blank=False,
             null=False,
-            unique=False,
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
@@ -240,12 +233,11 @@ class EquipmentDataField(Model):
             auto_now=True)
 
     class Meta:
-        ordering = \
+        unique_together = \
             'equipment_general_type', \
-            'equipment_data_field_type', \
             'name'
 
-        unique_together = \
+        ordering = \
             'equipment_general_type', \
             'name'
         
@@ -260,12 +252,7 @@ class EquipmentDataField(Model):
                 u', unit {}'.format(self.numeric_measurement_unit.name.upper())
                     if self.numeric_measurement_unit and self.numeric_measurement_unit.name
                     else '',
-                ('' if self.upper_numeric_null is None
-                    else ', null {}'.format(self.upper_numeric_null))
-                    if self.lower_numeric_null is None
-                    else (', null {}'.format(self.lower_numeric_null)
-                          if self.upper_numeric_null is None
-                          else ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null)),
+                ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null),
                 '' if self.default_val is None
                    else ', default {}'.format(self.default_val),
                 '' if self.min_val is None
@@ -275,7 +262,7 @@ class EquipmentDataField(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentDataField, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -294,7 +281,7 @@ class EquipmentUniqueTypeGroup(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment Unique Type Group Name',
+            verbose_name='Equipment Unique Type Group',
             blank=False,
             null=False,
             unique=True,
@@ -336,7 +323,7 @@ class EquipmentUniqueTypeGroup(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentUniqueTypeGroup, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -355,7 +342,7 @@ class EquipmentUniqueType(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment Unique Type Name',
+            verbose_name='Equipment Unique Type',
             blank=False,
             null=False,
             unique=True,
@@ -395,7 +382,7 @@ class EquipmentUniqueType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentUniqueType, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 def equipment_unique_types_equipment_data_fields_m2m_changed(
@@ -652,7 +639,7 @@ class EquipmentFacility(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment Facility Name',
+            verbose_name='Equipment Facility',
             blank=False,
             null=False,
             unique=True,
@@ -676,7 +663,7 @@ class EquipmentFacility(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentFacility, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -713,7 +700,7 @@ class EquipmentInstance(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment Instance Name',
+            verbose_name='Equipment Instance',
             blank=False,
             null=False,
             unique=True,
@@ -745,7 +732,7 @@ class EquipmentInstance(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentInstance, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 class EquipmentInstanceDailyMetadata(Model):
@@ -776,21 +763,17 @@ class EquipmentInstanceDailyMetadata(Model):
     schema = \
         JSONField(
             blank=False,
-            null=False,
-            default=None,
-            encoder=None)
+            null=False)
 
     n_columns = \
         IntegerField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
 
     n_rows = \
         IntegerField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
 
     last_updated = \
         DateTimeField(
@@ -848,13 +831,12 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
     daily_count = \
         IntegerField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
 
     daily_distinct_value_counts = \
         JSONField(
-            default=dict,
-            encoder=None)
+            blank=True,
+            null=True)
 
     daily_min = \
         FloatField(

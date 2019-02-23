@@ -111,8 +111,8 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'id', \
             'equipment_general_type', \
             'name', \
-            'equipment_data_field_type', \
             'description', \
+            'equipment_data_field_type', \
             'data_type', \
             'numeric_measurement_unit', \
             'lower_numeric_null', \

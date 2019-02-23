@@ -3,7 +3,7 @@ from __future__ import division
 from django.db.models import \
     Model, \
     BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
-    ForeignKey, ManyToManyField, \
+    ForeignKey, ManyToManyField, OneToOneField, \
     PROTECT
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField, JSONField
@@ -196,7 +196,7 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
 
     equipment_unique_type_group = \
-        ForeignKey(
+        OneToOneField(
             to=EquipmentUniqueTypeGroup,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,

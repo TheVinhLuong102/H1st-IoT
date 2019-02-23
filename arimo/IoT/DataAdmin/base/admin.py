@@ -34,18 +34,12 @@ class GlobalConfigAdmin(ModelAdmin):
     show_full_result_count = False
 
     @silk_profile(name='ADMIN: Global Configs')
-    def changelist_view(self, request, extra_context=None):
-        return super(GlobalConfigAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='ADMIN: Global Config')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(GlobalConfigAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -61,18 +55,12 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
     show_full_result_count = False
 
     @silk_profile(name='Admin: Numeric Measurement Units')
-    def changelist_view(self, request, extra_context=None):
-        return super(NumericMeasurementUnitAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Numeric Measurement Unit')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(NumericMeasurementUnitAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -86,18 +74,12 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
     show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentGeneralTypeAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment General Type')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentGeneralTypeAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -151,18 +133,12 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_unique_types',
 
     @silk_profile(name='Admin: Equipment Data Fields')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentDataFieldAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Data Field')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentDataFieldAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -206,34 +182,28 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
           else 0
 
     def get_queryset(self, request):
-        return super(EquipmentUniqueTypeGroupAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type') \
-            .prefetch_related(
-                'equipment_unique_types',
-                Prefetch(
-                    lookup='equipment_data_fields',
-                    queryset=
-                        EquipmentDataField.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_data_field_type',
-                            'data_type',
-                            'numeric_measurement_unit')))
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type') \
+                .prefetch_related(
+                    'equipment_unique_types',
+                    Prefetch(
+                        lookup='equipment_data_fields',
+                        queryset=
+                            EquipmentDataField.objects
+                            .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type',
+                                'data_type',
+                                'numeric_measurement_unit')))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentUniqueTypeGroupAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeGroupAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -275,27 +245,21 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                          for equipment_unique_type_group in obj.groups.all())
 
     def get_queryset(self, request):
-        return super(EquipmentUniqueTypeAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type') \
-            .prefetch_related(
-                'data_fields',
-                'equipment_instances',
-                'groups')
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type') \
+                .prefetch_related(
+                    'data_fields',
+                    'equipment_instances',
+                    'groups')
 
     @silk_profile(name='Admin: Equipment Unique Types')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentUniqueTypeAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -329,10 +293,10 @@ class EquipmentInstanceTabularInline(TabularInline):
     extra = 0
 
     def get_queryset(self, request):
-        return super(EquipmentInstanceTabularInline, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type',
-                'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
 
 
 class EquipmentFacilityAdmin(ModelAdmin):
@@ -352,23 +316,17 @@ class EquipmentFacilityAdmin(ModelAdmin):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        return super(EquipmentFacilityAdmin, self).get_queryset(request=request) \
-            .prefetch_related(
-                'equipment_instances')
+        return super(type(self), self).get_queryset(request=request) \
+                .prefetch_related(
+                    'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Facilities')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentFacilityAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Facility')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentFacilityAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -406,18 +364,12 @@ class EquipmentInstanceAdmin(ModelAdmin):
     form = EquipmentInstanceForm
 
     @silk_profile(name='Admin: Equipment Instances')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentInstanceAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentInstanceAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -459,18 +411,12 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'n_rows'
 
     @silk_profile(name='Admin: Equipment Instances Daily Metadata')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentInstanceDailyMetadataAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Daily Metadata')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentInstanceDailyMetadataAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -522,18 +468,12 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
         'daily_max'
 
     @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregates')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentInstanceDataFieldDailyAggAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregate')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentInstanceDataFieldDailyAggAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -573,18 +513,12 @@ class EquipmentSystemAdmin(ModelAdmin):
                 'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Systems')
-    def changelist_view(self, request, extra_context=None):
-        return super(EquipmentSystemAdmin, self).changelist_view(
-                request=request,
-                extra_context=extra_context)
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment System')
-    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentSystemAdmin, self).changeform_view(
-                request=request,
-                object_id=object_id,
-                form_url=form_url,
-                extra_context=extra_context)
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
 
 
 site.register(
