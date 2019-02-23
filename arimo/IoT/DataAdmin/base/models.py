@@ -752,9 +752,6 @@ class EquipmentInstanceDailyMetadata(Model):
     RELATED_NAME = 'equipment_instance_daily_metadata'
     RELATED_QUERY_NAME = 'equipment_instance_daily_metadata'
 
-    id = BigAutoField(
-            primary_key=True)
-
     equipment_instance = \
         ForeignKey(
             to=EquipmentInstance,
