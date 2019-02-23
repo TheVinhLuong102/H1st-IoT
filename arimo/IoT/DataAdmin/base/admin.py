@@ -455,8 +455,7 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'date', \
         'url', \
         'n_columns', \
-        'n_rows', \
-        'last_updated'
+        'n_rows'
 
     @silk_profile(name='Admin: Equipment Instances Daily Metadata')
     def changelist_view(self, request, extra_context=None):
