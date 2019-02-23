@@ -748,6 +748,53 @@ class EquipmentInstance(Model):
         return super(EquipmentInstance, self).save(*args, **kwargs)
 
 
+class EquipmentInstanceDailyMetadata(Model):
+    RELATED_NAME = 'equipment_instance_daily_metadata'
+    RELATED_QUERY_NAME = 'equipment_instance_daily_metadata'
+
+    id = BigAutoField(
+            primary_key=True)
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    date = \
+        DateField(
+            blank=False,
+            null=False,
+            auto_now=False,
+            auto_now_add=False,
+            db_index=True)
+
+    schema = \
+        JSONField(
+            blank=False,
+            null=False,
+            default=None,
+            encoder=None)
+
+    n_rows = \
+        IntegerField(
+            blank=False,
+            null=False,
+            default=0)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = \
+            'equipment_instance', \
+            'date'
+
+
 class EquipmentInstanceDataFieldDailyAgg(Model):
     RELATED_NAME = 'equipment_instance_data_field_daily_aggs'
     RELATED_QUERY_NAME = 'equipment_instance_data_field_daily_agg'
