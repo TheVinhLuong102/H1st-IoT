@@ -436,6 +436,7 @@ class Project(object):
             equipment_instance_name,
             equipment_general_type_name=None, equipment_unique_type_group_name=None,
             date=None, to_date=None):
+        from arimo.data.parquet import S3ParquetDataFeeder
         from arimo.data.distributed import DDF
         from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
         from arimo.util.date_time import DATE_COL
@@ -487,14 +488,13 @@ class Project(object):
                                     equipment_instance_name))
 
         elif date and (not to_date):
-            return DDF.load(
+            return S3ParquetDataFeeder(
                     path=os.path.join(
                             self.params.s3.equipment_data.raw_dir_path,
                             '{}={}'.format(
                                 self._EQUIPMENT_INSTANCE_ID_COL_NAME,
                                 equipment_instance_name),
                             '{}={}'.format(DATE_COL, date)),
-                    mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=None,
