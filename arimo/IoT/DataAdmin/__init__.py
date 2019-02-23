@@ -502,26 +502,25 @@ class Project(object):
                     verbose=True)
 
         else:
-            s3_parquet_ddf = \
-                S3ParquetDistributedDataFrame(
+            s3_parquet_df = \
+                S3ParquetDataFeeder(
                     path=os.path.join(
                             self.params.s3.equipment_data.raw_dir_path,
                             '{}={}'.format(
                                 self._EQUIPMENT_INSTANCE_ID_COL_NAME,
                                 equipment_instance_name)),
-                    mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=None,
                     tCol=None,
                     verbose=True)
 
-            return s3_parquet_ddf.filterByPartitionKeys(
+            return s3_parquet_df.filterByPartitionKeys(
                         (DATE_COL,
                          date,
                          to_date)) \
                 if date and to_date \
-              else s3_parquet_ddf
+              else s3_parquet_df
 
     # *** BELOW METHODS ARE EXPERIMENTAL >>>
 
