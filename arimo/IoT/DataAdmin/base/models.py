@@ -770,7 +770,8 @@ class EquipmentInstanceDailyMetadata(Model):
     url = \
         URLField(
             blank=False,
-            null=False)
+            null=False,
+            max_length=1000)
 
     schema = \
         JSONField(
