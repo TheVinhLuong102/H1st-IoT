@@ -454,6 +454,7 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'equipment_instance', \
         'date', \
         'url', \
+        'schema', \
         'n_columns', \
         'n_rows'
 

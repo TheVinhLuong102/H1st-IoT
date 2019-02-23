@@ -900,6 +900,12 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
         DateTimeField(
             auto_now=True)
 
+    class Meta:
+        unique_together = \
+            'equipment_instance', \
+            'equipment_data_field', \
+            'date'
+
 
 @python_2_unicode_compatible
 class EquipmentSystem(Model):
@@ -944,6 +950,10 @@ class EquipmentSystem(Model):
 
     class Meta:
         ordering = \
+            'name', \
+            'date'
+
+        unique_together = \
             'name', \
             'date'
 
