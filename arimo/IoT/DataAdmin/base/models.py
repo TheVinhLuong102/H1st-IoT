@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from django.db.models import \
     Model, \
-    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, \
+    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
     ForeignKey, ManyToManyField, \
     PROTECT
 from django.contrib.postgres.fields import JSONField
@@ -771,6 +771,11 @@ class EquipmentInstanceDailyMetadata(Model):
             auto_now=False,
             auto_now_add=False,
             db_index=True)
+
+    url = \
+        URLField(
+            blank=False,
+            null=False)
 
     schema = \
         JSONField(

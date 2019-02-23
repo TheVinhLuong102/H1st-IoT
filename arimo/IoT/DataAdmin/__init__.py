@@ -71,7 +71,7 @@ class Project(object):
             GlobalConfig, \
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentDataField, \
-            EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, \
+            EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
             EquipmentFacility, EquipmentSystem
 
         self.data = \
@@ -86,6 +86,7 @@ class Project(object):
                 EquipmentDataFields=EquipmentDataField.objects,
 
                 EquipmentInstances=EquipmentInstance.objects,
+                EquipmentInstanceDailyMetadata=EquipmentInstanceDailyMetadata.objects,
                 EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
 
                 EquipmentFacilities=EquipmentFacility.objects,

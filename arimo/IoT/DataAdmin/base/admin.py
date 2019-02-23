@@ -20,6 +20,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
+    EquipmentInstanceDailyMetadata, \
     EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem
 
@@ -422,6 +423,61 @@ class EquipmentInstanceAdmin(ModelAdmin):
 site.register(
     EquipmentInstance,
     admin_class=EquipmentInstanceAdmin)
+
+
+class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
+    list_display = \
+        'equipment_instance', \
+        'date', \
+        'url', \
+        'n_rows', \
+        'n_columns', \
+        'last_updated'
+
+    list_filter = \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance__equipment_unique_type__name'
+
+    list_select_related = \
+        'equipment_instance', \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance__equipment_unique_type__name', \
+        'equipment_instance__equipment_general_type__equipment_unique_type__name',
+
+    show_full_result_count = False
+
+    search_fields = \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance___equipment_unique_type__name', \
+        'equipment_instance__name'
+
+    readonly_fields = \
+        'url', \
+        'schema',
+
+    def n_columns(self, obj):
+        return len(obj.schema) \
+            if obj.schema \
+          else 0
+
+    @silk_profile(name='Admin: Equipment Instances Daily Metadata')
+    def changelist_view(self, request, extra_context=None):
+        return super(EquipmentInstanceDailyMetadataAdmin, self).changelist_view(
+                request=request,
+                extra_context=extra_context)
+
+    @silk_profile(name='Admin: Equipment Instance Daily Metadata')
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        return super(EquipmentInstanceDailyMetadataAdmin, self).changeform_view(
+                request=request,
+                object_id=object_id,
+                form_url=form_url,
+                extra_context=extra_context)
+
+
+site.register(
+    EquipmentInstanceDailyMetadata,
+    admin_class=EquipmentInstanceDailyMetadataAdmin)
 
 
 class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
