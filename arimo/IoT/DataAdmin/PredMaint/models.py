@@ -878,17 +878,17 @@ class Alert(Model):
             auto_now=True)
 
     class Meta:
-        # unique_together = \
-        #     ('equipment_unique_type_group',
-        #      'equipment_instance',
-        #      'risk_score_name',
-        #      'threshold',
-        #      'from_date'), \
-        #     ('equipment_unique_type_group',
-        #      'equipment_instance',
-        #      'risk_score_name',
-        #      'threshold',
-        #      'to_date')
+        unique_together = \
+            ('equipment_unique_type_group',
+             'equipment_instance',
+             'risk_score_name',
+             'threshold',
+             'from_date'), \
+            ('equipment_unique_type_group',
+             'equipment_instance',
+             'risk_score_name',
+             'threshold',
+             'to_date')
 
         ordering = \
             'diagnosis_status', \
