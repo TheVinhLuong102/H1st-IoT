@@ -944,4 +944,4 @@ class EquipmentSystem(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentSystem, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
