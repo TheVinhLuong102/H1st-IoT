@@ -52,8 +52,8 @@ class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
             'equipment_data_field', \
             'to_date', \
             'valid_proportion', \
-            'distinct_values', \
             'n_distinct_values', \
+            'distinct_values', \
             'sample_min', \
             'outlier_rst_min', \
             'sample_quartile', \

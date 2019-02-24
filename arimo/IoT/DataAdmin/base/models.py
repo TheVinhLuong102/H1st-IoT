@@ -905,7 +905,7 @@ class EquipmentSystem(Model):
 
     name = \
         CharField(
-            verbose_name='Equipment System Name',
+            verbose_name='Equipment System',
             blank=False,
             null=False,
             default=None,

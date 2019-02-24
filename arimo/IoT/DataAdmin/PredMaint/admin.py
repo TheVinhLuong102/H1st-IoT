@@ -93,16 +93,15 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'equipment_data_field', \
         'to_date', \
         'valid_proportion', \
-        'distinct_values', \
         'n_distinct_values', \
+        'distinct_values', \
         'sample_min', \
         'outlier_rst_min', \
         'sample_quartile', \
         'sample_median', \
         'sample_3rd_quartile', \
         'outlier_rst_max', \
-        'sample_max', \
-        'last_updated'
+        'sample_max'
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
@@ -153,8 +152,7 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'equipment_data_field_2', \
-        'sample_correlation', \
-        'last_updated'
+        'sample_correlation'
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
     def changelist_view(self, *args, **kwargs):
@@ -193,32 +191,32 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
         'lowly_correlated_numeric_equipment_data_fields'
     
     def get_queryset(self, request):
-        return super(EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline, self).get_queryset(request=request) \
-            .select_related(
-                'monitored_equipment_data_field',
-                'monitored_equipment_data_field__equipment_general_type',
-                'monitored_equipment_data_field__equipment_data_field_type',
-                'monitored_equipment_data_field__data_type',
-                'monitored_equipment_data_field__numeric_measurement_unit') \
-            .prefetch_related(
-                Prefetch(
-                    lookup='manually_included_equipment_data_fields',
-                    queryset=
-                        EquipmentDataField.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_data_field_type',
-                            'data_type',
-                            'numeric_measurement_unit')),
-                Prefetch(
-                    lookup='manually_excluded_equipment_data_fields',
-                    queryset=
-                        EquipmentDataField.objects
-                        .select_related(
-                            'equipment_general_type',
-                            'equipment_data_field_type',
-                            'data_type',
-                            'numeric_measurement_unit')))
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'monitored_equipment_data_field',
+                    'monitored_equipment_data_field__equipment_general_type',
+                    'monitored_equipment_data_field__equipment_data_field_type',
+                    'monitored_equipment_data_field__data_type',
+                    'monitored_equipment_data_field__numeric_measurement_unit') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='manually_included_equipment_data_fields',
+                        queryset=
+                            EquipmentDataField.objects
+                            .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type',
+                                'data_type',
+                                'numeric_measurement_unit')),
+                    Prefetch(
+                        lookup='manually_excluded_equipment_data_fields',
+                        queryset=
+                            EquipmentDataField.objects
+                            .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type',
+                                'data_type',
+                                'numeric_measurement_unit')))
 
 
 class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
@@ -250,40 +248,40 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     def monitored_and_excluded_equipment_data_fields(self, obj):
         return '{}{}'.format(
-            '; '.join(
-                '{}{}'.format(
-                    equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field.name.upper(),
-                    ' (excl: {})'.format(
-                        ', '.join(excluded_equipment_data_field.name
-                                  for excluded_equipment_data_field in
-                                    equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.all()))
-                        if equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.count()
-                        else '')
-                for equipment_unique_type_group_monitored_data_field_config in
-                    obj.equipment_unique_type_group_monitored_data_field_configs.all()
-                if equipment_unique_type_group_monitored_data_field_config.active),
-            ' | global excl: {}'.format(
-                ', '.join(excluded_equipment_data_field.name
-                          for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
-                if obj.global_excluded_equipment_data_fields.count()
-                else '')
+                '; '.join(
+                    '{}{}'.format(
+                        equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field.name.upper(),
+                        ' (excl: {})'.format(
+                            ', '.join(excluded_equipment_data_field.name
+                                      for excluded_equipment_data_field in
+                                        equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.all()))
+                            if equipment_unique_type_group_monitored_data_field_config.manually_excluded_equipment_data_fields.count()
+                            else '')
+                    for equipment_unique_type_group_monitored_data_field_config in
+                        obj.equipment_unique_type_group_monitored_data_field_configs.all()
+                    if equipment_unique_type_group_monitored_data_field_config.active),
+                ' | global excl: {}'.format(
+                    ', '.join(excluded_equipment_data_field.name
+                              for excluded_equipment_data_field in obj.global_excluded_equipment_data_fields.all()))
+                    if obj.global_excluded_equipment_data_fields.count()
+                    else '')
 
     def get_queryset(self, request):
-        return super(EquipmentUniqueTypeGroupServiceConfigAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
-            .prefetch_related(
-                Prefetch(
-                    lookup='equipment_unique_type_group_monitored_data_field_configs',
-                    queryset=
-                        EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
-                        .select_related(
-                            'monitored_equipment_data_field')
-                        .prefetch_related(
-                            'manually_included_equipment_data_fields',
-                            'manually_excluded_equipment_data_fields')),
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='equipment_unique_type_group_monitored_data_field_configs',
+                        queryset=
+                            EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
+                            .select_related(
+                                'monitored_equipment_data_field')
+                            .prefetch_related(
+                                'manually_included_equipment_data_fields',
+                                'manually_excluded_equipment_data_fields')),
 
-                'global_excluded_equipment_data_fields')
+                    'global_excluded_equipment_data_fields')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Configs')
     def changelist_view(self, *args, **kwargs):
@@ -331,8 +329,7 @@ class BlueprintAdmin(ModelAdmin):
         'equipment_unique_type_group', \
         'trained_to_date', \
         'uuid', \
-        'timestamp', \
-        'last_updated'
+        'timestamp'
 
     def benchmark_metrics_summary(self, obj):
         if obj.benchmark_metrics:
@@ -426,8 +423,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'r2', \
         'mae', \
         'medae', \
-        'rmse', \
-        'last_updated'
+        'rmse'
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def changelist_view(self, *args, **kwargs):
@@ -468,8 +464,7 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'equipment_instance', \
         'risk_score_name', \
         'date', \
-        'risk_score_value', \
-        'last_updated'
+        'risk_score_value'
 
     show_full_result_count = False
 
@@ -539,7 +534,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
         'duration', \
         'has_equipment_problems', \
         'has_associated_alerts', \
-        'alerts'   # too many alerts, so Select box would freeze
+        'alerts'
 
     show_full_result_count = False
 
@@ -548,21 +543,21 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
     form = EquipmentProblemDiagnosisForm
 
     def get_queryset(self, request):
-        return super(EquipmentProblemDiagnosisAdmin, self).get_queryset(request) \
-            .select_related(
-                'equipment_instance', 'equipment_instance__equipment_general_type',
-                'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type') \
-            .prefetch_related(
-                'equipment_problem_types',
-                Prefetch(
-                    lookup='alerts',
-                    queryset=
-                        Alert.objects
-                        .select_related(
-                            'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                            'equipment_instance', 'equipment_instance__equipment_general_type',
-                            'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
-                            'diagnosis_status')))
+        return super(type(self), self).get_queryset(request) \
+                .select_related(
+                    'equipment_instance', 'equipment_instance__equipment_general_type',
+                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type') \
+                .prefetch_related(
+                    'equipment_problem_types',
+                    Prefetch(
+                        lookup='alerts',
+                        queryset=
+                            Alert.objects
+                            .select_related(
+                                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                                'equipment_instance', 'equipment_instance__equipment_general_type',
+                                'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
+                                'diagnosis_status')))
 
     def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
@@ -640,8 +635,7 @@ class AlertAdmin(ModelAdmin):
         'cumulative_excess_risk_score', \
         'ongoing', \
         'info', \
-        'has_associated_equipment_problem_diagnoses', \
-        'last_updated'
+        'has_associated_equipment_problem_diagnoses'
 
     @silk_profile(name='Admin: Alerts')
     def changelist_view(self, *args, **kwargs):

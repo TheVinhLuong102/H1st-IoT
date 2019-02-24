@@ -30,8 +30,7 @@ class GlobalConfig(Model):
     value = \
         JSONField(
             blank=True,
-            null=True,
-            default=None)
+            null=True)
 
     last_updated = \
         DateTimeField(
@@ -43,14 +42,9 @@ class GlobalConfig(Model):
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
-
-        return super(GlobalConfig, self).save(
-                force_insert=force_insert,
-                force_update=force_update,
-                using=using,
-                update_fields=update_fields)
+        super(type(self), self).save( *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldProfile(Model):
@@ -84,19 +78,17 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
     valid_proportion = \
         FloatField(
             blank=False,
-            null=False,
-            default=0)
-
-    distinct_values = \
-        JSONField(
-            default=dict,
-            encoder=None)
+            null=False)
 
     n_distinct_values = \
         IntegerField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
+
+    distinct_values = \
+        JSONField(
+            blank=True,
+            null=True)
 
     sample_min = \
         FloatField(
@@ -138,6 +130,11 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
             auto_now=True)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            'to_date'
+
         ordering = \
             'equipment_unique_type_group', \
             'equipment_data_field', \
@@ -169,8 +166,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
     equipment_data_field_2 = \
         ForeignKey(
             to=EquipmentDataField,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
             blank=False,
             null=False,
             on_delete=PROTECT)
@@ -185,6 +180,11 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
             auto_now=True)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            'equipment_data_field_2'
+
         ordering = \
             'equipment_unique_type_group', \
             '-sample_correlation'
@@ -237,9 +237,7 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
     configs = \
         JSONField(
             blank=True,
-            null=True,
-            default=dict,
-            encoder=None)
+            null=True)
 
     comments = \
         TextField(
@@ -375,8 +373,8 @@ class Blueprint(Model):
 
     benchmark_metrics = \
         JSONField(
-            default=dict,
-            encoder=None)
+            blank=True,
+            null=True)
 
     active = \
         BooleanField(
@@ -426,15 +424,13 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
 
     trained_to_date = \
         DateField(
-            auto_now=False,
-            auto_now_add=False,
-            default=None,
+            blank=False,
+            null=False,
             db_index=True)
 
     n = BigIntegerField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
 
     mae = \
         FloatField(
@@ -461,6 +457,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
             auto_now=True)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'equipment_data_field', \
+            'trained_to_date'
+
         ordering = \
             'equipment_unique_type_group', \
             'equipment_data_field', \
@@ -495,29 +496,32 @@ class EquipmentInstanceDailyRiskScore(Model):
 
     risk_score_name = \
         CharField(
-            max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
-            db_index=True)
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
 
     date = \
         DateField(
             blank=False,
             null=False,
-            auto_now=False,
-            auto_created=False,
-            default=None,
             db_index=True)
 
     risk_score_value = \
         FloatField(
             blank=False,
-            null=False,
-            default=0)
+            null=False)
 
     last_updated = \
         DateTimeField(
             auto_now=True)
+
+    # class Meta:
+        # unique_together = \
+        #     'equipment_unique_type_group', \
+        #     'equipment_instance', \
+        #     'risk_score_name', \
+        #     'date'
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(
@@ -533,7 +537,7 @@ class EquipmentInstanceDailyRiskScore(Model):
 class EquipmentProblemType(Model):
     name = \
         CharField(
-            verbose_name='Equipment Problem Type Name',
+            verbose_name='Equipment Problem Type',
             max_length=MAX_CHAR_LEN,
             blank=False,
             null=False,
@@ -552,7 +556,7 @@ class EquipmentProblemType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(EquipmentProblemType, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -573,18 +577,12 @@ class EquipmentProblemPeriod(Model):
         DateField(
             blank=False,
             null=False,
-            auto_now=False,
-            auto_created=False,
-            default=None,
             db_index=True)
 
     to_date = \
         DateField(
             blank=False,
             null=False,
-            auto_now=False,
-            auto_created=False,
-            default=None,
             db_index=True)
 
     date_range = \
@@ -684,7 +682,7 @@ class EquipmentProblemPeriod(Model):
         self.duration = \
             (self.to_date - self.from_date).days + 1
 
-        return super(EquipmentProblemPeriod, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 # rename more correctly
@@ -750,7 +748,7 @@ class AlertDiagnosisStatus(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        return super(AlertDiagnosisStatus, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
@@ -925,7 +923,7 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
-        return super(Alert, self).save(*args, **kwargs)
+        super(type(self), self).save(*args, **kwargs)
 
 
 def alert_post_save(sender, instance, *args, **kwargs):

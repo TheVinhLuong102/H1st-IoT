@@ -129,8 +129,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'data_type__name', \
         'numeric_measurement_unit__name'
 
-    readonly_fields = \
-        'equipment_unique_types',
+    readonly_fields = 'equipment_unique_types',
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
@@ -231,8 +230,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeForm
 
-    readonly_fields = \
-        'groups',
+    readonly_fields = 'groups',
 
     def n_equipment_data_fields(self, obj):
         return obj.data_fields.count()
@@ -271,7 +269,7 @@ class EquipmentInstanceInLineFormSet(BaseInlineFormSet):
     model = EquipmentInstance
 
     # def get_queryset(self):
-    #     return super(EquipmentInstanceInLineFormSet, self).get_queryset() \
+    #     return super(type(self), self).get_queryset() \
     #         .select_related(
     #             'equipment_general_type',
     #             'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
@@ -506,11 +504,11 @@ class EquipmentSystemAdmin(ModelAdmin):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        return super(EquipmentSystemAdmin, self).get_queryset(request=request) \
-            .select_related(
-                'equipment_facility') \
-            .prefetch_related(
-                'equipment_instances')
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_facility') \
+                .prefetch_related(
+                    'equipment_instances')
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):
