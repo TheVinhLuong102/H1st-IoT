@@ -647,6 +647,12 @@ class EquipmentProblemPeriod(Model):
             auto_now=True)
 
     class Meta:
+        unique_together = \
+            ('equipment_instance',
+             'from_date'), \
+            ('equipment_instance',
+             'to_date')
+
         ordering = \
             '-ongoing', \
             '-from_date', \
