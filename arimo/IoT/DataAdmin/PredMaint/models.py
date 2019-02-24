@@ -516,12 +516,12 @@ class EquipmentInstanceDailyRiskScore(Model):
         DateTimeField(
             auto_now=True)
 
-    # class Meta:
-        # unique_together = \
-        #     'equipment_unique_type_group', \
-        #     'equipment_instance', \
-        #     'risk_score_name', \
-        #     'date'
+    class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'equipment_instance', \
+            'risk_score_name', \
+            'date'
 
     def __str__(self):
         return '{} {} #{} on {}: {} = {:.3g}'.format(
