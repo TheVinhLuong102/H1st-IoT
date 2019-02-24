@@ -25,8 +25,7 @@ class GlobalConfigSerializer(ModelSerializer):
 
         fields = \
             'key', \
-            'value', \
-            'last_updated'
+            'value'
 
 
 class DataTypeSerializer(ModelSerializer):
@@ -120,8 +119,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'default_val', \
             'min_val', \
             'max_val', \
-            'equipment_unique_types', \
-            'last_updated'
+            'equipment_unique_types'
 
 
 class EquipmentDataFieldShortFormRelatedField(RelatedField):
@@ -167,8 +165,7 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             'name', \
             'description', \
             'equipment_unique_types', \
-            'equipment_data_fields', \
-            'last_updated'
+            'equipment_data_fields'
 
 
 class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
@@ -201,8 +198,7 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'name', \
             'description', \
             'data_fields', \
-            'groups', \
-            'last_updated'
+            'groups'
 
 
 class EquipmentFacilitySerializer(ModelSerializer):
@@ -219,8 +215,7 @@ class EquipmentFacilitySerializer(ModelSerializer):
         fields = \
             'name', \
             'info', \
-            'equipment_instances', \
-            'last_updated'
+            'equipment_instances'
 
 
 class EquipmentInstanceSerializer(WritableNestedModelSerializer):
@@ -252,8 +247,7 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             'equipment_unique_type', \
             'equipment_facility', \
             'name', \
-            'info', \
-            'last_updated'
+            'info'
 
 
 class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
@@ -284,8 +278,7 @@ class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
             'daily_mean', \
             'daily_3rd_quartile', \
             'daily_outlier_rst_max', \
-            'daily_max', \
-            'last_updated'
+            'daily_max'
 
 
 class EquipmentSystemSerializer(ModelSerializer):
@@ -311,5 +304,4 @@ class EquipmentSystemSerializer(ModelSerializer):
             'equipment_facility', \
             'name', \
             'date', \
-            'equipment_instances', \
-            'last_updated'
+            'equipment_instances'

@@ -27,8 +27,7 @@ class GlobalConfigSerializer(ModelSerializer):
 
         fields = \
             'key', \
-            'value', \
-            'last_updated'
+            'value'
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
@@ -60,8 +59,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
             'sample_median', \
             'sample_3rd_quartile', \
             'outlier_rst_max', \
-            'sample_max', \
-            'last_updated'
+            'sample_max'
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(RelatedField):
@@ -102,8 +100,7 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
             'from_date', \
             'to_date', \
             'configs', \
-            'comments', \
-            'last_updated'
+            'comments'
 
 
 class BlueprintSerializer(ModelSerializer):
@@ -121,8 +118,7 @@ class BlueprintSerializer(ModelSerializer):
             'trained_to_date', \
             'uuid', \
             'timestamp', \
-            'active', \
-            'last_updated'
+            'active'
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer(ModelSerializer):
@@ -150,8 +146,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
             'mae', \
             'medae', \
             'rmse', \
-            'r2', \
-            'last_updated'
+            'r2'
 
 
 class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
@@ -237,8 +232,7 @@ class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
             'dismissed', \
             'comments', \
             'has_associated_alerts', \
-            'alerts', \
-            'last_updated'
+            'alerts'
 
 
 class AlertDiagnosisStatusSerializer(ModelSerializer):
@@ -306,5 +300,4 @@ class AlertSerializer(ModelSerializer):
             'info', \
             'diagnosis_status', \
             'has_associated_equipment_problem_diagnoses', \
-            'equipment_problem_diagnoses', \
-            'last_updated'
+            'equipment_problem_diagnoses'
