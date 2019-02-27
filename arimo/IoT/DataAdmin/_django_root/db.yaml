@@ -1,5 +1,10 @@
 db:
-  host: panaap-jp-cc-iotdataadmin.cgp5wm6rcqwy.us-east-1.rds.amazonaws.com
-  db_name: PanaCC_IoTDataAdmin   # *** ??? db cannot be renamed once created ??? ***
-  user: arimo
-  password: arimoiscool
+  host: ~
+  db_name: ~
+  user: ~
+  password: ~
+
+api:
+  endpoint: ~
+  user: ~
+  password: ~
