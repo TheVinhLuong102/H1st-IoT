@@ -106,6 +106,9 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+import subprocess
+subprocess.call("ls -la .", shell=True, cwd=_PROJECT_DIR)
+
 _DB_CREDS_FILE_NAME = 'db.yaml'
 _DB_CREDS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_CREDS_FILE_NAME)
 
