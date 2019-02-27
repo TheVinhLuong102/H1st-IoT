@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 
+from __future__ import print_function
+
 import os
 from ruamel import yaml
 import six
@@ -109,13 +111,24 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
 _DB_CREDS_FILE_NAME = 'db.yaml'
 _DB_CREDS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_CREDS_FILE_NAME)
 
-_db_creds = yaml.safe_load(stream=open(_DB_CREDS_FILE_PATH, 'r'))['db']
+try:
+    _db_creds = yaml.safe_load(stream=open(_DB_CREDS_FILE_PATH, 'r'))['db']
+
+except Exception as err:   # https://stackoverflow.com/questions/50879668/python-setup-py-some-files-are-missing
+    print('*** {} ***'.format(err))
+
+    _db_creds = \
+        dict(host=None,
+             user=None,
+             password=None,
+             db_name=None)
 
 DATABASES = \
     dict(default=
         dict(ENGINE='django.db.backends.postgresql', PORT='5432',
-             HOST=_db_creds['host'], NAME=_db_creds['db_name'],
-             USER=_db_creds['user'], PASSWORD=_db_creds['password']))
+             HOST=_db_creds['host'],
+             USER=_db_creds['user'], PASSWORD=_db_creds['password'],
+             NAME=_db_creds['db_name']))
 
 
 # Password validation

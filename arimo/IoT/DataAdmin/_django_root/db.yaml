@@ -1,8 +1,8 @@
 db:
   host: ~
-  db_name: ~
   user: ~
   password: ~
+  db_name: ~
 
 api:
   endpoint: ~
