@@ -131,7 +131,6 @@ class Project(object):
                 '*** {} ***'.format(self.params.s3.bucket)
 
             if 'access_key_id' in self.params.s3:
-                print(self.params.s3)
                 assert self.params.s3.access_key_id and self.params.s3.secret_access_key
 
             else:
