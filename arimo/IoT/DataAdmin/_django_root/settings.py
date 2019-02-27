@@ -125,10 +125,10 @@ except Exception as err:   # https://stackoverflow.com/questions/50879668/python
 
 DATABASES = \
     dict(default=
-        dict(ENGINE='django.db.backends.postgresql', PORT='5432',
-             HOST=_db_creds['host'],
-             USER=_db_creds['user'], PASSWORD=_db_creds['password'],
-             NAME=_db_creds['db_name']))
+            dict(ENGINE='django.db.backends.postgresql', PORT='5432',
+                 HOST=_db_creds['host'],
+                 USER=_db_creds['user'], PASSWORD=_db_creds['password'],
+                 NAME=_db_creds['db_name']))
 
 
 # Password validation
