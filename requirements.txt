@@ -1,4 +1,4 @@
-AWSEBCLI >= 3.14.11
+AWSEBCLI >= 3.14.13
 CoreAPI >= 2.3.3
 CoreAPI-CLI >= 1.0.9
 Django >= 2.1.5
