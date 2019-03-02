@@ -733,7 +733,8 @@ class EquipmentInstance(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
 
-        if self.equipment_unique_type.equipment_general_type != self.equipment_general_type:
+        if self.equipment_unique_type and \
+                (self.equipment_unique_type.equipment_general_type != self.equipment_general_type):
             warnings.warn(
                 message='*** EQUIPMENT INSTANCE #{}: EQUIPMENT UNIQUE TYPE {} NOT OF EQUIPMENT GENERAL TYPE {} ***'
                     .format(self.name, self.equipment_unique_type, self.equipment_general_type))
