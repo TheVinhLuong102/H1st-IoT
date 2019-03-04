@@ -1,6 +1,8 @@
 from django.contrib.admin import ModelAdmin, site, StackedInline
 from django.db.models import Prefetch
 
+import pandas
+
 from silk.profiling.profiler import silk_profile
 
 from .forms import \
@@ -341,10 +343,16 @@ class BlueprintAdmin(ModelAdmin):
                 good = True
 
                 r2 = global_benchmark_metrics['R2']
-                r2_text = '{:.1f}%'.format(100 * r2)
-                if r2 < .68:
+
+                if pandas.notnull(r2):
+                    r2_text = '{:.1f}%'.format(100 * r2)
+                    if r2 < .68:
+                        good = False
+                        r2_text += ' (< 68%)'
+
+                else:
+                    r2_text = 'na'
                     good = False
-                    r2_text += ' (< 68%)'
 
                 mae = global_benchmark_metrics['MAE']
                 medae = global_benchmark_metrics['MedAE']
