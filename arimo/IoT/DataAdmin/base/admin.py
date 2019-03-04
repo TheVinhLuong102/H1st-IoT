@@ -126,6 +126,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
         'name', \
+        'description', \
         'data_type__name', \
         'numeric_measurement_unit__name'
 
@@ -161,7 +162,8 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     search_fields = \
         'equipment_general_type__name', \
-        'name'
+        'name', \
+        'description'
 
     form = EquipmentUniqueTypeGroupForm
 
@@ -226,7 +228,8 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     search_fields = \
         'equipment_general_type__name', \
-        'name'
+        'name', \
+        'description'
 
     form = EquipmentUniqueTypeForm
 
@@ -306,7 +309,9 @@ class EquipmentFacilityAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'name',
+    search_fields = \
+        'name', \
+        'info'
 
     inlines = EquipmentInstanceTabularInline,
 
@@ -357,7 +362,8 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_unique_type__name', \
         'equipment_facility__name', \
-        'name'
+        'name', \
+        'info'
 
     form = EquipmentInstanceForm
 
