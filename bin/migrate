@@ -48,7 +48,7 @@ shutil.copyfile(
     src=db_creds_file_path,
     dst=_DB_CREDS_FILE_PATH)
 
-os.system('python manage.py migrate')
+os.system('python3 manage.py migrate')
 
 shutil.copyfile(
     src=DB_CREDS_ORIG_FILE_PATH,
