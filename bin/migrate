@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+
+import argparse
+import os
+from ruamel import yaml
+import shutil
+
+from arimo.IoT.DataAdmin import Project
+from arimo.IoT.DataAdmin._django_root.settings import _DB_CREDS_FILE_PATH
+from arimo.IoT.DataAdmin.util import _YAML_EXT
+
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    'project',
+    nargs='?',
+    default='TEST')
+
+args = parser.parse_args()
+
+
+db_creds_file_path = \
+    os.path.join(
+        Project.CONFIG_DIR_PATH,
+        args.project + _YAML_EXT)
+
+db_creds = \
+    yaml.safe_load(stream=open(db_creds_file_path, 'r'))['db']
+
+assert db_creds['host'] \
+   and db_creds['db_name'] \
+   and db_creds['user'] \
+   and db_creds['password']
+
+DB_CREDS_ORIG_FILE_PATH = _DB_CREDS_FILE_PATH + '.orig'
+
+assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
+
+shutil.copyfile(
+    src=_DB_CREDS_FILE_PATH,
+    dst=DB_CREDS_ORIG_FILE_PATH)
+
+assert os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
+
+shutil.copyfile(
+    src=db_creds_file_path,
+    dst=_DB_CREDS_FILE_PATH)
+
+os.system('python manage.py migrate')
+
+shutil.copyfile(
+    src=DB_CREDS_ORIG_FILE_PATH,
+    dst=_DB_CREDS_FILE_PATH)
+
+os.remove(DB_CREDS_ORIG_FILE_PATH)
+
+assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
