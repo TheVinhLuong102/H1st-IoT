@@ -522,6 +522,18 @@ class Project(object):
                 if date and to_date \
               else s3_parquet_df
 
+    def rm_s3_tmp(self):
+        from arimo.util.aws import s3
+
+        assert self.params.s3.bucket
+
+        s3.rm(path='s3://{}/tmp'.format(self.params.s3.bucket),
+              dir=True,
+              access_key_id=self.params.s3.access_key_id,
+              secret_access_key=self.params.s3.secret_access_key,
+              quiet=True,
+              verbose=True)
+
     # *** BELOW METHODS ARE EXPERIMENTAL >>>
 
     def check_equipment_data_integrity(self, equipment_instance_id_or_data_set_name):
