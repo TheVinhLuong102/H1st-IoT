@@ -145,10 +145,19 @@ class Project(object):
                     self.data.GlobalConfigs.get_or_create(
                         key=self.params.s3.SECRET_ACCESS_KEY_GLOBAL_CONFIG_KEY)[0].value
 
-            if not (self.params.s3.access_key_id and self.params.s3.secret_access_key):
+            if self.params.s3.access_key_id is None:
                 warnings.warn(
-                    '*** S3: Access Key ID = {}, Secret Access Key = {} ***'.format(
-                        self.params.s3.access_key_id, self.params.s3.secret_access_key))
+                    '*** AWS ACCESS KEY ID = {} ***'.format(self.params.s3.access_key_id))
+            else:
+                assert isinstance(self.params.s3.access_key_id, _STR_CLASSES), \
+                    '*** AWS ACCESS KEY ID = {} ***'.format(self.params.s3.access_key_id)
+
+            if self.params.s3.secret_access_key is None:
+                warnings.warn(
+                    '*** AWS SECRET ACCESS KEY = {} ***'.format(self.params.s3.secret_access_key))
+            else:
+                assert isinstance(self.params.s3.secret_access_key, _STR_CLASSES), \
+                    '*** AWS SECRET ACCESS KEY = {} ***'.format(self.params.s3.secret_access_key)
 
             self.s3_client = \
                 s3.client(
