@@ -4,6 +4,7 @@ import os
 import pandas
 from ruamel import yaml
 import six
+import warnings
 
 from django.conf import settings
 from django.core.management import call_command
@@ -40,6 +41,8 @@ class Project(object):
         dict(
             s3=dict(
                 BUCKET_NAME_GLOBAL_CONFIG_KEY='S3_BUCKET',
+                ACCESS_KEY_ID_GLOBAL_CONFIG_KEY='AWS_ACCESS_KEY_ID',
+                SECRET_ACCESS_KEY_GLOBAL_CONFIG_KEY='AWS_SECRET_ACCESS_KEY',
 
                 equipment_data=dict(
                     dir_prefix='.arimo/IoT/EquipmentData',
@@ -128,14 +131,24 @@ class Project(object):
 
         if self.params.s3.bucket:
             assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
-                '*** {} ***'.format(self.params.s3.bucket)
+                '*** S3 BUCKET = {} ***'.format(self.params.s3.bucket)
 
             if 'access_key_id' in self.params.s3:
                 assert 'secret_access_key' in self.params.s3
 
             else:
-                self.params.s3.access_key_id, self.params.s3.secret_access_key = \
-                    key_pair(profile=self._AWS_PROFILE_NAME)
+                self.params.s3.access_key_id = \
+                    self.data.GlobalConfigs.get_or_create(
+                        key=self.params.s3.ACCESS_KEY_ID_GLOBAL_CONFIG_KEY)[0].value
+
+                self.params.s3.secret_access_key = \
+                    self.data.GlobalConfigs.get_or_create(
+                        key=self.params.s3.SECRET_ACCESS_KEY_GLOBAL_CONFIG_KEY)[0].value
+
+            if not (self.params.s3.access_key_id and self.params.s3.secret_access_key):
+                warnings.warn(
+                    '*** S3: Access Key ID = {}, Secret Access Key = {} ***'.format(
+                        self.params.s3.access_key_id, self.params.s3.secret_access_key))
 
             self.s3_client = \
                 s3.client(
