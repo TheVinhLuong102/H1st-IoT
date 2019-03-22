@@ -543,6 +543,10 @@ class ErrorAdmin(ModelAdmin):
         'key', \
         'value'
 
+    readonly_fields = \
+        'key', \
+        'value'
+
     @silk_profile(name='ADMIN: Errors')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
