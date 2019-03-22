@@ -75,7 +75,8 @@ class Project(object):
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentDataField, \
             EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
-            EquipmentFacility, EquipmentSystem
+            EquipmentFacility, EquipmentSystem, \
+            Error
 
         self.data = \
             Namespace(
@@ -93,7 +94,9 @@ class Project(object):
                 EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
 
                 EquipmentFacilities=EquipmentFacility.objects,
-                EquipmentSystems=EquipmentSystem.objects)
+                EquipmentSystems=EquipmentSystem.objects,
+
+                Errors=Error.objects)
 
         self.CAT_DATA_TYPE = \
             DataType.objects.get_or_create(

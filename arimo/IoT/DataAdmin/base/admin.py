@@ -22,7 +22,8 @@ from .models import \
     EquipmentInstance, \
     EquipmentInstanceDailyMetadata, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem
+    EquipmentSystem, \
+    Error
 
 
 class GlobalConfigAdmin(ModelAdmin):
@@ -528,3 +529,27 @@ class EquipmentSystemAdmin(ModelAdmin):
 site.register(
     EquipmentSystem,
     admin_class=EquipmentSystemAdmin)
+
+
+class ErrorAdmin(ModelAdmin):
+    list_display = \
+        'key', \
+        'value', \
+        'last_updated'
+
+    show_full_result_count = False
+
+    search_fields = 'key',
+
+    @silk_profile(name='ADMIN: Global Configs')
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
+
+    @silk_profile(name='ADMIN: Global Config')
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
+
+
+site.register(
+    Error,
+    admin_class=ErrorAdmin)

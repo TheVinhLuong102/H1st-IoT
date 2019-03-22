@@ -954,3 +954,33 @@ class EquipmentSystem(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
+class Error(Model):
+    key = \
+        CharField(
+            blank=False,
+            null=False,
+            unique=True,
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
+
+    value = \
+        JSONField(
+            blank=True,
+            null=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        ordering = 'key',
+
+    def __str__(self):
+        return '{} = {}'.format(self.key, self.value)
+
+    def save(self, *args, **kwargs):
+        self.key = clean_upper_str(self.key)
+        super(type(self), self).save(*args, **kwargs)
