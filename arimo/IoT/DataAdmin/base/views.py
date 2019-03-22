@@ -20,7 +20,8 @@ from .filters import \
     EquipmentFacilityFilter, \
     EquipmentInstanceFilter, \
     EquipmentInstanceDataFieldDailyAggFilter, \
-    EquipmentSystemFilter
+    EquipmentSystemFilter, \
+    ErrorFilter
 
 from .models import \
     GlobalConfig, \
@@ -34,7 +35,8 @@ from .models import \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem
+    EquipmentSystem, \
+    Error
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -48,7 +50,8 @@ from .serializers import \
     EquipmentFacilitySerializer, \
     EquipmentInstanceSerializer, \
     EquipmentInstanceDataFieldDailyAggSerializer, \
-    EquipmentSystemSerializer
+    EquipmentSystemSerializer, \
+    ErrorSerializer
 
 
 class GlobalConfigViewSet(ModelViewSet):
@@ -764,5 +767,50 @@ class EquipmentSystemViewSet(ModelViewSet):
         return super(type(self), self).list(request, *args, **kwargs)
 
     @silk_profile(name='REST API: Equipment System')
+    def retrieve(self, request, *args, **kwargs):
+        return super(type(self), self).retrieve(request, *args, **kwargs)
+
+
+class ErrorViewSet(ReadOnlyModelViewSet):
+    """
+    list:
+    `GET` a filterable, paginated list of Errors
+
+    retrieve:
+    `GET` the Error specified by `key`
+    """
+    queryset = Error.objects.all()
+
+    serializer_class = ErrorSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'error_key'
+
+    filter_class = ErrorFilter
+
+    ordering_fields = 'key',
+
+    ordering = 'key',
+
+    pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='REST API: Errors')
+    def list(self, request, *args, **kwargs):
+        return super(type(self), self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Error')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)

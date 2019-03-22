@@ -539,13 +539,15 @@ class ErrorAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = 'key',
+    search_fields = \
+        'key', \
+        'value'
 
-    @silk_profile(name='ADMIN: Global Configs')
+    @silk_profile(name='ADMIN: Errors')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
 
-    @silk_profile(name='ADMIN: Global Config')
+    @silk_profile(name='ADMIN: Error')
     def changeform_view(self, *args, **kwargs):
         return super(type(self), self).changeform_view(*args, **kwargs)
 

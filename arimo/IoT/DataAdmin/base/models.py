@@ -968,8 +968,8 @@ class Error(Model):
 
     value = \
         JSONField(
-            blank=True,
-            null=True)
+            blank=False,
+            null=False)
 
     last_updated = \
         DateTimeField(

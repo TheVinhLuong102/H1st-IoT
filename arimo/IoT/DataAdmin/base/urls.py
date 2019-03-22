@@ -23,7 +23,8 @@ from .views import \
     EquipmentFacilityViewSet, \
     EquipmentInstanceViewSet, \
     EquipmentInstanceDataFieldDailyAggViewSet, \
-    EquipmentSystemViewSet
+    EquipmentSystemViewSet, \
+    ErrorViewSet
 
 
 ROUTER = DefaultRouter()
@@ -39,6 +40,7 @@ ROUTER.register('equipment-facilities', EquipmentFacilityViewSet)
 ROUTER.register('equipment-instances', EquipmentInstanceViewSet)
 ROUTER.register('equipment-instance-data-field-daily-aggs', EquipmentInstanceDataFieldDailyAggViewSet)
 ROUTER.register('equipment-systems', EquipmentSystemViewSet)
+ROUTER.register('errors', ErrorViewSet)
 
 
 URL_PATTERNS = [
