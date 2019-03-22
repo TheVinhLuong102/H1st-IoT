@@ -980,7 +980,3 @@ class Error(Model):
 
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
-
-    def save(self, *args, **kwargs):
-        self.key = clean_upper_str(self.key)
-        super(type(self), self).save(*args, **kwargs)
