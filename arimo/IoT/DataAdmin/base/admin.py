@@ -393,7 +393,8 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name'
+        'equipment_instance__equipment_unique_type__name', \
+        'date'
 
     list_select_related = \
         'equipment_instance', \
