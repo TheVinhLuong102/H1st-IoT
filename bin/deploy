@@ -7,7 +7,7 @@ from ruamel import yaml
 import shutil
 
 from arimo.IoT.DataAdmin import Project
-from arimo.IoT.DataAdmin._django_root.settings import _DB_CREDS_FILE_PATH
+from arimo.IoT.DataAdmin._django_root.settings import _CONFIGS_FILE_PATH
 from arimo.IoT.DataAdmin.util import _YAML_EXT
 
 
@@ -25,42 +25,54 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-db_creds_file_path = \
+configs_file_path = \
     os.path.join(
         Project.CONFIG_DIR_PATH,
         args.project + _YAML_EXT)
 
-db_creds = \
-    yaml.safe_load(stream=open(db_creds_file_path, 'r'))['db']
+configs = yaml.safe_load(stream=open(configs_file_path, 'r'))
 
+db_creds = configs['db']
 assert db_creds['host'] \
    and db_creds['db_name'] \
    and db_creds['user'] \
    and db_creds['password']
 
-DB_CREDS_ORIG_FILE_PATH = _DB_CREDS_FILE_PATH + '.orig'
+CONFIGS_ORIG_FILE_PATH = _CONFIGS_FILE_PATH + '.orig'
 
-assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
-
-shutil.copyfile(
-    src=_DB_CREDS_FILE_PATH,
-    dst=DB_CREDS_ORIG_FILE_PATH)
-
-assert os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
+assert not os.path.isfile(CONFIGS_ORIG_FILE_PATH)
 
 shutil.copyfile(
-    src=db_creds_file_path,
-    dst=_DB_CREDS_FILE_PATH)
+    src=_CONFIGS_FILE_PATH,
+    dst=CONFIGS_ORIG_FILE_PATH)
+
+assert os.path.isfile(CONFIGS_ORIG_FILE_PATH)
+
+shutil.copyfile(
+    src=configs_file_path,
+    dst=_CONFIGS_FILE_PATH)
+
+aws_configs = configs['aws']
+assert aws_configs['region'] \
+   and aws_configs['vpc']['vpc-id'] \
+   and aws_configs['vpc']['db-subnets'] \
+   and aws_configs['vpc']['ec2-subnets'] \
+   and aws_configs['vpc']['elb-subnets']
 
 os.system(
-    'eb {} {}'.format(
+    'eb {} {} --region {} --vpc.id {} --vpc.dbsubnets {} --vpc.ec2subnets {} --vpc.elbsubnets {}'.format(
         'create' if args.create else 'deploy',
-        args.project))
+        args.project,
+        aws_configs['region'],
+        aws_configs['vpc']['vpc-id'],
+        aws_configs['vpc']['db-subnets'],
+        aws_configs['vpc']['ec2-subnets'],
+        aws_configs['vpc']['elb-subnets']))
 
 shutil.copyfile(
-    src=DB_CREDS_ORIG_FILE_PATH,
-    dst=_DB_CREDS_FILE_PATH)
+    src=CONFIGS_ORIG_FILE_PATH,
+    dst=_CONFIGS_FILE_PATH)
 
-os.remove(DB_CREDS_ORIG_FILE_PATH)
+os.remove(CONFIGS_ORIG_FILE_PATH)
 
-assert not os.path.isfile(DB_CREDS_ORIG_FILE_PATH)
+assert not os.path.isfile(CONFIGS_ORIG_FILE_PATH)

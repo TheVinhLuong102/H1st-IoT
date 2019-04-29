@@ -108,11 +108,11 @@ WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-_DB_CREDS_FILE_NAME = 'db.yaml'
-_DB_CREDS_FILE_PATH = os.path.join(_PROJECT_DIR, _DB_CREDS_FILE_NAME)
+_CONFIGS_FILE_NAME = 'db.yaml'
+_CONFIGS_FILE_PATH = os.path.join(_PROJECT_DIR, _CONFIGS_FILE_NAME)
 
 try:
-    _db_creds = yaml.safe_load(stream=open(_DB_CREDS_FILE_PATH, 'r'))['db']
+    _db_creds = yaml.safe_load(stream=open(_CONFIGS_FILE_PATH, 'r'))['db']
 
 except Exception as err:   # https://stackoverflow.com/questions/50879668/python-setup-py-some-files-are-missing
     print('*** {} ***'.format(err))
