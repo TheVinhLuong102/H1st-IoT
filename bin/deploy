@@ -64,7 +64,8 @@ os.system(
         'create' if args.create else 'deploy',
         args.project,
         aws_configs['region'],
-        ' --vpc.id {} --vpc.dbsubnets {} --vpc.ec2subnets {} --vpc.elbsubnets {}'.format(
+        ' --vpc.id {} --vpc.dbsubnets {} --vpc.ec2subnets {} --vpc.elbsubnets {} --vpc.elbpublic --vpc.publicip'
+            .format(
                 aws_configs['vpc']['vpc-id'],
                 aws_configs['vpc']['db-subnets'],
                 aws_configs['vpc']['ec2-subnets'],
