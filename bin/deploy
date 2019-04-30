@@ -52,24 +52,20 @@ shutil.copyfile(
     src=configs_file_path,
     dst=_CONFIGS_FILE_PATH)
 
-aws_configs = configs['aws']
+aws_configs = configs['api']['aws']
 assert aws_configs['region'] \
-   and aws_configs['vpc']['vpc-id'] \
-   and aws_configs['vpc']['db-subnets'] \
-   and aws_configs['vpc']['ec2-subnets'] \
-   and aws_configs['vpc']['elb-subnets']
+   and aws_configs['vpc'] \
+   and aws_configs['subnets']
 
 os.system(
     'eb {} {} --region {}{}'.format(
         'create' if args.create else 'deploy',
         args.project,
         aws_configs['region'],
-        ' --vpc.id {} --vpc.dbsubnets {} --vpc.ec2subnets {} --vpc.elbsubnets {} --vpc.elbpublic --vpc.publicip'
+        ' --vpc.id {0} --vpc.dbsubnets {1} --vpc.ec2subnets {1} --vpc.elbsubnets {1} --vpc.elbpublic --vpc.publicip'
             .format(
-                aws_configs['vpc']['vpc-id'],
-                aws_configs['vpc']['db-subnets'],
-                aws_configs['vpc']['ec2-subnets'],
-                aws_configs['vpc']['elb-subnets'])
+                aws_configs['vpc'],
+                aws_configs['subnets'])
             if args.create
             else ''))
 
