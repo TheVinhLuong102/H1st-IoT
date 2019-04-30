@@ -3,7 +3,7 @@ branch-defaults:
     environment: TEST
 
 global:
-  application_name: ArimoIoTDataAdmin-app
+  application_name: ArimoIoT-app
   branch: null
   default_ec2_keyname: null
   default_platform: Python 3.6
