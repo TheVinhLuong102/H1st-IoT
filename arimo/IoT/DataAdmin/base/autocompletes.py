@@ -3,6 +3,7 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 from .models import \
     NumericMeasurementUnit, \
     EquipmentGeneralType, \
+    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
@@ -38,6 +39,21 @@ class EquipmentGeneralTypeAutoComplete(autocomplete.Select2QuerySetView):
 
         else:
             return EquipmentGeneralType.objects.none()
+
+
+class EquipmentComponentAutoComplete(autocomplete.Select2QuerySetView):
+    name = 'EquipmentComponent-AutoComplete'
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            query_set = EquipmentComponent.objects.all()
+
+            return query_set.filter(name__icontains=self.q) \
+                if self.q \
+              else query_set
+
+        else:
+            return EquipmentComponent.objects.none()
 
 
 class EquipmentDataFieldAutoComplete(autocomplete.Select2QuerySetView):

@@ -35,11 +35,11 @@ class GlobalConfigAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    @silk_profile(name='ADMIN: Global Configs')
+    @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
 
-    @silk_profile(name='ADMIN: Global Config')
+    @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
         return super(type(self), self).changeform_view(*args, **kwargs)
 
@@ -87,6 +87,40 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 site.register(
     EquipmentGeneralType,
     admin_class=EquipmentGeneralTypeAdmin)
+
+
+class EquipmentComponentAdmin(ModelAdmin):
+    list_display = \
+        'equipment_general_type', \
+        'name', \
+        'description', \
+        'last_updated'
+
+    list_filter = 'equipment_general_type__name',
+
+    list_select_related = 'equipment_general_type',
+
+    show_full_result_count = False
+
+    search_fields = \
+        'equipment_general_type__name', \
+        'name', \
+        'description'
+
+    readonly_fields = 'equipment_unique_types',
+
+    @silk_profile(name='Admin: Equipment Components')
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
+
+    @silk_profile(name='Admin: Equipment Component')
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
+
+
+site.register(
+    EquipmentComponent,
+    admin_class=EquipmentComponentAdmin)
 
 
 class EquipmentDataFieldAdmin(ModelAdmin):
@@ -549,11 +583,11 @@ class ErrorAdmin(ModelAdmin):
         'key', \
         'value'
 
-    @silk_profile(name='ADMIN: Errors')
+    @silk_profile(name='Admin: Errors')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
 
-    @silk_profile(name='ADMIN: Error')
+    @silk_profile(name='Admin: Error')
     def changeform_view(self, *args, **kwargs):
         return super(type(self), self).changeform_view(*args, **kwargs)
 

@@ -179,6 +179,10 @@ class EquipmentComponent(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
     class Meta:
         unique_together = \
             'equipment_general_type', \

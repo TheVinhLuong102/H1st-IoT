@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 from .autocompletes import \
     NumericMeasurementUnitAutoComplete, \
     EquipmentGeneralTypeAutoComplete, \
+    EquipmentComponentAutoComplete, \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
@@ -55,6 +56,10 @@ URL_PATTERNS = [
     url(r'^{}/$'.format(EquipmentGeneralTypeAutoComplete.name),
         EquipmentGeneralTypeAutoComplete.as_view(),
         name=EquipmentGeneralTypeAutoComplete.name),
+
+    url(r'^{}/$'.format(EquipmentComponentAutoComplete.name),
+        EquipmentComponentAutoComplete.as_view(),
+        name=EquipmentComponentAutoComplete.name),
 
     url(r'^{}/$'.format(EquipmentDataFieldAutoComplete.name),
         EquipmentDataFieldAutoComplete.as_view(),
