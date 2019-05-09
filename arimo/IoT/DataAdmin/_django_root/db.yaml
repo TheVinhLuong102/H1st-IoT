@@ -3,8 +3,3 @@ db:
   user: ~
   password: ~
   db_name: ~
-
-api:
-  endpoint: ~
-  user: ~
-  password: ~
