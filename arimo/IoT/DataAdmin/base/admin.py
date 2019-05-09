@@ -15,6 +15,7 @@ from .models import \
     GlobalConfig, \
     NumericMeasurementUnit, \
     EquipmentGeneralType, \
+    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \

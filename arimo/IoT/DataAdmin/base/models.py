@@ -138,6 +138,67 @@ class EquipmentGeneralType(Model):
 
 
 @python_2_unicode_compatible
+class EquipmentComponent(Model):
+    RELATED_NAME = 'equipment_components'
+    RELATED_QUERY_NAME = 'equipment_component'
+
+    equipment_general_type = \
+        ForeignKey(
+            to=EquipmentGeneralType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    name = \
+        CharField(
+            verbose_name='Equipment Component',
+            blank=False,
+            null=False,
+            unique=True,
+            db_index=True,
+            max_length=MAX_CHAR_LEN)
+
+    description = \
+        JSONField(
+            blank=True,
+            null=True)
+
+    equipment_data_fields = \
+        ManyToManyField(
+            to='EquipmentDataField',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    equipment_unique_types = \
+        ManyToManyField(
+            to='EquipmentUniqueType',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    class Meta:
+        unique_together = \
+            'equipment_general_type', \
+            'name'
+
+        ordering = \
+            'equipment_general_type', \
+            'name'
+
+    def __str__(self):
+        return '{} Component {}'.format(
+                self.equipment_general_type.name.upper(),
+                self.name.upper())
+
+    def save(self, *args, **kwargs):
+        self.name = clean_lower_str(self.name)
+        super(type(self), self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
 class EquipmentDataField(Model):
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
@@ -221,6 +282,12 @@ class EquipmentDataField(Model):
             blank=True,
             null=True)
 
+    components = \
+        ManyToManyField(
+            to=EquipmentComponent,
+            through=EquipmentComponent.equipment_data_fields.through,
+            blank=True)
+
     equipment_unique_types = \
         ManyToManyField(
             to='EquipmentUniqueType',
@@ -300,6 +367,13 @@ class EquipmentUniqueTypeGroup(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
+    equipment_components = \
+        ManyToManyField(
+            to=EquipmentComponent,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     equipment_data_fields = \
         ManyToManyField(
             to=EquipmentDataField,
@@ -353,6 +427,12 @@ class EquipmentUniqueType(Model):
         JSONField(
             blank=True,
             null=True)
+
+    components = \
+        ManyToManyField(
+            to=EquipmentComponent,
+            through=EquipmentComponent.equipment_unique_types.through,
+            blank=True)
 
     data_fields = \
         ManyToManyField(
