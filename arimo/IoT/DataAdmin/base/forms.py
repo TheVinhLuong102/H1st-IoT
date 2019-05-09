@@ -4,16 +4,41 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 
 from .autocompletes import \
     EquipmentGeneralTypeAutoComplete, \
+    EquipmentComponentAutoComplete, \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
 from .models import \
+    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
     EquipmentInstance, \
     EquipmentSystem
+
+
+class EquipmentComponentForm(autocomplete.FutureModelForm):
+    equipment_data_fields = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentDataField.objects
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_data_field_type',
+                    'data_type',
+                    'numeric_measurement_unit'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentDataFieldAutoComplete.name,
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+            required=False)
+
+    class Meta:
+        model = EquipmentComponent
+
+        fields = '__all__'
 
 
 class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
@@ -37,6 +62,19 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
 
 
 class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
+    components = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentComponent.objects
+                .select_related(
+                    'equipment_general_type'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentComponentAutoComplete.name,
+                    attrs={# Only trigger autocompletion after characters have been typed
+                           'data-minimum-input-length': 1}),
+            required=False)
+
     data_fields = \
         ModelMultipleChoiceField(
             queryset=

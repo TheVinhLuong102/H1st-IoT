@@ -6,6 +6,7 @@ from django.forms import BaseInlineFormSet
 from silk.profiling.profiler import silk_profile
 
 from .forms import \
+    EquipmentComponentForm, \
     EquipmentUniqueTypeGroupForm, \
     EquipmentUniqueTypeForm, \
     EquipmentInstanceForm, \
@@ -106,6 +107,8 @@ class EquipmentComponentAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'name', \
         'description'
+
+    form = EquipmentComponentForm
 
     readonly_fields = 'equipment_unique_types',
 
