@@ -286,8 +286,21 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                     'equipment_general_type') \
                 .prefetch_related(
                     'equipment_unique_types',
-                    'equipment_components',
-                    'equipment_data_fields')
+                    Prefetch(
+                        lookup='equipment_components',
+                        queryset=
+                            EquipmentComponent.objects
+                            .select_related(
+                                'equipment_general_type')),
+                    Prefetch(
+                        lookup='equipment_data_fields',
+                        queryset=
+                            EquipmentDataField.objects
+                            .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type',
+                                'data_type',
+                                'numeric_measurement_unit')))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
