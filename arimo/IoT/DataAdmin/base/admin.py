@@ -95,6 +95,8 @@ class EquipmentComponentAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
+        'equipment_data_field_list', \
+        'n_equipment_unique_types', \
         'last_updated'
 
     list_filter = 'equipment_general_type__name',
@@ -110,7 +112,28 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     form = EquipmentComponentForm
 
-    readonly_fields = 'equipment_unique_types',
+    def equipment_data_field_list(self, obj):
+        return '; '.join(str(equipment_data_field)
+                         for equipment_data_field in obj.equipment_data_fields.all())
+
+    def n_equipment_unique_types(self, obj):
+        return obj.equipment_unique_types.count()
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type') \
+                .prefetch_related(
+                    'equipment_unique_types',
+                    Prefetch(
+                        lookup='equipment_data_fields',
+                        queryset=
+                            EquipmentDataField.objects
+                            .select_related(
+                                'equipment_general_type',
+                                'equipment_data_field_type',
+                                'data_type',
+                                'numeric_measurement_unit')))
 
     @silk_profile(name='Admin: Equipment Components')
     def changelist_view(self, *args, **kwargs):

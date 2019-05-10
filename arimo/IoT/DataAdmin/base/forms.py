@@ -31,8 +31,19 @@ class EquipmentComponentForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
+            required=False)
+
+    equipment_unique_types = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentUniqueType.objects
+                .select_related(
+                    'equipment_general_type'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentUniqueTypeAutoComplete.name,
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
