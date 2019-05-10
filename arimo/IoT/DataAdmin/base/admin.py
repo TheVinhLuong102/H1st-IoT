@@ -112,8 +112,12 @@ class EquipmentComponentAdmin(ModelAdmin):
     form = EquipmentComponentForm
 
     def equipment_data_field_list(self, obj):
-        return '; '.join(str(equipment_data_field)
-                         for equipment_data_field in obj.equipment_data_fields.all())
+        n = obj.equipment_data_fields.count()
+        return '{}: {}'.format(
+                n, '; '.join(str(equipment_data_field)
+                             for equipment_data_field in obj.equipment_data_fields.all())) \
+            if n \
+          else ''
 
     def n_equipment_unique_types(self, obj):
         return obj.equipment_unique_types.count()
@@ -151,6 +155,7 @@ site.register(
 class EquipmentDataFieldAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
+        'equipment_components', \
         'name', \
         'description', \
         'equipment_data_field_type', \
@@ -161,7 +166,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'default_val', \
         'min_val', \
         'max_val', \
-        'equipment_components', \
         'n_equipment_unique_types', \
         'last_updated'
 
@@ -190,8 +194,12 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     form = EquipmentDataFieldForm
 
     def equipment_components(self, obj):
-        return ', '.join(equipment_component.name
-                         for equipment_component in obj.components.all())
+        n = obj.components.count()
+        return '{}: {}'.format(
+                n, ', '.join(equipment_component.name
+                             for equipment_component in obj.components.all())) \
+            if n \
+          else ''
 
     def n_equipment_unique_types(self, obj):
         return obj.equipment_unique_types.count()
