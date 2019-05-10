@@ -7,6 +7,7 @@ from silk.profiling.profiler import silk_profile
 
 from .forms import \
     EquipmentComponentForm, \
+    EquipmentDataFieldForm, \
     EquipmentUniqueTypeGroupForm, \
     EquipmentUniqueTypeForm, \
     EquipmentInstanceForm, \
@@ -101,8 +102,6 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    list_select_related = 'equipment_general_type',
-
     show_full_result_count = False
 
     search_fields = \
@@ -124,7 +123,6 @@ class EquipmentComponentAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type') \
                 .prefetch_related(
-                    'equipment_unique_types',
                     Prefetch(
                         lookup='equipment_data_fields',
                         queryset=
@@ -133,7 +131,8 @@ class EquipmentComponentAdmin(ModelAdmin):
                                 'equipment_general_type',
                                 'equipment_data_field_type',
                                 'data_type',
-                                'numeric_measurement_unit')))
+                                'numeric_measurement_unit')),
+                    'equipment_unique_types')
 
     @silk_profile(name='Admin: Equipment Components')
     def changelist_view(self, *args, **kwargs):
@@ -162,6 +161,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'default_val', \
         'min_val', \
         'max_val', \
+        'equipment_components', \
+        'n_equipment_unique_types', \
         'last_updated'
 
     list_filter = \
@@ -176,12 +177,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'min_val', \
         'max_val'
 
-    list_select_related = \
-        'equipment_general_type', \
-        'equipment_data_field_type', \
-        'data_type', \
-        'numeric_measurement_unit'
-
     show_full_result_count = False
 
     search_fields = \
@@ -192,7 +187,30 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'data_type__name', \
         'numeric_measurement_unit__name'
 
-    readonly_fields = 'equipment_unique_types',
+    form = EquipmentDataFieldForm
+
+    def equipment_components(self, obj):
+        return ', '.join(equipment_component.name
+                         for equipment_component in obj.equipment_components.all())
+
+    def n_equipment_unique_types(self, obj):
+        return obj.equipment_unique_types.count()
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_data_field_type',
+                    'data_type',
+                    'numeric_measurement_unit') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='components',
+                        queryset=
+                            EquipmentComponent.objects
+                            .select_related(
+                                'equipment_general_type')),
+                    'equipment_unique_types')
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):

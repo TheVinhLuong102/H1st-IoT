@@ -52,6 +52,38 @@ class EquipmentComponentForm(autocomplete.FutureModelForm):
         fields = '__all__'
 
 
+class EquipmentDataFieldForm(autocomplete.FutureModelForm):
+    components = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentComponent.objects
+                .select_related(
+                    'equipment_general_type'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentDataFieldAutoComplete.name   #,
+                    # attrs={'data-minimum-input-length': 1}
+                ),
+            required=False)
+
+    equipment_unique_types = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentUniqueType.objects
+                .select_related(
+                    'equipment_general_type'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentUniqueTypeAutoComplete.name,
+                    attrs={'data-minimum-input-length': 1}),
+            required=False)
+
+    class Meta:
+        model = EquipmentDataField
+
+        fields = '__all__'
+
+
 class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
     equipment_unique_types = \
         ModelMultipleChoiceField(
