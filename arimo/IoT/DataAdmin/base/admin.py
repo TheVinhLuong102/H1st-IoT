@@ -212,12 +212,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                     'data_type',
                     'numeric_measurement_unit') \
                 .prefetch_related(
-                    Prefetch(
-                        lookup='components',
-                        queryset=
-                            EquipmentComponent.objects
-                            .select_related(
-                                'equipment_general_type')),
+                    'components',
                     'equipment_unique_types')
 
     @silk_profile(name='Admin: Equipment Data Fields')
@@ -305,6 +300,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
+        'equipment_components', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
         'equipment_unique_type_groups', \
@@ -321,7 +317,13 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeForm
 
-    readonly_fields = 'groups',
+    def equipment_components(self, obj):
+        n = obj.components.count()
+        return '{}: {}'.format(
+                n, ', '.join(equipment_component.name
+                             for equipment_component in obj.components.all())) \
+            if n \
+          else ''
 
     def n_equipment_data_fields(self, obj):
         return obj.data_fields.count()
@@ -338,6 +340,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type') \
                 .prefetch_related(
+                    'components',
                     'data_fields',
                     'equipment_instances',
                     'groups')

@@ -6,6 +6,7 @@ from .autocompletes import \
     EquipmentGeneralTypeAutoComplete, \
     EquipmentComponentAutoComplete, \
     EquipmentDataFieldAutoComplete, \
+    EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
     EquipmentFacilityAutoComplete, \
     EquipmentInstanceAutoComplete
@@ -61,9 +62,7 @@ class EquipmentDataFieldForm(autocomplete.FutureModelForm):
                     'equipment_general_type'),
             widget=
                 autocomplete.ModelSelect2Multiple(
-                    url=EquipmentDataFieldAutoComplete.name   #,
-                    # attrs={'data-minimum-input-length': 1}
-                ),
+                    url=EquipmentComponentAutoComplete.name),
             required=False)
 
     equipment_unique_types = \
@@ -113,9 +112,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
                     'equipment_general_type'),
             widget=
                 autocomplete.ModelSelect2Multiple(
-                    url=EquipmentComponentAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    url=EquipmentComponentAutoComplete.name),
             required=False)
 
     data_fields = \
@@ -130,8 +127,18 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
+            required=False)
+
+    groups = \
+        ModelMultipleChoiceField(
+            queryset=
+                EquipmentUniqueTypeGroup.objects
+                .select_related(
+                    'equipment_general_type'),
+            widget=
+                autocomplete.ModelSelect2Multiple(
+                    url=EquipmentUniqueTypeGroupAutoComplete.name),
             required=False)
 
     class Meta:
