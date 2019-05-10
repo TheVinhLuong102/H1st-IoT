@@ -73,7 +73,9 @@ class Project(object):
         from arimo.IoT.DataAdmin.base.models import \
             GlobalConfig, \
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
-            EquipmentGeneralType, EquipmentUniqueTypeGroup, EquipmentUniqueType, EquipmentDataField, \
+            EquipmentGeneralType, \
+            EquipmentComponent, EquipmentDataField, \
+            EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
             EquipmentFacility, EquipmentSystem, \
             Error
@@ -85,9 +87,12 @@ class Project(object):
                 NumericMeasurementUnits=NumericMeasurementUnit.objects,
 
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
+
+                EquipmentComponents=EquipmentComponent.objects,
+                EquipmentDataFields=EquipmentDataField.objects,
+
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
-                EquipmentDataFields=EquipmentDataField.objects,
 
                 EquipmentInstances=EquipmentInstance.objects,
                 EquipmentInstanceDailyMetadata=EquipmentInstanceDailyMetadata.objects,
