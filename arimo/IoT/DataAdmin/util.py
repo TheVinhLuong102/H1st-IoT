@@ -15,7 +15,7 @@ _YAML_EXT = '.{}'.format(_YAML_FMT)
 
 
 def _clean_str(s):
-    return re.sub('[^\w]+', '_', s).strip('_')
+    return re.sub('[^\w]+', '_', s).strip('_').replace('__', '_')
 
 
 def clean_lower_str(s):
