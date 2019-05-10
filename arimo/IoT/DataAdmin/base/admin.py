@@ -191,7 +191,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     def equipment_components(self, obj):
         return ', '.join(equipment_component.name
-                         for equipment_component in obj.equipment_components.all())
+                         for equipment_component in obj.components.all())
 
     def n_equipment_unique_types(self, obj):
         return obj.equipment_unique_types.count()
