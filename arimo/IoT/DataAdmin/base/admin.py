@@ -234,7 +234,8 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
-        'equipment_unique_type_names', \
+        'equipment_unique_type_list', \
+        'equipment_component_list', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
         'last_updated'
@@ -250,11 +251,25 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeGroupForm
 
-    readonly_fields = 'equipment_data_fields',
+    readonly_fields = \
+        'equipment_components', \
+        'equipment_data_fields',
 
-    def equipment_unique_type_names(self, obj):
-        return ', '.join(equipment_unique_type.name
-                         for equipment_unique_type in obj.equipment_unique_types.all())
+    def equipment_unique_type_list(self, obj):
+        n = obj.equipment_unique_types.count()
+        return '{}: {}'.format(
+                n, ', '.join(equipment_unique_type.name
+                             for equipment_unique_type in obj.equipment_unique_types.all())) \
+            if n \
+          else ''
+
+    def equipment_component_list(self, obj):
+        n = obj.equipment_components.count()
+        return '{}: {}'.format(
+                n, ', '.join(equipment_component.name
+                             for equipment_component in obj.equipment_components.all())) \
+            if n \
+          else ''
 
     def n_equipment_data_fields(self, obj):
         return obj.equipment_data_fields.count()
@@ -263,7 +278,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         return sum(i['n_equipment_instances']
                    for i in obj.equipment_unique_types.annotate(n_equipment_instances=Count('equipment_instance')).values('n_equipment_instances')) \
             if obj.equipment_unique_types.count() \
-          else 0
+          else ''
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
@@ -271,15 +286,8 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                     'equipment_general_type') \
                 .prefetch_related(
                     'equipment_unique_types',
-                    Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=
-                            EquipmentDataField.objects
-                            .select_related(
-                                'equipment_general_type',
-                                'equipment_data_field_type',
-                                'data_type',
-                                'numeric_measurement_unit')))
+                    'equipment_components',
+                    'equipment_data_fields')
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
