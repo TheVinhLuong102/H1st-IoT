@@ -156,7 +156,7 @@ class EquipmentComponent(Model):
             verbose_name='Equipment Component',
             blank=False,
             null=False,
-            unique=True,
+            unique=False,
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
