@@ -10,7 +10,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemDiagnosis, \
+    EquipmentInstanceProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 
@@ -197,7 +197,7 @@ class AlertShortFormRelatedField(RelatedField):
                 has_associated_equipment_problem_diagnoses=value.has_associated_equipment_problem_diagnoses)
 
 
-class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
+class EquipmentInstanceProblemDiagnosisSerializer(WritableNestedModelSerializer):
     equipment_instance = \
         SlugRelatedField(
             queryset=EquipmentInstance.objects.all(), read_only=False,
@@ -218,7 +218,7 @@ class EquipmentProblemDiagnosisSerializer(WritableNestedModelSerializer):
             many=True)
 
     class Meta:
-        model = EquipmentProblemDiagnosis
+        model = EquipmentInstanceProblemDiagnosis
 
         fields = \
             'id', \
@@ -241,7 +241,7 @@ class AlertDiagnosisStatusSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentProblemDiagnosisShortFormRelatedField(RelatedField):
+class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
             equipment_instance=value.equipment_instance.name,
@@ -277,7 +277,7 @@ class AlertSerializer(ModelSerializer):
             required=False)
 
     equipment_problem_diagnoses = \
-        EquipmentProblemDiagnosisShortFormRelatedField(
+        EquipmentInstanceProblemDiagnosisShortFormRelatedField(
             read_only=True,
             many=True)
 

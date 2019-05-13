@@ -4,10 +4,10 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 
 from .autocompletes import \
     EquipmentProblemTypeAutoComplete, \
-    EquipmentProblemDiagnosisAutoComplete
+    EquipmentInstanceProblemDiagnosisAutoComplete
 from .models import \
     EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
-    EquipmentProblemDiagnosis, Alert
+    EquipmentInstanceProblemDiagnosis, Alert
 
 from ..base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
@@ -95,7 +95,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
         fields = '__all__'
 
 
-class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
+class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
     equipment_instance = \
         ModelChoiceField(
             queryset=
@@ -112,7 +112,7 @@ class EquipmentProblemDiagnosisForm(autocomplete.FutureModelForm):
             required=True)
 
     class Meta:
-        model = EquipmentProblemDiagnosis
+        model = EquipmentInstanceProblemDiagnosis
 
         fields = '__all__'
 
@@ -128,7 +128,7 @@ class AlertForm(autocomplete.FutureModelForm):
     equipment_problem_diagnoses = \
         ModelMultipleChoiceField(
             queryset=
-                EquipmentProblemDiagnosis.objects
+                EquipmentInstanceProblemDiagnosis.objects
                 .select_related(
                     'equipment_instance', 'equipment_instance__equipment_general_type',
                     'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type')
@@ -136,7 +136,7 @@ class AlertForm(autocomplete.FutureModelForm):
                     'equipment_problem_types'),
             widget=
                 autocomplete.ModelSelect2Multiple(
-                    url=EquipmentProblemDiagnosisAutoComplete.name,
+                    url=EquipmentInstanceProblemDiagnosisAutoComplete.name,
                     attrs={# Only trigger autocompletion after characters have been typed
                            'data-minimum-input-length': 1}),
             required=False)

@@ -16,7 +16,7 @@ from .filters import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter, \
     EquipmentInstanceDailyRiskScoreFilter, \
     EquipmentProblemTypeFilter, \
-    EquipmentProblemDiagnosisFilter, \
+    EquipmentInstanceProblemDiagnosisFilter, \
     AlertDiagnosisStatusFilter, \
     AlertFilter
 
@@ -29,7 +29,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemDiagnosis, \
+    EquipmentInstanceProblemDiagnosis, \
     AlertDiagnosisStatus, \
     Alert
 
@@ -41,7 +41,7 @@ from .serializers import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer, \
     EquipmentInstanceDailyRiskScoreSerializer, \
     EquipmentProblemTypeSerializer, \
-    EquipmentProblemDiagnosisSerializer, \
+    EquipmentInstanceProblemDiagnosisSerializer, \
     AlertDiagnosisStatusSerializer, \
     AlertSerializer
 
@@ -438,9 +438,9 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
 
-class EquipmentProblemDiagnosisViewSet(ModelViewSet):
+class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
-        EquipmentProblemDiagnosis.objects \
+        EquipmentInstanceProblemDiagnosis.objects \
         .select_related(
             'equipment_instance') \
         .prefetch_related(
@@ -454,7 +454,7 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
                         'equipment_instance',
                         'diagnosis_status')))
 
-    serializer_class = EquipmentProblemDiagnosisSerializer
+    serializer_class = EquipmentInstanceProblemDiagnosisSerializer
 
     authentication_classes = \
         BasicAuthentication, \
@@ -468,7 +468,7 @@ class EquipmentProblemDiagnosisViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    filter_class = EquipmentProblemDiagnosisFilter
+    filter_class = EquipmentInstanceProblemDiagnosisFilter
 
     ordering_fields = \
         'ongoing', \
@@ -561,7 +561,7 @@ class AlertViewSet(ModelViewSet):
             Prefetch(
                 lookup='equipment_problem_diagnoses',
                 queryset=
-                    EquipmentProblemDiagnosis.objects
+                    EquipmentInstanceProblemDiagnosis.objects
                     .select_related(
                         'equipment_instance')
                     .prefetch_related(

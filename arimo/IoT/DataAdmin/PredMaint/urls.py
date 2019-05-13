@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 from .autocompletes import \
     EquipmentProblemTypeAutoComplete, \
-    EquipmentProblemDiagnosisAutoComplete
+    EquipmentInstanceProblemDiagnosisAutoComplete
 
 from .views import \
     GlobalConfigViewSet, \
@@ -14,7 +14,7 @@ from .views import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, \
     EquipmentInstanceDailyRiskScoreViewSet, \
     EquipmentProblemTypeViewSet, \
-    EquipmentProblemDiagnosisViewSet, \
+    EquipmentInstanceProblemDiagnosisViewSet, \
     AlertDiagnosisStatusViewSet, \
     AlertViewSet
 
@@ -51,7 +51,7 @@ ROUTER.register(
 
 ROUTER.register(
     'equipment-problem-diagnoses',
-    EquipmentProblemDiagnosisViewSet)
+    EquipmentInstanceProblemDiagnosisViewSet)
 
 ROUTER.register(
     'alert-diagnosis-statuses',
@@ -71,7 +71,7 @@ URL_PATTERNS = [
         EquipmentProblemTypeAutoComplete.as_view(),
         name=EquipmentProblemTypeAutoComplete.name),
 
-    url(r'^{}/$'.format(EquipmentProblemDiagnosisAutoComplete.name),
-        EquipmentProblemDiagnosisAutoComplete.as_view(),
-        name=EquipmentProblemDiagnosisAutoComplete.name)
+    url(r'^{}/$'.format(EquipmentInstanceProblemDiagnosisAutoComplete.name),
+        EquipmentInstanceProblemDiagnosisAutoComplete.as_view(),
+        name=EquipmentInstanceProblemDiagnosisAutoComplete.name)
 ]

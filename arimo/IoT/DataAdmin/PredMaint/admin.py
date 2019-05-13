@@ -8,7 +8,7 @@ from silk.profiling.profiler import silk_profile
 from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
-    EquipmentProblemDiagnosisForm, \
+    EquipmentInstanceProblemDiagnosisForm, \
     AlertForm
 
 from .models import \
@@ -21,7 +21,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
-    EquipmentProblemDiagnosis, \
+    EquipmentInstanceProblemDiagnosis, \
     Alert, \
     AlertDiagnosisStatus
 
@@ -517,7 +517,7 @@ site.register(
     admin_class=EquipmentProblemTypeAdmin)
 
 
-class EquipmentProblemDiagnosisAdmin(ModelAdmin):
+class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
         'from_date', \
@@ -548,7 +548,7 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
 
     search_fields = 'equipment_instance__name',
 
-    form = EquipmentProblemDiagnosisForm
+    form = EquipmentInstanceProblemDiagnosisForm
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request) \
@@ -581,8 +581,8 @@ class EquipmentProblemDiagnosisAdmin(ModelAdmin):
 
 
 site.register(
-    EquipmentProblemDiagnosis,
-    admin_class=EquipmentProblemDiagnosisAdmin)
+    EquipmentInstanceProblemDiagnosis,
+    admin_class=EquipmentInstanceProblemDiagnosisAdmin)
 
 
 class AlertAdmin(ModelAdmin):

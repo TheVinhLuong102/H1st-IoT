@@ -561,8 +561,8 @@ class EquipmentProblemType(Model):
 
 @python_2_unicode_compatible
 class EquipmentProblemPeriod(Model):
-    RELATED_NAME = 'equipment_problem_diagnoses'
-    RELATED_QUERY_NAME = 'equipment_problem_diagnosis'
+    RELATED_NAME = 'equipment_instance_problem_diagnoses'
+    RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
 
     equipment_instance = \
         ForeignKey(
@@ -692,7 +692,7 @@ class EquipmentProblemPeriod(Model):
 
 
 # rename more correctly
-EquipmentProblemDiagnosis = EquipmentProblemPeriod
+EquipmentInstanceProblemDiagnosis = EquipmentProblemPeriod
 
 
 def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
@@ -708,14 +708,14 @@ def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
     alerts.update(
         has_associated_equipment_problem_diagnoses=True)
 
-    EquipmentProblemDiagnosis.objects.filter(pk=instance.pk).update(
+    EquipmentInstanceProblemDiagnosis.objects.filter(pk=instance.pk).update(
         has_equipment_problems=bool(instance.equipment_problem_types.count()),
         has_associated_alerts=bool(alerts.count()))
 
 
 post_save.connect(
     receiver=equipment_problem_diagnosis_post_save,
-    sender=EquipmentProblemDiagnosis,
+    sender=EquipmentInstanceProblemDiagnosis,
     weak=True,
     dispatch_uid=None)
 
@@ -864,8 +864,8 @@ class Alert(Model):
 
     equipment_problem_diagnoses = \
         ManyToManyField(
-            to=EquipmentProblemDiagnosis,
-            through=EquipmentProblemDiagnosis.alerts.through,
+            to=EquipmentInstanceProblemDiagnosis,
+            through=EquipmentInstanceProblemDiagnosis.alerts.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
                 # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_diagnoses: (fields.E302) Reverse accessor for 'Alert.equipment_problem_diagnoses' clashes with field name 'EquipmentProblemPeriod.alerts'.
@@ -946,7 +946,7 @@ class Alert(Model):
 
 def alert_post_save(sender, instance, *args, **kwargs):
     equipment_problem_diagnoses = \
-        EquipmentProblemDiagnosis.objects.filter(
+        EquipmentInstanceProblemDiagnosis.objects.filter(
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
     
