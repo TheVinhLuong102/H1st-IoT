@@ -50,7 +50,7 @@ ROUTER.register(
     EquipmentProblemTypeViewSet)
 
 ROUTER.register(
-    'equipment-problem-diagnoses',
+    'equipment-instance-problem-diagnoses',
     EquipmentInstanceProblemDiagnosisViewSet)
 
 ROUTER.register(
