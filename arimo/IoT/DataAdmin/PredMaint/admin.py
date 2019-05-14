@@ -473,11 +473,6 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'risk_score_name', \
         'date'
 
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-        'equipment_instance', 'equipment_instance__equipment_general_type', \
-                              'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type'
-
     readonly_fields = \
         'equipment_unique_type_group', \
         'equipment_instance', \
@@ -492,6 +487,13 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                    'equipment_instance', 'equipment_instance__equipment_general_type',
+                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type')
 
     @silk_profile(name='Admin: Equipment Instance Daily Risk Scores')
     def changelist_view(self, *args, **kwargs):
