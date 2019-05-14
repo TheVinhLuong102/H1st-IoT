@@ -419,11 +419,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'equipment_unique_type_group__name', \
         'trained_to_date'
 
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
-                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
-
     show_full_result_count = False
 
     search_fields = \
@@ -440,6 +435,14 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'mae', \
         'medae', \
         'rmse'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                    'equipment_data_field',
+                    'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
+                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def changelist_view(self, *args, **kwargs):
