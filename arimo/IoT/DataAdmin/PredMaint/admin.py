@@ -512,7 +512,7 @@ site.register(
 class EquipmentProblemTypeAdmin(ModelAdmin):
     list_display = 'name',
 
-    show_full_result_count = False   # only a few, but skip counting anyway
+    show_full_result_count = False
 
     search_fields = 'name',
 
