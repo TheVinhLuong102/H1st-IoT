@@ -542,8 +542,8 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'duration', \
         'has_equipment_problems', \
         'has_associated_equipment_instance_alert_periods', \
-        'alarm_periods', \
-        'alert_periods'
+        'equipment_instance_alarm_periods', \
+        'equipment_instance_alert_periods'
 
     show_full_result_count = False
 

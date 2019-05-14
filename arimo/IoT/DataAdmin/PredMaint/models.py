@@ -613,7 +613,7 @@ class EquipmentInstanceAlarmPeriod(Model):
     equipment_instance_alert_periods = \
         ManyToManyField(
             to='Alert',   # EquipmentInstanceAlertPeriods
-            related_name=RELATED_NAME,
+            related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
@@ -627,7 +627,7 @@ class EquipmentInstanceAlarmPeriod(Model):
     equipment_instance_problem_diagnoses = \
         ManyToManyField(
             to='EquipmentProblemPeriod',   # EquipmentInstanceProblemDiagnosis
-            related_name=RELATED_NAME,
+            related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
@@ -756,12 +756,12 @@ class EquipmentProblemPeriod(Model):
             blank=True,
             null=True)
 
-    alarm_periods = \
+    equipment_instance_alarm_periods = \
         ManyToManyField(
             to=EquipmentInstanceAlarmPeriod,
             through=EquipmentInstanceAlarmPeriod.equipment_instance_problem_diagnoses.through,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
+            related_name=RELATED_NAME + '_reverse',
+            related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
     has_associated_equipment_instance_alarm_periods = \
@@ -771,11 +771,11 @@ class EquipmentProblemPeriod(Model):
             default=False,
             db_index=True)
 
-    alert_periods = \
+    equipment_instance_alert_periods = \
         ManyToManyField(
             to='Alert',   # EquipmentInstanceAlertPeriod
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
+            related_name=RELATED_NAME + '_reverse',
+            related_query_name=RELATED_QUERY_NAME,
             blank=True)
     
     has_associated_equipment_instance_alert_periods = \
@@ -980,12 +980,12 @@ class Alert(Model):
             null=True,
             on_delete=PROTECT)
 
-    alarm_periods = \
+    equipment_instance_alarm_periods = \
         ManyToManyField(
             to=EquipmentInstanceAlarmPeriod,
             through=EquipmentInstanceAlarmPeriod.equipment_instance_alert_periods.through,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
+            related_name=RELATED_NAME + '_reverse',
+            related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
     has_associated_equipment_instance_alarm_periods = \
@@ -998,9 +998,9 @@ class Alert(Model):
     equipment_instance_problem_diagnoses = \
         ManyToManyField(
             to=EquipmentInstanceProblemDiagnosis,
-            through=EquipmentInstanceProblemDiagnosis.alert_periods.through,
-            # related_name=RELATED_NAME,
-            # related_query_name=RELATED_QUERY_NAME,
+            through=EquipmentInstanceProblemDiagnosis.equipment_instance_alert_periods.through,
+            related_name=RELATED_NAME + '_reverse',
+            related_query_name=RELATED_QUERY_NAME,
             blank=True)
     
     has_associated_equipment_instance_problem_diagnoses = \
@@ -1123,7 +1123,7 @@ def equipment_instance_alert_period(sender, instance, *args, **kwargs):
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
 
-    instance.alarm_periods.set(
+    instance.equipment_instance_alarm_periods.set(
         equipment_instance_alarm_periods,
         clear=False)
 
@@ -1160,7 +1160,7 @@ def equipment_instance_problem_diagnosis_post_save(sender, instance, *args, **kw
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
 
-    instance.alarm_periods.set(
+    instance.equipment_instance_alarm_periods.set(
         equipment_instance_alarm_periods,
         clear=False)
 
@@ -1172,7 +1172,7 @@ def equipment_instance_problem_diagnosis_post_save(sender, instance, *args, **kw
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
 
-    instance.alert_periods.set(
+    instance.equipment_instance_alert_periods.set(
         equipment_instance_alert_periods,
         clear=False)
 
