@@ -486,11 +486,11 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Equipment Problem Diagnoses')
+    @silk_profile(name='REST API: Equipment Instance Problem Diagnoses')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Problem Diagnosis')
+    @silk_profile(name='REST API: Equipment Instance Problem Diagnosis')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -559,7 +559,7 @@ class AlertViewSet(ModelViewSet):
             'diagnosis_status') \
         .prefetch_related(
             Prefetch(
-                lookup='equipment_problem_diagnoses',
+                lookup='equipment_instance_problem_diagnoses',
                 queryset=
                     EquipmentInstanceProblemDiagnosis.objects
                     .select_related(
@@ -600,10 +600,10 @@ class AlertViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Alerts')
+    @silk_profile(name='REST API: Equipment Instance Alert Periods')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Alert')
+    @silk_profile(name='REST API: Equipment Instance Alert Period')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
