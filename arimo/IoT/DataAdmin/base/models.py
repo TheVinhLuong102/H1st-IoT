@@ -1033,10 +1033,6 @@ class EquipmentInstanceDailyMetadata(Model):
             'equipment_instance', \
             'date'
 
-        ordering = \
-            'equipment_instance', \
-            'date'
-
     def __str__(self):
         return '{} on {} @ {} ({} columns x {} rows)'.format(
                 self.equipment_instance,
