@@ -212,7 +212,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                     'data_type',
                     'numeric_measurement_unit') \
                 .prefetch_related(
-                    'components',
+                    'equipment_components',
                     'equipment_unique_types')
 
     @silk_profile(name='Admin: Equipment Data Fields')
@@ -361,10 +361,10 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type') \
                 .prefetch_related(
-                    'components',
-                    'data_fields',
+                    'equipment_components',
+                    'equipment_data_fields',
                     'equipment_instances',
-                    'groups')
+                    'equipment_unique_type_groups')
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):

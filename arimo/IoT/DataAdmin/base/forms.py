@@ -54,7 +54,7 @@ class EquipmentComponentForm(autocomplete.FutureModelForm):
 
 
 class EquipmentDataFieldForm(autocomplete.FutureModelForm):
-    components = \
+    equipment_components = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentComponent.objects
@@ -104,7 +104,7 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
 
 
 class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
-    components = \
+    equipment_components = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentComponent.objects
@@ -115,7 +115,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
                     url=EquipmentComponentAutoComplete.name),
             required=False)
 
-    data_fields = \
+    equipment_data_fields = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentDataField.objects
@@ -130,7 +130,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
                     attrs={'data-minimum-input-length': 1}),
             required=False)
 
-    groups = \
+    equipment_unique_type_groups = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentUniqueTypeGroup.objects

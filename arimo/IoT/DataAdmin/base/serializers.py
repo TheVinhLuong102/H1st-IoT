@@ -198,8 +198,8 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             'equipment_general_type', \
             'name', \
             'description', \
-            'data_fields', \
-            'groups'
+            'equipment_data_fields', \
+            'equipment_unique_type_groups'
 
 
 class EquipmentFacilitySerializer(ModelSerializer):
