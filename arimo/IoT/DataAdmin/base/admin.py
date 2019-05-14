@@ -463,6 +463,7 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_unique_type__name', \
         'equipment_facility__name'
 
+    # .get_queryset(...) below is better in Retrieving a record
     # list_select_related = \
     #     'equipment_general_type', \
     #     'equipment_unique_type', 'equipment_unique_type__equipment_general_type', \

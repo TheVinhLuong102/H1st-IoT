@@ -1029,11 +1029,11 @@ class EquipmentInstanceDailyMetadata(Model):
             auto_now=True)
 
     class Meta:
-        ordering = \
+        unique_together = \
             'equipment_instance', \
             'date'
 
-        unique_together = \
+        ordering = \
             'equipment_instance', \
             'date'
 
