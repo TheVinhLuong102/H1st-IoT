@@ -154,14 +154,14 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
-            .select_related(
-                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                'equipment_data_field',
-                'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit',
-                'equipment_data_field_2',
-                'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type',
-                'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit')
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                    'equipment_data_field',
+                    'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
+                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit',
+                    'equipment_data_field_2',
+                    'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type',
+                    'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
     def changelist_view(self, *args, **kwargs):
@@ -323,10 +323,6 @@ class BlueprintAdmin(ModelAdmin):
         'timestamp', \
         'active'
 
-    list_select_related = \
-        'equipment_unique_type_group', \
-        'equipment_unique_type_group__equipment_general_type'
-
     show_full_result_count = False
 
     search_fields = \
@@ -386,6 +382,11 @@ class BlueprintAdmin(ModelAdmin):
                     v['MedAE'],
                     v['MAE_MedAE_ratio_text'])
                 for k, v in sorted(d.items(), key=lambda i: i[1]['good'], reverse=True))
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type')
 
     @silk_profile(name='Admin: Blueprints')
     def changelist_view(self, *args, **kwargs):
