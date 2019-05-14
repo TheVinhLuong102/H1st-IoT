@@ -194,10 +194,10 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     form = EquipmentDataFieldForm
 
     def equipment_component_list(self, obj):
-        n = obj.components.count()
+        n = obj.equipment_components.count()
         return '{}: {}'.format(
                 n, ', '.join(equipment_component.name
-                             for equipment_component in obj.components.all())) \
+                             for equipment_component in obj.equipment_components.all())) \
             if n \
           else ''
 
@@ -339,10 +339,10 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     form = EquipmentUniqueTypeForm
 
     def equipment_components(self, obj):
-        n = obj.components.count()
+        n = obj.equipment_components.count()
         return '{}: {}'.format(
                 n, ', '.join(equipment_component.name
-                             for equipment_component in obj.components.all())) \
+                             for equipment_component in obj.equipment_components.all())) \
             if n \
           else ''
 
