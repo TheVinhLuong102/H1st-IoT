@@ -58,7 +58,7 @@ ROUTER.register(
     AlertDiagnosisStatusViewSet)
 
 ROUTER.register(
-    'alerts',
+    'equipment-instance-alert-periods',
     AlertViewSet)
 
 
