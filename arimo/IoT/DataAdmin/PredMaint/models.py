@@ -667,7 +667,7 @@ class EquipmentInstanceAlarmPeriod(Model):
     def save(self, *args, **kwargs):
         if self.to_utc_date_time:
             self.duration_in_days = \
-                (self.from_utc_date_time - self.to_utc_date_time).total_seconds() \
+                (self.to_utc_date_time - self.from_utc_date_time).total_seconds() \
                 / _ONE_DAY_TIME_DELTA_TOTAL_SECONDS
 
             _to_date = (self.to_utc_date_time + _ONE_DAY_TIME_DELTA).date()
