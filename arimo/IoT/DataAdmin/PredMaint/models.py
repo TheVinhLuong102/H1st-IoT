@@ -21,6 +21,7 @@ from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
 
 _ONE_DAY_TIME_DELTA = timedelta(days=1)
+_ONE_DAY_TIME_DELTA_TOTAL_SECONDS = _ONE_DAY_TIME_DELTA.total_seconds()
 
 
 @python_2_unicode_compatible
@@ -666,8 +667,8 @@ class EquipmentInstanceAlarmPeriod(Model):
     def save(self, *args, **kwargs):
         if self.to_utc_date_time:
             self.duration_in_days = \
-                (self.from_utc_date_time - self.to_utc_date_time) \
-                / _ONE_DAY_TIME_DELTA
+                (self.from_utc_date_time - self.to_utc_date_time).total_seconds() \
+                / _ONE_DAY_TIME_DELTA_TOTAL_SECONDS
 
             _to_date = (self.to_date + _ONE_DAY_TIME_DELTA).date()
 
