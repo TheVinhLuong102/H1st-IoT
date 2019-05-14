@@ -321,10 +321,10 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
-        'equipment_components', \
+        'equipment_component_list', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
-        'equipment_unique_type_groups', \
+        'equipment_unique_type_group_names', \
         'last_updated'
 
     list_filter = 'equipment_general_type__name',
@@ -338,7 +338,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     form = EquipmentUniqueTypeForm
 
-    def equipment_components(self, obj):
+    def equipment_component_list(self, obj):
         n = obj.equipment_components.count()
         return '{}: {}'.format(
                 n, ', '.join(equipment_component.name
@@ -352,9 +352,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
 
-    def equipment_unique_type_groups(self, obj):
+    def equipment_unique_type_group_names(self, obj):
         return ', '.join(equipment_unique_type_group.name
-                         for equipment_unique_type_group in obj.groups.all())
+                         for equipment_unique_type_group in obj.equipment_unique_type_groups.all())
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
