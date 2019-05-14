@@ -347,7 +347,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
           else ''
 
     def n_equipment_data_fields(self, obj):
-        return obj.data_fields.count()
+        return obj.equipment_data_fields.count()
 
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
