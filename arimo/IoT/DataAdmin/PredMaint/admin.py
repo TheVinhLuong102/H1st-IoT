@@ -527,7 +527,7 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'equipment_problem_type_names', \
         'dismissed', \
         'comments', \
-        'has_associated_alerts', \
+        'has_associated_equipment_instance_alert_periods', \
         'last_updated'
 
     list_filter = \
@@ -541,8 +541,9 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'date_range', \
         'duration', \
         'has_equipment_problems', \
-        'has_associated_alerts', \
-        'alerts'
+        'has_associated_equipment_instance_alert_periods', \
+        'alarm_periods', \
+        'alert_periods'
 
     show_full_result_count = False
 
@@ -599,7 +600,7 @@ class AlertAdmin(ModelAdmin):
         'cumulative_excess_risk_score', \
         'ongoing', \
         'diagnosis_status', \
-        'has_associated_equipment_problem_diagnoses', \
+        'has_associated_equipment_instance_problem_diagnoses', \
         'last_updated'
 
     list_select_related = \
@@ -617,7 +618,7 @@ class AlertAdmin(ModelAdmin):
         'to_date', \
         'ongoing', \
         'diagnosis_status', \
-        'has_associated_equipment_problem_diagnoses'
+        'has_associated_equipment_instance_problem_diagnoses'
 
     show_full_result_count = False
 
@@ -643,7 +644,7 @@ class AlertAdmin(ModelAdmin):
         'cumulative_excess_risk_score', \
         'ongoing', \
         'info', \
-        'has_associated_equipment_problem_diagnoses'
+        'has_associated_equipment_instance_problem_diagnoses'
 
     @silk_profile(name='Admin: Alerts')
     def changelist_view(self, *args, **kwargs):

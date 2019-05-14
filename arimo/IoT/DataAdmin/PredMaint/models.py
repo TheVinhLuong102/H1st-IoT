@@ -1,5 +1,7 @@
 from __future__ import division
 
+from datetime import timedelta
+
 from django.db.models import \
     Model, \
     BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
@@ -16,6 +18,9 @@ from ..base.models import \
     EquipmentUniqueTypeGroup, \
     EquipmentInstance
 from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
+
+
+_ONE_DAY_TIME_DELTA = timedelta(days=1)
 
 
 @python_2_unicode_compatible
@@ -560,6 +565,129 @@ class EquipmentProblemType(Model):
 
 
 @python_2_unicode_compatible
+class EquipmentInstanceAlarmPeriod(Model):
+    RELATED_NAME = 'equipment_instance_alarm_periods'
+    RELATED_QUERY_NAME = 'equipment_instance_alarm_period'
+
+    equipment_instance = \
+        ForeignKey(
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    alarm_type = \
+        ForeignKey(
+            to=EquipmentProblemType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    from_utc_date_time = \
+        DateTimeField(
+            blank=False,
+            null=False,
+            db_index=True)
+
+    to_utc_date_time = \
+        DateTimeField(
+            blank=True,
+            null=True,
+            db_index=True)
+
+    duration_in_days = \
+        FloatField(
+            blank=True,
+            null=True,
+            db_index=True)
+
+    date_range = \
+        DateRangeField(
+            blank=True,
+            null=True)
+
+    equipment_instance_alert_periods = \
+        ManyToManyField(
+            to='Alert',
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    has_associated_equipment_instance_alert_periods = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False,
+            db_index=True)
+
+    equipment_instance_problem_diagnoses = \
+        ManyToManyField(
+            to='EquipmentProblemPeriod',   # EquipmentInstanceProblemDiagnosis
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    has_associated_equipment_instance_problem_diagnoses = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False,
+            db_index=True)
+
+    last_updated = \
+        DateTimeField(
+            auto_now=True)
+
+    class Meta:
+        unique_together = \
+            ('equipment_instance',
+             'alarm_type',
+             'from_utc_date_time'), \
+            ('equipment_instance',
+             'alarm_type',
+             'from_utc_date_time',
+             'to_utc_date_time')
+
+        ordering = \
+            'equipment_instance', \
+            'alarm_type', \
+            'from_utc_date_time'
+
+    def __str__(self):
+        return '{}: {} from {}{}'.format(
+                self.equipment_instance,
+                self.alarm.name,
+                self.from_utc_date_time,
+                ' to {} ({:.3f} Days)'.format(self.to_utc_date_time, self.duration_in_days)
+                    if self.to_utc_date_time
+                    else ' (ONGOING)')
+
+    def save(self, *args, **kwargs):
+        if self.to_utc_date_time:
+            self.duration_in_days = \
+                (self.from_utc_date_time - self.to_utc_date_time) \
+                / _ONE_DAY_TIME_DELTA
+
+            _to_date = (self.to_date + _ONE_DAY_TIME_DELTA).date()
+
+        else:
+            self.duration_in_days = _to_date = None
+
+        self.date_range = \
+            DateRange(
+                lower=(self.from_utc_date_time - _ONE_DAY_TIME_DELTA).date(),
+                upper=_to_date,
+                bounds='[]',
+                empty=False)
+
+        super(type(self), self).save(*args, **kwargs)
+
+
+@python_2_unicode_compatible
 class EquipmentProblemPeriod(Model):
     RELATED_NAME = 'equipment_instance_problem_diagnoses'
     RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
@@ -628,14 +756,29 @@ class EquipmentProblemPeriod(Model):
             blank=True,
             null=True)
 
-    alerts = \
+    alarm_periods = \
         ManyToManyField(
-            to='Alert',
+            to=EquipmentInstanceAlarmPeriod,
+            through=EquipmentInstanceAlarmPeriod.equipment_instance_alert_periods.through,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
+    has_associated_equipment_instance_alarm_periods = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False,
+            db_index=True)
+
+    alert_periods = \
+        ManyToManyField(
+            to='Alert',   # EquipmentInstanceAlertPeriod
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
             blank=True)
     
-    has_associated_alerts = \
+    has_associated_equipment_instance_alert_periods = \
         BooleanField(
             blank=False,
             null=False,
@@ -695,31 +838,6 @@ class EquipmentProblemPeriod(Model):
 EquipmentInstanceProblemDiagnosis = EquipmentProblemPeriod
 
 
-def equipment_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
-    alerts = \
-        Alert.objects.filter(
-            equipment_instance=instance.equipment_instance,
-            date_range__overlap=instance.date_range)
-
-    instance.alerts.set(
-        alerts,
-        clear=False)
-
-    alerts.update(
-        has_associated_equipment_problem_diagnoses=True)
-
-    EquipmentInstanceProblemDiagnosis.objects.filter(pk=instance.pk).update(
-        has_equipment_problems=bool(instance.equipment_problem_types.count()),
-        has_associated_alerts=bool(alerts.count()))
-
-
-post_save.connect(
-    receiver=equipment_problem_diagnosis_post_save,
-    sender=EquipmentInstanceProblemDiagnosis,
-    weak=True,
-    dispatch_uid=None)
-
-
 @python_2_unicode_compatible
 class AlertDiagnosisStatus(Model):
     RELATED_NAME = 'alert_diagnosis_statuses'
@@ -759,8 +877,8 @@ class AlertDiagnosisStatus(Model):
 
 @python_2_unicode_compatible
 class Alert(Model):
-    RELATED_NAME = 'alerts'
-    RELATED_QUERY_NAME = 'alert'
+    RELATED_NAME = 'equipment_instance_alert_periods'
+    RELATED_QUERY_NAME = 'equipment_instance_alert_period'
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -862,17 +980,30 @@ class Alert(Model):
             null=True,
             on_delete=PROTECT)
 
-    equipment_problem_diagnoses = \
+    alarm_periods = \
         ManyToManyField(
-            to=EquipmentInstanceProblemDiagnosis,
-            through=EquipmentInstanceProblemDiagnosis.alerts.through,
+            to=EquipmentInstanceAlarmPeriod,
+            through=EquipmentInstanceAlarmPeriod.equipment_instance_alert_periods.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
-                # Arimo_IoT_DataAdmin_PredMaint.Alert.equipment_problem_diagnoses: (fields.E302) Reverse accessor for 'Alert.equipment_problem_diagnoses' clashes with field name 'EquipmentProblemPeriod.alerts'.
-                # HINT: Rename field 'EquipmentProblemPeriod.alerts', or add/change a related_name argument to the definition for field 'Alert.equipment_problem_diagnoses'.
+            blank=True)
+
+    has_associated_equipment_instance_alarm_periods = \
+        BooleanField(
+            blank=False,
+            null=False,
+            default=False,
+            db_index=True)
+
+    equipment_instance_problem_diagnoses = \
+        ManyToManyField(
+            to=EquipmentInstanceProblemDiagnosis,
+            through=EquipmentInstanceProblemDiagnosis.alert_periods.through,
+            # related_name=RELATED_NAME,
+            # related_query_name=RELATED_QUERY_NAME,
             blank=True)
     
-    has_associated_equipment_problem_diagnoses = \
+    has_associated_equipment_instance_problem_diagnoses = \
         BooleanField(
             blank=False,
             null=False,
@@ -944,25 +1075,119 @@ class Alert(Model):
         super(type(self), self).save(*args, **kwargs)
 
 
-def alert_post_save(sender, instance, *args, **kwargs):
-    equipment_problem_diagnoses = \
+# rename more correctly
+EquipmentInstanceAlertPeriod = Alert
+
+
+def equipment_instance_alarm_period_post_save(sender, instance, *args, **kwargs):
+    equipment_instance_alert_periods = \
+        EquipmentInstanceAlertPeriod.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            date_range__overlap=instance.date_range)
+
+    instance.equipment_instance_alert_periods.set(
+        equipment_instance_alert_periods,
+        clear=False)
+
+    equipment_instance_alert_periods.update(
+        has_associated_equipment_instance_alarm_periods=True)
+
+    equipment_instance_problem_diagnoses = \
+        EquipmentInstanceProblemDiagnosis.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            date_range__overlap=instance.date_range)
+
+    instance.equipment_instance_problem_diagnoses.set(
+        equipment_instance_problem_diagnoses,
+        clear=False)
+
+    equipment_instance_problem_diagnoses.update(
+        has_associated_equipment_instance_alarm_periods=True)
+
+    EquipmentInstanceAlarmPeriod.objects.filter(pk=instance.pk).update(
+        has_associated_equipment_instance_alert_periods=bool(equipment_instance_alert_periods.count()),
+        has_associated_equipment_instance_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
+
+
+post_save.connect(
+    receiver=equipment_instance_alarm_period_post_save,
+    sender=EquipmentInstanceAlarmPeriod,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_instance_alert_period(sender, instance, *args, **kwargs):
+    equipment_instance_alarm_periods = \
+        EquipmentInstanceAlarmPeriod.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            date_range__overlap=instance.date_range)
+
+    instance.alarm_periods.set(
+        equipment_instance_alarm_periods,
+        clear=False)
+
+    equipment_instance_alarm_periods.update(
+        has_associated_equipment_instance_alert_periods=True)
+
+    equipment_instance_problem_diagnoses = \
         EquipmentInstanceProblemDiagnosis.objects.filter(
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
     
     instance.equipment_problem_diagnoses.set(
-        equipment_problem_diagnoses,
+        equipment_instance_problem_diagnoses,
         clear=False)
 
-    equipment_problem_diagnoses.update(
-        has_associated_alerts=True)
+    equipment_instance_problem_diagnoses.update(
+        has_associated_equipment_instance_alert_periods=True)
 
     Alert.objects.filter(pk=instance.pk).update(
-        has_associated_equipment_problem_diagnoses=bool(equipment_problem_diagnoses.count()))
+        has_associated_equipment_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
 
 
 post_save.connect(
-    receiver=alert_post_save,
-    sender=Alert,
+    receiver=equipment_instance_alert_period,
+    sender=EquipmentInstanceAlertPeriod,
     weak=True,
-    dispatch_uid=None)
+    dispatch_uid=None,
+    apps=None)
+
+
+def equipment_instance_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
+    equipment_instance_alarm_periods = \
+        EquipmentInstanceAlarmPeriod.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            date_range__overlap=instance.date_range)
+
+    instance.alarm_periods.set(
+        equipment_instance_alarm_periods,
+        clear=False)
+
+    equipment_instance_alarm_periods.update(
+        has_associated_equipment_instance_problem_diagnoses=True)
+
+    equipment_instance_alert_periods = \
+        EquipmentInstanceAlertPeriod.objects.filter(
+            equipment_instance=instance.equipment_instance,
+            date_range__overlap=instance.date_range)
+
+    instance.alert_periods.set(
+        equipment_instance_alert_periods,
+        clear=False)
+
+    equipment_instance_alert_periods.update(
+        has_associated_equipment_instance_problem_diagnoses=True)
+
+    EquipmentInstanceProblemDiagnosis.objects.filter(pk=instance.pk).update(
+        has_equipment_problems=bool(instance.equipment_problem_types.count()),
+        has_associated_equipment_instance_alarm_periods=bool(equipment_instance_alarm_periods.count()),
+        has_associated_equipment_instance_alert_periods=bool(equipment_instance_alert_periods.count()))
+
+
+post_save.connect(
+    receiver=equipment_instance_problem_diagnosis_post_save,
+    sender=EquipmentInstanceProblemDiagnosis,
+    weak=True,
+    dispatch_uid=None,
+    apps=None)

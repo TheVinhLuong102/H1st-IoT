@@ -437,7 +437,7 @@ class EquipmentInstanceProblemDiagnosisFilter(FilterSet):
 
              dismissed=['exact'],
 
-             has_associated_alerts=['exact'])
+             has_associated_equipment_instance_alert_periods=['exact'])
 
 
 class AlertDiagnosisStatusFilter(FilterSet):
@@ -695,4 +695,4 @@ class AlertFilter(FilterSet):
 
             ongoing=['exact'],
 
-            has_associated_equipment_problem_diagnoses=['exact'])
+            has_associated_equipment_instance_problem_diagnoses=['exact'])
