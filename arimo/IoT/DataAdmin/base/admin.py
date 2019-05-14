@@ -155,7 +155,7 @@ site.register(
 class EquipmentDataFieldAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
-        'equipment_components', \
+        'equipment_component_list', \
         'name', \
         'description', \
         'equipment_data_field_type', \
@@ -193,7 +193,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     form = EquipmentDataFieldForm
 
-    def equipment_components(self, obj):
+    def equipment_component_list(self, obj):
         n = obj.components.count()
         return '{}: {}'.format(
                 n, ', '.join(equipment_component.name
