@@ -612,7 +612,7 @@ class EquipmentInstanceAlarmPeriod(Model):
 
     equipment_instance_alert_periods = \
         ManyToManyField(
-            to='Alert',
+            to='Alert',   # EquipmentInstanceAlertPeriods
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -759,7 +759,7 @@ class EquipmentProblemPeriod(Model):
     alarm_periods = \
         ManyToManyField(
             to=EquipmentInstanceAlarmPeriod,
-            through=EquipmentInstanceAlarmPeriod.equipment_instance_alert_periods.through,
+            through=EquipmentInstanceAlarmPeriod.equipment_instance_problem_diagnoses.through,
             # related_name=RELATED_NAME,
             # related_query_name=RELATED_QUERY_NAME,
             blank=True)
