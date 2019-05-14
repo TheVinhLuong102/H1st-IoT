@@ -573,7 +573,8 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
         return super(type(self), self).get_queryset(request=request) \
                 .select_related(
                     'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                    'alarm_type')
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
