@@ -192,7 +192,8 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
 
         ordering = \
             'equipment_unique_type_group', \
-            '-sample_correlation'
+            'equipment_data_field', \
+            'equipment_data_field_2'
 
 
 @python_2_unicode_compatible
