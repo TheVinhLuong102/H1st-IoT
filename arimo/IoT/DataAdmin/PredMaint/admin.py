@@ -36,11 +36,11 @@ class GlobalConfigAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    @silk_profile(name='ADMIN: Global Configs')
+    @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
 
-    @silk_profile(name='ADMIN: Global Config')
+    @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
         return super(type(self), self).changeform_view(*args, **kwargs)
 
@@ -78,10 +78,11 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'to_date', \
         'equipment_data_field__name'
 
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
-                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
+    # .get_queryset(...) below is better in Retrieving a record
+    # list_select_related = \
+    #     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
+    #     'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
+    #                             'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
     show_full_result_count = False
 
@@ -104,6 +105,14 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_3rd_quartile', \
         'outlier_rst_max', \
         'sample_max'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                    'equipment_data_field',
+                    'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
+                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
