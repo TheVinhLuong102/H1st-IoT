@@ -670,7 +670,7 @@ class EquipmentInstanceAlarmPeriod(Model):
                 (self.from_utc_date_time - self.to_utc_date_time).total_seconds() \
                 / _ONE_DAY_TIME_DELTA_TOTAL_SECONDS
 
-            _to_date = (self.to_date + _ONE_DAY_TIME_DELTA).date()
+            _to_date = (self.to_utc_date_time + _ONE_DAY_TIME_DELTA).date()
 
         else:
             self.duration_in_days = _to_date = None
