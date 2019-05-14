@@ -463,10 +463,10 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_unique_type__name', \
         'equipment_facility__name'
 
-    list_select_related = \
-        'equipment_general_type', \
-        'equipment_unique_type', 'equipment_unique_type__equipment_general_type', \
-        'equipment_facility'
+    # list_select_related = \
+    #     'equipment_general_type', \
+    #     'equipment_unique_type', 'equipment_unique_type__equipment_general_type', \
+    #     'equipment_facility'
 
     show_full_result_count = False
 
@@ -478,6 +478,13 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'info'
 
     form = EquipmentInstanceForm
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+                    'equipment_facility')
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, *args, **kwargs):
