@@ -78,12 +78,6 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'to_date', \
         'equipment_data_field__name'
 
-    # .get_queryset(...) below is better in Retrieving a record
-    # list_select_related = \
-    #     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-    #     'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
-    #                             'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
-
     show_full_result_count = False
 
     search_fields = \
@@ -144,14 +138,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
-
-    # .get_queryset(...) below is better in Retrieving a record
-    # list_select_related = \
-    #     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-    #     'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
-    #     'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit', \
-    #     'equipment_data_field_2', 'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type', \
-    #     'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit'
 
     show_full_result_count = False
 
