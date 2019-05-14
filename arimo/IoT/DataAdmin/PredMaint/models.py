@@ -1135,7 +1135,7 @@ def equipment_instance_alert_period(sender, instance, *args, **kwargs):
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
     
-    instance.equipment_problem_diagnoses.set(
+    instance.equipment_instance_problem_diagnoses.set(
         equipment_instance_problem_diagnoses,
         clear=False)
 
@@ -1143,7 +1143,7 @@ def equipment_instance_alert_period(sender, instance, *args, **kwargs):
         has_associated_equipment_instance_alert_periods=True)
 
     Alert.objects.filter(pk=instance.pk).update(
-        has_associated_equipment_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
+        has_associated_equipment_instance_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
 
 
 post_save.connect(
