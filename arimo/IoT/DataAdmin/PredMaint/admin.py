@@ -529,6 +529,60 @@ site.register(
     admin_class=EquipmentProblemTypeAdmin)
 
 
+class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
+    list_display = \
+        'equipment_instance', \
+        'alarm_type', \
+        'from_utc_date_time', \
+        'to_utc_date_time', \
+        'duration_in_days', \
+        'has_associated_equipment_instance_alert_periods', \
+        'has_associated_equipment_instance_problem_diagnoses', \
+        'last_updated'
+
+    list_filter = \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance__equipment_unique_type__name', \
+        'alarm_type__name', \
+        'from_utc_date_time', \
+        'to_utc_date_time', \
+        'has_associated_equipment_instance_alert_periods', \
+        'has_associated_equipment_instance_problem_diagnoses'
+
+    search_fields = \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance__equipment_unique_type__name', \
+        'equipment_instance__name'
+
+    show_full_result_count = False
+
+    readonly_fields = \
+        'equipment_instance', \
+        'alarm_type', \
+        'from_utc_date_time', \
+        'to_utc_date_time', \
+        'duration_in_days', \
+        'date_range', \
+        'equipment_instance_alert_periods', \
+        'has_associated_equipment_instance_alert_periods', \
+        'equipment_instance_problem_diagnoses', \
+        'has_associated_equipment_instance_problem_diagnoses', \
+        'last_updated'
+
+    @silk_profile(name='Admin: Equipment Instance Alarm Periods')
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
+
+    @silk_profile(name='Admin: Equipment Instance Alarm Period')
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
+
+
+site.register(
+    EquipmentInstanceAlarmPeriod,
+    admin_class=EquipmentInstanceAlarmPeriodAdmin)
+
+
 class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
     list_display = \
         'equipment_instance', \
