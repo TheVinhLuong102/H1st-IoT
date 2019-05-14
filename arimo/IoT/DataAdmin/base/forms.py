@@ -93,8 +93,7 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentUniqueTypeAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
@@ -157,8 +156,7 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentUniqueTypeAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
@@ -174,8 +172,7 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
             equipment_facility=
                 autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                    attrs={'data-minimum-input-length': 1}))
 
 
 class EquipmentSystemForm(autocomplete.FutureModelForm):
@@ -190,8 +187,7 @@ class EquipmentSystemForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentInstanceAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=True)
 
     class Meta:
@@ -203,5 +199,4 @@ class EquipmentSystemForm(autocomplete.FutureModelForm):
             equipment_facility=
                 autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                    attrs={'data-minimum-input-length': 1}))
