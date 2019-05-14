@@ -35,8 +35,6 @@ class GlobalConfigAdmin(ModelAdmin):
         'value', \
         'last_updated'
 
-    show_full_result_count = False
-
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
@@ -56,8 +54,6 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
         'name', \
         'description'
 
-    show_full_result_count = False
-
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
@@ -74,8 +70,6 @@ site.register(
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
     list_display = 'name',
-
-    show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, *args, **kwargs):
@@ -102,12 +96,12 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_general_type__name', \
         'name', \
         'description'
+
+    show_full_result_count = False
 
     form = EquipmentComponentForm
 
@@ -181,8 +175,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'min_val', \
         'max_val'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
@@ -190,6 +182,8 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'description', \
         'data_type__name', \
         'numeric_measurement_unit__name'
+
+    show_full_result_count = False
 
     form = EquipmentDataFieldForm
 
@@ -242,12 +236,12 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_general_type__name', \
         'name', \
         'description'
+
+    show_full_result_count = False
 
     form = EquipmentUniqueTypeGroupForm
 
@@ -419,11 +413,11 @@ class EquipmentFacilityAdmin(ModelAdmin):
         'n_equipment_instances', \
         'last_updated'
 
-    show_full_result_count = False
-
     search_fields = \
         'name', \
         'info'
+
+    show_full_result_count = False
 
     inlines = EquipmentInstanceTabularInline,
 
@@ -463,14 +457,14 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_unique_type__name', \
         'equipment_facility__name'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_general_type__name', \
         'equipment_unique_type__name', \
         'equipment_facility__name', \
         'name', \
         'info'
+
+    show_full_result_count = False
 
     form = EquipmentInstanceForm
 
@@ -509,17 +503,17 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'equipment_instance__equipment_unique_type__name', \
         'date'
 
-    list_select_related = \
-        'equipment_instance', \
-        'equipment_instance__equipment_general_type', \
-        'equipment_instance__equipment_unique_type'
-
-    show_full_result_count = False
-
     search_fields = \
         'equipment_instance__equipment_general_type__name', \
         'equipment_instance__equipment_unique_type__name', \
         'equipment_instance__name'
+
+    show_full_result_count = False
+
+    list_select_related = \
+        'equipment_instance', \
+        'equipment_instance__equipment_general_type', \
+        'equipment_instance__equipment_unique_type'
 
     readonly_fields = \
         'equipment_instance', \
@@ -560,16 +554,16 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
         'daily_max', \
         'last_updated'
 
+    search_fields = \
+        'equipment_instance__name', \
+        'equipment_data_field__name'
+
+    show_full_result_count = False
+
     list_select_related = \
         'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type', \
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
-
-    show_full_result_count = False
-
-    search_fields = \
-        'equipment_instance__name', \
-        'equipment_data_field__name'
 
     readonly_fields = \
         'equipment_instance', \
@@ -613,11 +607,11 @@ class EquipmentSystemAdmin(ModelAdmin):
         'name', \
         'date'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_facility__name', \
         'name',
+
+    show_full_result_count = False
 
     form = EquipmentSystemForm
 
@@ -651,11 +645,11 @@ class ErrorAdmin(ModelAdmin):
         'value', \
         'last_updated'
 
-    show_full_result_count = False
-
     search_fields = \
         'key', \
         'value'
+
+    show_full_result_count = False
 
     readonly_fields = \
         'key', \

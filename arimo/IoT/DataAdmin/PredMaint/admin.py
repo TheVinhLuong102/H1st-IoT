@@ -21,6 +21,7 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
+    EquipmentInstanceAlarmPeriod, \
     EquipmentInstanceProblemDiagnosis, \
     Alert, \
     AlertDiagnosisStatus
@@ -33,8 +34,6 @@ class GlobalConfigAdmin(ModelAdmin):
         'key', \
         'value', \
         'last_updated'
-
-    show_full_result_count = False
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
@@ -67,23 +66,23 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_max', \
         'last_updated'
 
-    ordering = \
-        'equipment_unique_type_group', \
-        '-to_date', \
-        '-n_distinct_values'
-
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'to_date', \
         'equipment_data_field__name'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
+
+    show_full_result_count = False
+
+    ordering = \
+        'equipment_unique_type_group', \
+        '-to_date', \
+        '-n_distinct_values'
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -130,21 +129,21 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
         'sample_correlation', \
         'last_updated'
 
-    ordering = \
-        'equipment_unique_type_group', \
-        '-sample_correlation'
-
     list_filter = \
+        'equipment_unique_type_group__equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_data_field__name'
+
+    search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
 
     show_full_result_count = False
 
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_data_field__name'
+    ordering = \
+        'equipment_unique_type_group', \
+        '-sample_correlation'
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -245,11 +244,11 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'equipment_unique_type_group__name', \
         'active'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name',
+
+    show_full_result_count = False
 
     form = EquipmentUniqueTypeGroupServiceConfigForm
 
@@ -323,12 +322,12 @@ class BlueprintAdmin(ModelAdmin):
         'timestamp', \
         'active'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'uuid'
+
+    show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -419,12 +418,12 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'equipment_unique_type_group__name', \
         'trained_to_date'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_data_field__name'
+
+    show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -473,20 +472,20 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         'risk_score_name', \
         'date'
 
+    search_fields = \
+        'equipment_unique_type_group__equipment_general_type__name', \
+        'equipment_unique_type_group__name', \
+        'equipment_instance__name', \
+        'risk_score_name'
+
+    show_full_result_count = False
+
     readonly_fields = \
         'equipment_unique_type_group', \
         'equipment_instance', \
         'risk_score_name', \
         'date', \
         'risk_score_value'
-
-    show_full_result_count = False
-
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_instance__name', \
-        'risk_score_name'
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
@@ -512,9 +511,9 @@ site.register(
 class EquipmentProblemTypeAdmin(ModelAdmin):
     list_display = 'name',
 
-    show_full_result_count = False
-
     search_fields = 'name',
+
+    show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment Problem Types')
     def changelist_view(self, *args, **kwargs):
