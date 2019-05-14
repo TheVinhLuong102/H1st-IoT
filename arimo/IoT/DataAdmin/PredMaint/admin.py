@@ -569,6 +569,12 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
         'has_associated_equipment_instance_problem_diagnoses', \
         'last_updated'
 
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
+
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
