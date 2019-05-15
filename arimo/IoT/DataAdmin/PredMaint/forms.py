@@ -7,7 +7,7 @@ from .autocompletes import \
     EquipmentInstanceProblemDiagnosisAutoComplete
 from .models import \
     EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
-    EquipmentInstanceProblemDiagnosis, Alert
+    EquipmentInstanceProblemDiagnosis, EquipmentInstanceAlertPeriod
 
 from ..base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
@@ -138,6 +138,6 @@ class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
             required=False)
 
     class Meta:
-        model = Alert
+        model = EquipmentInstanceAlertPeriod
 
         fields = '__all__'
