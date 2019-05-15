@@ -102,8 +102,7 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
                 EquipmentInstance.objects
                 .select_related(
                     'equipment_general_type',
-                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-                    'equipment_facility'),
+                    'equipment_unique_type'),
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
