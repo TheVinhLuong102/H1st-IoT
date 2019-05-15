@@ -9,7 +9,7 @@ from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
     EquipmentInstanceProblemDiagnosisForm, \
-    AlertForm
+    EquipmentInstanceAlertPeriodForm
 
 from .models import \
     GlobalConfig, \
@@ -491,8 +491,8 @@ class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
         return super(type(self), self).get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_instance', 'equipment_instance__equipment_general_type',
-                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type')
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
 
     @silk_profile(name='Admin: Equipment Instance Daily Risk Scores')
     def changelist_view(self, *args, **kwargs):
@@ -646,6 +646,10 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
 
     form = EquipmentInstanceProblemDiagnosisForm
 
+    def equipment_problem_type_names(self, obj):
+        return ', '.join(equipment_problem_type.name
+                         for equipment_problem_type in obj.equipment_problem_types.all())
+
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request) \
                 .select_related(
@@ -670,10 +674,6 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                                 'equipment_instance',
                                 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
                                 'diagnosis_status')))
-
-    def equipment_problem_type_names(self, obj):
-        return ', '.join(equipment_problem_type.name
-                         for equipment_problem_type in obj.equipment_problem_types.all())
 
     @silk_profile(name='Admin: Equipment Problem Diagnoses')
     def changelist_view(self, *args, **kwargs):
@@ -722,14 +722,9 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'cumulative_excess_risk_score', \
         'ongoing', \
         'diagnosis_status', \
+        'has_associated_equipment_instance_alarm_periods', \
         'has_associated_equipment_instance_problem_diagnoses', \
         'last_updated'
-
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type', \
-        'equipment_instance', 'equipment_instance__equipment_general_type', \
-        'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type', \
-        'diagnosis_status'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -740,6 +735,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'to_date', \
         'ongoing', \
         'diagnosis_status', \
+        'has_associated_equipment_instance_alarm_periods', \
         'has_associated_equipment_instance_problem_diagnoses'
 
     show_full_result_count = False
@@ -750,7 +746,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'equipment_instance__name', \
         'risk_score_name'
 
-    form = AlertForm
+    form = EquipmentInstanceAlertPeriodForm
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -766,13 +762,32 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'cumulative_excess_risk_score', \
         'ongoing', \
         'info', \
+        'has_associated_equipment_instance_alarm_periods', \
+        'equipment_instance_alarm_periods', \
         'has_associated_equipment_instance_problem_diagnoses'
 
-    @silk_profile(name='Admin: Alerts')
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                    'diagnosis_status') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='equipment_instance_alarm_periods',
+                        queryset=
+                            EquipmentInstanceAlarmPeriod.objects
+                            .select_related(
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                                'alarm_type')))
+
+    @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
 
-    @silk_profile(name='Admin: Alert')
+    @silk_profile(name='Admin: Equipment Instance Alert Period')
     def changeform_view(self, *args, **kwargs):
         return super(type(self), self).changeform_view(*args, **kwargs)
 
@@ -780,5 +795,3 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
 site.register(
     EquipmentInstanceAlertPeriod,
     admin_class=EquipmentInstanceAlertPeriodAdmin)
-
-

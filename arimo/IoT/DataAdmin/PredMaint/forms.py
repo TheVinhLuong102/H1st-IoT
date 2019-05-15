@@ -120,7 +120,7 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
                     url=EquipmentProblemTypeAutoComplete.name))
 
 
-class AlertForm(autocomplete.FutureModelForm):
+class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
     equipment_problem_diagnoses = \
         ModelMultipleChoiceField(
             queryset=

@@ -825,10 +825,12 @@ class EquipmentProblemPeriod(Model):
                 bounds='[]',
                 empty=False)
 
-        self.duration = \
-            (self.to_date - self.from_date).days + 1 \
-            if self.to_date \
-            else None
+        if self.to_date:
+            self.duration = (self.to_date - self.from_date).days + 1
+            self.ongoing = False
+        else:
+            self.duration = None
+            self.ongoing = True
 
         super(type(self), self).save(*args, **kwargs)
 
