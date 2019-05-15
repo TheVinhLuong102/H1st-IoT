@@ -421,6 +421,12 @@ class EquipmentDataFieldViewSet(ModelViewSet):
             'numeric_measurement_unit') \
         .prefetch_related(
             Prefetch(
+                lookup='equipment_components',
+                queryset=
+                    EquipmentUniqueType.objects
+                    .select_related(
+                        'equipment_general_type')),
+            Prefetch(
                 lookup='equipment_unique_types',
                 queryset=
                     EquipmentUniqueType.objects

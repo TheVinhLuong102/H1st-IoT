@@ -141,6 +141,11 @@ class EquipmentDataFieldFilter(FilterSet):
             queryset=NumericMeasurementUnit.objects.all(),
             filterset=NumericMeasurementUnitFilter)
 
+    equipment_components = \
+        RelatedFilter(
+            queryset=EquipmentComponent.objects.all(),
+            filterset=EquipmentComponentFilter)
+
     equipment_unique_types = \
         RelatedFilter(
             queryset=EquipmentUniqueType.objects.all(),

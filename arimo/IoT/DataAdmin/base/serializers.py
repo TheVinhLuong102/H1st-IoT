@@ -159,6 +159,12 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             many=False,
             required=False)
 
+    equipment_components = \
+        EquipmentComponentShortFormRelatedField(
+            queryset=EquipmentComponent.objects.all(), read_only=False,
+            many=True,
+            required=False)
+
     equipment_unique_types = \
         EquipmentUniqueTypeShortFormRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
@@ -181,6 +187,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'default_val', \
             'min_val', \
             'max_val', \
+            'equipment_components', \
             'equipment_unique_types'
 
 
