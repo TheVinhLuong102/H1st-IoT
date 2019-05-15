@@ -89,10 +89,6 @@ class GlobalConfigViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'key'
-
-    lookup_url_kwarg = 'global_config_key'
-
     filter_class = GlobalConfigFilter
 
     ordering_fields = 'key',
@@ -100,6 +96,10 @@ class GlobalConfigViewSet(ModelViewSet):
     ordering = 'key',
 
     pagination_class = None
+
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'global_config_key'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -134,10 +134,6 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'data_type_name___cat_or_num'
-
     filter_class = DataTypeFilter
 
     ordering_fields = 'name',
@@ -145,6 +141,10 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     ordering = 'name',
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'data_type_name___cat_or_num'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -191,10 +191,6 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'numeric_measurement_unit_name'
-
     filter_class = NumericMeasurementUnitFilter
 
     ordering_fields = 'name',
@@ -202,6 +198,10 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     ordering = 'name',
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'numeric_measurement_unit_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -236,10 +236,6 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_data_field_type_name'
-
     filter_class = EquipmentDataFieldTypeFilter
 
     ordering_fields = 'name',
@@ -247,6 +243,10 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     ordering = 'name',
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_data_field_type_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -293,10 +293,6 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_general_type_name'
-
     filter_class = EquipmentGeneralTypeFilter
 
     ordering_fields = 'name',
@@ -304,6 +300,10 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     ordering = 'name',
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_general_type_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -524,10 +524,6 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_unique_type_group_name'
-
     filter_class = EquipmentUniqueTypeGroupFilter
 
     ordering_fields = \
@@ -539,6 +535,10 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         'name'
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_unique_type_group_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -619,6 +619,10 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         'name'
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_unique_type_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
