@@ -121,13 +121,13 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
 
 
 class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
-    equipment_problem_diagnoses = \
+    equipment_instance_problem_diagnoses = \
         ModelMultipleChoiceField(
             queryset=
                 EquipmentInstanceProblemDiagnosis.objects
                 .select_related(
-                    'equipment_instance', 'equipment_instance__equipment_general_type',
-                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type')
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',)
                 .prefetch_related(
                     'equipment_problem_types'),
             widget=
