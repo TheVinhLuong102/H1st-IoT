@@ -121,21 +121,21 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
 
 
 class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
-    equipment_instance_problem_diagnoses = \
-        ModelMultipleChoiceField(
-            queryset=
-                EquipmentInstanceProblemDiagnosis.objects
-                .select_related(
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',)
-                .prefetch_related(
-                    'equipment_problem_types'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
-                    url=EquipmentInstanceProblemDiagnosisAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
-            required=False)
+    # equipment_instance_problem_diagnoses = \
+    #     ModelMultipleChoiceField(
+    #         queryset=
+    #             EquipmentInstanceProblemDiagnosis.objects
+    #             .select_related(
+    #                 'equipment_instance',
+    #                 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',)
+    #             .prefetch_related(
+    #                 'equipment_problem_types'),
+    #         widget=
+    #             autocomplete.ModelSelect2Multiple(
+    #                 url=EquipmentInstanceProblemDiagnosisAutoComplete.name,
+    #                 attrs={# Only trigger autocompletion after characters have been typed
+    #                        'data-minimum-input-length': 1}),
+    #         required=False)
 
     class Meta:
         model = Alert
