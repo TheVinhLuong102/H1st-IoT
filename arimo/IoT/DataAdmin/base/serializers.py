@@ -205,6 +205,12 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             many=True,
             required=False)
 
+    equipment_components = \
+        EquipmentComponentShortFormRelatedField(
+            queryset=EquipmentComponent.objects.all(), read_only=False,
+            many=True,
+            required=False)
+
     equipment_data_fields = \
         EquipmentDataFieldShortFormRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
@@ -219,6 +225,7 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             'name', \
             'description', \
             'equipment_unique_types', \
+            'equipment_components', \
             'equipment_data_fields'
 
 

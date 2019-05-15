@@ -501,6 +501,12 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
+                lookup='equipment_components',
+                queryset=
+                    EquipmentComponent.objects
+                    .select_related(
+                        'equipment_general_type')),
+            Prefetch(
                 lookup='equipment_data_fields',
                 queryset=
                     EquipmentDataField.objects
