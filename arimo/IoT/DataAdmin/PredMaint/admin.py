@@ -649,8 +649,8 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request) \
                 .select_related(
-                    'equipment_instance', 'equipment_instance__equipment_general_type',
-                    'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type') \
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
                 .prefetch_related(
                     'equipment_problem_types',
                     Prefetch(
