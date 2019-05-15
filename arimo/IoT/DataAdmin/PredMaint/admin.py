@@ -23,7 +23,7 @@ from .models import \
     EquipmentProblemType, \
     EquipmentInstanceAlarmPeriod, \
     EquipmentInstanceProblemDiagnosis, \
-    Alert, \
+    EquipmentInstanceAlertPeriod, \
     AlertDiagnosisStatus
 
 from ..base.models import EquipmentDataField
@@ -574,7 +574,26 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
                 .select_related(
                     'equipment_instance',
                     'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                    'alarm_type')
+                    'alarm_type') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='equipment_instance_alert_periods',
+                        queryset=
+                            EquipmentInstanceAlertPeriod.objects
+                            .select_related(
+                                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                                'diagnosis_status')),
+                    Prefetch(
+                        lookup='equipment_instance_problem_diagnoses',
+                        queryset=
+                            EquipmentInstanceProblemDiagnosis.objects
+                            .select_related(
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
+                            .prefetch_related(
+                                'equipment_problem_types')))
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
@@ -634,11 +653,11 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                     Prefetch(
                         lookup='alerts',
                         queryset=
-                            Alert.objects
+                            EquipmentInstanceAlertPeriod.objects
                             .select_related(
                                 'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                                'equipment_instance', 'equipment_instance__equipment_general_type',
-                                'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type',
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
                                 'diagnosis_status')))
 
     def equipment_problem_type_names(self, obj):
@@ -659,7 +678,26 @@ site.register(
     admin_class=EquipmentInstanceProblemDiagnosisAdmin)
 
 
-class AlertAdmin(ModelAdmin):
+class AlertDiagnosisStatusAdmin(ModelAdmin):
+    list_display = \
+        'index', \
+        'name'
+
+    @silk_profile(name='Admin: Alert Diagnosis Statuses')
+    def changelist_view(self, *args, **kwargs):
+        return super(type(self), self).changelist_view(*args, **kwargs)
+
+    @silk_profile(name='Admin: Alert Diagnosis Status')
+    def changeform_view(self, *args, **kwargs):
+        return super(type(self), self).changeform_view(*args, **kwargs)
+
+
+site.register(
+    AlertDiagnosisStatus,
+    admin_class=AlertDiagnosisStatusAdmin)
+
+
+class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
         'equipment_instance', \
@@ -729,26 +767,7 @@ class AlertAdmin(ModelAdmin):
 
 
 site.register(
-    Alert,
-    admin_class=AlertAdmin)
+    EquipmentInstanceAlertPeriod,
+    admin_class=EquipmentInstanceAlertPeriodAdmin)
 
 
-class AlertDiagnosisStatusAdmin(ModelAdmin):
-    list_display = \
-        'index', \
-        'name'
-
-    show_full_result_count = False
-
-    @silk_profile(name='Admin: Alert Diagnosis Statuses')
-    def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Alert Diagnosis Status')
-    def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
-
-
-site.register(
-    AlertDiagnosisStatus,
-    admin_class=AlertDiagnosisStatusAdmin)
