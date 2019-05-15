@@ -707,8 +707,8 @@ class EquipmentProblemPeriod(Model):
 
     to_date = \
         DateField(
-            blank=False,
-            null=False,
+            blank=True,
+            null=True,
             db_index=True)
 
     date_range = \
@@ -718,9 +718,8 @@ class EquipmentProblemPeriod(Model):
 
     duration = \
         IntegerField(
-            blank=False,
-            null=False,
-            default=0)
+            blank=True,
+            null=True)
 
     ongoing = \
         BooleanField(
@@ -792,6 +791,7 @@ class EquipmentProblemPeriod(Model):
             ('equipment_instance',
              'from_date'), \
             ('equipment_instance',
+             'from_date',
              'to_date')
 
         ordering = \
@@ -802,13 +802,12 @@ class EquipmentProblemPeriod(Model):
             'dismissed'
 
     def __str__(self):
-        return '{} from {} to {}{}{}{}'.format(
+        return '{} from {} {}{}{}'.format(
                 self.equipment_instance,
                 self.from_date,
-                self.to_date,
-                ' (ONGOING)'
-                    if self.ongoing
-                    else '',
+                'to {}'.format(self.to_date)
+                    if self.to_date
+                    else '(ONGOING)',
                 ': {}'.format(
                     ', '.join(equipment_problem_type.name.upper()
                               for equipment_problem_type in self.equipment_problem_types.all()))
