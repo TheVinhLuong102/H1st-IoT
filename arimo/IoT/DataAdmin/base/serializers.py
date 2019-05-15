@@ -93,7 +93,18 @@ class EquipmentUniqueTypeShortFormRelatedField(RelatedField):
 
     def to_representation(self, value):
         return dict(
-                id=value.id,
+                equipment_general_type=value.equipment_general_type.name,
+                name=value.name)
+
+
+class EquipmentUniqueTypeGroupShortFormRelatedField(RelatedField):
+    def to_internal_value(self, data):
+        return EquipmentUniqueTypeGroup.objects.get_or_create(
+                equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
+                name=clean_lower_str(data['name']))[0]
+
+    def to_representation(self, value):
+        return dict(
                 equipment_general_type=value.equipment_general_type.name,
                 name=value.name)
 
@@ -237,16 +248,21 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             many=False,
             required=True)
 
-    data_fields = \
+    equipment_components = \
+        EquipmentComponentShortFormRelatedField(
+            queryset=EquipmentComponent.objects.all(), read_only=False,
+            many=True,
+            required=False)
+
+    equipment_data_fields = \
         EquipmentDataFieldShortFormRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
-    groups = \
-        SlugRelatedField(
+    equipment_unique_type_groups = \
+        EquipmentUniqueTypeGroupShortFormRelatedField(
             queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
-            slug_field='name',
             many=True,
             required=False)
 
@@ -254,10 +270,10 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
         model = EquipmentUniqueType
 
         fields = \
-            'id', \
             'equipment_general_type', \
             'name', \
             'description', \
+            'equipment_components', \
             'equipment_data_fields', \
             'equipment_unique_type_groups'
 

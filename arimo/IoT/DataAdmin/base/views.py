@@ -559,19 +559,19 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     `GET` a filterable, unpaginated list of Equipment Unique Types
 
     retrieve:
-    `GET` the Equipment Unique Type specified by `id`
+    `GET` the Equipment Unique Type specified by `name`
 
     create:
     `POST` a new Equipment Unique Type
 
     update:
-    `PUT` updated data for the Equipment Unique Type specified by `id`
+    `PUT` updated data for the Equipment Unique Type specified by `name`
 
     partial_update:
-    `PATCH` the Equipment Unique Type specified by `id`
+    `PATCH` the Equipment Unique Type specified by `name`
 
     destroy:
-    `DELETE` the Equipment Unique Type specified by `id`
+    `DELETE` the Equipment Unique Type specified by `name`
     """
     queryset = \
         EquipmentUniqueType.objects \
@@ -579,13 +579,24 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
             'equipment_general_type') \
         .prefetch_related(
             Prefetch(
-                lookup='data_fields',
+                lookup='equipment_components',
+                queryset=
+                    EquipmentComponent.objects
+                    .select_related(
+                        'equipment_general_type')),
+            Prefetch(
+                lookup='equipment_data_fields',
                 queryset=
                     EquipmentDataField.objects
                     .select_related(
                         'equipment_general_type',
                         'equipment_data_field_type')),
-            'groups')
+            Prefetch(
+                lookup='equipment_unique_type_groups',
+                queryset=
+                    EquipmentUniqueTypeGroup.objects
+                    .select_related(
+                        'equipment_general_type')))
 
     serializer_class = EquipmentUniqueTypeSerializer
 

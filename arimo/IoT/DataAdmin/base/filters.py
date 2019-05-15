@@ -275,12 +275,17 @@ class EquipmentUniqueTypeFilter(FilterSet):
             queryset=EquipmentGeneralType.objects.all(),
             filterset=EquipmentGeneralTypeFilter)
 
-    data_fields = \
+    equipment_components = \
+        RelatedFilter(
+            queryset=EquipmentComponent.objects.all(),
+            filterset=EquipmentComponentFilter)
+
+    equipment_data_fields = \
         RelatedFilter(
             queryset=EquipmentDataField.objects.all(),
             filterset=EquipmentDataFieldFilter)
 
-    groups = \
+    equipment_unique_type_groups = \
         RelatedFilter(
             queryset=EquipmentUniqueTypeGroup.objects.all(),
             filterset=EquipmentUniqueTypeGroupFilter)
