@@ -30,8 +30,7 @@ class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
@@ -53,8 +52,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=True)
 
     manually_included_equipment_data_fields = \
@@ -69,8 +67,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     manually_excluded_equipment_data_fields = \
@@ -85,8 +82,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureMo
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
@@ -133,8 +129,7 @@ class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentInstanceProblemDiagnosisAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
