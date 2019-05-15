@@ -423,7 +423,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
             Prefetch(
                 lookup='equipment_components',
                 queryset=
-                    EquipmentUniqueType.objects
+                    EquipmentComponent.objects
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
