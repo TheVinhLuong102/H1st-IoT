@@ -513,7 +513,8 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
     list_select_related = \
         'equipment_instance', \
         'equipment_instance__equipment_general_type', \
-        'equipment_instance__equipment_unique_type'
+        'equipment_instance__equipment_unique_type', \
+        'equipment_instance__equipment_unique_type__equipment_general_type'
 
     readonly_fields = \
         'equipment_instance', \
