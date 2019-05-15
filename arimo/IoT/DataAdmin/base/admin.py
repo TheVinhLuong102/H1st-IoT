@@ -562,7 +562,8 @@ class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
     show_full_result_count = False
 
     list_select_related = \
-        'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type', \
+        'equipment_instance', 'equipment_instance__equipment_general_type',\
+        'equipment_instance__equipment_unique_type', 'equipment_instance__equipment_unique_type__equipment_general_type', \
         'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
                                 'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
 
