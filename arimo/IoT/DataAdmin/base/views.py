@@ -14,6 +14,7 @@ from .filters import \
     NumericMeasurementUnitFilter, \
     EquipmentDataFieldTypeFilter, \
     EquipmentGeneralTypeFilter, \
+    EquipmentComponentFilter, \
     EquipmentDataFieldFilter, \
     EquipmentUniqueTypeGroupFilter, \
     EquipmentUniqueTypeFilter, \
@@ -29,6 +30,7 @@ from .models import \
     NumericMeasurementUnit, \
     EquipmentDataFieldType, \
     EquipmentGeneralType, \
+    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
@@ -44,6 +46,7 @@ from .serializers import \
     NumericMeasurementUnitSerializer, \
     EquipmentDataFieldTypeSerializer, \
     EquipmentGeneralTypeSerializer, \
+    EquipmentComponentSerializer, \
     EquipmentDataFieldSerializer, \
     EquipmentUniqueTypeGroupSerializer, \
     EquipmentUniqueTypeSerializer, \
@@ -311,6 +314,80 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         return super(type(self), self).list(request, *args, **kwargs)
 
     @silk_profile(name='REST API: Equipment General Type')
+    def retrieve(self, request, *args, **kwargs):
+        return super(type(self), self).retrieve(request, *args, **kwargs)
+
+
+class EquipmentComponentViewSet(ModelViewSet):
+    """
+    list:
+    `GET` a filterable, non-paginated list of Equipment Components
+
+    retrieve:
+    `GET` the Equipment Component specified by `id`
+
+    create:
+    `POST` a new Equipment Component
+
+    update:
+    `PUT` updated data for the Equipment Component specified by `id`
+
+    partial_update:
+    `PATCH` the Equipment Component specified by `id`
+
+    destroy:
+    `DELETE` the Equipment Component specified by `id`
+    """
+    queryset = \
+        EquipmentComponent.objects \
+        .select_related(
+            'equipment_general_type') \
+        .prefetch_related(
+            Prefetch(
+                lookup='equipment_data_fields',
+                queryset=
+                    EquipmentDataField.objects
+                    .select_related(
+                        'equipment_general_type',
+                        'equipment_data_field_type')),
+            Prefetch(
+                lookup='equipment_unique_types',
+                queryset=
+                    EquipmentUniqueType.objects
+                    .select_related(
+                        'equipment_general_type')))
+
+    serializer_class = EquipmentComponentSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    filter_class = EquipmentComponentFilter
+
+    ordering_fields = \
+        'equipment_general_type', \
+        'name'
+
+    ordering = \
+        'equipment_general_type', \
+        'name'
+
+    pagination_class = None
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='REST API: Equipment Components')
+    def list(self, request, *args, **kwargs):
+        return super(type(self), self).list(request, *args, **kwargs)
+
+    @silk_profile(name='REST API: Equipment Component')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 

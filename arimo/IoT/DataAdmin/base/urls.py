@@ -18,6 +18,7 @@ from .views import \
     NumericMeasurementUnitViewSet, \
     EquipmentDataFieldTypeViewSet, \
     EquipmentGeneralTypeViewSet, \
+    EquipmentComponentViewSet, \
     EquipmentDataFieldViewSet, \
     EquipmentUniqueTypeGroupViewSet, \
     EquipmentUniqueTypeViewSet, \
@@ -34,6 +35,7 @@ ROUTER.register('data-types', DataTypeViewSet)
 ROUTER.register('numeric-measurement-units', NumericMeasurementUnitViewSet)
 ROUTER.register('equipment-data-field-types', EquipmentDataFieldTypeViewSet)
 ROUTER.register('equipment-general-types', EquipmentGeneralTypeViewSet)
+ROUTER.register('equipment-components', EquipmentComponentViewSet)
 ROUTER.register('equipment-data-fields', EquipmentDataFieldViewSet)
 ROUTER.register('equipment-unique-type-groups', EquipmentUniqueTypeGroupViewSet)
 ROUTER.register('equipment-unique-types', EquipmentUniqueTypeViewSet)

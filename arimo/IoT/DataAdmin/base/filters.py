@@ -8,6 +8,7 @@ from .models import \
     NumericMeasurementUnit, \
     EquipmentDataFieldType, \
     EquipmentGeneralType, \
+    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
@@ -79,6 +80,44 @@ class EquipmentGeneralTypeFilter(FilterSet):
                 'regex', 'iregex'
             ]
         )
+
+
+class EquipmentComponentFilter(FilterSet):
+    equipment_general_type = \
+        RelatedFilter(
+            queryset=EquipmentGeneralType.objects.all(),
+            filterset=EquipmentGeneralTypeFilter)
+
+    equipment_data_fields = \
+        RelatedFilter(
+            queryset=EquipmentDataField.objects.all(),
+            filterset='EquipmentDataFieldFilter')
+
+    equipment_unique_types = \
+        RelatedFilter(
+            queryset=EquipmentUniqueType.objects.all(),
+            filterset='EquipmentUniqueTypeFilter')
+
+    class Meta:
+        model = EquipmentComponent
+
+        fields = dict(
+            name=[
+                'exact', 'iexact',
+                'in',
+                'contains', 'icontains',
+                'startswith', 'istartswith', 'endswith', 'iendswith',
+                'regex', 'iregex'
+            ],
+
+            description='__all__')
+
+        filter_overrides = {
+            JSONField: dict(
+                filter_class=CharFilter
+                # 'extra': lambda f: {'lookup_expr': 'icontains'}
+            )
+        }
 
 
 class EquipmentDataFieldFilter(FilterSet):
