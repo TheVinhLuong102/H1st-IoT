@@ -764,8 +764,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'info', \
         'has_associated_equipment_instance_alarm_periods', \
         'equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_problem_diagnoses', \
-        'equipment_instance_problem_diagnoses'
+        'has_associated_equipment_instance_problem_diagnoses'
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request) \
