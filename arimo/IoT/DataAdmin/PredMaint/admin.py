@@ -781,7 +781,16 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
                             .select_related(
                                 'equipment_instance',
                                 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                                'alarm_type')))
+                                'alarm_type')),
+                    Prefetch(
+                        lookup='equipment_instance_problem_diagnoses',
+                        queryset=
+                            EquipmentInstanceProblemDiagnosis.objects
+                            .select_related(
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
+                            .prefetch_related(
+                                'equipment_problem_types')))
 
     @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):
