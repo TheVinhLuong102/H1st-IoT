@@ -542,7 +542,6 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
         'alarm_type__name', \
         'from_utc_date_time', \
         'to_utc_date_time', \
@@ -563,11 +562,10 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
         'to_utc_date_time', \
         'duration_in_days', \
         'date_range', \
-        'equipment_instance_alert_periods', \
         'has_associated_equipment_instance_alert_periods', \
-        'equipment_instance_problem_diagnoses', \
+        'equipment_instance_alert_periods', \
         'has_associated_equipment_instance_problem_diagnoses', \
-        'last_updated'
+        'equipment_instance_problem_diagnoses'
 
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
@@ -619,6 +617,7 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'equipment_problem_type_names', \
         'dismissed', \
         'comments', \
+        'has_associated_equipment_instance_alarm_periods', \
         'has_associated_equipment_instance_alert_periods', \
         'last_updated'
 
@@ -633,13 +632,17 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'date_range', \
         'duration', \
         'has_equipment_problems', \
-        'has_associated_equipment_instance_alert_periods', \
+        'has_associated_equipment_instance_alarm_periods', \
         'equipment_instance_alarm_periods', \
+        'has_associated_equipment_instance_alert_periods', \
         'equipment_instance_alert_periods'
 
     show_full_result_count = False
 
-    search_fields = 'equipment_instance__name',
+    search_fields = \
+        'equipment_instance__equipment_general_type__name', \
+        'equipment_instance__equipment_unique_type__name', \
+        'equipment_instance__name'
 
     form = EquipmentInstanceProblemDiagnosisForm
 
@@ -651,7 +654,15 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                 .prefetch_related(
                     'equipment_problem_types',
                     Prefetch(
-                        lookup='alerts',
+                        lookup='equipment_instance_alarm_periods',
+                        queryset=
+                            EquipmentInstanceAlarmPeriod.objects
+                            .select_related(
+                                'equipment_instance',
+                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                                'alarm_type')),
+                    Prefetch(
+                        lookup='equipment_instance_alert_periods',
                         queryset=
                             EquipmentInstanceAlertPeriod.objects
                             .select_related(

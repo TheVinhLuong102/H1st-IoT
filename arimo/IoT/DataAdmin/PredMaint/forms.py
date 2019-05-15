@@ -107,8 +107,7 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
             widget=
                 autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}),
+                    attrs={'data-minimum-input-length': 1}),
             required=True)
 
     class Meta:
@@ -119,9 +118,7 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
         widgets = dict(
             equipment_problem_types=
                 autocomplete.ModelSelect2Multiple(
-                    url=EquipmentProblemTypeAutoComplete.name,
-                    attrs={# Only trigger autocompletion after characters have been typed
-                           'data-minimum-input-length': 1}))
+                    url=EquipmentProblemTypeAutoComplete.name))
 
 
 class AlertForm(autocomplete.FutureModelForm):
