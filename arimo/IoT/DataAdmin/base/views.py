@@ -264,7 +264,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 class EquipmentGeneralTypeViewSet(ModelViewSet):
     """
     list:
-    `GET` a filterable, non-paginated list of Equipment General Types
+    `GET` a filterable, unpaginated list of Equipment General Types
 
     retrieve:
     `GET` the Equipment General Type specified by `name`
@@ -321,7 +321,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 class EquipmentComponentViewSet(ModelViewSet):
     """
     list:
-    `GET` a filterable, non-paginated list of Equipment Components
+    `GET` a filterable, unpaginated list of Equipment Components
 
     retrieve:
     `GET` the Equipment Component specified by `id`
@@ -395,7 +395,7 @@ class EquipmentComponentViewSet(ModelViewSet):
 class EquipmentDataFieldViewSet(ModelViewSet):
     """
     list:
-    `GET` a filterable, non-paginated list of Equipment Data Fields
+    `GET` a filterable, unpaginated list of Equipment Data Fields
 
     retrieve:
     `GET` the Equipment Data Field specified by `id`
@@ -466,7 +466,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     """
     list:
-    `GET` a filterable, non-paginated list of Equipment Unique Type Groups
+    `GET` a filterable, unpaginated list of Equipment Unique Type Groups
 
     retrieve:
     `GET` the Equipment Unique Type Group specified by `name`
@@ -544,7 +544,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 class EquipmentUniqueTypeViewSet(ModelViewSet):
     """
     list:
-    `GET` a filterable, non-paginated list of Equipment Unique Types
+    `GET` a filterable, unpaginated list of Equipment Unique Types
 
     retrieve:
     `GET` the Equipment Unique Type specified by `id`

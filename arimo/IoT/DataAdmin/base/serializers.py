@@ -122,6 +122,7 @@ class EquipmentComponentSerializer(WritableNestedModelSerializer):
         model = EquipmentComponent
 
         fields = \
+            'id', \
             'equipment_general_type', \
             'name', \
             'description', \
