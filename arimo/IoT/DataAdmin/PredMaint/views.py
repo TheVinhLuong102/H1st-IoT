@@ -127,10 +127,6 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
         SessionAuthentication, \
         TokenAuthentication
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     permission_classes = IsAuthenticated,
 
     filter_class = EquipmentUniqueTypeGroupDataFieldProfileFilter
@@ -146,6 +142,10 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
         '-to_date'
 
     pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile(name='API: Equipment Unique Type Group Data Field Profiles')
     def list(self, request, *args, **kwargs):
@@ -413,10 +413,6 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentProblemTypeFilter
 
     ordering_fields = 'name',
@@ -428,6 +424,10 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
     lookup_field = 'name'
 
     lookup_url_kwarg = 'equipment_problem_type_name'
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile(name='API: Equipment Problem Types')
     def list(self, request, *args, **kwargs):
@@ -464,10 +464,6 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = EquipmentInstanceProblemDiagnosisFilter
 
     ordering_fields = \
@@ -485,6 +481,10 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
         'dismissed'
 
     pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile(name='API: Equipment Instance Problem Diagnoses')
     def list(self, request, *args, **kwargs):
@@ -515,14 +515,6 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticatedOrReadOnly,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'alert_diagnosis_status_name'
-
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = AlertDiagnosisStatusFilter
 
     ordering_fields = 'index',
@@ -530,6 +522,14 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     ordering = 'index',
 
     pagination_class = None
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'alert_diagnosis_status_name'
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile(name='API: Alert Diagnosis Statuses')
     def list(self, request, *args, **kwargs):

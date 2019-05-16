@@ -693,4 +693,6 @@ class AlertFilter(FilterSet):
 
             ongoing=['exact'],
 
+            has_associated_equipment_instance_alarm_periods=['exact'],
+
             has_associated_equipment_instance_problem_diagnoses=['exact'])

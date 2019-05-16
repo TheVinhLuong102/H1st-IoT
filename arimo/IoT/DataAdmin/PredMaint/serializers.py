@@ -276,7 +276,7 @@ class AlertSerializer(ModelSerializer):
             many=False,
             required=False)
 
-    equipment_problem_diagnoses = \
+    equipment_instance_problem_diagnoses = \
         EquipmentInstanceProblemDiagnosisShortFormRelatedField(
             read_only=True,
             many=True)
@@ -299,5 +299,5 @@ class AlertSerializer(ModelSerializer):
             'ongoing', \
             'info', \
             'diagnosis_status', \
-            'has_associated_equipment_problem_diagnoses', \
-            'equipment_problem_diagnoses'
+            'has_associated_equipment_instance_problem_diagnoses', \
+            'equipment_instance_problem_diagnoses'
