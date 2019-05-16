@@ -35,6 +35,8 @@ class GlobalConfigAdmin(ModelAdmin):
         'value', \
         'last_updated'
 
+    show_full_result_count = False
+
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)

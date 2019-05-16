@@ -893,10 +893,6 @@ class ErrorViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'key'
-
-    lookup_url_kwarg = 'error_key'
-
     filter_class = ErrorFilter
 
     ordering_fields = 'key',
@@ -904,6 +900,10 @@ class ErrorViewSet(ReadOnlyModelViewSet):
     ordering = 'key',
 
     pagination_class = LimitOffsetPagination
+
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'error_key'
 
     renderer_classes = \
         CoreJSONRenderer, \
