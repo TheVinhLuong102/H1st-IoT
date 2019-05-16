@@ -672,10 +672,6 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_facility_name'
-
     filter_class = EquipmentFacilityFilter
 
     ordering_fields = 'name',
@@ -683,6 +679,10 @@ class EquipmentFacilityViewSet(ModelViewSet):
     ordering = 'name',
 
     pagination_class = LimitOffsetPagination
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_facility_name'
 
     renderer_classes = \
         CoreJSONRenderer, \
@@ -734,10 +734,6 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_instance_name'
-
     filter_class = EquipmentInstanceFilter
 
     ordering_fields = \
@@ -749,6 +745,10 @@ class EquipmentInstanceViewSet(ModelViewSet):
         'equipment_general_type', \
         'equipment_unique_type', \
         'name'
+
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_instance_name'
 
     pagination_class = LimitOffsetPagination
 

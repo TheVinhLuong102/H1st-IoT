@@ -1031,6 +1031,8 @@ class EquipmentInstanceDailyMetadata(Model):
             auto_now=True)
 
     class Meta:
+        verbose_name_plural = 'Equipment Instance Daily Metadata'
+
         unique_together = \
             'equipment_instance', \
             'date'
