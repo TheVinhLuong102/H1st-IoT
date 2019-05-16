@@ -231,7 +231,7 @@ class EquipmentInstanceProblemDiagnosisSerializer(WritableNestedModelSerializer)
             'has_equipment_problems', \
             'dismissed', \
             'comments', \
-            'has_associated_alerts', \
+            'has_associated_equipment_instance_alert_periods', \
             'alerts'
 
 
@@ -244,16 +244,16 @@ class AlertDiagnosisStatusSerializer(ModelSerializer):
 class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
-            equipment_instance=value.equipment_instance.name,
-            from_date=str(value.from_date),
-            to_date=str(value.to_date),
-            duration=value.duration,
-            ongoing=value.ongoing,
-            has_equipment_problems=value.has_equipment_problems,
-            equipment_problem_types=[i.name for i in value.equipment_problem_types.all()],
-            dismissed=value.dismissed,
-            comments=value.comments,
-            has_associated_alerts=value.has_associated_alerts)
+                equipment_instance=value.equipment_instance.name,
+                from_date=str(value.from_date),
+                to_date=str(value.to_date),
+                duration=value.duration,
+                ongoing=value.ongoing,
+                has_equipment_problems=value.has_equipment_problems,
+                equipment_problem_types=[i.name for i in value.equipment_problem_types.all()],
+                dismissed=value.dismissed,
+                comments=value.comments,
+                has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods)
 
 
 class AlertSerializer(ModelSerializer):
