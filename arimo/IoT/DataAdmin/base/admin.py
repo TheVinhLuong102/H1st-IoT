@@ -610,7 +610,6 @@ class EquipmentSystemAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_facility__name', \
-        'name', \
         'date'
 
     search_fields = \

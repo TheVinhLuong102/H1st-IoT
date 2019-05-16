@@ -796,8 +796,6 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
         'equipment_data_field', \
         'date'
 
-    # ordering = ()   # too numerous to order by default
-
     pagination_class = LimitOffsetPagination
 
     renderer_classes = \
