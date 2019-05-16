@@ -370,7 +370,7 @@ class EquipmentSystemSerializer(ModelSerializer):
         SlugRelatedField(
             queryset=EquipmentInstance.objects.all(), read_only=False,
             slug_field='name',
-            many=False,
+            many=True,
             required=False)
 
     class Meta:
