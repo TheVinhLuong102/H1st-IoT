@@ -896,6 +896,8 @@ class EquipmentFacility(Model):
             auto_now=True)
 
     class Meta:
+        verbose_name_plural = 'equipment_facilities'
+
         ordering = 'name',
 
     def __str__(self):
