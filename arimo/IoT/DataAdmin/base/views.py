@@ -105,11 +105,11 @@ class GlobalConfigViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Global Configs')
+    @silk_profile(name='API: Global Configs')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Global Config')
+    @silk_profile(name='API: Global Config')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -150,11 +150,11 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Data Types')
+    @silk_profile(name='API: Data Types')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Data Type')
+    @silk_profile(name='API: Data Type')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -207,11 +207,11 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Numeric Measurement Units')
+    @silk_profile(name='API: Numeric Measurement Units')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Numeric Measurement Unit')
+    @silk_profile(name='API: Numeric Measurement Unit')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -252,11 +252,11 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Data Field Types')
+    @silk_profile(name='API: Equipment Data Field Types')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Data Field Type')
+    @silk_profile(name='API: Equipment Data Field Type')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -309,11 +309,11 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment General Types')
+    @silk_profile(name='API: Equipment General Types')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment General Type')
+    @silk_profile(name='API: Equipment General Type')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -383,11 +383,11 @@ class EquipmentComponentViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Components')
+    @silk_profile(name='API: Equipment Components')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Component')
+    @silk_profile(name='API: Equipment Component')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -460,11 +460,11 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Data Fields')
+    @silk_profile(name='API: Equipment Data Fields')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Data Field')
+    @silk_profile(name='API: Equipment Data Field')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -544,11 +544,11 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Unique Type Groups')
+    @silk_profile(name='API: Equipment Unique Type Groups')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Unique Type Group')
+    @silk_profile(name='API: Equipment Unique Type Group')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -628,11 +628,11 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Unique Types')
+    @silk_profile(name='API: Equipment Unique Types')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Unique Type')
+    @silk_profile(name='API: Equipment Unique Type')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -688,11 +688,11 @@ class EquipmentFacilityViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Facilities')
+    @silk_profile(name='API: Equipment Facilities')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Facility')
+    @silk_profile(name='API: Equipment Facility')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -756,11 +756,11 @@ class EquipmentInstanceViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Instances')
+    @silk_profile(name='API: Equipment Instances')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance')
+    @silk_profile(name='API: Equipment Instance')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -804,11 +804,11 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggregates')
+    @silk_profile(name='API: Equipment Instance Data Field Daily Aggregates')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance Data Field Daily Aggregate')
+    @silk_profile(name='API: Equipment Instance Data Field Daily Aggregate')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -866,11 +866,11 @@ class EquipmentSystemViewSet(ModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Systems')
+    @silk_profile(name='API: Equipment Systems')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment System')
+    @silk_profile(name='API: Equipment System')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -911,10 +911,10 @@ class ErrorViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Errors')
+    @silk_profile(name='API: Errors')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Error')
+    @silk_profile(name='API: Error')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
