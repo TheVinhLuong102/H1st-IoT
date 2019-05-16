@@ -696,6 +696,8 @@ class AlertDiagnosisStatusAdmin(ModelAdmin):
         'index', \
         'name'
 
+    show_full_result_count = False
+
     @silk_profile(name='Admin: Alert Diagnosis Statuses')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)

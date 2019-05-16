@@ -80,10 +80,6 @@ class GlobalConfigViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'key'
-
-    lookup_url_kwarg = 'global_config_key'
-
     filter_class = GlobalConfigFilter
 
     ordering_fields = 'key',
@@ -92,15 +88,19 @@ class GlobalConfigViewSet(ModelViewSet):
 
     pagination_class = None
 
+    lookup_field = 'key'
+
+    lookup_url_kwarg = 'global_config_key'
+
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Global Configs')
+    @silk_profile(name='API: Global Configs')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Global Config')
+    @silk_profile(name='API: Global Config')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -147,11 +147,11 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Profiles')
+    @silk_profile(name='API: Equipment Unique Type Group Data Field Profiles')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Profile')
+    @silk_profile(name='API: Equipment Unique Type Group Data Field Profile')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -220,11 +220,11 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Service Configs')
+    @silk_profile(name='API: Equipment Unique Type Group Service Configs')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Service Config')
+    @silk_profile(name='API: Equipment Unique Type Group Service Config')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -252,14 +252,6 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'uuid'
-
-    lookup_url_kwarg = 'blueprint_uuid'
-
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
     filter_class = BlueprintFilter
 
     ordering_fields = \
@@ -274,11 +266,19 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Blueprints')
+    lookup_field = 'uuid'
+
+    lookup_url_kwarg = 'blueprint_uuid'
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='API: Blueprints')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Blueprint')
+    @silk_profile(name='API: Blueprint')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -325,11 +325,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
+    @silk_profile(name='API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
+    @silk_profile(name='API: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -372,11 +372,11 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
         CoreJSONRenderer, \
         JSONRenderer
 
-    @silk_profile(name='REST API: Equipment Instance Daily Risk Scores')
+    @silk_profile(name='API: Equipment Instance Daily Risk Scores')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance Daily Risk Score')
+    @silk_profile(name='API: Equipment Instance Daily Risk Score')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -413,10 +413,6 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     permission_classes = IsAuthenticated,
 
-    lookup_field = 'name'
-
-    lookup_url_kwarg = 'equipment_problem_type_name'
-
     renderer_classes = \
         CoreJSONRenderer, \
         JSONRenderer
@@ -429,11 +425,15 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
     pagination_class = None
 
-    @silk_profile(name='REST API: Equipment Problem Types')
+    lookup_field = 'name'
+
+    lookup_url_kwarg = 'equipment_problem_type_name'
+
+    @silk_profile(name='API: Equipment Problem Types')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Problem Type')
+    @silk_profile(name='API: Equipment Problem Type')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -486,11 +486,11 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Equipment Instance Problem Diagnoses')
+    @silk_profile(name='API: Equipment Instance Problem Diagnoses')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance Problem Diagnosis')
+    @silk_profile(name='API: Equipment Instance Problem Diagnosis')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -531,11 +531,11 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
 
     pagination_class = None
 
-    @silk_profile(name='REST API: Alert Diagnosis Statuses')
+    @silk_profile(name='API: Alert Diagnosis Statuses')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Alert Diagnosis Status')
+    @silk_profile(name='API: Alert Diagnosis Status')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
@@ -600,10 +600,10 @@ class AlertViewSet(ModelViewSet):
 
     pagination_class = LimitOffsetPagination
 
-    @silk_profile(name='REST API: Equipment Instance Alert Periods')
+    @silk_profile(name='API: Equipment Instance Alert Periods')
     def list(self, request, *args, **kwargs):
         return super(type(self), self).list(request, *args, **kwargs)
 
-    @silk_profile(name='REST API: Equipment Instance Alert Period')
+    @silk_profile(name='API: Equipment Instance Alert Period')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)

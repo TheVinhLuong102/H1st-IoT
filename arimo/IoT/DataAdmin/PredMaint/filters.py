@@ -13,13 +13,11 @@ from .models import \
     Alert
 
 from ..base.filters import \
-    EquipmentGeneralTypeFilter, \
     EquipmentUniqueTypeGroupFilter, \
     EquipmentDataFieldFilter, \
     EquipmentInstanceFilter
 
 from ..base.models import \
-    EquipmentGeneralType, \
     EquipmentUniqueTypeGroup, \
     EquipmentDataField, \
     EquipmentInstance

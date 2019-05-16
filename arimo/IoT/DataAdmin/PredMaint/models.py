@@ -798,7 +798,6 @@ class EquipmentProblemPeriod(Model):
             '-ongoing', \
             '-from_date', \
             '-to_date', \
-            'equipment_instance', \
             'dismissed'
 
     def __str__(self):
@@ -866,6 +865,8 @@ class AlertDiagnosisStatus(Model):
             auto_now=True)
 
     class Meta:
+        verbose_name_plural = 'Alert Diagnosis Statuses'
+
         ordering = 'index',
 
     def __str__(self):
