@@ -284,7 +284,7 @@ class EquipmentInstanceProblemDiagnosisSerializer(WritableNestedModelSerializer)
             required=True)
 
     equipment_instance_alarm_periods = \
-        EquipmentInstanceAlertPeriodShortFormRelatedField(
+        EquipmentInstanceAlarmPeriodShortFormRelatedField(
             read_only=True,
             many=True)
 
