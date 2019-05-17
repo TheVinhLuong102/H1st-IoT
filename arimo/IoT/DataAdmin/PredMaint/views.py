@@ -16,9 +16,10 @@ from .filters import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileFilter, \
     EquipmentInstanceDailyRiskScoreFilter, \
     EquipmentProblemTypeFilter, \
+    EquipmentInstanceAlarmPeriodFilter, \
     EquipmentInstanceProblemDiagnosisFilter, \
     AlertDiagnosisStatusFilter, \
-    AlertFilter
+    EquipmentInstanceAlertPeriodFilter
 
 from .models import \
     GlobalConfig, \
@@ -29,9 +30,10 @@ from .models import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
+    EquipmentInstanceAlarmPeriod, \
     EquipmentInstanceProblemDiagnosis, \
     AlertDiagnosisStatus, \
-    Alert
+    EquipmentInstanceAlertPeriod
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -41,9 +43,10 @@ from .serializers import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer, \
     EquipmentInstanceDailyRiskScoreSerializer, \
     EquipmentProblemTypeSerializer, \
+    EquipmentInstanceAlarmPeriodSerializer, \
     EquipmentInstanceProblemDiagnosisSerializer, \
     AlertDiagnosisStatusSerializer, \
-    AlertSerializer
+    EquipmentInstanceAlertPeriodSerializer
 
 from ..base.models import EquipmentDataField
 
@@ -438,6 +441,65 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
 
+class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
+    queryset = \
+        EquipmentInstanceAlarmPeriod.objects \
+        .select_related(
+            'equipment_instance',
+            'alarm_type') \
+        .prefetch_related(
+            Prefetch(
+                lookup='equipment_instance_alert_periods',
+                queryset=
+                    EquipmentInstanceAlertPeriod.objects
+                    .select_related(
+                        'equipment_unique_type_group',
+                        'equipment_instance',
+                        'diagnosis_status')),
+            Prefetch(
+                lookup='equipment_instance_problem_diagnoses',
+                queryset=
+                    EquipmentInstanceProblemDiagnosis.objects
+                    .select_related(
+                        'equipment_instance')
+                    .prefetch_related(
+                        'equipment_problem_types')))
+
+    serializer_class = EquipmentInstanceAlarmPeriodSerializer
+
+    authentication_classes = \
+        BasicAuthentication, \
+        RemoteUserAuthentication, \
+        SessionAuthentication, \
+        TokenAuthentication
+
+    permission_classes = IsAuthenticated,
+
+    filter_class = EquipmentInstanceAlarmPeriodFilter
+
+    ordering_fields = \
+        'equipment_instance', \
+        'from_utc_date_time'
+
+    ordering = \
+        'equipment_instance', \
+        '-from_utc_date_time'
+
+    pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
+
+    @silk_profile(name='API: Equipment Instance Alarm Periods')
+    def list(self, request, *args, **kwargs):
+        return super(type(self), self).list(request, *args, **kwargs)
+
+    @silk_profile(name='API: Equipment Instance Alarm Period')
+    def retrieve(self, request, *args, **kwargs):
+        return super(type(self), self).retrieve(request, *args, **kwargs)
+
+
 class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
     queryset = \
         EquipmentInstanceProblemDiagnosis.objects \
@@ -446,9 +508,16 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
         .prefetch_related(
             'equipment_problem_types',
             Prefetch(
-                lookup='alerts',
+                lookup='equipment_instance_alarm_periods',
                 queryset=
-                    Alert.objects
+                    EquipmentInstanceAlarmPeriod.objects
+                    .select_related(
+                        'equipment_instance',
+                        'alarm_type')),
+            Prefetch(
+                lookup='equipment_instance_alert_periods',
+                queryset=
+                    EquipmentInstanceAlertPeriod.objects
                     .select_related(
                         'equipment_unique_type_group',
                         'equipment_instance',
@@ -540,7 +609,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
         return super(type(self), self).retrieve(request, *args, **kwargs)
 
 
-class AlertViewSet(ModelViewSet):
+class EquipmentInstanceAlertPeriodViewSet(ModelViewSet):
     """
     list:
     `GET` a filterable, paginated list of Alerts
@@ -552,12 +621,19 @@ class AlertViewSet(ModelViewSet):
     `PATCH` the `diagnosis_status` of the Alert specified by `id`
     """
     queryset = \
-        Alert.objects \
+        EquipmentInstanceAlertPeriod.objects \
         .select_related(
             'equipment_unique_type_group',
             'equipment_instance',
             'diagnosis_status') \
         .prefetch_related(
+            Prefetch(
+                lookup='equipment_instance_alarm_periods',
+                queryset=
+                    EquipmentInstanceAlarmPeriod.objects
+                    .select_related(
+                        'equipment_instance',
+                        'alarm_type')),
             Prefetch(
                 lookup='equipment_instance_problem_diagnoses',
                 queryset=
@@ -567,7 +643,7 @@ class AlertViewSet(ModelViewSet):
                     .prefetch_related(
                         'equipment_problem_types')))
 
-    serializer_class = AlertSerializer
+    serializer_class = EquipmentInstanceAlertPeriodSerializer
 
     authentication_classes = \
         BasicAuthentication, \
@@ -578,11 +654,7 @@ class AlertViewSet(ModelViewSet):
     permission_classes = \
         IsAuthenticated,
 
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
-    filter_class = AlertFilter
+    filter_class = EquipmentInstanceAlertPeriodFilter
 
     ordering_fields = \
         'diagnosis_status', \
@@ -599,6 +671,10 @@ class AlertViewSet(ModelViewSet):
         '-cumulative_excess_risk_score'
 
     pagination_class = LimitOffsetPagination
+
+    renderer_classes = \
+        CoreJSONRenderer, \
+        JSONRenderer
 
     @silk_profile(name='API: Equipment Instance Alert Periods')
     def list(self, request, *args, **kwargs):

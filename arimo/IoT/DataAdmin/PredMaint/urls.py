@@ -16,7 +16,7 @@ from .views import \
     EquipmentProblemTypeViewSet, \
     EquipmentInstanceProblemDiagnosisViewSet, \
     AlertDiagnosisStatusViewSet, \
-    AlertViewSet
+    EquipmentInstanceAlertPeriodViewSet
 
 
 ROUTER = DefaultRouter()
@@ -59,7 +59,7 @@ ROUTER.register(
 
 ROUTER.register(
     'equipment-instance-alert-periods',
-    AlertViewSet)
+    EquipmentInstanceAlertPeriodViewSet)
 
 
 URL_PATTERNS = [

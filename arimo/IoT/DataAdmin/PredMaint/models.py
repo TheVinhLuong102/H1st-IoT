@@ -652,8 +652,7 @@ class EquipmentInstanceAlarmPeriod(Model):
 
         ordering = \
             'equipment_instance', \
-            'alarm_type', \
-            'from_utc_date_time'
+            '-from_utc_date_time'
 
     def __str__(self):
         return '{}: {} from {}{}'.format(
