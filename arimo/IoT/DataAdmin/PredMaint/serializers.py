@@ -189,7 +189,7 @@ class EquipmentInstanceAlarmPeriodShortFormRelatedField(RelatedField):
                 to_utc_date_time=value.to_utc_date_time,
                 duration_in_days=value.duration_in_days,
                 has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods,
-                has_associated_equipment_problem_diagnoses=value.has_associated_equipment_problem_diagnoses)
+                has_associated_equipment_instance_problem_diagnoses=value.has_associated_equipment_instance_problem_diagnoses)
 
 
 class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
@@ -204,8 +204,8 @@ class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
                 equipment_problem_types=[i.name for i in value.equipment_problem_types.all()],
                 dismissed=value.dismissed,
                 comments=value.comments,
-                has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods,
-                has_associated_equipment_problem_diagnoses=value.has_associated_equipment_problem_diagnoses)
+                has_associated_equipment_instance_alarm_periods=value.has_associated_equipment_instance_alarm_periods,
+                has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods)
 
 
 class EquipmentInstanceAlertPeriodShortFormRelatedField(RelatedField):
@@ -224,7 +224,7 @@ class EquipmentInstanceAlertPeriodShortFormRelatedField(RelatedField):
                 ongoing=value.ongoing,
                 diagnosis_status=value.diagnosis_status.name,
                 has_associated_equipment_instance_alarm_periods=value.has_associated_equipment_instance_alarm_periods,
-                has_associated_equipment_problem_diagnoses=value.has_associated_equipment_problem_diagnoses)
+                has_associated_equipment_instance_problem_diagnoses=value.has_associated_equipment_instance_problem_diagnoses)
 
 
 class EquipmentInstanceAlarmPeriodSerializer(WritableNestedModelSerializer):
