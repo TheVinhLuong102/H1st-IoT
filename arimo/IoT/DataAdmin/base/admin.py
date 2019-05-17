@@ -521,11 +521,6 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    list_select_related = \
-        'equipment_instance', \
-        'equipment_instance__equipment_general_type', \
-        'equipment_instance__equipment_unique_type'
-
     readonly_fields = \
         'equipment_instance', \
         'date', \
@@ -533,6 +528,13 @@ class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
         'schema', \
         'n_columns', \
         'n_rows'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .defer('schema') \
+                .select_related(
+                    'equipment_instance',
+                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
 
     @silk_profile(name='Admin: Equipment Instances Daily Metadata')
     def changelist_view(self, *args, **kwargs):
