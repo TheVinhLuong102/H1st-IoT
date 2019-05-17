@@ -275,8 +275,8 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         return obj.equipment_data_fields.count()
 
     def n_equipment_instances(self, obj):
-        return sum(i['n_equipment_instances']
-                   for i in obj.equipment_unique_types.annotate(n_equipment_instances=Count('equipment_instance')).values('n_equipment_instances')) \
+        return sum(equipment_unique_type.equipment_instances.count()
+                   for equipment_unique_type in obj.equipment_unique_types.all()) \
             if obj.equipment_unique_types.count() \
           else ''
 
@@ -285,7 +285,12 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type') \
                 .prefetch_related(
-                    'equipment_unique_types',
+                    Prefetch(
+                        lookup='equipment_unique_types',
+                        queryset=
+                            EquipmentUniqueType.objects
+                            .prefetch_related(
+                                'equipment_instances')),
                     Prefetch(
                         lookup='equipment_components',
                         queryset=
