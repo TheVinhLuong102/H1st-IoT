@@ -185,8 +185,8 @@ class EquipmentInstanceAlarmPeriodShortFormRelatedField(RelatedField):
         return dict(
                 equipment_instance=value.equipment_instance.name,
                 alarm_type=value.alarm_type.name,
-                from_utc_date_time=value.from_utc_date_time,
-                to_utc_date_time=value.to_utc_date_time,
+                from_utc_date_time=str(value.from_utc_date_time),
+                to_utc_date_time=str(value.to_utc_date_time),
                 duration_in_days=value.duration_in_days,
                 has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods,
                 has_associated_equipment_instance_problem_diagnoses=value.has_associated_equipment_instance_problem_diagnoses)
