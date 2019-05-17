@@ -14,6 +14,7 @@ from .views import \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet, \
     EquipmentInstanceDailyRiskScoreViewSet, \
     EquipmentProblemTypeViewSet, \
+    EquipmentInstanceAlarmPeriodViewSet, \
     EquipmentInstanceProblemDiagnosisViewSet, \
     AlertDiagnosisStatusViewSet, \
     EquipmentInstanceAlertPeriodViewSet
@@ -48,6 +49,10 @@ ROUTER.register(
 ROUTER.register(
     'equipment-problem-types',
     EquipmentProblemTypeViewSet)
+
+ROUTER.register(
+    'equipment-instance-alarm-periods',
+    EquipmentInstanceAlarmPeriodViewSet)
 
 ROUTER.register(
     'equipment-instance-problem-diagnoses',
