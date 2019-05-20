@@ -115,6 +115,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
         ModelMultipleChoiceField(
             queryset=
                 EquipmentComponent.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type'),
             widget=
@@ -126,11 +127,14 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
         ModelMultipleChoiceField(
             queryset=
                 EquipmentDataField.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type',
                     'equipment_data_field_type',
                     'data_type',
-                    'numeric_measurement_unit'),
+                    'numeric_measurement_unit')
+                .defer(
+                    'numeric_measurement_unit__description'),
             widget=
                 autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
@@ -141,6 +145,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
         ModelMultipleChoiceField(
             queryset=
                 EquipmentUniqueTypeGroup.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type'),
             widget=

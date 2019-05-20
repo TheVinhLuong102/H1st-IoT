@@ -597,6 +597,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     """
     queryset = \
         EquipmentUniqueType.objects \
+        .defer('last_updated') \
         .select_related(
             'equipment_general_type') \
         .prefetch_related(
@@ -604,19 +605,26 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
                 lookup='equipment_components',
                 queryset=
                     EquipmentComponent.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
                 lookup='equipment_data_fields',
                 queryset=
                     EquipmentDataField.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type',
-                        'equipment_data_field_type')),
+                        'equipment_data_field_type',
+                        'data_type',
+                        'numeric_measurement_unit')
+                    .defer(
+                        'numeric_measurement_unit__description')),
             Prefetch(
                 lookup='equipment_unique_type_groups',
                 queryset=
                     EquipmentUniqueTypeGroup.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')))
 

@@ -365,7 +365,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_component_list', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
-        'equipment_unique_type_group_names', \
+        'equipment_unique_type_group_list', \
         'last_updated'
 
     list_filter = 'equipment_general_type__name',
@@ -393,19 +393,45 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
 
-    def equipment_unique_type_group_names(self, obj):
-        return ', '.join(equipment_unique_type_group.name
-                         for equipment_unique_type_group in obj.equipment_unique_type_groups.all())
+    def equipment_unique_type_group_list(self, obj):
+        n = obj.equipment_unique_type_groups.count()
+        return '{}: {}'.format(
+                n, ', '.join(equipment_unique_type_group.name
+                             for equipment_unique_type_group in obj.equipment_unique_type_groups.all())) \
+            if n \
+          else ''
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
-                .select_related(
-                    'equipment_general_type') \
+        query_set = \
+            super(type(self), self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_data_fields',
+                    queryset=EquipmentDataField.objects.only('id').order_by()))
+
+        return query_set \
                 .prefetch_related(
-                    'equipment_components',
-                    'equipment_data_fields',
-                    'equipment_instances',
-                    'equipment_unique_type_groups')
+                    Prefetch(
+                        lookup='equipment_components',
+                        queryset=EquipmentComponent.objects.only('id').order_by()),
+                    Prefetch(
+                        lookup='equipment_unique_type_groups',
+                        queryset=EquipmentUniqueTypeGroup.objects.only('id').order_by())) \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='equipment_components',
+                        queryset=EquipmentComponent.objects.only('name').order_by('name')),
+                    Prefetch(
+                        lookup='equipment_instances',
+                        queryset=EquipmentInstance.objects.only('id').order_by()),
+                    Prefetch(
+                        lookup='equipment_unique_type_groups',
+                        queryset=
+                            EquipmentUniqueTypeGroup.objects.only('name').order_by('name')))
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):
