@@ -124,9 +124,7 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Data Type specified by `name` "cat" or "num"
     """
-    queryset = \
-        DataType.objects \
-        .only(*DataTypeSerializer.Meta.fields)
+    queryset = DataType.objects.all()
 
     serializer_class = DataTypeSerializer
 
@@ -230,9 +228,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Data Field Type specified by `name`
     """
-    queryset = \
-        EquipmentDataFieldType.objects \
-        .only(*EquipmentDataFieldTypeSerializer.Meta.fields)
+    queryset = EquipmentDataFieldType.objects.all()
 
     serializer_class = EquipmentDataFieldTypeSerializer
 
@@ -289,9 +285,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment General Type specified by `name`
     """
-    queryset = \
-        EquipmentGeneralType.objects \
-        .only(*EquipmentGeneralTypeSerializer.Meta.fields)
+    queryset = EquipmentGeneralType.objects.all()
 
     serializer_class = EquipmentGeneralTypeSerializer
 
