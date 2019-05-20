@@ -181,9 +181,7 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     destroy:
     `DELETE` the Numeric Measurement Unit specified by `name`
     """
-    queryset = \
-        NumericMeasurementUnit.objects \
-        .only(*NumericMeasurementUnitSerializer.Meta.fields)
+    queryset = NumericMeasurementUnit.objects.all()
 
     serializer_class = NumericMeasurementUnitSerializer
 

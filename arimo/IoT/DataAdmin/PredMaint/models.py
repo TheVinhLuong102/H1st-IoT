@@ -38,10 +38,6 @@ class GlobalConfig(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = 'key',
 
