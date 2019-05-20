@@ -426,17 +426,21 @@ class EquipmentDataFieldViewSet(ModelViewSet):
             'equipment_data_field_type',
             'data_type',
             'numeric_measurement_unit') \
+        .defer(
+            'numeric_measurement_unit__description') \
         .prefetch_related(
             Prefetch(
                 lookup='equipment_components',
                 queryset=
                     EquipmentComponent.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
                 lookup='equipment_unique_types',
                 queryset=
                     EquipmentUniqueType.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')))
 
@@ -455,7 +459,9 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     ordering_fields = \
         'equipment_general_type', \
         'name', \
-        'equipment_data_field_type'
+        'equipment_data_field_type', \
+        'data_type', \
+        'numeric_measurement_unit'
 
     ordering = \
         'equipment_general_type', \

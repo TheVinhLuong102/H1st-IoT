@@ -63,6 +63,7 @@ class EquipmentDataFieldForm(autocomplete.FutureModelForm):
         ModelMultipleChoiceField(
             queryset=
                 EquipmentComponent.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type'),
             widget=
@@ -74,6 +75,7 @@ class EquipmentDataFieldForm(autocomplete.FutureModelForm):
         ModelMultipleChoiceField(
             queryset=
                 EquipmentUniqueType.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type'),
             widget=

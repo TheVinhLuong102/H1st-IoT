@@ -217,9 +217,21 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                     'equipment_data_field_type',
                     'data_type',
                     'numeric_measurement_unit') \
+                .defer(
+                    'numeric_measurement_unit__description') \
                 .prefetch_related(
-                    'equipment_components',
-                    'equipment_unique_types')
+                    Prefetch(
+                        lookup='equipment_components',
+                        queryset=
+                            EquipmentComponent.objects.only('id').order_by()
+                            if request.resolver_match.url_name.endswith('_change')
+                            else EquipmentComponent.objects
+                                    .defer('description', 'last_updated')
+                                    .select_related(
+                                        'equipment_general_type')),
+                    Prefetch(
+                        lookup='equipment_unique_types',
+                        queryset=EquipmentUniqueType.objects.only('id').order_by()))
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
