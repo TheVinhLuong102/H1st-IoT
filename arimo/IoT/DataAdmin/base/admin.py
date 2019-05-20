@@ -225,10 +225,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                         queryset=
                             EquipmentComponent.objects.only('id').order_by()
                             if request.resolver_match.url_name.endswith('_change')
-                            else EquipmentComponent.objects
-                                    .defer('description', 'last_updated')
-                                    .select_related(
-                                        'equipment_general_type')),
+                            else EquipmentComponent.only('name').order_by('name')),
                     Prefetch(
                         lookup='equipment_unique_types',
                         queryset=EquipmentUniqueType.objects.only('id').order_by()))
