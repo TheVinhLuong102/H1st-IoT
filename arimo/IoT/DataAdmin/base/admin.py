@@ -132,6 +132,7 @@ class EquipmentComponentAdmin(ModelAdmin):
                             EquipmentDataField.objects.only('id').order_by()
                             if request.resolver_match.url_name.endswith('_change')
                             else EquipmentDataField.objects
+                                    .defer('description', 'last_updated')
                                     .select_related(
                                         'equipment_general_type',
                                         'equipment_data_field_type',
