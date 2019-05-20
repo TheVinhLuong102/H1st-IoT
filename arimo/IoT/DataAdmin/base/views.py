@@ -77,9 +77,7 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = \
-        GlobalConfig.objects \
-        .only(*GlobalConfigSerializer.Meta.fields)
+    queryset = GlobalConfig.objects.all()
 
     serializer_class = GlobalConfigSerializer
 
