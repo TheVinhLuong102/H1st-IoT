@@ -30,6 +30,10 @@ from ..base.models import EquipmentDataField
 
 
 class GlobalConfigAdmin(ModelAdmin):
+    list_display = \
+        'key', \
+        'value'
+
     show_full_result_count = False
 
     @silk_profile(name='Admin: Global Configs')

@@ -30,6 +30,10 @@ from .models import \
 
 
 class GlobalConfigAdmin(ModelAdmin):
+    list_display = \
+        'key', \
+        'value'
+
     show_full_result_count = False
 
     @silk_profile(name='Admin: Global Configs')
@@ -47,6 +51,10 @@ site.register(
 
 
 class NumericMeasurementUnitAdmin(ModelAdmin):
+    list_display = \
+        'name', \
+        'description'
+
     show_full_result_count = False
 
     @silk_profile(name='Admin: Numeric Measurement Units')
@@ -64,6 +72,8 @@ site.register(
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
+    list_display = 'name',
+
     show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
