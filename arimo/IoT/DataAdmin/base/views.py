@@ -421,6 +421,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     """
     queryset = \
         EquipmentDataField.objects \
+        .defer('last_updated') \
         .select_related(
             'equipment_general_type',
             'equipment_data_field_type',
