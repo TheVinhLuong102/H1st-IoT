@@ -77,7 +77,9 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = GlobalConfig.objects.all()
+    queryset = \
+        GlobalConfig.objects \
+        .only(*GlobalConfigSerializer.Meta.fields)
 
     serializer_class = GlobalConfigSerializer
 
@@ -122,7 +124,9 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Data Type specified by `name` "cat" or "num"
     """
-    queryset = DataType.objects.all()
+    queryset = \
+        DataType.objects \
+        .only(*DataTypeSerializer.Meta.fields)
 
     serializer_class = DataTypeSerializer
 
@@ -179,7 +183,9 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     destroy:
     `DELETE` the Numeric Measurement Unit specified by `name`
     """
-    queryset = NumericMeasurementUnit.objects.all()
+    queryset = \
+        NumericMeasurementUnit.objects \
+        .only(*NumericMeasurementUnitSerializer.Meta.fields)
 
     serializer_class = NumericMeasurementUnitSerializer
 
@@ -224,7 +230,9 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Data Field Type specified by `name`
     """
-    queryset = EquipmentDataFieldType.objects.all()
+    queryset = \
+        EquipmentDataFieldType.objects \
+        .only(*EquipmentDataFieldTypeSerializer.Meta.fields)
 
     serializer_class = EquipmentDataFieldTypeSerializer
 
@@ -281,7 +289,9 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment General Type specified by `name`
     """
-    queryset = EquipmentGeneralType.objects.all()
+    queryset = \
+        EquipmentGeneralType.objects \
+        .only(*EquipmentGeneralTypeSerializer.Meta.fields)
 
     serializer_class = EquipmentGeneralTypeSerializer
 

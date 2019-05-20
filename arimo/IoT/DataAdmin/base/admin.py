@@ -32,10 +32,15 @@ from .models import \
 class GlobalConfigAdmin(ModelAdmin):
     list_display = \
         'key', \
-        'value', \
-        'last_updated'
+        'value'
 
     show_full_result_count = False
+
+    def get_queryset(self, request):
+        query_set = super(type(self), self).get_queryset(request=request)
+        return query_set \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set.only(*self.list_display)
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
@@ -58,6 +63,12 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
 
     show_full_result_count = False
 
+    def get_queryset(self, request):
+        query_set = super(type(self), self).get_queryset(request=request)
+        return query_set \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set.only(*self.list_display)
+
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, *args, **kwargs):
         return super(type(self), self).changelist_view(*args, **kwargs)
@@ -76,6 +87,12 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
     list_display = 'name',
 
     show_full_result_count = False
+
+    def get_queryset(self, request):
+        query_set = super(type(self), self).get_queryset(request=request)
+        return query_set \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set.only(*self.list_display)
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, *args, **kwargs):
