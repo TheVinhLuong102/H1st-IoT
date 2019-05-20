@@ -335,7 +335,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                             .prefetch_related(
                                 Prefetch(
                                     lookup='equipment_instances',
-                                    query_set=EquipmentInstance.objects.only('id').order_by()))),
+                                    queryset=EquipmentInstance.objects.only('id').order_by()))),
                     Prefetch(
                         lookup='equipment_components',
                         queryset=EquipmentComponent.objects.only('name').order_by('name')),
