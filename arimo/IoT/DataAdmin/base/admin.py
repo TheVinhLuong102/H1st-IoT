@@ -364,9 +364,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'description', \
         'equipment_component_list', \
         'n_equipment_data_fields', \
-        'n_equipment_instances', \
         'equipment_unique_type_group_list', \
         'last_updated'
+        # 'n_equipment_instances', \
 
     list_filter = 'equipment_general_type__name',
 
@@ -425,9 +425,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                     Prefetch(
                         lookup='equipment_components',
                         queryset=EquipmentComponent.objects.only('name').order_by('name')),
-                    Prefetch(
-                        lookup='equipment_instances',
-                        queryset=EquipmentInstance.objects.only('id').order_by()),
+                    # Prefetch(
+                    #     lookup='equipment_instances',
+                    #     queryset=EquipmentInstance.objects.only('id').order_by()),
                     Prefetch(
                         lookup='equipment_unique_type_groups',
                         queryset=
