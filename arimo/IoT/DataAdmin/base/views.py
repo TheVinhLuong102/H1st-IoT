@@ -505,6 +505,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     """
     queryset = \
         EquipmentUniqueTypeGroup.objects \
+        .defer('last_updated') \
         .select_related(
             'equipment_general_type') \
         .prefetch_related(
@@ -512,21 +513,28 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
                 lookup='equipment_unique_types',
                 queryset=
                     EquipmentUniqueType.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
                 lookup='equipment_components',
                 queryset=
                     EquipmentComponent.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type')),
             Prefetch(
                 lookup='equipment_data_fields',
                 queryset=
                     EquipmentDataField.objects
+                    .defer('last_updated')
                     .select_related(
                         'equipment_general_type',
-                        'equipment_data_field_type')))
+                        'equipment_data_field_type',
+                        'data_type',
+                        'numeric_measurement_unit')
+                    .defer(
+                        'numeric_measurement_unit__description')))
 
     serializer_class = EquipmentUniqueTypeGroupSerializer
 
