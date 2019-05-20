@@ -57,56 +57,85 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentComponentShortFormRelatedField(RelatedField):
+class EquipmentComponentRelatedField(RelatedField):
     def to_internal_value(self, data):
-        return EquipmentComponent.objects.get_or_create(
+        return EquipmentComponent.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']))[0]
+                name=clean_lower_str(data['name']),
+                defaults=dict(
+                    description=data['description']))[0]
 
     def to_representation(self, value):
         return dict(
                 id=value.id,
                 equipment_general_type=value.equipment_general_type.name,
-                name=value.name)
+                name=value.name,
+                description=value.description)
 
 
-class EquipmentDataFieldShortFormRelatedField(RelatedField):
+class EquipmentDataFieldRelatedField(RelatedField):
     def to_internal_value(self, data):
-        return EquipmentDataField.objects.get_or_create(
+        return EquipmentDataField.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                equipment_data_field_type=EquipmentDataFieldType.objects.get(name=clean_lower_str(data['equipment_data_field_type'])),
-                name=clean_lower_str(data['name']))[0]
+                name=clean_lower_str(data['name']),
+                defaults=dict(
+                    equipment_data_field_type=EquipmentDataFieldType.objects.get(name=clean_lower_str(data['equipment_data_field_type'])),
+                    data_type=DataType.objects.get(name=clean_lower_str(data['data_type'])),
+                    numeric_measurement_unit=NumericMeasurementUnit.objects.get_or_create(name=data['numeric_measurement_unit'].strip())[0],
+                    lower_numeric_null=data['lower_numeric_null'],
+                    upper_numeric_null=data['upper_numeric_null'],
+                    default_val=data['default_val'],
+                    min_val=data['min_val'],
+                    max_val=data['max_val']))[0]
 
     def to_representation(self, value):
         return dict(
                 id=value.id,
                 equipment_general_type=value.equipment_general_type.name,
+                name=value.name,
+                description=value.description,
                 equipment_data_field_type=value.equipment_data_field_type.name,
-                name=value.name)
+                data_type=value.data_type.name
+                    if value.data_type
+                    else None,
+                numeric_measurement_unit=value.numeric_measurement_unit.name
+                    if value.numeric_measurement_unit
+                    else None,
+                lower_numeric_null=value.lower_numeric_null,
+                upper_numeric_null=value.upper_numeric_null,
+                default_val=value.default_val,
+                min_val=value.min_val,
+                max_val=value.max_val)
 
 
-class EquipmentUniqueTypeShortFormRelatedField(RelatedField):
+class EquipmentUniqueTypeRelatedField(RelatedField):
     def to_internal_value(self, data):
-        return EquipmentUniqueType.objects.get_or_create(
+        return EquipmentUniqueType.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']))[0]
+                name=clean_lower_str(data['name']),
+                defaults=dict(
+                    description=data['description']))[0]
 
     def to_representation(self, value):
         return dict(
                 equipment_general_type=value.equipment_general_type.name,
-                name=value.name)
+                name=value.name,
+                description=value.description)
 
 
-class EquipmentUniqueTypeGroupShortFormRelatedField(RelatedField):
+class EquipmentUniqueTypeGroupRelatedField(RelatedField):
     def to_internal_value(self, data):
-        return EquipmentUniqueTypeGroup.objects.get_or_create(
+        return EquipmentUniqueTypeGroup.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']))[0]
+                name=clean_lower_str(data['name']),
+                defaults=dict(
+                    description=data['description']))[0]
 
     def to_representation(self, value):
         return dict(
                 equipment_general_type=value.equipment_general_type.name,
-                name=value.name)
+                name=value.name,
+                description=value.description)
 
 
 class EquipmentComponentSerializer(WritableNestedModelSerializer):
@@ -118,13 +147,13 @@ class EquipmentComponentSerializer(WritableNestedModelSerializer):
             required=True)
 
     equipment_data_fields = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_types = \
-        EquipmentUniqueTypeShortFormRelatedField(
+        EquipmentUniqueTypeRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
@@ -171,13 +200,13 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             required=False)
 
     equipment_components = \
-        EquipmentComponentShortFormRelatedField(
+        EquipmentComponentRelatedField(
             queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_types = \
-        EquipmentUniqueTypeShortFormRelatedField(
+        EquipmentUniqueTypeRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
@@ -211,19 +240,19 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             required=True)
 
     equipment_unique_types = \
-        EquipmentUniqueTypeShortFormRelatedField(
+        EquipmentUniqueTypeRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_components = \
-        EquipmentComponentShortFormRelatedField(
+        EquipmentComponentRelatedField(
             queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_data_fields = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
@@ -249,19 +278,19 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             required=True)
 
     equipment_components = \
-        EquipmentComponentShortFormRelatedField(
+        EquipmentComponentRelatedField(
             queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_data_fields = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_type_groups = \
-        EquipmentUniqueTypeGroupShortFormRelatedField(
+        EquipmentUniqueTypeGroupRelatedField(
             queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
             many=True,
             required=False)
@@ -304,7 +333,7 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             required=True)
 
     equipment_unique_type = \
-        EquipmentUniqueTypeShortFormRelatedField(
+        EquipmentUniqueTypeRelatedField(
             queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=False,
             required=False)
@@ -335,7 +364,7 @@ class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
             many=False)
 
     equipment_data_field = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             read_only=True,
             many=False)
 

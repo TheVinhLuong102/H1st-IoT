@@ -19,7 +19,7 @@ from ..base.models import \
     EquipmentInstance
 
 from ..base.serializers import \
-    EquipmentDataFieldShortFormRelatedField
+    EquipmentDataFieldRelatedField
 
 
 class GlobalConfigSerializer(ModelSerializer):
@@ -39,7 +39,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileSerializer(ModelSerializer):
             many=False)
 
     equipment_data_field = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             read_only=True,
             many=False)
 
@@ -85,7 +85,7 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
             many=True)
 
     global_excluded_equipment_data_fields = \
-        EquipmentDataFieldShortFormRelatedField(
+        EquipmentDataFieldRelatedField(
             read_only=True,
             many=True)
 
