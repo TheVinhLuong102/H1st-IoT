@@ -342,7 +342,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                         queryset=EquipmentComponent.objects.only('name').order_by('name')),
                     Prefetch(
                         lookup='equipment_data_fields',
-                        queryset=EquipmentComponent.objects.only('id').order_by()))
+                        queryset=EquipmentDataField.objects.only('id').order_by()))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
