@@ -694,7 +694,9 @@ class EquipmentFacilityViewSet(ModelViewSet):
             Prefetch(
                 lookup='equipment_instances',
                 queryset=
-                    EquipmentInstance.objects.only('name').order_by('name')))
+                    EquipmentInstance.objects
+                    .only('id', 'name', 'equipment_facility')
+                    .order_by('name')))
 
     serializer_class = EquipmentFacilitySerializer
 
