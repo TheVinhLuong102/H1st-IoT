@@ -553,7 +553,10 @@ class EquipmentInstanceAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-                    'equipment_facility')
+                    'equipment_facility') \
+                .defer(
+                    'equipment_unique_type__description', 'equipment_unique_type__last_updated',
+                    'equipment_facility__info', 'equipment_facility__last_updated')
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, *args, **kwargs):

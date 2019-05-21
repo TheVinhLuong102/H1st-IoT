@@ -12,6 +12,7 @@ from .autocompletes import \
     EquipmentInstanceAutoComplete
 
 from .models import \
+    EquipmentGeneralType, \
     EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
@@ -122,10 +123,19 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
 
 
 class EquipmentInstanceForm(autocomplete.FutureModelForm):
+    equipment_general_type = \
+        ModelChoiceField(
+            queryset=
+                EquipmentGeneralType.objects.order_by(),
+            widget=
+                autocomplete.ModelSelect2(
+                    url=EquipmentGeneralTypeAutoComplete.name))
+
     equipment_unique_type = \
         ModelChoiceField(
             queryset=
                 EquipmentUniqueType.objects
+                .defer('description', 'last_updated')
                 .select_related(
                     'equipment_general_type')
                 .order_by(),
@@ -147,11 +157,6 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
         model = EquipmentInstance
 
         fields = '__all__'
-
-        widgets = dict(
-            equipment_general_type=
-                autocomplete.ModelSelect2(
-                    url=EquipmentGeneralTypeAutoComplete.name))
 
 
 class EquipmentSystemForm(autocomplete.FutureModelForm):
