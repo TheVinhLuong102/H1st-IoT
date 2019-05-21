@@ -25,6 +25,11 @@ from ..base.urls import URL_PATTERNS as BASE_URL_PATTERNS
 from ..PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
 
+admin.site.index_title = \
+    admin.site.site_header = \
+    admin.site.site_title = 'Arimo IoT'
+
+
 urlpatterns = [
     # Home URL Redirected to Admin
     url(r'^$', RedirectView.as_view(url='/admin')),
@@ -32,8 +37,8 @@ urlpatterns = [
 
     # API URLs
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/doc/', include_docs_urls(title='Arimo IoT DataAdmin API')),
-    url(r'^api/schema/$', get_schema_view(title='Arimo IoT DataAdmin API')),
+    url(r'^api/doc/', include_docs_urls(title='Arimo IoT REST API')),
+    url(r'^api/schema/$', get_schema_view(title='Arimo IoT REST API')),
 
     # Silk Profiling URLs
     url(r'^silk/', include('silk.urls', namespace='silk'))
