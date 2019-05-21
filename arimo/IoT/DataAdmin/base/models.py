@@ -482,7 +482,7 @@ def equipment_unique_types_equipment_components_m2m_changed(
 
         if invalid_objs:
             warnings.warn(
-                messsag='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
+                message='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
                     instance, invalid_objs))
 
             pk_set.difference_update(
@@ -598,7 +598,7 @@ def equipment_unique_types_equipment_data_fields_m2m_changed(
 
         if invalid_objs:
             warnings.warn(
-                messsag='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
+                message='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
                         instance, invalid_objs))
 
             pk_set.difference_update(
@@ -714,7 +714,7 @@ def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
 
         if invalid_objs:
             warnings.warn(
-                messsag='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
+                message='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
                     instance, invalid_objs))
 
             pk_set.difference_update(
