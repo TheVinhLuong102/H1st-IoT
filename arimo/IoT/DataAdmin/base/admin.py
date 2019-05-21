@@ -252,8 +252,8 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'equipment_unique_type_list', \
         'equipment_component_list', \
         'n_equipment_data_fields', \
+        'n_equipment_instances', \
         'last_updated'
-        # 'n_equipment_instances', \
 
     list_filter = 'equipment_general_type__name',
 
@@ -332,10 +332,11 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                         queryset=
                             EquipmentUniqueType.objects
                             .defer('description', 'last_updated')
-                            .order_by('name')),
-                    # Prefetch(
-                    #     lookup='equipment_unique_types__equipment_instances',
-                    #     queryset=EquipmentInstance.objects.only('id').order_by()),
+                            .order_by('name')
+                            .prefetch_related(
+                                Prefetch(
+                                    lookup='equipment_instances',
+                                    queryset=EquipmentInstance.objects.only('id', 'equipment_unique_type').order_by()))),
                     Prefetch(
                         lookup='equipment_components',
                         queryset=EquipmentComponent.objects.only('name').order_by('name')),
@@ -365,8 +366,8 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_component_list', \
         'n_equipment_data_fields', \
         'equipment_unique_type_group_list', \
+        'n_equipment_instances', \
         'last_updated'
-        # 'n_equipment_instances', \
 
     list_filter = 'equipment_general_type__name',
 
@@ -425,9 +426,9 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                     Prefetch(
                         lookup='equipment_components',
                         queryset=EquipmentComponent.objects.only('name').order_by('name')),
-                    # Prefetch(
-                    #     lookup='equipment_instances',
-                    #     queryset=EquipmentInstance.objects.only('id').order_by()),
+                    Prefetch(
+                        lookup='equipment_instances',
+                        queryset=EquipmentInstance.objects.only('id', 'equipment_unique_type').order_by()),
                     Prefetch(
                         lookup='equipment_unique_type_groups',
                         queryset=
