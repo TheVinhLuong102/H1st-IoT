@@ -689,8 +689,12 @@ class EquipmentFacilityViewSet(ModelViewSet):
     """
     queryset = \
         EquipmentFacility.objects \
+        .defer('last_updated') \
         .prefetch_related(
-            'equipment_instances')
+            Prefetch(
+                lookup='equipment_instances',
+                queryset=
+                    EquipmentInstance.objects.only('name').order_by('name')))
 
     serializer_class = EquipmentFacilitySerializer
 
