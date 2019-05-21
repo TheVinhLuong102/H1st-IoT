@@ -25,9 +25,9 @@ from ..base.urls import URL_PATTERNS as BASE_URL_PATTERNS
 from ..PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
 
-admin.site.index_title = \
-    admin.site.site_header = \
-    admin.site.site_title = 'Arimo IoT'
+admin.site.index_title = 'Arimo'
+admin.site.site_title = 'IoT'
+admin.site.site_header = 'Arimo IoT'
 
 
 urlpatterns = [
