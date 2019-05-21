@@ -892,7 +892,7 @@ class EquipmentFacility(Model):
             auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'equipment_facilities'
+        verbose_name_plural = 'Equipment Facilities'
 
         ordering = 'name',
 

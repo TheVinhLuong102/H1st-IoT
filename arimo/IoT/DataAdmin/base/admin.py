@@ -493,15 +493,21 @@ class EquipmentFacilityAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    inlines = EquipmentInstanceTabularInline,
+    # inlines = EquipmentInstanceTabularInline,
 
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        query_set = super(type(self), self).get_queryset(request=request)
+
+        return query_set \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
                 .prefetch_related(
-                    'equipment_instances')
+                    Prefetch(
+                        lookup='equipment_instances',
+                        queryset=EquipmentInstance.objects.only('id', 'equipment_facility').order_by()))
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, *args, **kwargs):
