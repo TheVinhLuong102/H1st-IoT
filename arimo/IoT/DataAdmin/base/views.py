@@ -25,20 +25,22 @@ from .filters import \
     ErrorFilter
 
 from .models import \
-    GlobalConfig, \
-    DataType, \
-    NumericMeasurementUnit, \
-    EquipmentDataFieldType, \
-    EquipmentGeneralType, \
-    EquipmentComponent, \
-    EquipmentDataField, \
-    EquipmentUniqueTypeGroup, \
-    EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem, \
     Error
+
+from .query_sets import \
+    GLOBAL_CONFIG_QUERY_SET, \
+    DATA_TYPE_QUERY_SET, \
+    NUMERIC_MEASUREMENT_UNIT_QUERY_SET, \
+    EQUIPMENT_DATA_FIELD_TYPE_QUERY_SET, \
+    EQUIPMENT_GENERAL_TYPE_QUERY_SET, \
+    EQUIPMENT_COMPONENT_REST_API_QUERY_SET, \
+    EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -77,7 +79,7 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = GlobalConfig.objects.all()
+    queryset = GLOBAL_CONFIG_QUERY_SET
 
     serializer_class = GlobalConfigSerializer
 
@@ -122,7 +124,7 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Data Type specified by `name` "cat" or "num"
     """
-    queryset = DataType.objects.all()
+    queryset = DATA_TYPE_QUERY_SET
 
     serializer_class = DataTypeSerializer
 
@@ -179,7 +181,7 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     destroy:
     `DELETE` the Numeric Measurement Unit specified by `name`
     """
-    queryset = NumericMeasurementUnit.objects.all()
+    queryset = NUMERIC_MEASUREMENT_UNIT_QUERY_SET
 
     serializer_class = NumericMeasurementUnitSerializer
 
@@ -224,7 +226,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Data Field Type specified by `name`
     """
-    queryset = EquipmentDataFieldType.objects.all()
+    queryset = EQUIPMENT_DATA_FIELD_TYPE_QUERY_SET
 
     serializer_class = EquipmentDataFieldTypeSerializer
 
@@ -281,7 +283,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment General Type specified by `name`
     """
-    queryset = EquipmentGeneralType.objects.all()
+    queryset = EQUIPMENT_GENERAL_TYPE_QUERY_SET
 
     serializer_class = EquipmentGeneralTypeSerializer
 
@@ -338,31 +340,7 @@ class EquipmentComponentViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Component specified by `id`
     """
-    queryset = \
-        EquipmentComponent.objects \
-        .defer('last_updated') \
-        .select_related(
-            'equipment_general_type') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_data_fields',
-                queryset=
-                    EquipmentDataField.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type',
-                        'equipment_data_field_type',
-                        'data_type',
-                        'numeric_measurement_unit')
-                    .defer(
-                        'numeric_measurement_unit__description')),
-            Prefetch(
-                lookup='equipment_unique_types',
-                queryset=
-                    EquipmentUniqueType.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')))
+    queryset = EQUIPMENT_COMPONENT_REST_API_QUERY_SET
 
     serializer_class = EquipmentComponentSerializer
 
@@ -419,31 +397,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Data Field specified by `id`
     """
-    queryset = \
-        EquipmentDataField.objects \
-        .defer('last_updated') \
-        .select_related(
-            'equipment_general_type',
-            'equipment_data_field_type',
-            'data_type',
-            'numeric_measurement_unit') \
-        .defer(
-            'numeric_measurement_unit__description') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_components',
-                queryset=
-                    EquipmentComponent.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')),
-            Prefetch(
-                lookup='equipment_unique_types',
-                queryset=
-                    EquipmentUniqueType.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')))
+    queryset = EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET
 
     serializer_class = EquipmentDataFieldSerializer
 
@@ -503,38 +457,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type Group specified by `name`
     """
-    queryset = \
-        EquipmentUniqueTypeGroup.objects \
-        .defer('last_updated') \
-        .select_related(
-            'equipment_general_type') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_unique_types',
-                queryset=
-                    EquipmentUniqueType.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')),
-            Prefetch(
-                lookup='equipment_components',
-                queryset=
-                    EquipmentComponent.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')),
-            Prefetch(
-                lookup='equipment_data_fields',
-                queryset=
-                    EquipmentDataField.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type',
-                        'equipment_data_field_type',
-                        'data_type',
-                        'numeric_measurement_unit')
-                    .defer(
-                        'numeric_measurement_unit__description')))
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET
 
     serializer_class = EquipmentUniqueTypeGroupSerializer
 
@@ -595,38 +518,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type specified by `name`
     """
-    queryset = \
-        EquipmentUniqueType.objects \
-        .defer('last_updated') \
-        .select_related(
-            'equipment_general_type') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_components',
-                queryset=
-                    EquipmentComponent.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')),
-            Prefetch(
-                lookup='equipment_data_fields',
-                queryset=
-                    EquipmentDataField.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type',
-                        'equipment_data_field_type',
-                        'data_type',
-                        'numeric_measurement_unit')
-                    .defer(
-                        'numeric_measurement_unit__description')),
-            Prefetch(
-                lookup='equipment_unique_type_groups',
-                queryset=
-                    EquipmentUniqueTypeGroup.objects
-                    .defer('last_updated')
-                    .select_related(
-                        'equipment_general_type')))
+    queryset = EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET
 
     serializer_class = EquipmentUniqueTypeSerializer
 
