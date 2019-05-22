@@ -8,6 +8,8 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from silk.profiling.profiler import silk_profile
 
+from ..base.models import EquipmentDataField
+
 from .filters import \
     GlobalConfigFilter, \
     EquipmentUniqueTypeGroupDataFieldProfileFilter, \
@@ -22,8 +24,6 @@ from .filters import \
     EquipmentInstanceAlertPeriodFilter
 
 from .models import \
-    GlobalConfig, \
-    EquipmentUniqueTypeGroupDataFieldProfile, \
     EquipmentUniqueTypeGroupServiceConfig, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     Blueprint, \
@@ -34,6 +34,10 @@ from .models import \
     EquipmentInstanceProblemDiagnosis, \
     AlertDiagnosisStatus, \
     EquipmentInstanceAlertPeriod
+
+from .query_sets import \
+    GLOBAL_CONFIG_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -47,9 +51,6 @@ from .serializers import \
     EquipmentInstanceProblemDiagnosisSerializer, \
     AlertDiagnosisStatusSerializer, \
     EquipmentInstanceAlertPeriodSerializer
-
-from ..base.models import EquipmentDataField
-
 
 class GlobalConfigViewSet(ModelViewSet):
     """
@@ -71,7 +72,7 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = GlobalConfig.objects.all()
+    queryset = GLOBAL_CONFIG_QUERY_SET
 
     serializer_class = GlobalConfigSerializer
 
@@ -116,11 +117,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Unique Type Group Data Field Profile specified by `id`
     """
-    queryset = \
-        EquipmentUniqueTypeGroupDataFieldProfile.objects \
-        .select_related(
-            'equipment_unique_type_group',
-            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldProfileSerializer
 

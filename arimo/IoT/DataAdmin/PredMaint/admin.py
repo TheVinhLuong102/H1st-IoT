@@ -106,7 +106,12 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
                     'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit')
+                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
+                .defer(
+                    'equipment_unique_type_group__description',
+                    'equipment_unique_type_group__last_updated',
+                    'equipment_data_field__last_updated',
+                    'equipment_data_field__numeric_measurement_unit__description')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
@@ -161,7 +166,14 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
                     'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit',
                     'equipment_data_field_2',
                     'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type',
-                    'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit')
+                    'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit') \
+                .defer(
+                    'equipment_unique_type_group__description',
+                    'equipment_unique_type_group__last_updated',
+                    'equipment_data_field__last_updated',
+                    'equipment_data_field__numeric_measurement_unit__description',
+                    'equipment_data_field_2__last_updated',
+                    'equipment_data_field_2__numeric_measurement_unit__description')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
     def changelist_view(self, *args, **kwargs):
