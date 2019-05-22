@@ -1154,7 +1154,6 @@ class EquipmentSystem(Model):
             blank=False,
             null=False,
             default=None,
-            unique=False,
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
@@ -1176,16 +1175,22 @@ class EquipmentSystem(Model):
             auto_now=True)
 
     class Meta:
-        ordering = \
-            'name', \
-            'date'
-
         unique_together = \
             'name', \
             'date'
 
+        ordering = \
+            'equipment_facility', \
+            'name', \
+            'date'
+
     def __str__(self):
-        return '{} on {}'.format(self.name, self.date)
+        return '{}{} on {}'.format(
+                self.name,
+                ' @ EqFacility "{}"'.format(self.equipment_facility.name)
+                    if self.equipment_facility
+                    else '',
+                self.date)
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)

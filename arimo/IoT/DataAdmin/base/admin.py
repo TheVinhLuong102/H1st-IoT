@@ -37,6 +37,7 @@ from .query_sets import \
     EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET, \
+    EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET
 
@@ -706,8 +707,12 @@ class EquipmentSystemAdmin(ModelAdmin):
         return super(type(self), self).get_queryset(request=request) \
                 .select_related(
                     'equipment_facility') \
+                .defer(
+                    'equipment_facility__info', 'equipment_facility__last_updated') \
                 .prefetch_related(
-                    'equipment_instances')
+                    Prefetch(
+                        lookup='equipment_instances',
+                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):

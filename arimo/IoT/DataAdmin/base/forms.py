@@ -62,6 +62,7 @@ class EquipmentComponentForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentComponent
+        fields = '__all__'
 
 
 class EquipmentDataFieldForm(autocomplete.FutureModelForm):
@@ -70,6 +71,7 @@ class EquipmentDataFieldForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentDataField
+        fields = '__all__'
 
 
 class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
@@ -77,6 +79,7 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentUniqueTypeGroup
+        fields = '__all__'
 
 
 class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
@@ -93,6 +96,7 @@ class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentUniqueType
+        fields = '__all__'
 
 
 class EquipmentInstanceForm(autocomplete.FutureModelForm):
@@ -119,6 +123,7 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentInstance
+        fields = '__all__'
 
 
 class EquipmentSystemForm(autocomplete.FutureModelForm):
@@ -139,3 +144,4 @@ class EquipmentSystemForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentSystem
+        fields = '__all__'

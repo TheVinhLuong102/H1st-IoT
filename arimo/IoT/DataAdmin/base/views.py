@@ -1,5 +1,3 @@
-from django.db.models import Prefetch
-
 from rest_framework.authentication import BasicAuthentication, RemoteUserAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -25,8 +23,7 @@ from .filters import \
     ErrorFilter
 
 from .models import \
-    EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem
+    EquipmentInstanceDataFieldDailyAgg
 
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
@@ -40,6 +37,7 @@ from .query_sets import \
     EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET, \
     EQUIPMENT_FACILITY_REST_API_QUERY_SET, \
     EQUIPMENT_INSTANCE_REST_API_QUERY_SET, \
+    EQUIPMENT_SYSTEM_REST_API_QUERY_SET, \
     ERROR_QUERY_SET
 
 from .serializers import \
@@ -746,12 +744,7 @@ class EquipmentSystemViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment System specified by `id`
     """
-    queryset = \
-        EquipmentSystem.objects \
-        .select_related(
-            'equipment_facility') \
-        .prefetch_related(
-            'equipment_instances')
+    queryset = EQUIPMENT_SYSTEM_REST_API_QUERY_SET
 
     serializer_class = EquipmentSystemSerializer
 
@@ -766,10 +759,12 @@ class EquipmentSystemViewSet(ModelViewSet):
     filter_class = EquipmentSystemFilter
 
     ordering_fields = \
+        'equipment_facility', \
         'name', \
         'date'
 
     ordering = \
+        'equipment_facility', \
         'name', \
         'date'
 

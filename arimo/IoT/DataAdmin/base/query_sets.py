@@ -12,6 +12,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
+    EquipmentSystem, \
     Error
 
 
@@ -204,6 +205,12 @@ EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET = \
             queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET))
 
 
+EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET = \
+    EquipmentInstance.objects \
+    .only('id') \
+    .order_by()
+
+
 EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET = \
     EquipmentInstance.objects \
     .only(
@@ -225,6 +232,14 @@ EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERY_SET = \
     .only(
         'name',
         'equipment_facility') \
+    .order_by(
+        'name')
+
+
+EQUIPMENT_INSTANCE_NAME_ONLY_QUERY_SET = \
+    EquipmentInstance.objects \
+    .only(
+        'name') \
     .order_by(
         'name')
 
@@ -274,6 +289,20 @@ EQUIPMENT_FACILITY_REST_API_QUERY_SET = \
         Prefetch(
             lookup='equipment_instances',
             queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERY_SET))
+
+
+EQUIPMENT_SYSTEM_REST_API_QUERY_SET = \
+    EquipmentSystem.objects \
+    .defer(
+        'last_updated') \
+    .select_related(
+        'equipment_facility') \
+    .defer(
+        'equipment_facility__info', 'equipment_facility__last_updated') \
+    .prefetch_related(
+        Prefetch(
+            lookup='equipment_instances',
+            queryset=EQUIPMENT_INSTANCE_NAME_ONLY_QUERY_SET))
 
 
 ERROR_QUERY_SET = \
