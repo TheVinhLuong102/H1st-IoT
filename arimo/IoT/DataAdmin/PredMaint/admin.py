@@ -7,7 +7,7 @@ from silk.profiling.profiler import silk_profile
 
 from ..base.query_sets import \
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_NAME_ONLY_UNORDERED_QUERY_SET
+    EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET
 
 from .forms import \
     EquipmentUniqueTypeGroupServiceConfigForm, \
@@ -29,9 +29,6 @@ from .models import \
     EquipmentInstanceProblemDiagnosis, \
     EquipmentInstanceAlertPeriod, \
     AlertDiagnosisStatus
-
-from .query_sets import \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_MONITORED_DATA_FIELD_CONFIG_QUERY_SET
 
 
 class GlobalConfigAdmin(ModelAdmin):
@@ -288,27 +285,57 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                     else '')
 
     def get_queryset(self, request):
-        query_set = \
-            super(type(self), self).get_queryset(request=request) \
-            .select_related(
-                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
-            .defer(
-                'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated')
+        query_set = super(type(self), self).get_queryset(request=request) \
 
         return query_set \
+                .select_related(
+                    'equipment_unique_type_group') \
+                .defer(
+                    'equipment_unique_type_group__equipment_general_type',
+                    # 'equipment_unique_type_group__name',
+                    'equipment_unique_type_group__description',
+                    'equipment_unique_type_group__last_updated') \
                 .prefetch_related(
                     Prefetch(
                         lookup='global_excluded_equipment_data_fields',
                         queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET)) \
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+                .defer(
+                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated') \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_type_group_monitored_data_field_configs',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_MONITORED_DATA_FIELD_CONFIG_QUERY_SET),
+                        queryset=
+                            EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
+                            .defer(
+                                'highly_correlated_numeric_equipment_data_fields',
+                                'auto_included_numeric_equipment_data_fields',
+                                'lowly_correlated_numeric_equipment_data_fields',
+                                'comments')
+                            .select_related(
+                                'monitored_equipment_data_field')
+                            .defer(
+                                'monitored_equipment_data_field__equipment_general_type',
+                                'monitored_equipment_data_field__description',
+                                'monitored_equipment_data_field__equipment_data_field_type',
+                                'monitored_equipment_data_field__data_type',
+                                'monitored_equipment_data_field__numeric_measurement_unit',
+                                'monitored_equipment_data_field__lower_numeric_null',
+                                'monitored_equipment_data_field__upper_numeric_null',
+                                'monitored_equipment_data_field__default_val',
+                                'monitored_equipment_data_field__min_val',
+                                'monitored_equipment_data_field__max_val',
+                                'monitored_equipment_data_field__last_updated')
+                            .prefetch_related(
+                                Prefetch(
+                                    lookup='manually_excluded_equipment_data_fields',
+                                    queryset=EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET))),
                     Prefetch(
                         lookup='global_excluded_equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_NAME_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Configs')
     def changelist_view(self, *args, **kwargs):

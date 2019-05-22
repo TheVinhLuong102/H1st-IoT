@@ -12,6 +12,7 @@ from .models import \
 
 from ..base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
+    EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentInstanceAutoComplete
 
 from ..base.models import \
@@ -19,10 +20,18 @@ from ..base.models import \
 
 from ..base.query_sets import \
     EQUIPMENT_DATA_FIELD_STR_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_STR_UNORDERED_QUERY_SET
+    EQUIPMENT_DATA_FIELD_STR_UNORDERED_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_STR_UNORDERED_QUERY_SET
 
 
 class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
+    equipment_unique_type_group = \
+        ModelChoiceField(
+            queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_STR_UNORDERED_QUERY_SET,
+            widget=autocomplete.ModelSelect2(
+                    url=EquipmentUniqueTypeGroupAutoComplete.name),
+            required=True)
+
     global_excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
             queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
@@ -109,5 +118,4 @@ class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
 
     class Meta:
         model = EquipmentInstanceAlertPeriod
-
         fields = '__all__'

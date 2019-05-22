@@ -8,8 +8,6 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from silk.profiling.profiler import silk_profile
 
-from ..base.models import EquipmentDataField
-
 from .filters import \
     GlobalConfigFilter, \
     EquipmentUniqueTypeGroupDataFieldProfileFilter, \
@@ -24,8 +22,6 @@ from .filters import \
     EquipmentInstanceAlertPeriodFilter
 
 from .models import \
-    EquipmentUniqueTypeGroupServiceConfig, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
     EquipmentInstanceDailyRiskScore, \
@@ -37,7 +33,8 @@ from .models import \
 
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET
+    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -164,35 +161,7 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Unique Type Group Service Config specified by `id`
     """
-    queryset = \
-        EquipmentUniqueTypeGroupServiceConfig.objects \
-        .select_related(
-            'equipment_unique_type_group') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_unique_type_group_monitored_data_field_configs',
-                queryset=
-                    EquipmentUniqueTypeGroupMonitoredDataFieldConfig.objects
-                    .select_related(
-                        'monitored_equipment_data_field',
-                        'monitored_equipment_data_field__equipment_general_type',
-                        'monitored_equipment_data_field__equipment_data_field_type')
-                    .prefetch_related(
-                        Prefetch(
-                            lookup='manually_excluded_equipment_data_fields',
-                            queryset=
-                                EquipmentDataField.objects
-                                .select_related(
-                                    'equipment_general_type',
-                                    'equipment_data_field_type')))),
-
-            Prefetch(
-                lookup='global_excluded_equipment_data_fields',
-                queryset=
-                    EquipmentDataField.objects
-                    .select_related(
-                        'equipment_general_type',
-                        'equipment_data_field_type')))
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET
 
     serializer_class = EquipmentUniqueTypeGroupServiceConfigSerializer
 

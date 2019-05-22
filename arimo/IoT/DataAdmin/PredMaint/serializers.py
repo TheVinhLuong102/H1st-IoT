@@ -67,6 +67,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigRelatedField(RelatedField)
     def to_representation(self, value):
         return dict(
                 monitored_equipment_data_field=value.monitored_equipment_data_field.name,
+                manually_included_equipment_data_fields=[i.name for i in value.manually_included_equipment_data_fields.all()],
                 manually_excluded_equipment_data_fields=[i.name for i in value.manually_excluded_equipment_data_fields.all()],
                 active=value.active,
                 comments=value.comments)
@@ -96,6 +97,7 @@ class EquipmentUniqueTypeGroupServiceConfigSerializer(ModelSerializer):
             'id', \
             'equipment_unique_type_group', \
             'equipment_unique_type_group_monitored_data_field_configs', \
+            'include_categorical_equipment_data_fields', \
             'global_excluded_equipment_data_fields', \
             'active', \
             'from_date', \
