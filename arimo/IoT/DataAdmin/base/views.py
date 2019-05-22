@@ -755,7 +755,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
     """
     queryset = \
         EquipmentInstance.objects \
-        .defer('last_update') \
+        .defer('last_updated') \
         .select_related(
             'equipment_general_type',
             'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
