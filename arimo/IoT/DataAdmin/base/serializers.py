@@ -141,20 +141,20 @@ class EquipmentUniqueTypeGroupRelatedField(RelatedField):
 class EquipmentComponentSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.order_by(), read_only=False,
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     equipment_data_fields = \
         EquipmentDataFieldRelatedField(
-            queryset=EquipmentDataField.objects.order_by(), read_only=False,
+            queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_types = \
         EquipmentUniqueTypeRelatedField(
-            queryset=EquipmentUniqueType.objects.order_by(), read_only=False,
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
 
@@ -173,41 +173,41 @@ class EquipmentComponentSerializer(WritableNestedModelSerializer):
 class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.order_by(), read_only=False,
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     equipment_data_field_type = \
         SlugRelatedField(
-            queryset=EquipmentDataFieldType.objects.order_by(), read_only=False,
+            queryset=EquipmentDataFieldType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     data_type = \
         SlugRelatedField(
-            queryset=DataType.objects.order_by(), read_only=False,
+            queryset=DataType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=False)
 
     numeric_measurement_unit = \
         SlugRelatedField(
-            queryset=NumericMeasurementUnit.objects.order_by(), read_only=False,
+            queryset=NumericMeasurementUnit.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=False)
 
     equipment_components = \
         EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.order_by(), read_only=False,
+            queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_types = \
         EquipmentUniqueTypeRelatedField(
-            queryset=EquipmentUniqueType.objects.order_by(), read_only=False,
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
 
@@ -234,26 +234,26 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
 class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.order_by(), read_only=False,
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     equipment_unique_types = \
         EquipmentUniqueTypeRelatedField(
-            queryset=EquipmentUniqueType.objects.order_by(), read_only=False,
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_components = \
         EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.order_by(), read_only=False,
+            queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_data_fields = \
         EquipmentDataFieldRelatedField(
-            queryset=EquipmentDataField.objects.order_by(), read_only=False,
+            queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
@@ -272,26 +272,26 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
 class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.order_by(), read_only=False,
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     equipment_components = \
         EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.order_by(), read_only=False,
+            queryset=EquipmentComponent.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_data_fields = \
         EquipmentDataFieldRelatedField(
-            queryset=EquipmentDataField.objects.order_by(), read_only=False,
+            queryset=EquipmentDataField.objects.all(), read_only=False,
             many=True,
             required=False)
 
     equipment_unique_type_groups = \
         EquipmentUniqueTypeGroupRelatedField(
-            queryset=EquipmentUniqueTypeGroup.objects.order_by(), read_only=False,
+            queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
             many=True,
             required=False)
 
@@ -310,7 +310,7 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
 class EquipmentFacilitySerializer(ModelSerializer):
     equipment_instances = \
         SlugRelatedField(
-            queryset=EquipmentInstance.objects.order_by(), read_only=False,
+            queryset=EquipmentInstance.objects.all(), read_only=False,
             slug_field='name',
             many=True,
             required=False)
@@ -327,20 +327,20 @@ class EquipmentFacilitySerializer(ModelSerializer):
 class EquipmentInstanceSerializer(WritableNestedModelSerializer):
     equipment_general_type = \
         SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.order_by(), read_only=False,
+            queryset=EquipmentGeneralType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=True)
 
     equipment_unique_type = \
         EquipmentUniqueTypeRelatedField(
-            queryset=EquipmentUniqueType.objects.order_by(), read_only=False,
+            queryset=EquipmentUniqueType.objects.all(), read_only=False,
             many=False,
             required=False)
 
     equipment_facility = \
         SlugRelatedField(
-            queryset=EquipmentFacility.objects.order_by(), read_only=False,
+            queryset=EquipmentFacility.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=False)
@@ -391,14 +391,14 @@ class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
 class EquipmentSystemSerializer(ModelSerializer):
     equipment_facility = \
         SlugRelatedField(
-            queryset=EquipmentFacility.objects.order_by(), read_only=False,
+            queryset=EquipmentFacility.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=False)
 
     equipment_instances = \
         SlugRelatedField(
-            queryset=EquipmentInstance.objects.order_by(), read_only=False,
+            queryset=EquipmentInstance.objects.all(), read_only=False,
             slug_field='name',
             many=True,
             required=False)
