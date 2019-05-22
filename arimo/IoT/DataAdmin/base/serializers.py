@@ -372,6 +372,7 @@ class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
         model = EquipmentInstanceDataFieldDailyAgg
 
         fields = \
+            'id', \
             'equipment_instance', \
             'equipment_data_field', \
             'date', \
