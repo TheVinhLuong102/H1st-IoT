@@ -307,7 +307,7 @@ EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET = \
         'equipment_instance__equipment_facility',
         'equipment_instance__info',
         'equipment_instance__last_updated',
-        'equipment_data_field__description', 'equipment_data_field__last_updated',
+        'equipment_data_field__last_updated',
         'equipment_data_field__numeric_measurement_unit__description')
 
 
