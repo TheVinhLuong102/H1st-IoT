@@ -357,7 +357,7 @@ class EquipmentInstanceFilter(FilterSet):
             filterset=EquipmentFacilityFilter)
 
     class Meta:
-        model = EquipmentInstance
+        queryset = EquipmentInstance.objects.order_by()
 
         fields = dict(
             name=[
