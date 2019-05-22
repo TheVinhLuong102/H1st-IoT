@@ -549,7 +549,16 @@ class EquipmentInstanceAdmin(ModelAdmin):
     form = EquipmentInstanceForm
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        query_set = super(type(self), self).get_queryset(request=request)
+
+        return query_set \
+                .select_related(
+                    'equipment_general_type',
+                    'equipment_unique_type') \
+                .defer(
+                    'equipment_unique_type__description', 'equipment_unique_type__last_updated') \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
