@@ -5,6 +5,7 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 from .autocompletes import \
     EquipmentProblemTypeAutoComplete, \
     EquipmentInstanceProblemDiagnosisAutoComplete
+
 from .models import \
     EquipmentUniqueTypeGroupServiceConfig, EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     EquipmentInstanceProblemDiagnosis, EquipmentInstanceAlertPeriod
@@ -12,82 +13,56 @@ from .models import \
 from ..base.autocompletes import \
     EquipmentDataFieldAutoComplete, \
     EquipmentInstanceAutoComplete
+
 from ..base.models import \
-    EquipmentDataField, \
     EquipmentInstance
+
+from ..base.query_sets import \
+    EQUIPMENT_DATA_FIELD_STR_QUERY_SET, \
+    EQUIPMENT_DATA_FIELD_STR_UNORDERED_QUERY_SET
 
 
 class EquipmentUniqueTypeGroupServiceConfigForm(autocomplete.FutureModelForm):
     global_excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
-            queryset=
-                EquipmentDataField.objects
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_data_field_type',
-                    'data_type',
-                    'numeric_measurement_unit'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
+            queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
+            widget=autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
         model = EquipmentUniqueTypeGroupServiceConfig
-
         fields = '__all__'
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm(autocomplete.FutureModelForm):
     monitored_equipment_data_field = \
         ModelChoiceField(
-            queryset=
-                EquipmentDataField.objects
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_data_field_type',
-                    'data_type',
-                    'numeric_measurement_unit'),
-            widget=
-                autocomplete.ModelSelect2(
+            queryset=EQUIPMENT_DATA_FIELD_STR_UNORDERED_QUERY_SET,
+            widget=autocomplete.ModelSelect2(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}),
             required=True)
 
     manually_included_equipment_data_fields = \
         ModelMultipleChoiceField(
-            queryset=
-                EquipmentDataField.objects
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_data_field_type',
-                    'data_type',
-                    'numeric_measurement_unit'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
+            queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
+            widget=autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}),
             required=False)
 
     manually_excluded_equipment_data_fields = \
         ModelMultipleChoiceField(
-            queryset=
-                EquipmentDataField.objects
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_data_field_type',
-                    'data_type',
-                    'numeric_measurement_unit'),
-            widget=
-                autocomplete.ModelSelect2Multiple(
+            queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
+            widget=autocomplete.ModelSelect2Multiple(
                     url=EquipmentDataFieldAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}),
             required=False)
 
     class Meta:
         model = EquipmentUniqueTypeGroupMonitoredDataFieldConfig
-
         fields = '__all__'
 
 
