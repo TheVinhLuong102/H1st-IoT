@@ -22,8 +22,6 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
-    EquipmentInstanceDailyMetadata, \
-    EquipmentInstanceDataFieldDailyAgg, \
     EquipmentSystem, \
     Error
 
@@ -571,113 +569,6 @@ class EquipmentInstanceAdmin(ModelAdmin):
 site.register(
     EquipmentInstance,
     admin_class=EquipmentInstanceAdmin)
-
-
-class EquipmentInstanceDailyMetadataAdmin(ModelAdmin):
-    list_display = \
-        'equipment_instance', \
-        'date', \
-        'url', \
-        'n_columns', \
-        'n_rows', \
-        'last_updated'
-
-    list_filter = \
-        'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
-        'date'
-
-    search_fields = \
-        'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
-        'equipment_instance__name'
-
-    show_full_result_count = False
-
-    readonly_fields = \
-        'equipment_instance', \
-        'date', \
-        'url', \
-        'schema', \
-        'n_columns', \
-        'n_rows'
-
-    def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
-                .defer('schema') \
-                .select_related(
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
-
-    @silk_profile(name='Admin: Equipment Instances Daily Metadata')
-    def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Equipment Instance Daily Metadata')
-    def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentInstanceDailyMetadata,
-    admin_class=EquipmentInstanceDailyMetadataAdmin)
-
-
-class EquipmentInstanceDataFieldDailyAggAdmin(ModelAdmin):
-    list_display = \
-        'equipment_instance', \
-        'equipment_data_field', \
-        'date', \
-        'daily_count', \
-        'daily_distinct_value_counts', \
-        'daily_min', \
-        'daily_outlier_rst_min', \
-        'daily_quartile', \
-        'daily_median', \
-        'daily_mean', \
-        'daily_3rd_quartile', \
-        'daily_outlier_rst_max', \
-        'daily_max', \
-        'last_updated'
-
-    search_fields = \
-        'equipment_instance__name', \
-        'equipment_data_field__name'
-
-    show_full_result_count = False
-
-    list_select_related = \
-        'equipment_instance', 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type', \
-        'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type', \
-                                'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit'
-
-    readonly_fields = \
-        'equipment_instance', \
-        'equipment_data_field', \
-        'date', \
-        'daily_count', \
-        'daily_distinct_value_counts', \
-        'daily_min', \
-        'daily_outlier_rst_min', \
-        'daily_quartile', \
-        'daily_median', \
-        'daily_mean', \
-        'daily_3rd_quartile', \
-        'daily_outlier_rst_max', \
-        'daily_max'
-
-    @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregates')
-    def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Equipment Instance Data Field Daily Aggregate')
-    def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentInstanceDataFieldDailyAgg,
-    admin_class=EquipmentInstanceDataFieldDailyAggAdmin)
 
 
 class EquipmentSystemAdmin(ModelAdmin):

@@ -22,9 +22,6 @@ from .filters import \
     EquipmentSystemFilter, \
     ErrorFilter
 
-from .models import \
-    EquipmentInstanceDataFieldDailyAgg
-
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
     DATA_TYPE_QUERY_SET, \
@@ -38,6 +35,7 @@ from .query_sets import \
     EQUIPMENT_FACILITY_REST_API_QUERY_SET, \
     EQUIPMENT_INSTANCE_REST_API_QUERY_SET, \
     EQUIPMENT_SYSTEM_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET, \
     ERROR_QUERY_SET
 
 from .serializers import \
@@ -686,11 +684,7 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Instance Data Field Daily Agg specified by `id`
     """
-    queryset = \
-        EquipmentInstanceDataFieldDailyAgg.objects \
-        .select_related(
-            'equipment_instance',
-            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
+    queryset = EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET
 
     serializer_class = EquipmentInstanceDataFieldDailyAggSerializer
 
