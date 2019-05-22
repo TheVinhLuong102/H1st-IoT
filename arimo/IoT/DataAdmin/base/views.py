@@ -25,11 +25,8 @@ from .filters import \
     ErrorFilter
 
 from .models import \
-    EquipmentFacility, \
-    EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem, \
-    Error
+    EquipmentSystem
 
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
@@ -40,7 +37,10 @@ from .query_sets import \
     EQUIPMENT_COMPONENT_REST_API_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET
+    EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET, \
+    EQUIPMENT_FACILITY_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_REST_API_QUERY_SET, \
+    ERROR_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -579,16 +579,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Facility specified by `name`
     """
-    queryset = \
-        EquipmentFacility.objects \
-        .defer('last_updated') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_instances',
-                queryset=
-                    EquipmentInstance.objects
-                    .only('id', 'name', 'equipment_facility')
-                    .order_by('name')))
+    queryset = EQUIPMENT_FACILITY_REST_API_QUERY_SET
 
     serializer_class = EquipmentFacilitySerializer
 
@@ -645,16 +636,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Instance specified by `name`
     """
-    queryset = \
-        EquipmentInstance.objects \
-        .defer('last_updated') \
-        .select_related(
-            'equipment_general_type',
-            'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-            'equipment_facility') \
-        .defer(
-            'equipment_unique_type__last_updated',
-            'equipment_facility__info', 'equipment_facility__last_updated')
+    queryset = EQUIPMENT_INSTANCE_REST_API_QUERY_SET
 
     serializer_class = EquipmentInstanceSerializer
 
@@ -814,7 +796,7 @@ class ErrorViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Error specified by `key`
     """
-    queryset = Error.objects.all()
+    queryset = ERROR_QUERY_SET
 
     serializer_class = ErrorSerializer
 

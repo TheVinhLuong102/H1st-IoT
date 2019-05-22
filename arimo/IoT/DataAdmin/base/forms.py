@@ -26,7 +26,7 @@ from .query_sets import \
     EQUIPMENT_UNIQUE_TYPE_GROUP_STR_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_STR_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_STR_UNORDERED_QUERY_SET, \
-    EQUIPMENT_FACILITY_STR_UNORDERED_QUERY_SET, \
+    EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_INSTANCE_STR_QUERY_SET
 
 
@@ -112,7 +112,7 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
 
     equipment_facility = \
         ModelChoiceField(
-            queryset=EQUIPMENT_FACILITY_STR_UNORDERED_QUERY_SET,
+            queryset=EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET,
             widget=autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}))
@@ -124,7 +124,7 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
 class EquipmentSystemForm(autocomplete.FutureModelForm):
     equipment_facility = \
         ModelChoiceField(
-            queryset=EQUIPMENT_FACILITY_STR_UNORDERED_QUERY_SET,
+            queryset=EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET,
             widget=autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}))

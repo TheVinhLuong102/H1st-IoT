@@ -11,7 +11,8 @@ from .models import \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
     EquipmentFacility, \
-    EquipmentInstance
+    EquipmentInstance, \
+    Error
 
 
 GLOBAL_CONFIG_QUERY_SET = \
@@ -203,12 +204,6 @@ EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET = \
             queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET))
 
 
-EQUIPMENT_FACILITY_STR_UNORDERED_QUERY_SET = \
-    EquipmentFacility.objects \
-    .only('name') \
-    .order_by()
-
-
 EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET = \
     EquipmentInstance.objects \
     .only(
@@ -225,6 +220,15 @@ EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET = \
     .order_by()
 
 
+EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERY_SET = \
+    EquipmentInstance.objects \
+    .only(
+        'name',
+        'equipment_facility') \
+    .order_by(
+        'name')
+
+
 EQUIPMENT_INSTANCE_STR_QUERY_SET = \
     EquipmentInstance.objects \
     .defer(
@@ -235,4 +239,42 @@ EQUIPMENT_INSTANCE_STR_QUERY_SET = \
         'equipment_general_type',
         'equipment_unique_type') \
     .defer(
-        'equipment_unique_type__description', 'equipment_unique_type__last_updated')
+        'equipment_unique_type__equipment_general_type',
+        'equipment_unique_type__description',
+        'equipment_unique_type__last_updated')
+
+
+EQUIPMENT_INSTANCE_REST_API_QUERY_SET = \
+    EquipmentInstance.objects \
+    .defer(
+        'last_updated') \
+    .select_related(
+        'equipment_general_type',
+        'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+        'equipment_facility') \
+    .defer(
+        'equipment_unique_type__last_updated',
+        'equipment_facility__info', 'equipment_facility__last_updated')
+
+
+EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET = \
+    EquipmentFacility.objects \
+    .only('name') \
+    .order_by()
+
+
+EQUIPMENT_FACILITY_STR_QUERY_SET = \
+    EquipmentFacility.objects \
+    .defer('last_updated')
+
+
+EQUIPMENT_FACILITY_REST_API_QUERY_SET = \
+    EQUIPMENT_FACILITY_STR_QUERY_SET \
+    .prefetch_related(
+        Prefetch(
+            lookup='equipment_instances',
+            queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERY_SET))
+
+
+ERROR_QUERY_SET = \
+    Error.objects.all()
