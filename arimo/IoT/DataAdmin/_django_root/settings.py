@@ -39,9 +39,6 @@ SECRET_KEY = '_'
 DEBUG = not _ON_LINUX_CLUSTER
 
 
-INTERNAL_IPS = ['127.0.0.1']
-
-
 ALLOWED_HOSTS = \
     ['.arimo.com', '.elasticbeanstalk.com'] \
     if _ON_LINUX_CLUSTER \
