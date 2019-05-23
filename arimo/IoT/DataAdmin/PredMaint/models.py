@@ -638,13 +638,9 @@ class EquipmentInstanceAlarmPeriod(Model):
 
     class Meta:
         unique_together = \
-            ('equipment_instance',
-             'alarm_type',
-             'from_utc_date_time'), \
-            ('equipment_instance',
-             'alarm_type',
-             'from_utc_date_time',
-             'to_utc_date_time')
+            'equipment_instance', \
+            'alarm_type', \
+            'from_utc_date_time'
 
         ordering = \
             'equipment_instance', \
@@ -783,11 +779,8 @@ class EquipmentProblemPeriod(Model):
 
     class Meta:
         unique_together = \
-            ('equipment_instance',
-             'from_date'), \
-            ('equipment_instance',
-             'from_date',
-             'to_date')
+            'equipment_instance', \
+            'from_date'
 
         ordering = \
             '-ongoing', \
