@@ -431,7 +431,9 @@ class BlueprintAdmin(ModelAdmin):
     def get_queryset(self, request):
         return super(type(self), self).get_queryset(request=request) \
                 .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type')
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+                .defer(
+                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated')
 
     @silk_profile(name='Admin: Blueprints')
     def changelist_view(self, *args, **kwargs):
@@ -487,7 +489,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
                     'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit')
+                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
+                .defer(
+                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
+                    'equipment_data_field__description', 'equipment_data_field__last_updated',
+                    'equipment_data_field__numeric_measurement_unit__description')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def changelist_view(self, *args, **kwargs):
@@ -501,57 +507,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
 site.register(
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile,
     admin_class=EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin)
-
-
-class EquipmentInstanceDailyRiskScoreAdmin(ModelAdmin):
-    list_display = \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name', \
-        'date', \
-        'risk_score_value', \
-        'last_updated'
-
-    list_filter = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'risk_score_name', \
-        'date'
-
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_instance__name', \
-        'risk_score_name'
-
-    show_full_result_count = False
-
-    readonly_fields = \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name', \
-        'date', \
-        'risk_score_value'
-
-    def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
-                .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
-
-    @silk_profile(name='Admin: Equipment Instance Daily Risk Scores')
-    def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Equipment Instance Daily Risk Score')
-    def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentInstanceDailyRiskScore,
-    admin_class=EquipmentInstanceDailyRiskScoreAdmin)
 
 
 class EquipmentProblemTypeAdmin(ModelAdmin):

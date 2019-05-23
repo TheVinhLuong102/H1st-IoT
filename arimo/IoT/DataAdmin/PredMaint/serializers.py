@@ -169,6 +169,7 @@ class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):
         model = EquipmentInstanceDailyRiskScore
 
         fields = \
+            'id', \
             'equipment_unique_type_group', \
             'equipment_instance', \
             'risk_score_name', \

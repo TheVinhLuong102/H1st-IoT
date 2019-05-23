@@ -22,9 +22,6 @@ from .filters import \
     EquipmentInstanceAlertPeriodFilter
 
 from .models import \
-    Blueprint, \
-    EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
-    EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
     EquipmentInstanceAlarmPeriod, \
     EquipmentInstanceProblemDiagnosis, \
@@ -34,7 +31,10 @@ from .models import \
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET
+    EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET, \
+    BLUEPRINT_REST_API_QUERY_SET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_DAILY_RISK_SCORE
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -206,10 +206,7 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Blueprint specified by `uuid`
     """
-    queryset = \
-        Blueprint.objects \
-        .select_related(
-            'equipment_unique_type_group')
+    queryset = BLUEPRINT_REST_API_QUERY_SET
 
     serializer_class = BlueprintSerializer
 
@@ -260,11 +257,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
     retrieve:
     `GET` the Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile specified by `id`
     """
-    queryset = \
-        EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects \
-        .select_related(
-            'equipment_unique_type_group',
-            'equipment_data_field', 'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type')
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 
@@ -311,11 +304,7 @@ class EquipmentInstanceDailyRiskScoreViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Instance Daily Risk Score specified by `id`
     """
-    queryset = \
-        EquipmentInstanceDailyRiskScore.objects \
-        .select_related(
-            'equipment_unique_type_group',
-            'equipment_instance')
+    queryset = EQUIPMENT_INSTANCE_DAILY_RISK_SCORE
 
     serializer_class = EquipmentInstanceDailyRiskScoreSerializer
 
