@@ -11,7 +11,12 @@ from .models import \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
-    EquipmentInstanceDailyRiskScore
+    EquipmentInstanceDailyRiskScore, \
+    EquipmentProblemType, \
+    EquipmentInstanceAlarmPeriod, \
+    AlertDiagnosisStatus, \
+    EquipmentInstanceAlertPeriod, \
+    EquipmentInstanceProblemDiagnosis
 
 
 GLOBAL_CONFIG_QUERY_SET = \
@@ -130,3 +135,87 @@ EQUIPMENT_INSTANCE_DAILY_RISK_SCORE = \
         'equipment_instance__equipment_facility',
         'equipment_instance__info',
         'equipment_instance__last_updated')
+
+
+EQUIPMENT_PROBLEM_TYPE_REST_API_QUERY_SET = \
+    EquipmentProblemType.objects.all()
+
+
+EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET = \
+    EquipmentInstanceAlarmPeriod.objects \
+    .select_related(
+        'equipment_instance',
+        'alarm_type') \
+    .defer
+
+
+EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET = \
+    EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET \
+    .prefetch_related(
+    Prefetch(
+        lookup='equipment_instance_alert_periods',
+        queryset=
+        EquipmentInstanceAlertPeriod.objects
+            .select_related(
+            'equipment_unique_type_group',
+            'equipment_instance',
+            'diagnosis_status')),
+    Prefetch(
+        lookup='equipment_instance_problem_diagnoses',
+        queryset=
+        EquipmentInstanceProblemDiagnosis.objects
+            .select_related(
+            'equipment_instance')
+            .prefetch_related(
+            'equipment_problem_types')))
+
+
+ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET = \
+    AlertDiagnosisStatus.objects.all()
+
+
+EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET = \
+    EquipmentInstanceAlertPeriod.objects \
+    .select_related(
+        'equipment_unique_type_group',
+        'equipment_instance',
+        'diagnosis_status') \
+    .prefetch_related(
+        Prefetch(
+            lookup='equipment_instance_alarm_periods',
+            queryset=
+            EquipmentInstanceAlarmPeriod.objects
+                .select_related(
+                'equipment_instance',
+                'alarm_type')),
+        Prefetch(
+            lookup='equipment_instance_problem_diagnoses',
+            queryset=
+            EquipmentInstanceProblemDiagnosis.objects
+                .select_related(
+                'equipment_instance')
+                .prefetch_related(
+                'equipment_problem_types')))
+
+
+EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET = \
+EquipmentInstanceProblemDiagnosis.objects \
+    .select_related(
+    'equipment_instance') \
+    .prefetch_related(
+    'equipment_problem_types',
+    Prefetch(
+        lookup='equipment_instance_alarm_periods',
+        queryset=
+        EquipmentInstanceAlarmPeriod.objects
+            .select_related(
+            'equipment_instance',
+            'alarm_type')),
+    Prefetch(
+        lookup='equipment_instance_alert_periods',
+        queryset=
+        EquipmentInstanceAlertPeriod.objects
+            .select_related(
+            'equipment_unique_type_group',
+            'equipment_instance',
+            'diagnosis_status')))

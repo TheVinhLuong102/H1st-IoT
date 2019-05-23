@@ -855,10 +855,6 @@ class AlertDiagnosisStatus(Model):
             unique=True,
             default='to_diagnose')
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         verbose_name_plural = 'Alert Diagnosis Statuses'
 

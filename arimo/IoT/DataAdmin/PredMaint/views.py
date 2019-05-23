@@ -21,20 +21,18 @@ from .filters import \
     AlertDiagnosisStatusFilter, \
     EquipmentInstanceAlertPeriodFilter
 
-from .models import \
-    EquipmentProblemType, \
-    EquipmentInstanceAlarmPeriod, \
-    EquipmentInstanceProblemDiagnosis, \
-    AlertDiagnosisStatus, \
-    EquipmentInstanceAlertPeriod
-
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET, \
     BLUEPRINT_REST_API_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_DAILY_RISK_SCORE
+    EQUIPMENT_INSTANCE_DAILY_RISK_SCORE, \
+    EQUIPMENT_PROBLEM_TYPE_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET, \
+    ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET, \
+    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -359,7 +357,7 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Problem Type specified by `name`
     """
-    queryset = EquipmentProblemType.objects.all()
+    queryset = EQUIPMENT_PROBLEM_TYPE_REST_API_QUERY_SET
 
     serializer_class = EquipmentProblemTypeSerializer
 
@@ -397,28 +395,7 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
 
 class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
-    queryset = \
-        EquipmentInstanceAlarmPeriod.objects \
-        .select_related(
-            'equipment_instance',
-            'alarm_type') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_instance_alert_periods',
-                queryset=
-                    EquipmentInstanceAlertPeriod.objects
-                    .select_related(
-                        'equipment_unique_type_group',
-                        'equipment_instance',
-                        'diagnosis_status')),
-            Prefetch(
-                lookup='equipment_instance_problem_diagnoses',
-                queryset=
-                    EquipmentInstanceProblemDiagnosis.objects
-                    .select_related(
-                        'equipment_instance')
-                    .prefetch_related(
-                        'equipment_problem_types')))
+    queryset = EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET
 
     serializer_class = EquipmentInstanceAlarmPeriodSerializer
 
@@ -456,27 +433,7 @@ class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
 
 
 class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
-    queryset = \
-        EquipmentInstanceProblemDiagnosis.objects \
-        .select_related(
-            'equipment_instance') \
-        .prefetch_related(
-            'equipment_problem_types',
-            Prefetch(
-                lookup='equipment_instance_alarm_periods',
-                queryset=
-                    EquipmentInstanceAlarmPeriod.objects
-                    .select_related(
-                        'equipment_instance',
-                        'alarm_type')),
-            Prefetch(
-                lookup='equipment_instance_alert_periods',
-                queryset=
-                    EquipmentInstanceAlertPeriod.objects
-                    .select_related(
-                        'equipment_unique_type_group',
-                        'equipment_instance',
-                        'diagnosis_status')))
+    queryset = EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET
 
     serializer_class = EquipmentInstanceProblemDiagnosisSerializer
 
@@ -527,7 +484,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Alert Diagnosis Status specified by `name`
     """
-    queryset = AlertDiagnosisStatus.objects.all()
+    queryset = ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET
 
     serializer_class = AlertDiagnosisStatusSerializer
 
@@ -575,28 +532,7 @@ class EquipmentInstanceAlertPeriodViewSet(ModelViewSet):
     partial_update:
     `PATCH` the `diagnosis_status` of the Alert specified by `id`
     """
-    queryset = \
-        EquipmentInstanceAlertPeriod.objects \
-        .select_related(
-            'equipment_unique_type_group',
-            'equipment_instance',
-            'diagnosis_status') \
-        .prefetch_related(
-            Prefetch(
-                lookup='equipment_instance_alarm_periods',
-                queryset=
-                    EquipmentInstanceAlarmPeriod.objects
-                    .select_related(
-                        'equipment_instance',
-                        'alarm_type')),
-            Prefetch(
-                lookup='equipment_instance_problem_diagnoses',
-                queryset=
-                    EquipmentInstanceProblemDiagnosis.objects
-                    .select_related(
-                        'equipment_instance')
-                    .prefetch_related(
-                        'equipment_problem_types')))
+    queryset = EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET
 
     serializer_class = EquipmentInstanceAlertPeriodSerializer
 
