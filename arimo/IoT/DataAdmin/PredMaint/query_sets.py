@@ -137,16 +137,26 @@ EQUIPMENT_INSTANCE_DAILY_RISK_SCORE = \
         'equipment_instance__last_updated')
 
 
-EQUIPMENT_PROBLEM_TYPE_REST_API_QUERY_SET = \
+EQUIPMENT_PROBLEM_TYPE_QUERY_SET = \
     EquipmentProblemType.objects.all()
 
 
 EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET = \
     EquipmentInstanceAlarmPeriod.objects \
+    .defer(
+        'date_range',
+        'has_associated_equipment_instance_alert_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+        'last_updated') \
     .select_related(
         'equipment_instance',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'alarm_type')
+        'alarm_type') \
+    .defer(
+        'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+    .order_by(
+        'from_utc_date_time')
 
 
 EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET = \
@@ -166,7 +176,8 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET = \
         'date_range',
         'info',
         'has_associated_equipment_instance_alarm_periods',
-        'has_associated_equipment_instance_problem_diagnoses') \
+        'has_associated_equipment_instance_problem_diagnoses',
+        'last_updated') \
     .select_related(
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
         'equipment_instance',
@@ -186,11 +197,28 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET = \
         'diagnosis_status')
 
 
+EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_ID_ONLY_UNORDERED_QUERY_SET = \
+    EquipmentInstanceProblemDiagnosis.objects \
+    .only('id') \
+    .order_by()
+
+
 EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET = \
     EquipmentInstanceProblemDiagnosis.objects \
+    .defer(
+        'date_range',
+        'duration',
+        'has_equipment_problems',
+        'comments',
+        'has_associated_equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_alert_periods',
+        'last_updated') \
     .select_related(
         'equipment_instance',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
+    .defer(
+        'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
     .prefetch_related(
         'equipment_problem_types')
 

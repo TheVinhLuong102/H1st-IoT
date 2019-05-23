@@ -30,8 +30,10 @@ from .models import \
     AlertDiagnosisStatus
 
 from .query_sets import \
+    EQUIPMENT_PROBLEM_TYPE_QUERY_SET, \
     EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET, \
     EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET, \
+    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET
 
 
@@ -573,18 +575,28 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
         'equipment_instance_problem_diagnoses'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
-                .select_related(
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                    'alarm_type') \
+        query_set = \
+            super(type(self), self).get_queryset(request=request) \
+            .select_related(
+                'equipment_instance',
+                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                'alarm_type') \
+            .defer(
+                'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
+                'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated')
+
+        return query_set \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instance_alert_periods',
                         queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET),
                     Prefetch(
                         lookup='equipment_instance_problem_diagnoses',
-                        queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET)) \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
+                .defer(
+                    'date_range')
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
@@ -644,10 +656,16 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                          for equipment_problem_type in obj.equipment_problem_types.all())
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request) \
-                .select_related(
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
+        query_set = \
+            super(type(self), self).get_queryset(request) \
+            .select_related(
+                'equipment_instance',
+                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
+            .defer(
+                'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
+                'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated')
+
+        return query_set \
                 .prefetch_related(
                     'equipment_problem_types',
                     Prefetch(
@@ -655,7 +673,13 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                         queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET),
                     Prefetch(
                         lookup='equipment_instance_alert_periods',
-                        queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET)) \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
+                .defer(
+                    'date_range') \
+                .prefetch_related(
+                    'equipment_problem_types')
 
     @silk_profile(name='Admin: Equipment Problem Diagnoses')
     def changelist_view(self, *args, **kwargs):
@@ -768,7 +792,10 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instance_alarm_periods',
-                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET)) \
+                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET),
+                    Prefetch(
+                        lookup='equipment_instance_problem_diagnoses',
+                        queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_ID_ONLY_UNORDERED_QUERY_SET)) \
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
                 .defer(

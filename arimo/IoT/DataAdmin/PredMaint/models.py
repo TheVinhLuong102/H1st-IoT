@@ -649,7 +649,7 @@ class EquipmentInstanceAlarmPeriod(Model):
     def __str__(self):
         return '{}: {} from {}{}'.format(
                 self.equipment_instance,
-                self.alarm_type.name,
+                self.alarm_type.name.upper(),
                 self.from_utc_date_time,
                 ' to {} ({:.3f} Days)'.format(self.to_utc_date_time, self.duration_in_days)
                     if self.to_utc_date_time
