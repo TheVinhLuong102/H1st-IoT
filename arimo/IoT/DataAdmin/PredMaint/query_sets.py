@@ -161,9 +161,17 @@ EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET = \
 
 EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlarmPeriod.objects \
+    .defer(
+        'date_range',
+        'last_updated') \
     .select_related(
         'equipment_instance',
-        'alarm_type')
+        'alarm_type') \
+    .defer(
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+    .order_by(
+        'from_utc_date_time')
 
 
 ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET = \
@@ -191,10 +199,19 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET = \
 
 EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlertPeriod.objects \
+    .defer(
+        'date_range',
+        'last_updated') \
     .select_related(
         'equipment_unique_type_group',
         'equipment_instance',
-        'diagnosis_status')
+        'diagnosis_status') \
+    .defer(
+        'equipment_unique_type_group__equipment_general_type',
+        'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated',
+        'diagnosis_status__index')
 
 
 EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_ID_ONLY_UNORDERED_QUERY_SET = \
@@ -225,8 +242,14 @@ EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET = \
 
 EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET = \
     EquipmentInstanceProblemDiagnosis.objects \
+    .defer(
+        'date_range',
+        'last_updated') \
     .select_related(
         'equipment_instance') \
+    .defer(
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
     .prefetch_related(
         'equipment_problem_types')
 

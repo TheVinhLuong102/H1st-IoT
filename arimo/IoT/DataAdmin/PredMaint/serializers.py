@@ -183,7 +183,7 @@ class EquipmentProblemTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentInstanceAlarmPeriodShortFormRelatedField(RelatedField):
+class EquipmentInstanceAlarmPeriodRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
                 equipment_instance=value.equipment_instance.name,
@@ -195,7 +195,7 @@ class EquipmentInstanceAlarmPeriodShortFormRelatedField(RelatedField):
                 has_associated_equipment_instance_problem_diagnoses=value.has_associated_equipment_instance_problem_diagnoses)
 
 
-class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
+class EquipmentInstanceProblemDiagnosisRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
                 equipment_instance=value.equipment_instance.name,
@@ -211,7 +211,7 @@ class EquipmentInstanceProblemDiagnosisShortFormRelatedField(RelatedField):
                 has_associated_equipment_instance_alert_periods=value.has_associated_equipment_instance_alert_periods)
 
 
-class EquipmentInstanceAlertPeriodShortFormRelatedField(RelatedField):
+class EquipmentInstanceAlertPeriodRelatedField(RelatedField):
     def to_representation(self, value):
         return dict(
                 equipment_unique_type_group=value.equipment_unique_type_group.name,
@@ -225,6 +225,7 @@ class EquipmentInstanceAlertPeriodShortFormRelatedField(RelatedField):
                 approx_average_risk_score=value.approx_average_risk_score,
                 last_risk_score=value.last_risk_score,
                 ongoing=value.ongoing,
+                info=value.info,
                 diagnosis_status=value.diagnosis_status.name,
                 has_associated_equipment_instance_alarm_periods=value.has_associated_equipment_instance_alarm_periods,
                 has_associated_equipment_instance_problem_diagnoses=value.has_associated_equipment_instance_problem_diagnoses)
@@ -246,12 +247,12 @@ class EquipmentInstanceAlarmPeriodSerializer(WritableNestedModelSerializer):
             required=True)
 
     equipment_instance_alert_periods = \
-        EquipmentInstanceAlertPeriodShortFormRelatedField(
+        EquipmentInstanceAlertPeriodRelatedField(
             read_only=True,
             many=True)
 
     equipment_instance_problem_diagnoses = \
-        EquipmentInstanceProblemDiagnosisShortFormRelatedField(
+        EquipmentInstanceProblemDiagnosisRelatedField(
             read_only=True,
             many=True)
 
@@ -287,12 +288,12 @@ class EquipmentInstanceProblemDiagnosisSerializer(WritableNestedModelSerializer)
             required=True)
 
     equipment_instance_alarm_periods = \
-        EquipmentInstanceAlarmPeriodShortFormRelatedField(
+        EquipmentInstanceAlarmPeriodRelatedField(
             read_only=True,
             many=True)
 
     equipment_instance_alert_periods = \
-        EquipmentInstanceAlertPeriodShortFormRelatedField(
+        EquipmentInstanceAlertPeriodRelatedField(
             read_only=True,
             many=True)
 
@@ -343,12 +344,12 @@ class EquipmentInstanceAlertPeriodSerializer(ModelSerializer):
             required=False)
 
     equipment_instance_alarm_periods = \
-        EquipmentInstanceAlarmPeriodShortFormRelatedField(
+        EquipmentInstanceAlarmPeriodRelatedField(
             read_only=True,
             many=True)
 
     equipment_instance_problem_diagnoses = \
-        EquipmentInstanceProblemDiagnosisShortFormRelatedField(
+        EquipmentInstanceProblemDiagnosisRelatedField(
             read_only=True,
             many=True)
 

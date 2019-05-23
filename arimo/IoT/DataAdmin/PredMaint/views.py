@@ -414,7 +414,6 @@ class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
         'from_utc_date_time'
 
     ordering = \
-        'equipment_instance', \
         '-from_utc_date_time'
 
     pagination_class = LimitOffsetPagination
@@ -458,7 +457,6 @@ class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
         '-ongoing', \
         '-from_date', \
         '-to_date', \
-        'equipment_instance', \
         'dismissed'
 
     pagination_class = LimitOffsetPagination
