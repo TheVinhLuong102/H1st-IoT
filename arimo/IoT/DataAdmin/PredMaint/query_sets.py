@@ -162,11 +162,20 @@ ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET = \
 
 EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET = \
     EquipmentInstanceAlertPeriod.objects \
+    .defer(
+        'date_range',
+        'info',
+        'has_associated_equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_problem_diagnoses') \
     .select_related(
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
         'equipment_instance',
+        'diagnosis_status') \
+    .defer(
+        'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'diagnosis_status')
+        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated',
+        'diagnosis_status__index')
 
 
 EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET = \

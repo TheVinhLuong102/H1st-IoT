@@ -722,13 +722,13 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'has_associated_equipment_instance_alarm_periods', \
         'has_associated_equipment_instance_problem_diagnoses'
 
-    show_full_result_count = False
-
     search_fields = \
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name', \
         'equipment_instance__name', \
         'risk_score_name'
+
+    show_full_result_count = False
 
     form = EquipmentInstanceAlertPeriodForm
 
@@ -751,16 +751,29 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'has_associated_equipment_instance_problem_diagnoses'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request) \
-                .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_instance',
-                    'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                    'diagnosis_status') \
+        query_set = \
+            super(type(self), self).get_queryset(request) \
+            .select_related(
+                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+                'equipment_instance',
+                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+                'diagnosis_status') \
+            .defer(
+                'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
+                'equipment_instance__equipment_unique_type__description',
+                'equipment_instance__equipment_unique_type__last_updated',
+                'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated')
+
+        return query_set \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instance_alarm_periods',
-                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET)) \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
+                .defer(
+                    'date_range',
+                    'info')
 
     @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):
