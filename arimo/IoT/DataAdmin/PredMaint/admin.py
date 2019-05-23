@@ -23,12 +23,16 @@ from .models import \
     EquipmentUniqueTypeGroupServiceConfig, \
     Blueprint, \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile, \
-    EquipmentInstanceDailyRiskScore, \
     EquipmentProblemType, \
     EquipmentInstanceAlarmPeriod, \
     EquipmentInstanceProblemDiagnosis, \
     EquipmentInstanceAlertPeriod, \
     AlertDiagnosisStatus
+
+from .query_sets import \
+    EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET, \
+    EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET, \
+    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET
 
 
 class GlobalConfigAdmin(ModelAdmin):
@@ -577,22 +581,10 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instance_alert_periods',
-                        queryset=
-                            EquipmentInstanceAlertPeriod.objects
-                            .select_related(
-                                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                                'equipment_instance',
-                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                                'diagnosis_status')),
+                        queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET),
                     Prefetch(
                         lookup='equipment_instance_problem_diagnoses',
-                        queryset=
-                            EquipmentInstanceProblemDiagnosis.objects
-                            .select_related(
-                                'equipment_instance',
-                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
-                            .prefetch_related(
-                                'equipment_problem_types')))
+                        queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
@@ -660,21 +652,10 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
                     'equipment_problem_types',
                     Prefetch(
                         lookup='equipment_instance_alarm_periods',
-                        queryset=
-                            EquipmentInstanceAlarmPeriod.objects
-                            .select_related(
-                                'equipment_instance',
-                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                                'alarm_type')),
+                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET),
                     Prefetch(
                         lookup='equipment_instance_alert_periods',
-                        queryset=
-                            EquipmentInstanceAlertPeriod.objects
-                            .select_related(
-                                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                                'equipment_instance',
-                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                                'diagnosis_status')))
+                        queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Problem Diagnoses')
     def changelist_view(self, *args, **kwargs):
@@ -779,12 +760,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instance_alarm_periods',
-                        queryset=
-                            EquipmentInstanceAlarmPeriod.objects
-                            .select_related(
-                                'equipment_instance',
-                                'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-                                'alarm_type')))
+                        queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):

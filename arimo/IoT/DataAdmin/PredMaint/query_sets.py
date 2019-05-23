@@ -141,81 +141,87 @@ EQUIPMENT_PROBLEM_TYPE_REST_API_QUERY_SET = \
     EquipmentProblemType.objects.all()
 
 
+EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET = \
+    EquipmentInstanceAlarmPeriod.objects \
+    .select_related(
+        'equipment_instance',
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'alarm_type')
+
+
 EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlarmPeriod.objects \
     .select_related(
         'equipment_instance',
-        'alarm_type') \
-    .defer
-
-
-EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET = \
-    EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET \
-    .prefetch_related(
-    Prefetch(
-        lookup='equipment_instance_alert_periods',
-        queryset=
-        EquipmentInstanceAlertPeriod.objects
-            .select_related(
-            'equipment_unique_type_group',
-            'equipment_instance',
-            'diagnosis_status')),
-    Prefetch(
-        lookup='equipment_instance_problem_diagnoses',
-        queryset=
-        EquipmentInstanceProblemDiagnosis.objects
-            .select_related(
-            'equipment_instance')
-            .prefetch_related(
-            'equipment_problem_types')))
+        'alarm_type')
 
 
 ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET = \
     AlertDiagnosisStatus.objects.all()
 
 
-EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET = \
+EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET = \
+    EquipmentInstanceAlertPeriod.objects \
+    .select_related(
+        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+        'equipment_instance',
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'diagnosis_status')
+
+
+EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlertPeriod.objects \
     .select_related(
         'equipment_unique_type_group',
         'equipment_instance',
-        'diagnosis_status') \
+        'diagnosis_status')
+
+
+EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET = \
+    EquipmentInstanceProblemDiagnosis.objects \
+    .select_related(
+        'equipment_instance',
+        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
+    .prefetch_related(
+        'equipment_problem_types')
+
+
+EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET = \
+    EquipmentInstanceProblemDiagnosis.objects \
+    .select_related(
+        'equipment_instance') \
+    .prefetch_related(
+        'equipment_problem_types')
+
+
+EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET = \
+    EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET \
+    .prefetch_related(
+        Prefetch(
+            lookup='equipment_instance_alert_periods',
+            queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET),
+        Prefetch(
+            lookup='equipment_instance_problem_diagnoses',
+            queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET))
+
+
+EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET = \
+    EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET \
     .prefetch_related(
         Prefetch(
             lookup='equipment_instance_alarm_periods',
-            queryset=
-            EquipmentInstanceAlarmPeriod.objects
-                .select_related(
-                'equipment_instance',
-                'alarm_type')),
+            queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET),
         Prefetch(
             lookup='equipment_instance_problem_diagnoses',
-            queryset=
-            EquipmentInstanceProblemDiagnosis.objects
-                .select_related(
-                'equipment_instance')
-                .prefetch_related(
-                'equipment_problem_types')))
+            queryset=EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET))
 
 
 EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET = \
-EquipmentInstanceProblemDiagnosis.objects \
-    .select_related(
-    'equipment_instance') \
+    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET \
     .prefetch_related(
-    'equipment_problem_types',
-    Prefetch(
-        lookup='equipment_instance_alarm_periods',
-        queryset=
-        EquipmentInstanceAlarmPeriod.objects
-            .select_related(
-            'equipment_instance',
-            'alarm_type')),
-    Prefetch(
-        lookup='equipment_instance_alert_periods',
-        queryset=
-        EquipmentInstanceAlertPeriod.objects
-            .select_related(
-            'equipment_unique_type_group',
-            'equipment_instance',
-            'diagnosis_status')))
+        Prefetch(
+            lookup='equipment_instance_alarm_periods',
+            queryset=EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET),
+        Prefetch(
+            lookup='equipment_instance_alert_periods',
+            queryset=EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET))
