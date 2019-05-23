@@ -1212,10 +1212,6 @@ class Error(Model):
             blank=False,
             null=False)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = 'key',
 

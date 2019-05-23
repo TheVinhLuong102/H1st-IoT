@@ -622,8 +622,7 @@ site.register(
 class ErrorAdmin(ModelAdmin):
     list_display = \
         'key', \
-        'value', \
-        'last_updated'
+        'value'
 
     search_fields = \
         'key', \
