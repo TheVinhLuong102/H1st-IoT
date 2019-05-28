@@ -712,12 +712,6 @@ class EquipmentProblemPeriod(Model):
             blank=True,
             null=True)
 
-    ongoing = \
-        BooleanField(
-            blank=False,
-            null=False,
-            default=False)
-
     equipment_problem_types = \
         ManyToManyField(
             to=EquipmentProblemType,
@@ -783,10 +777,9 @@ class EquipmentProblemPeriod(Model):
             'from_date'
 
         ordering = \
-            '-ongoing', \
-            '-from_date', \
+            'dismissed', \
             '-to_date', \
-            'dismissed'
+            'from_date'
 
     def __str__(self):
         return '{} from {} {}{}{}'.format(
@@ -812,12 +805,10 @@ class EquipmentProblemPeriod(Model):
                 bounds='[]',
                 empty=False)
 
-        if self.to_date:
-            self.duration = (self.to_date - self.from_date).days + 1
-            self.ongoing = False
-        else:
-            self.duration = None
-            self.ongoing = True
+        self.duration = \
+            (self.to_date - self.from_date).days + 1 \
+            if self.to_date \
+            else None
 
         super(type(self), self).save(*args, **kwargs)
 

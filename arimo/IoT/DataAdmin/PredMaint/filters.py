@@ -605,8 +605,6 @@ class EquipmentInstanceProblemDiagnosisFilter(FilterSet):
                  # 'contained_by'
              ],
 
-             ongoing=['exact'],
-
              has_equipment_problems=['exact'],
 
              dismissed=['exact'],

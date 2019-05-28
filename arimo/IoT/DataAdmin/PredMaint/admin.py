@@ -617,7 +617,6 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'duration', \
-        'ongoing', \
         'equipment_problem_type_names', \
         'dismissed', \
         'comments', \
@@ -627,7 +626,6 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
 
     list_filter = \
         'equipment_instance__equipment_general_type__name', \
-        'ongoing', \
         'from_date', \
         'to_date', \
         'dismissed'
