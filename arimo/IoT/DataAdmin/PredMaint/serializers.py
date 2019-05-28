@@ -202,7 +202,6 @@ class EquipmentInstanceProblemDiagnosisRelatedField(RelatedField):
                 from_date=str(value.from_date),
                 to_date=str(value.to_date),
                 duration=value.duration,
-                ongoing=value.ongoing,
                 has_equipment_problems=value.has_equipment_problems,
                 equipment_problem_types=[i.name for i in value.equipment_problem_types.all()],
                 dismissed=value.dismissed,
