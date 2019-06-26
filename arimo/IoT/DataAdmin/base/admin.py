@@ -106,11 +106,11 @@ class EquipmentComponentAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
+        'directly_interacting_component_list', \
         'sub_component_list', \
         'equipment_data_field_list', \
         'n_equipment_unique_types', \
         'last_updated'
-        # 'directly_interacting_component_list', \
 
     list_filter = 'equipment_general_type__name',
 
@@ -162,9 +162,9 @@ class EquipmentComponentAdmin(ModelAdmin):
 
         return query_set \
                 .prefetch_related(
-                    # Prefetch(
-                    #     lookup='directly_interacts_with_components',
-                    #     queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
+                    Prefetch(
+                        lookup='directly_interacts_with_components',
+                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
                     Prefetch(
                         lookup='sub_components',
                         queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
@@ -174,9 +174,9 @@ class EquipmentComponentAdmin(ModelAdmin):
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
                 .prefetch_related(
-                    # Prefetch(
-                    #     lookup='directly_interacts_with_components',
-                    #     queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
+                    Prefetch(
+                        lookup='directly_interacts_with_components',
+                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='sub_components',
                         queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
