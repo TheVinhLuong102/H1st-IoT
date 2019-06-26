@@ -106,6 +106,7 @@ class EquipmentComponentAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
+        'sub_component_list', \
         'equipment_data_field_list', \
         'n_equipment_unique_types', \
         'last_updated'
@@ -121,6 +122,14 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     form = EquipmentComponentForm
 
+    def sub_component_list(self, obj):
+        n = obj.sub_components.count()
+        return '{}: {}'.format(
+                n, '; '.join(equipment_component.name
+                             for equipment_component in obj.sub_components.all())) \
+            if n \
+          else ''
+
     def equipment_data_field_list(self, obj):
         n = obj.equipment_data_fields.count()
         return '{}: {}'.format(
@@ -133,19 +142,32 @@ class EquipmentComponentAdmin(ModelAdmin):
         return obj.equipment_unique_types.count()
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
-                .select_related(
-                    'equipment_general_type') \
+        query_set = \
+            super(type(self), self).get_queryset(request=request) \
+            .select_related(
+                'equipment_general_type') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_types',
+                    queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))
+
+        return query_set \
                 .prefetch_related(
                     Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=
-                            EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET
-                            if request.resolver_match.url_name.endswith('_change')
-                            else EQUIPMENT_DATA_FIELD_STR_QUERY_SET),
+                        lookup='sub_components',
+                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
                     Prefetch(
-                        lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))
+                        lookup='equipment_data_fields',
+                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET)) \
+            if request.resolver_match.url_name.endswith('_change') \
+          else query_set \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='sub_components',
+                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
+                    Prefetch(
+                        lookup='equipment_data_fields',
+                        queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Components')
     def changelist_view(self, *args, **kwargs):

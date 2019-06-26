@@ -160,6 +160,13 @@ class EquipmentComponent(Model):
             blank=True,
             null=True)
 
+    sub_components = \
+        ManyToManyField(
+            to='EquipmentComponent',
+            related_name=RELATED_NAME + '_reverse',
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     equipment_data_fields = \
         ManyToManyField(
             to='EquipmentDataField',
