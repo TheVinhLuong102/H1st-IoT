@@ -165,7 +165,8 @@ class EquipmentComponent(Model):
             to='EquipmentComponent',
             related_name=RELATED_NAME + '_directly_interacts_reverse',
             related_query_name=RELATED_QUERY_NAME + '_directly_interacts_reverse',
-            blank=True)
+            blank=True,
+            symmetrical=True)
 
     sub_components = \
         ManyToManyField(
