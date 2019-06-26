@@ -164,14 +164,14 @@ class EquipmentComponent(Model):
         ManyToManyField(
             to='EquipmentComponent',
             related_name=RELATED_NAME + '_directly_interacts_reverse',
-            related_query_name=RELATED_QUERY_NAME,
+            related_query_name=RELATED_QUERY_NAME + '_directly_interacts_reverse',
             blank=True)
 
     sub_components = \
         ManyToManyField(
             to='EquipmentComponent',
             related_name=RELATED_NAME + '_sub_reverse',
-            related_query_name=RELATED_QUERY_NAME,
+            related_query_name=RELATED_QUERY_NAME + '_sub_reverse',
             blank=True,
             symmetrical=False)
 
