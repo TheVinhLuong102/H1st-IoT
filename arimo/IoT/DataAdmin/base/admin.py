@@ -106,6 +106,7 @@ class EquipmentComponentAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
+        'directly_interacting_component_list', \
         'sub_component_list', \
         'equipment_data_field_list', \
         'n_equipment_unique_types', \
@@ -121,6 +122,14 @@ class EquipmentComponentAdmin(ModelAdmin):
     show_full_result_count = False
 
     form = EquipmentComponentForm
+
+    def directly_interacting_component_list(self, obj):
+        n = obj.directly_interacts_with_components.count()
+        return '{}: {}'.format(
+                n, '; '.join(equipment_component.name
+                             for equipment_component in obj.directly_interacts_with_components.all())) \
+            if n \
+          else ''
 
     def sub_component_list(self, obj):
         n = obj.sub_components.count()
@@ -154,6 +163,9 @@ class EquipmentComponentAdmin(ModelAdmin):
         return query_set \
                 .prefetch_related(
                     Prefetch(
+                        lookup='directly_interacts_with_components',
+                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
+                    Prefetch(
                         lookup='sub_components',
                         queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
                     Prefetch(
@@ -162,6 +174,9 @@ class EquipmentComponentAdmin(ModelAdmin):
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
                 .prefetch_related(
+                    Prefetch(
+                        lookup='directly_interacts_with_components',
+                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='sub_components',
                         queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
