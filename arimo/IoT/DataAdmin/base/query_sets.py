@@ -286,7 +286,11 @@ EQUIPMENT_INSTANCE_REST_API_QUERY_SET = \
         'equipment_facility') \
     .defer(
         'equipment_unique_type__last_updated',
-        'equipment_facility__info', 'equipment_facility__last_updated')
+        'equipment_facility__info', 'equipment_facility__last_updated') \
+    .prefetch_related(
+        Prefetch(
+            lookup='equipment_unique_type_groups',
+            queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET))
 
 
 EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET = \

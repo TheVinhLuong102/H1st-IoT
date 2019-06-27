@@ -345,6 +345,12 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             many=False,
             required=False)
 
+    equipment_unique_type_groups = \
+        EquipmentUniqueTypeGroupRelatedField(
+            queryset=EquipmentUniqueTypeGroup.objects.all(), read_only=False,
+            many=True,
+            required=False)
+
     class Meta:
         model = EquipmentInstance
 
@@ -353,7 +359,8 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             'equipment_unique_type', \
             'equipment_facility', \
             'name', \
-            'info'
+            'info', \
+            'equipment_unique_type_groups'
 
 
 class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
