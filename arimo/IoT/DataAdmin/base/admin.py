@@ -330,9 +330,9 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         return obj.equipment_data_fields.count()
 
     def n_equipment_instances(self, obj):
-        return sum(equipment_unique_type.equipment_instances.count()
-                   for equipment_unique_type in obj.equipment_unique_types.all()) \
-            if obj.equipment_unique_types.count() \
+        n = obj.equipment_instances.count()
+        return n \
+            if n \
           else ''
 
     def get_queryset(self, request):
@@ -357,18 +357,16 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_types',
-                        queryset=
-                            EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET
-                            .prefetch_related(
-                                Prefetch(
-                                    lookup='equipment_instances',
-                                    queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))),
+                        queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='equipment_components',
                         queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET),
+                    Prefetch(
+                        lookup='equipment_instances',
+                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
