@@ -47,6 +47,15 @@ EQUIPMENT_DATA_FIELDS_MODEL_MULTIPLE_CHOICE_FIELD = \
         required=False)
 
 
+EQUIPMENT_UNIQUE_TYPE_GROUPS_MODEL_MULTIPLE_CHOICE_FIELD = \
+    ModelMultipleChoiceField(
+        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_STR_QUERY_SET,
+        widget=autocomplete.ModelSelect2Multiple(
+                url=EquipmentUniqueTypeGroupAutoComplete.name,
+                attrs={'data-minimum-input-length': 1}),
+        required=False)
+
+
 EQUIPMENT_UNIQUE_TYPES_MODEL_MULTIPLE_CHOICE_FIELD = \
     ModelMultipleChoiceField(
         queryset=EQUIPMENT_UNIQUE_TYPE_STR_QUERY_SET,
@@ -86,15 +95,8 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
 
 class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
     equipment_components = EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD
-
     equipment_data_fields = EQUIPMENT_DATA_FIELDS_MODEL_MULTIPLE_CHOICE_FIELD
-
-    equipment_unique_type_groups = \
-        ModelMultipleChoiceField(
-            queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_STR_QUERY_SET,
-            widget=autocomplete.ModelSelect2Multiple(
-                    url=EquipmentUniqueTypeGroupAutoComplete.name),
-            required=False)
+    equipment_unique_type_groups = EQUIPMENT_UNIQUE_TYPE_GROUPS_MODEL_MULTIPLE_CHOICE_FIELD
 
     class Meta:
         model = EquipmentUniqueType
@@ -122,6 +124,8 @@ class EquipmentInstanceForm(autocomplete.FutureModelForm):
             widget=autocomplete.ModelSelect2(
                     url=EquipmentFacilityAutoComplete.name,
                     attrs={'data-minimum-input-length': 1}))
+
+    equipment_unique_type_groups = EQUIPMENT_UNIQUE_TYPE_GROUPS_MODEL_MULTIPLE_CHOICE_FIELD
 
     class Meta:
         model = EquipmentInstance

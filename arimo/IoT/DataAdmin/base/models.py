@@ -966,6 +966,13 @@ class EquipmentInstance(Model):
             blank=True,
             null=True)
 
+    equipment_unique_type_groups = \
+        ManyToManyField(
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=True)
+
     last_updated = \
         DateTimeField(
             auto_now=True)

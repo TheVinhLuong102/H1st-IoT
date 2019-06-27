@@ -584,6 +584,10 @@ class EquipmentInstanceAdmin(ModelAdmin):
                     'equipment_unique_type__equipment_general_type',
                     'equipment_unique_type__description',
                     'equipment_unique_type__last_updated') \
+                .prefetch_related(
+                    Prefetch(
+                        lookup='equipment_unique_type_groups',
+                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET)) \
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
                 .select_related(
