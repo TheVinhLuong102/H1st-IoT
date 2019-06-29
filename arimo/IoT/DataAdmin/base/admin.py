@@ -330,10 +330,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         return obj.equipment_data_fields.count()
 
     def n_equipment_instances(self, obj):
-        n = obj.equipment_instances.count()
-        return n \
-            if n \
-          else ''
+        return obj.equipment_instances.count()
 
     def get_queryset(self, request):
         query_set = \
