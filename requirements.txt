@@ -12,4 +12,4 @@ Markdown >= 3.1.1
 Pandas >= 0.24.2
 PsycoPG2-binary >= 2.8.3
 Python-DateUtil >= 2.7.5
-Ruamel.YAML >= 0.15.97
+Ruamel.YAML >= 0.15.98
