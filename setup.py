@@ -32,9 +32,11 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
                   else ('DjangoRESTFramework-Filters >= 0.10.2, < 1'   # last 0.x ver compat w/ Py2
                         if six.PY2 and lower_s.startswith('djangorestframework-filters')
-                        else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
-                              if six.PY2 and lower_s.startswith('django-filter')
-                              else s))))
+                        else ('DjangoRESTFramework >= 3.9.4'   # last 0.x ver compat w/ Py2
+                              if six.PY2 and lower_s.startswith('djangorestframework')
+                              else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
+                                    if six.PY2 and lower_s.startswith('django-filter')
+                                    else s)))))
 
 setup(
     name=_metadata['PACKAGE'],
