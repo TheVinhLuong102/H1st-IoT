@@ -1,7 +1,5 @@
 import os
 from ruamel import yaml
-import six
-import warnings
 
 from django.conf import settings
 from django.core.management import call_command
@@ -9,12 +7,6 @@ from django.core.wsgi import get_wsgi_application
 
 import arimo.IoT.DataAdmin._django_root.settings
 from arimo.IoT.DataAdmin.util import _JSON_EXT, _PARQUET_EXT, _YAML_EXT
-
-
-_STR_CLASSES = \
-    (str, unicode) \
-    if six.PY2 \
-    else str
 
 
 class Project(object):
@@ -34,16 +26,10 @@ class Project(object):
     _DATE_TIME_COL_NAME = 'date_time'
 
     _DEFAULT_PARAMS = \
-        dict(
-            s3=dict(
-                BUCKET_NAME_GLOBAL_CONFIG_KEY='S3_BUCKET',
-                ACCESS_KEY_ID_GLOBAL_CONFIG_KEY='AWS_ACCESS_KEY_ID',
-                SECRET_ACCESS_KEY_GLOBAL_CONFIG_KEY='AWS_SECRET_ACCESS_KEY',
-
-                equipment_data=dict(
-                    dir_prefix='.arimo/IoT/EquipmentData',
-                    raw_dir_prefix='.arimo/IoT/EquipmentData/raw',
-                    daily_agg_dir_prefix='.arimo/IoT/EquipmentData/DailyAgg')))
+        dict(s3=dict(equipment_data=dict(
+                         dir_prefix='.arimo/IoT/EquipmentData',
+                         raw_dir_prefix='.arimo/IoT/EquipmentData/raw',
+                         daily_agg_dir_prefix='.arimo/IoT/EquipmentData/DailyAgg')))
 
     def __init__(self, params, **kwargs):
         from arimo.util import Namespace
@@ -131,37 +117,20 @@ class Project(object):
 
         self.params.s3.bucket = \
             self.data.GlobalConfigs.get_or_create(
-                key=self.params.s3.BUCKET_NAME_GLOBAL_CONFIG_KEY)[0].value
+                key='S3_BUCKET')[0].value
 
         if self.params.s3.bucket:
-            assert isinstance(self.params.s3.bucket, _STR_CLASSES), \
-                '*** S3 BUCKET = {} ***'.format(self.params.s3.bucket)
-
             if 'access_key_id' in self.params.s3:
                 assert 'secret_access_key' in self.params.s3
 
             else:
                 self.params.s3.access_key_id = \
                     self.data.GlobalConfigs.get_or_create(
-                        key=self.params.s3.ACCESS_KEY_ID_GLOBAL_CONFIG_KEY)[0].value
+                        key='AWS_ACCESS_KEY_ID')[0].value
 
                 self.params.s3.secret_access_key = \
                     self.data.GlobalConfigs.get_or_create(
-                        key=self.params.s3.SECRET_ACCESS_KEY_GLOBAL_CONFIG_KEY)[0].value
-
-            if self.params.s3.access_key_id is None:
-                warnings.warn(
-                    '*** AWS ACCESS KEY ID = {} ***'.format(self.params.s3.access_key_id))
-            else:
-                assert isinstance(self.params.s3.access_key_id, _STR_CLASSES), \
-                    '*** AWS ACCESS KEY ID = {} ***'.format(self.params.s3.access_key_id)
-
-            if self.params.s3.secret_access_key is None:
-                warnings.warn(
-                    '*** AWS SECRET ACCESS KEY = {} ***'.format(self.params.s3.secret_access_key))
-            else:
-                assert isinstance(self.params.s3.secret_access_key, _STR_CLASSES), \
-                    '*** AWS SECRET ACCESS KEY = {} ***'.format(self.params.s3.secret_access_key)
+                        key='AWS_SECRET_ACCESS_KEY')[0].value
 
             self.s3_client = \
                 s3.client(
