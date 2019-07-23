@@ -8,7 +8,6 @@ PsycoPG2-binary >= 2.8.3
 DjangoRESTFramework >= 3.10.1
 DjangoRESTFramework-Filters >= 1.0.0.dev0
 DRF-Writable-Nested >= 0.5.1
-CoreAPI >= 2.3.3
 
 # deployment-related
 AWSEBCLI >= 3.15.2
