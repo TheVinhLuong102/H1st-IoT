@@ -55,7 +55,8 @@ class Project(object):
             GlobalConfig, \
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, \
-            EquipmentComponent, EquipmentDataField, \
+            EquipmentComponent, \
+            EquipmentDataField, \
             EquipmentUniqueTypeGroup, EquipmentUniqueType, \
             EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
             EquipmentFacility, EquipmentSystem, \
@@ -70,6 +71,7 @@ class Project(object):
                 EquipmentGeneralTypes=EquipmentGeneralType.objects,
 
                 EquipmentComponents=EquipmentComponent.objects,
+
                 EquipmentDataFields=EquipmentDataField.objects,
 
                 EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
@@ -84,39 +86,23 @@ class Project(object):
 
                 Errors=Error.objects)
 
-        self.CAT_DATA_TYPE = \
-            DataType.objects.get_or_create(
-                name=self._CAT_DATA_TYPE_NAME,
-                defaults=None)[0]
+        self.CAT_DATA_TYPE = DataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
 
-        self.NUM_DATA_TYPE = \
-            DataType.objects.get_or_create(
-                name=self._NUM_DATA_TYPE_NAME,
-                defaults=None)[0]
+        self.NUM_DATA_TYPE = DataType.objects.get_or_create(name=self._NUM_DATA_TYPE_NAME)[0]
 
         self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
+            EquipmentDataFieldType.objects.get_or_create(name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
 
         self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
+            EquipmentDataFieldType.objects.get_or_create(name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
 
         self.CALC_EQUIPMENT_DATA_FIELD_TYPE = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
+            EquipmentDataFieldType.objects.get_or_create(name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
 
         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
-            EquipmentDataFieldType.objects.get_or_create(
-                name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME,
-                defaults=None)[0]
+            EquipmentDataFieldType.objects.get_or_create(name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
 
-        self.params.s3.bucket = \
-            self.data.GlobalConfigs.get_or_create(
-                key='S3_BUCKET')[0].value
+        self.params.s3.bucket = self.data.GlobalConfigs.get_or_create(key='S3_BUCKET')[0].value
 
         if self.params.s3.bucket:
             if 'access_key_id' in self.params.s3:
