@@ -18,8 +18,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-from rest_framework.documentation import include_docs_urls
-
 from ..base.urls import URL_PATTERNS as BASE_URL_PATTERNS
 from ..PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
@@ -36,7 +34,6 @@ urlpatterns = [
 
     # API URLs
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/doc/', include_docs_urls(title='Arimo IoT REST API')),
 
     # Silk Profiling URLs
     url(r'^silk/', include('silk.urls', namespace='silk'))
