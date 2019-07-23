@@ -201,18 +201,18 @@ class Project(object):
                     if set_t_col
                     else None,
                 verbose=verbose, **kwargs)
-               if _spark
-               else S3ParquetDataFeeder(
-                        path=path,
-                        aws_access_key_id=self.params.s3.access_key_id,
-                        aws_secret_access_key=self.params.s3.secret_access_key,
-                        iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
-                            if set_i_col
-                            else None,
-                        tCol=self._DATE_TIME_COL_NAME
-                            if set_t_col
-                            else None,
-                        verbose=verbose, **kwargs)) \
+              if _spark
+              else S3ParquetDataFeeder(
+                    path=path,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                        if set_i_col
+                        else None,
+                    tCol=self._DATE_TIME_COL_NAME
+                        if set_t_col
+                        else None,
+                    verbose=verbose, **kwargs)) \
             if _from_files \
             else DDF.load(
                     path=path,
