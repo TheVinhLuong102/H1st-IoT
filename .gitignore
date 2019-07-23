@@ -8,3 +8,5 @@ src/
 # IntelliJ IDEA files
 *.iml
 .idea/
+
+.venv
