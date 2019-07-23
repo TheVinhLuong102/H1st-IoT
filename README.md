@@ -9,4 +9,6 @@ Sync config files from `arimo-iot-pm` S3 bucket down to `~/.arimo/IoT/`.
 
 The names of the YAML config files are the Project Names.
 
+Have an `[arimo]` profile with a key pair set up in `~/.aws/credentials`. 
+
 Run `bin/deploy <Project-Name>` from repo's root dir.
