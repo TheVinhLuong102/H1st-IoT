@@ -1,5 +1,4 @@
 import os
-from ruamel import yaml
 
 from django.conf import settings
 from django.core.management import call_command
@@ -245,11 +244,3 @@ class Project(object):
         assert {self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL, self._DATE_TIME_COL_NAME}.issubset(df.columns)
 
         return df
-
-
-def project(name='TEST'):
-    return Project(
-            params=yaml.safe_load(
-                    open(os.path.join(
-                            Project.CONFIG_DIR_PATH,
-                            name + _YAML_EXT))))
