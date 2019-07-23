@@ -24,6 +24,9 @@ _STR_CLASSES = \
 class Project(object):
     CONFIG_DIR_PATH = os.path.expanduser('~/.arimo/IoT')
 
+    if not os.path.isdir(CONFIG_DIR_PATH):
+        os.makedirs(CONFIG_DIR_PATH)
+
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
 
