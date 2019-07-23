@@ -1,15 +1,12 @@
-AWSEBCLI >= 3.15.2
-CoreAPI >= 2.3.3
-CoreAPI-CLI >= 1.0.9
-Django >= 2.1.5
-Django-AutoComplete-Light >= 3.3.4
-Django-Filter >= 2.1.0
-DjangoRESTFramework >= 3.9.4
+# Django
+Django >= 2.2.3
+Django-AutoComplete-Light >= 3.3.5
+DjangoRESTFramework >= 3.10.1
 DjangoRESTFramework-Filters >= 1.0.0.dev0
 DRF-Writable-Nested >= 0.5.1
 Django-Silk >= 3.0.2
-Markdown >= 3.1.1
-Pandas >= 0.24.2
 PsycoPG2-binary >= 2.8.3
-Python-DateUtil >= 2.8.0
-Ruamel.YAML >= 0.15.98
+
+# deployment-related
+AWSEBCLI >= 3.15.2
+Ruamel.YAML >= 0.15.100
