@@ -5,10 +5,6 @@ dist/
 src/
 *egg-info*
 
-# Sphinx doc
-docs/*.rst
-docs/_build/
-
 # IntelliJ IDEA files
 *.iml
 .idea/

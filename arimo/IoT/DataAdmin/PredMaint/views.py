@@ -45,6 +45,7 @@ from .serializers import \
     AlertDiagnosisStatusSerializer, \
     EquipmentInstanceAlertPeriodSerializer
 
+
 class GlobalConfigViewSet(ModelViewSet):
     """
     list:
