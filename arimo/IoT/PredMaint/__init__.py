@@ -1066,8 +1066,6 @@ class Project(object):
             _force_calc=False, re_calc_daily=False,
             __batch_size__=10 ** 3,
             sql_filter=None):
-        _ARROW_PARQUET_MAX_N_ROWS_PER_FILE = 10 ** 9   # https://issues.apache.org/jira/browse/ARROW-2369
-
         equipment_unique_type_group = \
             self.data.EquipmentUniqueTypeGroups.get(
                 equipment_general_type__name=equipment_general_type_name,
@@ -1108,9 +1106,7 @@ class Project(object):
             _mth_str = mth_str
 
             while _mth_str <= to_mth_str:
-                print('*** SCORING "{}" FOR {} ***'
-                    .format(equipment_unique_type_group_data_set_name,
-                            _mth_str))
+                print('*** SCORING {} FOR {} ***'.format(equipment_unique_type_group_data_set_name, _mth_str))
 
                 for i, _trained_to_date in enumerate(_trained_to_dates):
                     if str(_trained_to_date) > _mth_str:
@@ -1119,9 +1115,7 @@ class Project(object):
 
                         break
 
-                active_ppp_blueprints_train_to_date = \
-                    active_ppp_blueprints.filter(
-                        trained_to_date=_trained_to_date)
+                active_ppp_blueprints_train_to_date = active_ppp_blueprints.filter(trained_to_date=_trained_to_date)
 
                 active_ppp_blueprint_train_to_date = \
                     active_ppp_blueprints_train_to_date.get(
@@ -1176,8 +1170,8 @@ class Project(object):
                         _to_calc = True
 
                     except Exception as err:
-                        print('*** NO DATA FOR "{}" IN {}: {} ***'
-                            .format(equipment_unique_type_group_data_set_name, _mth_str, err))
+                        print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                                equipment_unique_type_group_data_set_name, _mth_str, err))
 
                         _to_calc = False
 
@@ -1239,13 +1233,12 @@ class Project(object):
 
                         break
 
-                active_ppp_blueprints_train_to_date = \
-                    active_ppp_blueprints.filter(
-                        trained_to_date=_trained_to_date)
+                active_ppp_blueprints_train_to_date = active_ppp_blueprints.filter(trained_to_date=_trained_to_date)
 
                 active_ppp_blueprint_train_to_date = \
                     active_ppp_blueprints_train_to_date.get(
-                        timestamp=max(bp.timestamp for bp in active_ppp_blueprints_train_to_date))
+                        timestamp=max(bp.timestamp
+                                      for bp in active_ppp_blueprints_train_to_date))
 
                 blueprint_uuid = active_ppp_blueprint_train_to_date.uuid
 
@@ -1284,12 +1277,12 @@ class Project(object):
                             blueprints_to_calc_for_dates[active_ppp_blueprint_train_to_date] = [_date]
 
                     except Exception as err:
-                        print('*** NO DATA FOR {} ON {}: {} ***'
-                            .format(equipment_unique_type_group_data_set_name, _date, err))
+                        print('*** NO DATA FOR {} ON {}: {} ***'.format(
+                                equipment_unique_type_group_data_set_name, _date, err))
 
             if blueprints_to_calc_for_dates:
-                print('*** SCORING "{}" BY {} ***'
-                    .format(equipment_unique_type_group_data_set_name, blueprints_to_calc_for_dates))
+                print('*** SCORING "{}" BY {} ***'.format(
+                        equipment_unique_type_group_data_set_name, blueprints_to_calc_for_dates))
 
                 err_mults_s3_dir_path = \
                     os.path.join(
@@ -1376,9 +1369,9 @@ class Project(object):
                 if monthly \
                 else min(calc_daily_for_dates)
 
-            print('*** AGGREGATING DAILY ERROR MULTIPLES FOR "{}" ON ~{:,} DATES FROM {} TO {} ***'
-                .format(equipment_unique_type_group_data_set_name,
-                        len(calc_daily_for_dates), min(calc_daily_for_dates), max(calc_daily_for_dates)))
+            print('*** AGGREGATING DAILY ERROR MULTIPLES FOR "{}" ON ~{:,} DATES FROM {} TO {} ***'.format(
+                    equipment_unique_type_group_data_set_name,
+                    len(calc_daily_for_dates), min(calc_daily_for_dates), max(calc_daily_for_dates)))
 
             err_mults_s3_parquet_ddf = \
                 S3ParquetDistributedDataFrame(
@@ -1399,8 +1392,7 @@ class Project(object):
             label_var_names = []
             n_label_var_names = 0
 
-            for label_var_name in \
-                    self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name]:
+            for label_var_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name]:
                 if 'MAE__{}'.format(label_var_name) in err_mults_s3_parquet_ddf.columns:
                     label_var_names.append(label_var_name)
                     n_label_var_names += 1
@@ -1519,13 +1511,15 @@ class Project(object):
                     *daily_mean_abs_mae_mult_col_names,
                     id_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME)
 
-            _tmp_parquet_dir_path = \
+            anom_scores_parquet_file_name = 'PPPAnomScores' + _PARQUET_EXT
+
+            _tmp_parquet_file_path = \
                 os.path.join(
                     _tmp_dir_path,
-                    'AnomScores' + _PARQUET_EXT)
+                    anom_scores_parquet_file_name)
 
             fs.mkdir(
-                dir=_tmp_parquet_dir_path,
+                dir=_tmp_parquet_file_path,
                 hdfs=False)
 
             anom_scores_df.columns = anom_scores_df.columns.map(str)   # Arrow Parquet columns cannot be Unicode
@@ -1536,15 +1530,11 @@ class Project(object):
                 .format(n_rows, anom_scores_df.columns.tolist()), end='')
             tic = time.time()
 
-            for i in tqdm.tqdm(range(n_rows // _ARROW_PARQUET_MAX_N_ROWS_PER_FILE + 1)):
-                anom_scores_df.iloc[(i * _ARROW_PARQUET_MAX_N_ROWS_PER_FILE):((i + 1) * _ARROW_PARQUET_MAX_N_ROWS_PER_FILE)] \
-                    .to_parquet(
-                        fname=os.path.join(
-                            _tmp_parquet_dir_path,
-                            'fromRow{}.snappy.parquet'.format(_ARROW_PARQUET_MAX_N_ROWS_PER_FILE * i)),
-                        engine='pyarrow',
-                        compression='snappy',
-                        flavor='spark')
+            anom_scores_df.to_parquet(
+                fname=_tmp_parquet_file_path,
+                engine='pyarrow',
+                compression='snappy',
+                flavor='spark')
 
             toc = time.time()
             print('done!   <{:,.1f} m>'.format((toc - tic) / 60))
@@ -1552,14 +1542,15 @@ class Project(object):
             print('Uploading Anom Scores Parquet Files... ', end='')
             tic = time.time()
 
-            s3.sync(
-                from_dir_path=_tmp_parquet_dir_path,
-                to_dir_path=
-                    os.path.join(
-                        's3://{}'.format(self.params.s3.bucket),
-                        self.params.s3.anom_scores.dir_prefix,
-                        equipment_unique_type_group_data_set_name + _PARQUET_EXT),
-                delete=True, quiet=True,
+            s3.mv(
+                from_path=_tmp_parquet_file_path,
+                to_path=os.path.join(
+                            's3://{}'.format(self.params.s3.bucket),
+                            self.params.s3.anom_scores.dir_prefix,
+                            equipment_unique_type_group_data_set_name,
+                            anom_scores_parquet_file_name),
+                is_dir=False,
+                quiet=True,
                 access_key_id=self.params.s3.access_key_id,
                 secret_access_key=self.params.s3.secret_access_key,
                 verbose=True)
@@ -1577,9 +1568,7 @@ class Project(object):
                 date__gte=copy_anom_scores_from_date) \
             .delete()
 
-            anom_scores_df = \
-                anom_scores_df.loc[
-                    anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
+            anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
             equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
@@ -1776,22 +1765,23 @@ class Project(object):
                             if ppp_monitored_equipment_data_field_cumulative_excess_risk_scores
                             else {})))
 
+        equipment_unique_type_group_data_set_name = \
+            '{}---{}'.format(
+                equipment_general_type_name.upper(),
+                equipment_unique_type_group_name)
+
         if _redo:
-            print('*** DELETING EXISTING ANOM ALERTS FOR {}---{}: {} ***'.format(
-                    equipment_general_type_name.upper(), equipment_unique_type_group_name,
-                    self.data.PredMaintAlerts.filter(
-                        equipment_unique_type_group=equipment_unique_type_group_name).delete()))
+            print('*** DELETING EXISTING ANOM ALERTS FOR {}: {} ***'.format(
+                    equipment_unique_type_group_data_set_name,
+                    self.data.PredMaintAlerts.filter(equipment_unique_type_group=equipment_unique_type_group).delete()))
 
         ppp_anom_scores_s3_parquet_df = \
             S3ParquetDataFeeder(
-                path=os.path.join(
-                        's3://{}/{}'.format(
-                            self.params.s3.bucket,
-                            self.params.s3.anom_scores.dir_prefix),
-                        '{}---{}{}'.format(
-                            equipment_general_type_name.upper(),
-                            equipment_unique_type_group_name,
-                            _PARQUET_EXT)),
+                path='s3://{}/{}/{}/PPPAnomScores{}'.format(
+                        self.params.s3.bucket,
+                        self.params.s3.anom_scores.dir_prefix,
+                        equipment_unique_type_group_data_set_name,
+                        _PARQUET_EXT),
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
                 verbose=True)
