@@ -12,7 +12,6 @@ from pyspark.sql import functions
 from ruamel import yaml
 from scipy.stats import pearsonr
 import tempfile
-import time
 import tqdm
 import uuid
 
@@ -1521,23 +1520,11 @@ class Project(object):
 
             anom_scores_df.columns = anom_scores_df.columns.map(str)   # Arrow Parquet columns cannot be Unicode
 
-            n_rows = len(anom_scores_df)
-
-            print('Writing {:,} Rows of Anom Scores to Parquet Files with Columns {}... '
-                .format(n_rows, anom_scores_df.columns.tolist()), end='')
-            tic = time.time()
-
             anom_scores_df.to_parquet(
                 fname=_tmp_parquet_file_path,
                 engine='pyarrow',
                 compression='snappy',
                 flavor='spark')
-
-            toc = time.time()
-            print('done!   <{:,.1f} m>'.format((toc - tic) / 60))
-
-            print('Uploading Anom Scores Parquet Files... ', end='')
-            tic = time.time()
 
             s3.mv(
                 from_path=_tmp_parquet_file_path,
@@ -1551,9 +1538,6 @@ class Project(object):
                 access_key_id=self.params.s3.access_key_id,
                 secret_access_key=self.params.s3.secret_access_key,
                 verbose=True)
-
-            toc = time.time()
-            print('done!   <{:,.1f} m>'.format((toc - tic) / 60))
 
             fs.rm(path=_tmp_dir_path,
                   is_dir=True,
@@ -1578,9 +1562,7 @@ class Project(object):
 
             from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
-            msg = 'Writing Anom Scores for {} {} to DB...'.format(equipment_general_type_name.upper(), equipment_unique_type_group_name)
-            print(msg)
-            tic = time.time()
+            print('Writing Anom Scores for {} {} to DB...'.format(equipment_general_type_name.upper(), equipment_unique_type_group_name))
 
             for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                 _anom_scores_df = \
@@ -1598,9 +1580,6 @@ class Project(object):
                     for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                         for risk_score_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                             if pandas.notnull(row[risk_score_name]))
-
-            toc = time.time()
-            print(msg + ' done!   <{:,.1f} m>'.format((toc - tic) / 60))
 
             date_time = datetime.datetime.utcnow()
 
@@ -1634,8 +1613,6 @@ class Project(object):
         from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
         msg = 'Writing Anom Scores into DB...'
-        print(msg)
-        tic = time.time()
 
         for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
             _anom_scores_df = \
