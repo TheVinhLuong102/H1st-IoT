@@ -1519,10 +1519,6 @@ class Project(object):
                     _tmp_dir_path,
                     anom_scores_parquet_file_name)
 
-            fs.mkdir(
-                dir=_tmp_parquet_file_path,
-                hdfs=False)
-
             anom_scores_df.columns = anom_scores_df.columns.map(str)   # Arrow Parquet columns cannot be Unicode
 
             n_rows = len(anom_scores_df)
