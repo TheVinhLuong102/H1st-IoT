@@ -2546,7 +2546,7 @@ def project(name, download_config_file=True):
               .format(Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
               end='')
 
-        key, secret = key_pair(profile='arimo')
+        key, secret = key_pair(profile=Project._AWS_PROFILE_NAME)
 
         s3.client(
             access_key_id=key,
