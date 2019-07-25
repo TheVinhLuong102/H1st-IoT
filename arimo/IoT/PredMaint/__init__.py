@@ -1973,7 +1973,8 @@ class Project(object):
     def agg_daily_equipment_data(
             self,
             equipment_general_type_name, equipment_unique_type_group_name,
-            date, to_date=None, monthly=False, _force_re_agg=False, _force_re_insert_to_db=False):
+            date, to_date=None, monthly=False,
+            _force_re_agg=False, _force_re_insert_to_db=False):
         equipment_unique_type_group_data_set_name = \
             '{}---{}'.format(
                 equipment_general_type_name.upper(),
@@ -2012,8 +2013,8 @@ class Project(object):
             _mth_str = mth_str
 
             while _mth_str <= to_mth_str:
-                print('*** AGGREGATING "{}" DATA FOR {} ***'
-                    .format(equipment_unique_type_group_data_set_name, _mth_str))
+                print('*** AGGREGATING "{}" DATA FOR {} ***'.format(
+                        equipment_unique_type_group_data_set_name, _mth_str))
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2023,8 +2024,8 @@ class Project(object):
                              _mth_str + '-31'))
 
                 except Exception as err:
-                    print('*** NO DATA FOR "{}" IN {}: {} ***'
-                        .format(equipment_unique_type_group_data_set_name, _mth_str, err))
+                    print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                            equipment_unique_type_group_data_set_name, _mth_str, err))
 
                     _mth_str = month_str(_mth_str, n_months_offset=1)
 
@@ -2143,8 +2144,8 @@ class Project(object):
                             
                     continue
 
-                print('*** AGGREGATING "{}" DATA FOR {} ***'
-                    .format(equipment_unique_type_group_data_set_name, _date))
+                print('*** AGGREGATING "{}" DATA FOR {} ***'.format(
+                        equipment_unique_type_group_data_set_name, _date))
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2153,8 +2154,8 @@ class Project(object):
                              _date))
 
                 except Exception as err:
-                    print('*** NO DATA FOR "{}" IN {}: {} ***'
-                        .format(equipment_unique_type_group_data_set_name, _date, err))
+                    print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                            equipment_unique_type_group_data_set_name, _date, err))
 
                     continue
 
