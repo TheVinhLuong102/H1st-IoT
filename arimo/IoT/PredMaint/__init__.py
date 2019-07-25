@@ -1562,7 +1562,8 @@ class Project(object):
 
             from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
-            print('Writing Anom Scores for {} {} to DB...'.format(equipment_general_type_name.upper(), equipment_unique_type_group_name))
+            print('Writing {} Anom Scores to DB: {}...'.format(
+                    equipment_unique_type_group_data_set_name, anom_scores_df.columns))
 
             for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                 _anom_scores_df = \
