@@ -8,20 +8,17 @@ import numpy
 import os
 import pandas
 from psycopg2.extras import DateRange
+from pyspark.sql import functions
 from ruamel import yaml
 from scipy.stats import pearsonr
-import six
 import tempfile
 import time
 import tqdm
 import uuid
 
-from pyspark.sql import functions
-
 import arimo.backend
-from arimo.blueprints.base import AbstractPPPBlueprint, load as load_blueprint
+from arimo.blueprints import AbstractPPPBlueprint, load as load_blueprint
 from arimo.blueprints.cs import anom as cs_anom, regr as cs_regr
-from arimo.blueprints.ts import anom as ts_anom, regr as ts_regr
 from arimo.data.parquet import S3ParquetDataFeeder
 from arimo.data.distributed import DDF
 from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
@@ -33,18 +30,29 @@ from arimo.util.date_time import \
     month_end, month_str
 from arimo.util.types.spark_sql import _BOOL_TYPE
 
-from arimo.IoT.DataAdmin import Project as IoT_DataAdmin_Project, _PARQUET_EXT, _YAML_EXT
-from arimo.IoT.DataAdmin.util import clean_lower_str
+from django.conf import settings
+from django.core.management import call_command
+from django.core.wsgi import get_wsgi_application
+
+import arimo.IoT.DataAdmin._django_root.settings
+from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 
 
-_STR_CLASSES = \
-    (str, unicode) \
-    if six.PY2 \
-    else str
+class Project(object):
+    CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
+    CONFIG_S3_BUCKET = 'arimo-iot-pm'
+    _AWS_PROFILE_NAME = 'arimo'
 
+    _CAT_DATA_TYPE_NAME = 'cat'
+    _NUM_DATA_TYPE_NAME = 'num'
 
-class Project(IoT_DataAdmin_Project):
-    CONFIGS_S3_BUCKET = 'arimo-iot-pm'
+    _CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'control'
+    _MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'measure'
+    _CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'calc'
+    _ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME = 'alarm'
+
+    _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
+    _DATE_TIME_COL_NAME = 'date_time'
 
     REF_N_MONTHS = 18
 
@@ -68,27 +76,24 @@ class Project(IoT_DataAdmin_Project):
 
     _DEFAULT_PARAMS = \
         Namespace(
-            **IoT_DataAdmin_Project._DEFAULT_PARAMS)
+            s3=Namespace(
+                equipment_data=Namespace(
+                    dir_prefix='.arimo/PredMaint/EquipmentData',
+                    raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
+                    daily_agg_dir_prefix='.arimo/PredMaint/EquipmentData/DailyAgg',
+                    train_val_benchmark_dir_prefix='.arimo/PredMaint/EquipmentData/TrainValBenchmark'),
 
-    _DEFAULT_PARAMS.update(
-        s3=Namespace(
-            equipment_data=Namespace(
-                dir_prefix='.arimo/PredMaint/EquipmentData',
-                raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
-                daily_agg_dir_prefix='.arimo/PredMaint/EquipmentData/DailyAgg',
-                train_val_benchmark_dir_prefix='.arimo/PredMaint/EquipmentData/TrainValBenchmark'),
+                ppp=Namespace(
+                    blueprints_dir_prefix='.arimo/PredMaint/PPP/Blueprints',
+                    err_mults_dir_prefix='.arimo/PredMaint/PPP/ErrMults',
+                    daily_err_mults_dir_prefix='.arimo/PredMaint/PPP/DailyErrMults'),
 
-            ppp=Namespace(
-                blueprints_dir_prefix='.arimo/PredMaint/PPP/Blueprints',
-                err_mults_dir_prefix='.arimo/PredMaint/PPP/ErrMults',
-                daily_err_mults_dir_prefix='.arimo/PredMaint/PPP/DailyErrMults'),
+                anom_scores=Namespace(
+                    dir_prefix='.arimo/PredMaint/AnomScores')),
 
-            anom_scores=Namespace(
-                dir_prefix='.arimo/PredMaint/AnomScores')),
-
-        equipment_monitoring=Namespace(
-            anom_score_names_and_thresholds=dict(
-                rowHigh__dailyMean__abs__MAE_Mult=(2, 2.5, 3, 3.5, 4, 4.5, 5))))
+            equipment_monitoring=Namespace(
+                anom_score_names_and_thresholds=dict(
+                    rowHigh__dailyMean__abs__MAE_Mult=(2, 2.5, 3, 3.5, 4, 4.5, 5))))
 
     _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
     _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
@@ -98,8 +103,33 @@ class Project(IoT_DataAdmin_Project):
     _MAX_N_DISTINCT_VALUES_TO_PROFILE = 30
     _MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME = 10 ** 3
 
-    def __init__(self, params={}, **kwargs):
-        super(Project, self).__init__(params, **kwargs)
+    def __init__(self, params, **kwargs):
+        self.params.update(params, **kwargs)
+
+        assert self.params.db.host \
+           and self.params.db.db_name \
+           and self.params.db.user \
+           and self.params.db.password
+
+        django_db_settings = arimo.IoT.DataAdmin._django_root.settings.DATABASES['default']
+        django_db_settings['HOST'] = self.params.db.host
+        django_db_settings['NAME'] = self.params.db.db_name
+        django_db_settings['USER'] = self.params.db.user
+        django_db_settings['PASSWORD'] = self.params.db.password
+        settings.configure(**arimo.IoT.DataAdmin._django_root.settings.__dict__)
+        get_wsgi_application()
+        call_command('migrate')
+
+        from arimo.IoT.DataAdmin.base.models import \
+            GlobalConfig, \
+            DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
+            EquipmentGeneralType, \
+            EquipmentComponent, \
+            EquipmentDataField, \
+            EquipmentUniqueTypeGroup, EquipmentUniqueType, \
+            EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
+            EquipmentFacility, EquipmentSystem, \
+            Error
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
@@ -114,29 +144,113 @@ class Project(IoT_DataAdmin_Project):
         from arimo.IoT.DataAdmin.tasks.models import \
             EquipmentUniqueTypeGroupRiskScoringTask
 
-        self.data.update(dict(
-            EquipmentUniqueTypeGroupDataFieldProfiles=
-                EquipmentUniqueTypeGroupDataFieldProfile.objects,
-            EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations=
-                EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation.objects,
+        self.data = \
+            Namespace(
+                GlobalConfigs=GlobalConfig.objects,
 
-            EquipmentUniqueTypeGroupPredMaintServiceConfigs=
-                EquipmentUniqueTypeGroupServiceConfig.objects,
+                NumericMeasurementUnits=NumericMeasurementUnit.objects,
 
-            PredMaintBlueprints=Blueprint.objects,
-            EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
-                EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
+                EquipmentGeneralTypes=EquipmentGeneralType.objects,
 
-            EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
+                EquipmentComponents=EquipmentComponent.objects,
 
-            EquipmentProblemTypes=EquipmentProblemType.objects,
-            EquipmentInstanceAlarmPeriods=EquipmentInstanceAlarmPeriod.objects,
-            EquipmentInstanceProblemDiagnoses=EquipmentInstanceProblemDiagnosis.objects,
+                EquipmentDataFields=EquipmentDataField.objects,
 
-            PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
-            PredMaintAlerts=Alert.objects,
+                EquipmentUniqueTypeGroups=EquipmentUniqueTypeGroup.objects,
+                EquipmentUniqueTypes=EquipmentUniqueType.objects,
 
-            EquipmentUniqueTypeGroupRiskScoringTasks=EquipmentUniqueTypeGroupRiskScoringTask.objects))
+                EquipmentInstances=EquipmentInstance.objects,
+                EquipmentInstanceDailyMetadata=EquipmentInstanceDailyMetadata.objects,
+                EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
+
+                EquipmentFacilities=EquipmentFacility.objects,
+                EquipmentSystems=EquipmentSystem.objects,
+
+                Errors=Error.objects,
+
+                EquipmentUniqueTypeGroupDataFieldProfiles=
+                    EquipmentUniqueTypeGroupDataFieldProfile.objects,
+                EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations=
+                    EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation.objects,
+
+                EquipmentUniqueTypeGroupPredMaintServiceConfigs=
+                    EquipmentUniqueTypeGroupServiceConfig.objects,
+
+                PredMaintBlueprints=Blueprint.objects,
+                EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles=
+                    EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects,
+
+                EquipmentInstanceDailyRiskScores=EquipmentInstanceDailyRiskScore.objects,
+
+                EquipmentProblemTypes=EquipmentProblemType.objects,
+                EquipmentInstanceAlarmPeriods=EquipmentInstanceAlarmPeriod.objects,
+                EquipmentInstanceProblemDiagnoses=EquipmentInstanceProblemDiagnosis.objects,
+
+                PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
+                PredMaintAlerts=Alert.objects,
+
+                EquipmentUniqueTypeGroupRiskScoringTasks=EquipmentUniqueTypeGroupRiskScoringTask.objects)
+
+        self.CAT_DATA_TYPE = DataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
+
+        self.NUM_DATA_TYPE = DataType.objects.get_or_create(name=self._NUM_DATA_TYPE_NAME)[0]
+
+        self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE = \
+            EquipmentDataFieldType.objects.get_or_create(name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
+
+        self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
+            EquipmentDataFieldType.objects.get_or_create(name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
+
+        self.CALC_EQUIPMENT_DATA_FIELD_TYPE = \
+            EquipmentDataFieldType.objects.get_or_create(name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
+
+        self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
+            EquipmentDataFieldType.objects.get_or_create(name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
+
+        self.params.s3.bucket = self.data.GlobalConfigs.get_or_create(key='S3_BUCKET')[0].value
+
+        if self.params.s3.bucket:
+            if 'access_key_id' in self.params.s3:
+                assert 'secret_access_key' in self.params.s3
+
+            else:
+                self.params.s3.access_key_id = \
+                    self.data.GlobalConfigs.get_or_create(
+                        key='AWS_ACCESS_KEY_ID')[0].value
+
+                self.params.s3.secret_access_key = \
+                    self.data.GlobalConfigs.get_or_create(
+                        key='AWS_SECRET_ACCESS_KEY')[0].value
+
+            self.s3_client = \
+                s3.client(
+                    access_key_id=self.params.s3.access_key_id,
+                    secret_access_key=self.params.s3.secret_access_key)
+
+            self.params.s3.equipment_data.dir_path = \
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
+                    self.params.s3.equipment_data.dir_prefix)
+
+            self.params.s3.equipment_data.raw_dir_path = \
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
+                    self.params.s3.equipment_data.raw_dir_prefix)
+
+            self.params.s3.equipment_data.daily_agg_dir_path = \
+                os.path.join(
+                    's3://{}'.format(self.params.s3.bucket),
+                    self.params.s3.equipment_data.daily_agg_dir_prefix)
+
+            self.params.s3.equipment_data.train_val_benchmark_dir_path = \
+                os.path.join(
+                    's3://{}'.format(self.params.s3.bucket),
+                    self.params.s3.equipment_data.train_val_benchmark_dir_prefix)
+    
+            self.params.s3.ppp.blueprints_dir_path = \
+                os.path.join(
+                    's3://{}'.format(self.params.s3.bucket),
+                    self.params.s3.ppp.blueprints_dir_prefix)
 
         self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
             self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
@@ -208,17 +322,82 @@ class Project(IoT_DataAdmin_Project):
                                 .difference(excluded_equipment_data_field_names)),
                         excluded=excluded_equipment_data_field_names)
 
-        # Equipment Data
-        self.params.s3.equipment_data.train_val_benchmark_dir_path = \
-            os.path.join(
-                's3://{}'.format(self.params.s3.bucket),
-                self.params.s3.equipment_data.train_val_benchmark_dir_prefix)
+    def equipment_general_type(self, equipment_general_type_name):
+        return self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
-        # Blueprints
-        self.params.s3.ppp.blueprints_dir_path = \
-            os.path.join(
-                's3://{}'.format(self.params.s3.bucket),
-                self.params.s3.ppp.blueprints_dir_prefix)
+    def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
+        return self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
+
+    def equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, control=False):
+        kwargs = \
+            dict(equipment_data_field_type=self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE) \
+                if control \
+                else dict(equipment_data_field_type__in=
+                          [self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                           self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
+                           self.ALARM_EQUIPMENT_DATA_FIELD_TYPE])
+
+        return self.data.EquipmentDataFields.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_data_field_name,
+                **kwargs)
+
+    def equipment_instance(self, equipment_general_type_name, equipment_instance_name):
+        return self.data.EquipmentInstances.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_instance_name)
+
+    def load_equipment_data(
+            self, equipment_data_set_name,
+            _from_files=True, _spark=False,
+            set_i_col=True, set_t_col=True,
+            verbose=True, **kwargs):
+        path = os.path.join(
+                self.params.s3.equipment_data.dir_path,
+                equipment_data_set_name + _PARQUET_EXT)
+
+        df = (S3ParquetDistributedDataFrame(
+                path=path, mergeSchema=True,
+                aws_access_key_id=self.params.s3.access_key_id,
+                aws_secret_access_key=self.params.s3.secret_access_key,
+                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                    if set_i_col
+                    else None,
+                tCol=self._DATE_TIME_COL_NAME
+                    if set_t_col
+                    else None,
+                verbose=verbose, **kwargs)
+              if _spark
+              else S3ParquetDataFeeder(
+                    path=path,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                        if set_i_col
+                        else None,
+                    tCol=self._DATE_TIME_COL_NAME
+                        if set_t_col
+                        else None,
+                    verbose=verbose, **kwargs)) \
+            if _from_files \
+            else DDF.load(
+                    path=path,
+                    format='parquet', mergeSchema=True,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
+                        if set_i_col
+                        else None,
+                    tCol=self._DATE_TIME_COL_NAME
+                        if set_t_col
+                        else None,
+                    verbose=verbose, **kwargs)
+
+        assert {self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL, self._DATE_TIME_COL_NAME}.issubset(df.columns)
+
+        return df
 
     def profile_equipment_data_fields(self, equipment_general_type_name=None, equipment_unique_type_group_name=None, to_month=None):
         results = \
@@ -887,7 +1066,7 @@ class Project(IoT_DataAdmin_Project):
         return label_var_names
 
     def _good_ppp_blueprint(self, bp_obj=None, benchmark_metrics=None):
-        if isinstance(bp_obj, _STR_CLASSES):
+        if isinstance(bp_obj, (str, unicode)):
             bp_obj = self.data.PredMaintBlueprints.get(uuid=bp_obj)
 
         if not benchmark_metrics:
@@ -2380,17 +2559,17 @@ def project(name, download_config_file=True):
 
     local_project_config_file_path = \
         os.path.join(
-            Project.CONFIG_DIR_PATH,
+            Project.CONFIG_LOCAL_DIR_PATH,
             local_project_config_file_name)
 
     if download_config_file:
-        if not os.path.isdir(Project.CONFIG_DIR_PATH):
+        if not os.path.isdir(Project.CONFIG_LOCAL_DIR_PATH):
             fs.mkdir(
-                dir=Project.CONFIG_DIR_PATH,
+                dir=Project.CONFIG_LOCAL_DIR_PATH,
                 hdfs=False)
 
         print('Downloading "s3://{}/{}" to "{}"... '
-              .format(Project.CONFIGS_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
+              .format(Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
               end='')
 
         key, secret = key_pair(profile='arimo')
@@ -2399,7 +2578,7 @@ def project(name, download_config_file=True):
             access_key_id=key,
             secret_access_key=secret) \
         .download_file(
-            Bucket=Project.CONFIGS_S3_BUCKET,
+            Bucket=Project.CONFIG_S3_BUCKET,
             Key=local_project_config_file_name,
             Filename=local_project_config_file_path)
 
