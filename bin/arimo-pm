@@ -51,7 +51,7 @@ parser = \
 parser.add_argument(
     'project',
     action='store',
-    help='<ProjectName> associated with "{}/<ProjectName>{}" config file'.format(Project.CONFIG_DIR_PATH, _YAML_EXT),
+    help='<ProjectName> associated with "{}/<ProjectName>{}" config file'.format(Project.CONFIG_LOCAL_DIR_PATH, _YAML_EXT),
     metavar='PROJECT_NAME')
 
 
