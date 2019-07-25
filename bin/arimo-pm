@@ -9,6 +9,7 @@ import random
 import tqdm
 
 from arimo.util import Namespace
+from arimo.util.aws import s3
 
 from arimo.IoT.DataAdmin.util import _YAML_EXT
 from arimo.IoT.PredMaint import Project, project
@@ -50,10 +51,6 @@ parser = \
 parser.add_argument(
     'project',
     action='store',
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='<ProjectName> associated with "{}/<ProjectName>{}" config file'.format(Project.CONFIG_DIR_PATH, _YAML_EXT),
     metavar='PROJECT_NAME')
 
@@ -63,11 +60,9 @@ cmd_sub_parsers = \
     parser.add_subparsers(
         title='SUB-COMMAND',
         description='Sub-Command',
-        prog=None,
         parser_class=argparse.ArgumentParser,
         dest=CMD_ARG_NAME,
-        help='sub-command',
-        metavar=None)
+        help='sub-command')
 
 
 # UPLOAD CONFIG FILE
@@ -99,38 +94,19 @@ parser___profile_equipment_data_fields = \
 
 parser___profile_equipment_data_fields.add_argument(
     '--gen-tp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment General Type name to filter',
     metavar='EQ_GEN_TP_NAME',
     dest='eq_gen_tp_name')
 
 parser___profile_equipment_data_fields.add_argument(
     '--unq-tp-grp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment Unique Type Group name to filter',
     metavar='EQ_UNQ_TP_GRP_NAME',
     dest='eq_unq_tp_grp_name')
 
 parser___profile_equipment_data_fields.add_argument(
     'to_months',
-    action=None,
     nargs='*',
-    const=None,
-    default=[],
-    type=str,
-    choices=None,
     help='data up to months (YYYY-MM)',
     metavar='TO_MONTHS')
 
@@ -150,32 +126,18 @@ parser___profile_equipment_data_field_correlations = \
 
 parser___profile_equipment_data_field_correlations.add_argument(
     '--gen-tp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment General Type name to filter',
     metavar='EQ_GEN_TP_NAME',
     dest='eq_gen_tp_name')
 
 parser___profile_equipment_data_field_correlations.add_argument(
     '--unq-tp-grp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment Unique Type Group name to filter',
     metavar='EQ_UNQ_TP_GRP_NAME',
     dest='eq_unq_tp_grp_name')
 
 
-# RECOMMEND AUTO INCLUDED NUMERIC DATA FIELDS
+# RECOMMEND AUTO-INCLUDED PPP INPUT EQUIPMENT DATA FIELDS
 parser___recommend_auto_included_ppp_input_equipment_data_fields = \
     cmd_sub_parsers.add_parser(
         name=RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD,
@@ -190,21 +152,11 @@ parser___recommend_auto_included_ppp_input_equipment_data_fields = \
 
 parser___recommend_auto_included_ppp_input_equipment_data_fields.add_argument(
     'eq_gen_tp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment General Type name',
     metavar='EQ_GEN_TP_NAME')
 
 parser___recommend_auto_included_ppp_input_equipment_data_fields.add_argument(
     'eq_unq_tp_grp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment Unique Type Group name',
     metavar='EQ_UNQ_TP_GRP_NAME')
 
@@ -224,70 +176,40 @@ parser___train_ppp = \
 
 parser___train_ppp.add_argument(
     'eq_gen_tp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment General Type name',
     metavar='EQ_GEN_TP_NAME')
 
 parser___train_ppp.add_argument(
     'eq_unq_tp_grp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment Unique Type Group name',
     metavar='EQ_UNQ_TP_GRP_NAME')
 
 parser___train_ppp.add_argument(
     'ref_to',
-    action=None,
     nargs='+',
-    const=None,
-    default=[],
-    type=str,
-    choices=None,
     help='train PPP models up to month (YYYY-MM)',
     metavar='REF_DATA_TO_MONTH')
 
 parser___train_ppp.add_argument(
     '--gen-q',
-    action=None,
-    nargs=None,
-    const=None,
     default=68,
     type=int,
-    choices=None,
-    required=False,
     help='Deep Learning training generator queue size',
     metavar='DL_TRAIN_GEN_Q_SIZE',
     dest='dl_train_gen_q_size')
 
 parser___train_ppp.add_argument(
     '--n-workers',
-    action=None,
-    nargs=None,
-    const=None,
     default=3,
     type=int,
-    choices=None,
-    required=False,
     help='Deep Learning training no. of parallel processes',
     metavar='DL_TRAIN_N_WORKERS',
     dest='dl_train_n_workers')
 
 parser___train_ppp.add_argument(
     '--n-gpus',
-    action=None,
-    nargs=None,
-    const=None,
     default=1,
     type=int,
-    choices=None,
-    required=False,
     help='Deep Learning training no. of GPUs',
     metavar='DL_TRAIN_N_GPUS',
     dest='dl_train_n_gpus')
@@ -295,16 +217,12 @@ parser___train_ppp.add_argument(
 parser___train_ppp.add_argument(
     '--cpu-merge',
     action='store_true',
-    default=False,
-    required=False,
     help='Deep Learning training: CPU Merge flag',
     dest='dl_train_cpu_merge')
 
 parser___train_ppp.add_argument(
     '--keras',
     action='store_true',
-    default=None,
-    required=False,
     help='whether to use Keras',
     dest='dl_train_keras')
 
@@ -324,88 +242,34 @@ parser___eval_ppp = \
 
 parser___eval_ppp.add_argument(
     '--gen-tp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment General Type name to filter',
     metavar='EQ_GEN_TP_NAME',
     dest='eq_gen_tp_name')
 
 parser___eval_ppp.add_argument(
     '--unq-tp-grp',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Equipment Unique Type Group name to filter',
     metavar='EQ_UNQ_TP_GRP_NAME',
     dest='eq_unq_tp_grp_name')
 
 parser___eval_ppp.add_argument(
     '--sql-filter',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Custom SQL Filter',
     metavar='SQL_FILTER',
     dest='sql_filter')
 
 parser___eval_ppp.add_argument(
     '--uuid',
-    action=None,
     nargs='+',
-    const=None,
-    default=[],
-    type=str,
-    choices=None,
-    required=False,
     help='PPP Blueprint UUID(s) to use for scoring',
     metavar='PPP_BLUEPRINT_UUID',
     dest='ppp_blueprint_uuids')
 
 parser___eval_ppp.add_argument(
-    '--excl-uuid',
-    action=None,
-    nargs='+',
-    const=None,
-    default=[],
-    type=str,
-    choices=None,
-    required=False,
-    help='PPP Blueprint UUID(s) to Exclude for Eval',
-    metavar='EXCL_PPP_BLUEPRINT_UUID',
-    dest='excl_ppp_blueprint_uuids')
-
-parser___eval___mut_excl_grp = \
-    parser___eval_ppp.add_mutually_exclusive_group(
-        required=False)
-
-parser___eval___mut_excl_grp.add_argument(
     '-f', '--force-re-eval',
     action='store_true',
-    default=False,
-    required=False,
     help='whether to force re-evaluating & re-saving Benchmark Metrics',
     dest='force_re_eval')
-
-parser___eval___mut_excl_grp.add_argument(
-    '--no-save',
-    action='store_true',
-    default=False,
-    required=False,
-    help='whether to skip saving evaluated Benchmark Metrics',
-    dest='no_save')
 
 
 # PPP ANOM SCORE
@@ -423,57 +287,29 @@ parser___ppp_anom_score = \
 
 parser___ppp_anom_score.add_argument(
     'eq_gen_tp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment General Type name',
     metavar='EQ_GEN_TP_NAME')
 
 parser___ppp_anom_score.add_argument(
     'eq_unq_tp_grp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment Unique Type Group name',
     metavar='EQ_UNQ_TP_GRP_NAME')
 
 parser___ppp_anom_score.add_argument(
     'date',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
     help='date (YYYY-MM-DD) / month (YYYY-MM) to score (from)',
     metavar='DATE')
 
 parser___ppp_anom_score.add_argument(
     '--to',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='date (YYYY-MM-DD) / month (YYYY-MM) to score to',
     metavar='TO_DATE',
     dest='to_date')
 
 parser___ppp_anom_score.add_argument(
     '--score-batch',
-    action=None,
-    nargs=None,
-    const=None,
     default=10 ** 3,
     type=int,
-    choices=None,
-    required=False,
     help='Deep Learning scoring batch size',
     metavar='DL_SCORE_BATCH_SIZE',
     dest='dl_score_batch_size')
@@ -481,28 +317,17 @@ parser___ppp_anom_score.add_argument(
 parser___ppp_anom_score.add_argument(
     '-f', '--force',
     action='store_true',
-    default=False,
-    required=False,
     help='whether to force re-calculating PPP Reconstructions',
     dest='force_calc')
 
 parser___ppp_anom_score.add_argument(
     '--re-calc-daily',
     action='store_true',
-    default=False,
-    required=False,
     help='whether to re-calculate Daily Anom Scores',
     dest='re_calc_daily')
 
 parser___ppp_anom_score.add_argument(
     '--sql-filter',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Custom SQL Filter',
     metavar='SQL_FILTER',
     dest='sql_filter')
@@ -523,46 +348,22 @@ parser___ppp_anom_alert = \
 
 parser___ppp_anom_alert.add_argument(
     'eq_gen_tp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment General Type name',
     metavar='EQ_GEN_TP_NAME')
 
 parser___ppp_anom_alert.add_argument(
     'eq_unq_tp_grp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment Unique Type Group name',
     metavar='EQ_UNQ_TP_GRP_NAME')
 
 parser___ppp_anom_alert.add_argument(
     '--from',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Anom Alert From Month',
     metavar='FROM_MONTH',
     dest='from_date')
 
 parser___ppp_anom_alert.add_argument(
     '--to',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='Anom Alert To Month',
     metavar='TO_MONTH',
     dest='to_date')
@@ -570,10 +371,9 @@ parser___ppp_anom_alert.add_argument(
 parser___ppp_anom_alert.add_argument(
     '--redo',
     action='store_true',
-    default=False,
-    required=False,
     help='Whether to Redo All Anom Alerts for concerned Unique Type Group',
     dest='redo')
+
 
 # AGG DATA
 parser___agg_data = \
@@ -590,44 +390,21 @@ parser___agg_data = \
 
 parser___agg_data.add_argument(
     'eq_gen_tp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment General Type name',
     metavar='EQ_GEN_TP_NAME')
 
 parser___agg_data.add_argument(
     'eq_unq_tp_grp_name',
-    action=None,
-    nargs=None,
-    const=None,
-    type=str,
-    choices=None,
     help='Equipment Unique Type Group name',
     metavar='EQ_UNQ_TP_GRP_NAME')
 
 parser___agg_data.add_argument(
     'date',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
     help='date (YYYY-MM-DD) / month (YYYY-MM) to aggregate (from)',
     metavar='DATE')
 
 parser___agg_data.add_argument(
     '--to',
-    action=None,
-    nargs=None,
-    const=None,
-    default=None,
-    type=str,
-    choices=None,
-    required=False,
     help='date (YYYY-MM-DD) / month (YYYY-MM) to aggregate to',
     metavar='TO_DATE',
     dest='to_date')
@@ -636,8 +413,6 @@ parser___agg_data.add_argument(
 parser___agg_data.add_argument(
     '-f', '--force-re-agg',
     action='store_true',
-    default=False,
-    required=False,
     help='whether to force re-aggregation',
     dest='force_re_agg')
 
@@ -645,8 +420,6 @@ parser___agg_data.add_argument(
 parser___agg_data.add_argument(
     '--re-insert-to-db',
     action='store_true',
-    default=False,
-    required=False,
     help='whether to force re-inserting to DB',
     dest='force_re_insert_to_db')
 
@@ -679,16 +452,16 @@ if cmd == UPLOAD_CONFIG_FILE:
 
     local_project_config_file_path = \
         os.path.join(
-            Project.CONFIG_DIR_PATH,
+            Project.CONFIG_LOCAL_DIR_PATH,
             local_project_config_file_name)
 
     print('Uploading "{}" to "s3://{}/{}"... '
-          .format(local_project_config_file_path, Project.CONFIGS_S3_BUCKET, local_project_config_file_name),
+          .format(local_project_config_file_path, Project.CONFIG_S3_BUCKET, local_project_config_file_name),
           end='')
 
     loaded_project.s3_client.upload_file(
         Filename=local_project_config_file_path,
-        Bucket=Project.CONFIGS_S3_BUCKET,
+        Bucket=Project.CONFIG_S3_BUCKET,
         Key=local_project_config_file_name)
 
     print('done!')
@@ -782,8 +555,7 @@ elif cmd == EVAL_PPP_CMD:
                     (PROJECT.data.PredMaintBlueprints.filter(
                         equipment_unique_type_group__name=args.eq_unq_tp_grp_name)
                      if args.eq_unq_tp_grp_name
-                     else PROJECT.data.PredMaintBlueprints.all()) \
-                    .exclude(uuid__in=args.excl_ppp_blueprint_uuids):
+                     else PROJECT.data.PredMaintBlueprints.all()):
                 PROJECT.eval_ppp_blueprint(
                     uuid=_bp_obj.uuid,
                     sql_filter=args.sql_filter,
@@ -886,4 +658,9 @@ elif cmd == AGG_DATA_CMD:
 
 
 elif cmd == RM_S3_TMP:
-    PROJECT.rm_s3_tmp()
+    s3.rm(path='s3://{}/{}'.format(PROJECT.params.s3.bucket, 'tmp'),
+          dir=True,
+          access_key_id=PROJECT.params.s3.access_key_id,
+          secret_access_key=PROJECT.params.s3.secret_access_key,
+          quiet=True,
+          verbose=True)
