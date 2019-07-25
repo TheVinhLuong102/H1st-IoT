@@ -962,69 +962,27 @@ class Project(object):
     def eval_ppp_blueprint(
             self, uuid,
             sql_filter=None,
-            save=True, _force_re_eval=False,
+            _force_re_eval=False,
             verbose=True):
-        print('EVALUATING "{}"...'.format(uuid))
-
         ppp_blueprint = self._ppp_blueprint(uuid=uuid)
 
-        _bp_obj = \
-            self.data.PredMaintBlueprints.filter(
-                uuid=ppp_blueprint.params.uuid) \
-            .first()
+        _bp_obj = self.data.PredMaintBlueprints.get(uuid=ppp_blueprint.params.uuid)
 
-        if save:
-            benchmark_metrics_exist = 'benchmark_metrics' in ppp_blueprint.params
+        benchmark_metrics_exist = 'benchmark_metrics' in ppp_blueprint.params
 
-            if not _force_re_eval:
-                assert benchmark_metrics_exist == bool(_bp_obj.benchmark_metrics)
+        if not _force_re_eval:
+            assert benchmark_metrics_exist == bool(_bp_obj.benchmark_metrics)
 
-            equipment_general_type_name = _bp_obj.equipment_unique_type_group.equipment_general_type.name
-            equipment_unique_type_group_name = _bp_obj.equipment_unique_type_group.name
-            to_month = str(_bp_obj.trained_to_date)[:7]
+        equipment_general_type_name = _bp_obj.equipment_unique_type_group.equipment_general_type.name
+        equipment_unique_type_group_name = _bp_obj.equipment_unique_type_group.name
+        to_month = str(_bp_obj.trained_to_date)[:7]
 
-            if _force_re_eval or (not benchmark_metrics_exist):
-                benchmark_s3_parquet_ddf = \
-                    self._benchmark_s3_parquet_ddf(
-                        equipment_general_type_name=equipment_general_type_name,
-                        equipment_unique_type_group_name=equipment_unique_type_group_name,
-                        to_month=to_month,
-                        set_i_col=False,
-                        verbose=verbose)
-
-                if sql_filter:
-                    try:
-                        benchmark_s3_parquet_ddf.filter(
-                            condition=sql_filter,
-                            inplace=True)
-
-                    except Exception as err:
-                        print(err)
-
-                ppp_blueprint.eval(
-                    df=benchmark_s3_parquet_ddf,
-                    save=True)
-
-            _bp_obj.benchmark_metrics = benchmark_metrics = \
-                ppp_blueprint.params.benchmark_metrics.to_dict()
-
-            _bp_obj.active = active = \
-                bool(self._good_ppp_blueprint(
-                        bp_obj=_bp_obj,
-                        benchmark_metrics=benchmark_metrics))
-
-            _bp_obj.save()
-
-            self.profile_ppp_blueprints(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
-
-        else:
+        if _force_re_eval or (not benchmark_metrics_exist):
             benchmark_s3_parquet_ddf = \
                 self._benchmark_s3_parquet_ddf(
-                    equipment_general_type_name=_bp_obj.equipment_unique_type_group.equipment_general_type.name,
-                    equipment_unique_type_group_name=_bp_obj.equipment_unique_type_group.name,
-                    to_month=str(_bp_obj.trained_to_date)[:7],
+                    equipment_general_type_name=equipment_general_type_name,
+                    equipment_unique_type_group_name=equipment_unique_type_group_name,
+                    to_month=to_month,
                     set_i_col=False,
                     verbose=verbose)
 
@@ -1039,15 +997,23 @@ class Project(object):
 
             ppp_blueprint.eval(
                 df=benchmark_s3_parquet_ddf,
-                save=False)
+                save=True)
 
-            active = False
+        _bp_obj.benchmark_metrics = benchmark_metrics = \
+            ppp_blueprint.params.benchmark_metrics.to_dict()
 
-        print('{}{} ({})'.format(
-            uuid,
-            '' if active else ' (*** INACTIVATED ***)',
-            'SAVED' if save else '*** NOT SAVED ***'))
+        _bp_obj.active = active = \
+            bool(self._good_ppp_blueprint(
+                    bp_obj=_bp_obj,
+                    benchmark_metrics=benchmark_metrics))
 
+        _bp_obj.save()
+
+        self.profile_ppp_blueprints(
+            equipment_general_type_name=equipment_general_type_name,
+            equipment_unique_type_group_name=equipment_unique_type_group_name)
+
+        print('{}{} ({})'.format(uuid, '' if active else ' (*** INACTIVATED ***)'))
         for label_var_name, component_blueprint_params in ppp_blueprint.params.model.component_blueprints.items():
             if component_blueprint_params.model.ver:
                 print(label_var_name,
