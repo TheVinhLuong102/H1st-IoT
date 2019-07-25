@@ -5,4 +5,3 @@ resource "aws_db_subnet_group" "pm-db" {
     data.aws_subnet.subnet2.id,
   ]
 }
-

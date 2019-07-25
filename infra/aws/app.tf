@@ -58,38 +58,6 @@ resource "aws_db_instance" "app-db" {
   }
 }
 
-resource "aws_db_instance" "fcpm-app-db" {
-  allocated_storage       = 864
-  backup_retention_period = 3
-  db_subnet_group_name    = "pm20190118201546865800000001"
-  engine                  = "postgres"
-  engine_version          = "10.6"
-  identifier              = "fcpm-app-db"
-  instance_class          = "db.m4.large"
-  multi_az                = false
-  name                    = "fcpm"
-
-  snapshot_identifier = "rds:ccpm-app-db-2019-07-22-10-30"
-
-  # XXX FIX: This means the password is in state file.
-  # password               = "${trimspace(file("${path.module}/secrets/app-db-password"))}"
-  port = 5432
-
-  publicly_accessible    = false
-  storage_encrypted      = true
-  storage_type           = "gp2"
-  username               = "fcpm"
-  vpc_security_group_ids = [var.internal_security_group_id]
-
-  # monitoring_interval = 60
-
-  tags = {
-    Name        = "FC App DB"
-    Project     = "FCPM"
-    Environment = "DEV"
-  }
-}
-
 module "app_ingress_jp" {
   source = "./ingress"
   name   = "ccpm-app-jp"
