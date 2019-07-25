@@ -272,7 +272,6 @@ class Project(object):
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=10))[0]
 
-        # Equipment Unique Type Groups' Monitored & Included/Excluded Data Fields
         self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields = Namespace()
 
         for equipment_unique_type_group_service_config in EquipmentUniqueTypeGroupServiceConfig.objects.filter(active=True):
@@ -321,14 +320,13 @@ class Project(object):
 
     def load_equipment_data(
             self, equipment_data_set_name,
-            _from_files=True, _spark=False,
-            set_i_col=True, set_t_col=True,
+            spark=False, set_i_col=True, set_t_col=True,
             verbose=True, **kwargs):
         path = os.path.join(
                 self.params.s3.equipment_data.dir_path,
                 equipment_data_set_name + _PARQUET_EXT)
 
-        df = (S3ParquetDistributedDataFrame(
+        df = S3ParquetDistributedDataFrame(
                 path=path, mergeSchema=True,
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
@@ -338,23 +336,10 @@ class Project(object):
                 tCol=self._DATE_TIME_COL_NAME
                     if set_t_col
                     else None,
-                verbose=verbose, **kwargs)
-              if _spark
-              else S3ParquetDataFeeder(
+                verbose=verbose, **kwargs) \
+            if spark \
+            else S3ParquetDataFeeder(
                     path=path,
-                    aws_access_key_id=self.params.s3.access_key_id,
-                    aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
-                        if set_i_col
-                        else None,
-                    tCol=self._DATE_TIME_COL_NAME
-                        if set_t_col
-                        else None,
-                    verbose=verbose, **kwargs)) \
-            if _from_files \
-            else DDF.load(
-                    path=path,
-                    format='parquet', mergeSchema=True,
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
                     iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
@@ -405,8 +390,7 @@ class Project(object):
                     s3_parquet_df = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
-                            _from_files=True, _spark=False,
-                            set_i_col=True, set_t_col=True,
+                            spark=False, set_i_col=True, set_t_col=True,
                             verbose=True)
 
                     if to_month:
@@ -533,8 +517,7 @@ class Project(object):
                     s3_parquet_df = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
-                            _from_files=True, _spark=False,
-                            set_i_col=True, set_t_col=True,
+                            spark=False, set_i_col=True, set_t_col=True,
                             verbose=True)
 
                 except Exception as err:
@@ -935,7 +918,7 @@ class Project(object):
                  'train.val_batch_size': 10 ** 4},
             params={},
             verbose=True,
-            _spark=False,
+            spark=False,
             **kwargs):
         self.profile_equipment_data_fields(
             equipment_general_type_name=equipment_general_type_name,
@@ -1053,7 +1036,7 @@ class Project(object):
                         equipment_general_type_name=equipment_general_type_name,
                         equipment_unique_type_group_name=equipment_unique_type_group_name,
                         to_month=to_month,
-                        set_i_col=isinstance(ppp_blueprint, ts_anom.DLPPPBlueprint),
+                        set_i_col=False,
                         verbose=verbose)
 
                 if sql_filter:
@@ -1089,7 +1072,7 @@ class Project(object):
                     equipment_general_type_name=_bp_obj.equipment_unique_type_group.equipment_general_type.name,
                     equipment_unique_type_group_name=_bp_obj.equipment_unique_type_group.name,
                     to_month=str(_bp_obj.trained_to_date)[:7],
-                    set_i_col=isinstance(ppp_blueprint, ts_anom.DLPPPBlueprint),
+                    set_i_col=False,
                     verbose=verbose)
 
             if sql_filter:
@@ -1283,8 +1266,7 @@ class Project(object):
                             s3_parquet_ddf = \
                                 self.load_equipment_data(
                                     equipment_unique_type_group_data_set_name,
-                                    _from_files=True, _spark=True,
-                                    set_i_col=False) \
+                                    spark=True, set_i_col=False) \
                                 .filterByPartitionKeys(
                                     (DATE_COL,
                                      _mth_str + '-01',
@@ -1301,8 +1283,7 @@ class Project(object):
                         s3_parquet_ddf = \
                             self.load_equipment_data(
                                 equipment_unique_type_group_data_set_name,
-                                _from_files=True, _spark=True,
-                                set_i_col=False) \
+                                spark=True, set_i_col=False) \
                             .filterByPartitionKeys(
                                 (DATE_COL,
                                  _mth_str + '-01',
@@ -1318,9 +1299,6 @@ class Project(object):
 
                 if _to_calc:
                     ppp_blueprint = self._ppp_blueprint(uuid=blueprint_uuid)
-
-                    if isinstance(ppp_blueprint, ts_anom.DLPPPBlueprint):
-                        s3_parquet_ddf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
                     if sql_filter:
                         try:
@@ -1411,8 +1389,7 @@ class Project(object):
                         s3_parquet_ddf = \
                             self.load_equipment_data(
                                 equipment_unique_type_group_data_set_name,
-                                _from_files=True, _spark=True,
-                                set_i_col=False) \
+                                spark=True, set_i_col=False) \
                             .filterByPartitionKeys(
                                 (DATE_COL,
                                  _date))
@@ -1445,14 +1422,10 @@ class Project(object):
                     s3_parquet_ddf = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
-                            _from_files=True, _spark=True,
-                            set_i_col=False) \
+                            spark=True, set_i_col=False) \
                         .filterByPartitionKeys(
                             (DATE_COL,
                              dates))
-
-                    if isinstance(ppp_blueprint, ts_anom.DLPPPBlueprint):
-                        s3_parquet_ddf.iCol = self._EQUIPMENT_INSTANCE_ID_COL_NAME
 
                     if sql_filter:
                         try:
@@ -2135,9 +2108,7 @@ class Project(object):
         equipment_unique_type_group_s3_parquet_ddf = \
             self.load_equipment_data(
                 equipment_unique_type_group_data_set_name,
-                _from_files=True, _spark=True,
-                set_i_col=False,
-                set_t_col=False)
+                spark=True, set_i_col=False, set_t_col=False)
 
         s3_dir_prefix = \
             os.path.join(
@@ -2379,9 +2350,7 @@ class Project(object):
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
                     equipment_unique_type_group_data_set_name,
-                    _from_files=True, _spark=False,
-                    set_i_col=False,
-                    set_t_col=False) \
+                    spark=False, set_i_col=False, set_t_col=False) \
                 .filterByPartitionKeys(
                     (DATE_COL,
                      copy_agg_daily_equipment_data_to_db_for_dates))
