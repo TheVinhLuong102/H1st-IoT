@@ -1,4 +1,0 @@
-include requirements.txt
-include arimo/metadata.json
-include arimo/IoT/DataAdmin/_django_root/db.yaml
-recursive-exclude *.pyc

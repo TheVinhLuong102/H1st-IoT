@@ -1,27 +1,10 @@
-import json
-import os
 from setuptools import find_packages, setup
 import six
 
 
-_PACKAGE_NAMESPACE_NAME = 'arimo'
-
-_METADATA_FILE_NAME = 'metadata.json'
-
-_REQUIREMENTS_FILE_NAME = 'requirements.txt'
-
-
-_metadata = \
-    json.load(
-        open(os.path.join(
-            os.path.dirname(__file__),
-            _PACKAGE_NAMESPACE_NAME,
-            _METADATA_FILE_NAME)))
-
-
 install_requires = []
 
-for s in open(_REQUIREMENTS_FILE_NAME).readlines():
+for s in open('requirements.txt').readlines():
     if not s.startswith('#'):
         s = s.strip()
         lower_s = s.lower()
@@ -39,14 +22,14 @@ for s in open(_REQUIREMENTS_FILE_NAME).readlines():
                                     else s)))))
 
 setup(
-    name=_metadata['PACKAGE'],
-    author=_metadata['AUTHOR'],
-    author_email=_metadata['AUTHOR_EMAIL'],
-    url=_metadata['URL'],
-    version=_metadata['VERSION'],
-    description=_metadata['DESCRIPTION'],
-    long_description=_metadata['DESCRIPTION'],
-    keywords=_metadata['DESCRIPTION'],
+    name='Arimo-IoT-DataAdmin',
+    author='Arimo',
+    author_email='DSAR@Arimo.com',
+    url='https://github.com/adatao/IoT-DataAdmin',
+    version='0.0.0',
+    description='Arimo IoT Data Admin',
+    long_description='Arimo IoT Data Admin',
+    keywords='Arimo IoT Data Admin',
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires)
