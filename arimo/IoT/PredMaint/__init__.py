@@ -104,6 +104,7 @@ class Project(object):
     _MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME = 10 ** 3
 
     def __init__(self, params, **kwargs):
+        self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
 
         assert self.params.db.host \
