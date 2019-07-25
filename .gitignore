@@ -5,8 +5,9 @@ dist/
 src/
 *egg-info*
 
-# IntelliJ IDEA files
+# IntelliJ IDEA
 *.iml
 .idea/
 
+# Virtual Env
 .venv
