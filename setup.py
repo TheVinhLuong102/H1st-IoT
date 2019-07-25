@@ -3,7 +3,6 @@ import six
 
 
 install_requires = []
-
 for s in open('requirements.txt').readlines():
     if not s.startswith('#'):
         s = s.strip()
@@ -20,6 +19,7 @@ for s in open('requirements.txt').readlines():
                               else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
                                     if six.PY2 and lower_s.startswith('django-filter')
                                     else s)))))
+
 
 setup(
     name='Arimo-IoT-DataAdmin',
