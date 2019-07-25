@@ -1,0 +1,91 @@
+provider:
+  region: ap-northeast-1
+
+cluster: "bai-ccpm"
+
+ec2_key_name: ""
+ssh_ca_pub_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWgkmugVoI2pni5fkPA1NLY/VkHf6ljr4md9fymYMW/mOnknvLBuKz6F83P9layFgXJ4wej5f72yIXse+3+VGUQFGa2ent/aDl3A1UuqeFSBafATnNhBkFo6LfT80gMNGqdiL/pBVcrjxQWGbeEIOIt0VfV0FFbhZErc9LCsM26SNrGD2u2bWlOvdcZQgMuzK4tPcNgsoWwUVXDhMNrqCUSwxpaBQFsYEFvhaVnuRPkGp0RrO0+owCNu16Z11+/bJ5Px1IdvMOiQyejUaToLYXiQtgMZvBjgK46EvgJy0ZyBKlFYDNSgOHAMz8KBlxPQ/2wxtuUY/QkOpG6AFgcO7uNdyI4SwVZ0moD9v4Cu0Kz0o7gm0I/4T7rN7oIYnkW1aYlfrOHL57MvSzJ8TXA6m5eBtFPaCXV0LGvlVOdt+jZce73OMBz0nGs9oUoPfuYjyx+EMIwanfKqPUi/TqiccSTI9aB+e6KY+6A0bu+R8yJD72J/F09pqYwTu2pbJ5NzhhZDWksGZ48NXLdjyIhl/pWqnEgVA0LGxSbGMrDf4nqbTpcrSd2WCy8nX4sa4CT1GdjxMPDLfg5IUja2EI4WQdDiNIySjMaa43Ro92hbr37AaQ595svIcFwx0UeCLBRJHbMbM6LXGcDVRXIlCLr+QOoeBSM0xdAy8TC+36hte2FQ== Arimo SSH CA"
+
+# TODO: parameterize this
+model_manager_url: https://ccpm.jp.arimo.com
+
+project_tag: PM
+version: 1.2.7
+peng_version: 1.2.8-SNAPSHOT
+
+# ================================
+
+provisioner:
+  dlots:
+    bigapps:
+      notebook:
+        init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/init_notebook.sh
+    peng:
+      worker-pyspark-tensorflow:
+        init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/init_worker.sh
+
+
+slack:
+  hook_url: https://hooks.slack.com/services/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
+
+# ================================
+
+worker_use_asg: no
+use_cm: False
+use_emr: True
+gpu_management: true
+
+model_manager_instance_type: "m5.xlarge"
+model_manager_ebs: 64
+
+notebook_instance_type: "c5.4xlarge"
+notebook_ebs: 64
+
+worker_instance_type: "g3.8xlarge"
+worker_instance_count: 3
+serving_instance_count: 0
+
+aux_worker:
+  role: etl-dev
+
+notebook_worker:
+  role: etl
+  exclusive: False
+
+# TODO: parameterize below parameters
+primary_subnet_id: "subnet-59421d10"
+secondary_subnet_id: "subnet-547bf30f"
+ec2_security_groups: ["sg-fb0d2282"]
+
+# need to be public subnets
+lb_subnet_ids: ["subnet-1e7df545", "subnet-6c411e25"]
+
+route53_zone_id: Z2HA7QW161JAS1
+acm_certificate_arn: arn:aws:acm:ap-northeast-1:394497726199:certificate/174d56e6-45fb-4928-9ecf-d6397e71bc2a
+
+# ================================
+
+# TODO: parameterize this
+s3_extra_access:
+  - 'arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm'
+  - 'arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm/*'
+  - 'arn:aws:s3:::arimo-iot-pm'
+  - 'arn:aws:s3:::arimo-iot-pm/*'
+  - 'arn:aws:s3:::arimo-bai-clusters/custom_provisioner/ccpm*'
+  - 'arn:aws:s3:::arimo-panasonic-ap'
+  - 'arn:aws:s3:::arimo-panasonic-ap/*'
+
+node_instance_profile_extra_policies:
+  - actions: ssm:Get*,ssm:Describe*
+    resources: arn:aws:ssm:us-east-1:394497726199:parameter/pm/*
+  - actions: ssm:Get*,ssm:Describe*
+    resources: arn:aws:ssm:us-east-1:394497726199:parameter/aidb*
+  - actions: ssm:Get*,ssm:Describe*
+    resources: arn:aws:ssm:ap-northeast-1:394497726199:parameter/ccpm/*
+  - actions: ssm:Get*,ssm:Describe*
+    resources: arn:aws:ssm:ap-northeast-1:394497726199:parameter/aidb*
+  - actions: kms:Decrypt
+    resources: arn:aws:kms:us-east-1:394497726199:alias/aws/ssm
+
+rds_backup_retention: 0
+rds_name: ""

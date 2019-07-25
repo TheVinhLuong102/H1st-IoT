@@ -1,0 +1,140 @@
+parameters:
+  PROJECT:
+    type: string
+    required: true
+
+  EQUIPMENT_GENERAL_TYPE:
+    type: string
+    required: true
+
+  EQUIPMENT_UNIQUE_TYPE_GROUP:
+    type: string
+    required: true
+
+  DATE:
+    type: string
+    required: true
+
+  TO_DATE:
+    type: string
+    required: false
+
+  WORKER_ROLE:
+    type: string
+    default: etl   # run on BAI CPU worker
+
+  YARN_CLUSTER:
+    type: string
+    default: yarn-ccpm-medium
+
+  SLACK_CHANNEL:
+    type: string
+    default: '#devops-alerts'
+
+tasks:
+  - name: start-yarn-cluster
+    type: python
+    worker_role: etl-dev   # role of workers on Model Mgr instance, which also runs Cluster Mgr, which can start/stop instances
+    script: util/yarn_cluster.py
+    arguments:
+      - start
+      - ${YARN_CLUSTER}
+      - 0
+
+  - name: adhoc-test-load-data
+    type: call
+    wait: true
+    worker_role: etl-dev
+    workflow: adhoc-test-load-data
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      WORKER_ROLE: ${WORKER_ROLE}
+      YARN_CLUSTER: ${YARN_CLUSTER}
+      DONT_START_STOP_YARN_CLUSTER: 1
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+  - name: adhoc-anom-score
+    type: call
+    wait: true
+    worker_role: etl-dev
+    workflow: adhoc-anom-score
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      DATE: ${DATE}
+      TO_DATE: ${TO_DATE}
+      WORKER_ROLE: ${WORKER_ROLE}
+      YARN_CLUSTER: ${YARN_CLUSTER}
+      DONT_START_STOP_YARN_CLUSTER: 1
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+  - name: adhoc-anom-alert
+    type: call
+    wait: false   # run in parallel to agg-data below
+    worker_role: etl-dev
+    workflow: adhoc-anom-alert
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      FROM_DATE: ${DATE}
+      TO_DATE: ${TO_DATE}
+      WORKER_ROLE: ${WORKER_ROLE}
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+  - name: adhoc-agg-data
+    type: call
+    wait: true
+    worker_role: etl-dev
+    workflow: adhoc-agg-data
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      DATE: ${DATE}
+      TO_DATE: ${TO_DATE}
+      WORKER_ROLE: ${WORKER_ROLE}
+      YARN_CLUSTER: ${YARN_CLUSTER}
+      DONT_START_STOP_YARN_CLUSTER: 1
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+on_failure:
+  - type: parallel
+
+    tasks:
+      - name: stop-yarn-cluster
+        type: python
+        worker_role: etl-dev   # role of workers on Model Mgr instance, which also runs Cluster Mgr, which can start/stop instances
+        script: util/yarn_cluster.py
+        arguments:
+          - stop
+          - ${YARN_CLUSTER}
+          - 0
+
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-all has failed :cry:'
+
+on_success:
+  - type: parallel
+
+    tasks:
+      - name: stop-yarn-cluster
+        type: python
+        worker_role: etl-dev   # role of workers on Model Mgr instance, which also runs Cluster Mgr, which can start/stop instances
+        script: util/yarn_cluster.py
+        arguments:
+          - stop
+          - ${YARN_CLUSTER}
+          - 0
+
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-all has succeeded :smile:'

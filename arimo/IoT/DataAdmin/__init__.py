@@ -137,10 +137,6 @@ class Project(object):
                     's3://{}'.format(self.params.s3.bucket),
                     self.params.s3.equipment_data.daily_agg_dir_prefix)
 
-    @classmethod
-    def __qual_name__(cls):
-        return '{}.{}'.format(cls.__module__, cls.__name__)
-
     def get_or_create_equipment_general_type(self, equipment_general_type_name):
         return self.data.EquipmentGeneralTypes.get_or_create(name=equipment_general_type_name)[0]
 

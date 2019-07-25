@@ -1,0 +1,58 @@
+installer:
+  installer_root: /opt/arimo-installer
+  data_root: /opt/arimo-data
+
+env:
+  DOCKER_PULL_METHOD: pull
+  YARN_MASTER_NODE: ${master_node}
+
+  MODEL_MANAGER_URL: ${public_url}
+
+  # refer everything else as internal address
+  BIGAPPS_SERVER_HOST: ${master_node}
+  POSTGRESQL_HOST: ${master_node}
+  NOTEBOOK_HOST: ${master_node}
+  KEYCLOAK_HOST: ${master_node}
+  REDIS_HOST: ${master_node}
+  PENG_API_HOST: ${master_node}  # this is required because of the new MM :(
+
+  YARN_NODEMANAGER_RESOURCE_MEMORY_MB: ${yarn_worker_memory}
+  YARN_SCHEDULER_MINIMUM_ALLOCATION_MB: 512
+
+provisioner:
+  yarn:
+    master:
+      init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
+    slave:
+      init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
+
+hosts:
+  database:
+    ip: localhost
+    roles:
+      dlots:
+        common:
+          - redis
+          - postgresql
+
+  keycloak:
+    ip: localhost
+    roles:
+      keycloak:
+        - master
+
+  model_manager:
+    ip: localhost
+    roles:
+      dlots:
+        bigapps:
+          - model-manager
+      yarn:
+        - master
+
+  notebook:
+    ip: localhost
+    roles:
+      dlots:
+        bigapps:
+          - notebook

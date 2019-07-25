@@ -1,0 +1,48 @@
+parameters:
+  PROJECT:
+    type: string
+    required: true
+
+  EQUIPMENT_GENERAL_TYPE:
+    type: string
+    required: true
+
+  EQUIPMENT_UNIQUE_TYPE_GROUP:
+    type: string
+    required: true
+
+  TO_MONTHS:
+    type: string
+    default: ''
+
+  WORKER_ROLE:
+    type: string
+    default: etl   # run on BAI CPU worker
+
+  SLACK_CHANNEL:
+    type: string
+    default: '#devops-alerts'
+
+tasks:
+  - name: adhoc-profile-data-flds
+    type: python
+    worker_role: ${WORKER_ROLE}
+    script: adhoc/profile-data-flds.py
+
+on_failure:
+  - type: parallel
+    tasks:
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-profile-data-flds has failed :cry:'
+
+on_success:
+  - type: parallel
+    tasks:
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-profile-data-flds has succeeded :smile:'

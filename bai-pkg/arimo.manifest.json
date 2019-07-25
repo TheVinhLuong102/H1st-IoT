@@ -1,0 +1,13 @@
+{
+  "name": "Arimo IoT PredMaint",
+
+  "title": "Arimo IoT PredMaint",
+
+  "description": "Arimo IoT Predictive Maintenance",
+
+  "files": [
+    "**/*.py",
+    "**/*.sh",
+    "requirements.txt"
+  ]
+}

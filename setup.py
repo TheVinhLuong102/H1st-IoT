@@ -14,7 +14,7 @@ for s in open('requirements.txt').readlines():
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
                   else ('DjangoRESTFramework-Filters >= 0.10.2, < 1'   # last 0.x ver compat w/ Py2
                         if six.PY2 and lower_s.startswith('djangorestframework-filters')
-                        else ('DjangoRESTFramework >= 3.9.4'   # last 0.x ver compat w/ Py2
+                        else ('DjangoRESTFramework >= 3.9.4'   # last 3.9 ver compat w/ Py2
                               if six.PY2 and lower_s.startswith('djangorestframework')
                               else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
                                     if six.PY2 and lower_s.startswith('django-filter')
@@ -22,14 +22,15 @@ for s in open('requirements.txt').readlines():
 
 
 setup(
-    name='Arimo-IoT-DataAdmin',
+    name='Arimo-PredMaint',
     author='Arimo',
     author_email='DSAR@Arimo.com',
-    url='https://github.com/adatao/IoT-DataAdmin',
+    url='https://github.com/adatao/PredMaint',
     version='0.0.0',
-    description='Arimo IoT Data Admin',
-    long_description='Arimo IoT Data Admin',
-    keywords='Arimo IoT Data Admin',
+    description='Arimo Predictive Maintenance',
+    long_description='Arimo Predictive Maintenance',
+    keywords='Arimo Predictive Maintenance',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=install_requires)
+    install_requires=install_requires,
+    scripts=['bin/arimo-pm'])

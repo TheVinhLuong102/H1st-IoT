@@ -1,0 +1,913 @@
+#!/usr/bin/env python2
+
+
+from __future__ import print_function
+
+import argparse
+import os
+import random
+import tqdm
+
+from arimo.util import Namespace
+
+from arimo.IoT.DataAdmin.util import _YAML_EXT
+from arimo.IoT.PredMaint import Project, project
+
+
+CMD_ARG_NAME = 'cmd'
+
+
+UPLOAD_CONFIG_FILE = 'upload-config-file'
+
+PROFILE_DATA_FIELDS_CMD = 'profile-data-flds'
+PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD = 'profile-data-fld-corrs'
+RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD = 'rec-auto-incl-input-data-flds'
+
+TRAIN_PPP_CMD = 'train-ppp'
+EVAL_PPP_CMD = 'eval-ppp'
+PPP_ANOM_SCORE_CMD = 'ppp-anom-score'
+PPP_ANOM_ALERT_CMD = 'ppp-anom-alert'
+
+AGG_DATA_CMD = 'agg-data'
+
+RM_S3_TMP = 'rm-s3-tmp'
+
+
+# MASTER PARSER
+parser = \
+    argparse.ArgumentParser(
+        description='%(prog)s CLI >>>',
+        epilog='^^^ %(prog)s CLI\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=None,
+        conflict_handler='error',
+        add_help=True)
+
+
+# Project Name
+parser.add_argument(
+    'project',
+    action='store',
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='<ProjectName> associated with "{}/<ProjectName>{}" config file'.format(Project.CONFIG_DIR_PATH, _YAML_EXT),
+    metavar='PROJECT_NAME')
+
+
+# COMMAND SUB-PARSERS
+cmd_sub_parsers = \
+    parser.add_subparsers(
+        title='SUB-COMMAND',
+        description='Sub-Command',
+        prog=None,
+        parser_class=argparse.ArgumentParser,
+        dest=CMD_ARG_NAME,
+        help='sub-command',
+        metavar=None)
+
+
+# UPLOAD CONFIG FILE
+parser___upload_config_file = \
+    cmd_sub_parsers.add_parser(
+        name=UPLOAD_CONFIG_FILE,
+        description='%(prog)s: CLI for .upload_project_config_file(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .upload_project_config_file(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+
+# PROFILE DATA FIELDS
+parser___profile_equipment_data_fields = \
+    cmd_sub_parsers.add_parser(
+        name=PROFILE_DATA_FIELDS_CMD,
+        description='%(prog)s: CLI for .profile_equipment_data_fields(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .profile_equipment_data_fields(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___profile_equipment_data_fields.add_argument(
+    '--gen-tp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment General Type name to filter',
+    metavar='EQ_GEN_TP_NAME',
+    dest='eq_gen_tp_name')
+
+parser___profile_equipment_data_fields.add_argument(
+    '--unq-tp-grp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment Unique Type Group name to filter',
+    metavar='EQ_UNQ_TP_GRP_NAME',
+    dest='eq_unq_tp_grp_name')
+
+parser___profile_equipment_data_fields.add_argument(
+    'to_months',
+    action=None,
+    nargs='*',
+    const=None,
+    default=[],
+    type=str,
+    choices=None,
+    help='data up to months (YYYY-MM)',
+    metavar='TO_MONTHS')
+
+
+# PROFILE DATA FIELD CORRELATIONS
+parser___profile_equipment_data_field_correlations = \
+    cmd_sub_parsers.add_parser(
+        name=PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD,
+        description='%(prog)s: CLI for .profile_equipment_data_field_pairwise_correlations(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .profile_equipment_data_field_pairwise_correlations(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___profile_equipment_data_field_correlations.add_argument(
+    '--gen-tp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment General Type name to filter',
+    metavar='EQ_GEN_TP_NAME',
+    dest='eq_gen_tp_name')
+
+parser___profile_equipment_data_field_correlations.add_argument(
+    '--unq-tp-grp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment Unique Type Group name to filter',
+    metavar='EQ_UNQ_TP_GRP_NAME',
+    dest='eq_unq_tp_grp_name')
+
+
+# RECOMMEND AUTO INCLUDED NUMERIC DATA FIELDS
+parser___recommend_auto_included_ppp_input_equipment_data_fields = \
+    cmd_sub_parsers.add_parser(
+        name=RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD,
+        description='%(prog)s: CLI for .recommend_auto_included_ppp_input_equipment_data_fields(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .recommend_auto_included_ppp_input_equipment_data_fields(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___recommend_auto_included_ppp_input_equipment_data_fields.add_argument(
+    'eq_gen_tp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment General Type name',
+    metavar='EQ_GEN_TP_NAME')
+
+parser___recommend_auto_included_ppp_input_equipment_data_fields.add_argument(
+    'eq_unq_tp_grp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment Unique Type Group name',
+    metavar='EQ_UNQ_TP_GRP_NAME')
+
+
+# TRAIN PPP
+parser___train_ppp = \
+    cmd_sub_parsers.add_parser(
+        name=TRAIN_PPP_CMD,
+        description='%(prog)s: CLI for .train_ppp_blueprint(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .train_ppp_blueprint(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___train_ppp.add_argument(
+    'eq_gen_tp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment General Type name',
+    metavar='EQ_GEN_TP_NAME')
+
+parser___train_ppp.add_argument(
+    'eq_unq_tp_grp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment Unique Type Group name',
+    metavar='EQ_UNQ_TP_GRP_NAME')
+
+parser___train_ppp.add_argument(
+    'ref_to',
+    action=None,
+    nargs='+',
+    const=None,
+    default=[],
+    type=str,
+    choices=None,
+    help='train PPP models up to month (YYYY-MM)',
+    metavar='REF_DATA_TO_MONTH')
+
+parser___train_ppp.add_argument(
+    '--seq-len',
+    action=None,
+    nargs=None,
+    const=None,
+    default=1,
+    type=int,
+    choices=None,
+    required=False,
+    help='input sequence length',
+    metavar='INPUT_SEQ_LEN',
+    dest='input_seq_len')
+
+parser___train_ppp.add_argument(
+    '--gen-q',
+    action=None,
+    nargs=None,
+    const=None,
+    default=68,
+    type=int,
+    choices=None,
+    required=False,
+    help='Deep Learning training generator queue size',
+    metavar='DL_TRAIN_GEN_Q_SIZE',
+    dest='dl_train_gen_q_size')
+
+parser___train_ppp.add_argument(
+    '--n-workers',
+    action=None,
+    nargs=None,
+    const=None,
+    default=3,
+    type=int,
+    choices=None,
+    required=False,
+    help='Deep Learning training no. of parallel processes',
+    metavar='DL_TRAIN_N_WORKERS',
+    dest='dl_train_n_workers')
+
+parser___train_ppp.add_argument(
+    '--n-gpus',
+    action=None,
+    nargs=None,
+    const=None,
+    default=1,
+    type=int,
+    choices=None,
+    required=False,
+    help='Deep Learning training no. of GPUs',
+    metavar='DL_TRAIN_N_GPUS',
+    dest='dl_train_n_gpus')
+
+parser___train_ppp.add_argument(
+    '--cpu-merge',
+    action='store_true',
+    default=False,
+    required=False,
+    help='Deep Learning training: CPU Merge flag',
+    dest='dl_train_cpu_merge')
+
+parser___train_ppp.add_argument(
+    '--keras',
+    action='store_true',
+    default=None,
+    required=False,
+    help='whether to use Keras',
+    dest='dl_train_keras')
+
+
+# EVAL PPP
+parser___eval_ppp = \
+    cmd_sub_parsers.add_parser(
+        name=EVAL_PPP_CMD,
+        description='%(prog)s: CLI for .eval_ppp_blueprint(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .eval_ppp_blueprint(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___eval_ppp.add_argument(
+    '--gen-tp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment General Type name to filter',
+    metavar='EQ_GEN_TP_NAME',
+    dest='eq_gen_tp_name')
+
+parser___eval_ppp.add_argument(
+    '--unq-tp-grp',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Equipment Unique Type Group name to filter',
+    metavar='EQ_UNQ_TP_GRP_NAME',
+    dest='eq_unq_tp_grp_name')
+
+parser___eval_ppp.add_argument(
+    '--sql-filter',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Custom SQL Filter',
+    metavar='SQL_FILTER',
+    dest='sql_filter')
+
+parser___eval_ppp.add_argument(
+    '--uuid',
+    action=None,
+    nargs='+',
+    const=None,
+    default=[],
+    type=str,
+    choices=None,
+    required=False,
+    help='PPP Blueprint UUID(s) to use for scoring',
+    metavar='PPP_BLUEPRINT_UUID',
+    dest='ppp_blueprint_uuids')
+
+parser___eval_ppp.add_argument(
+    '--excl-uuid',
+    action=None,
+    nargs='+',
+    const=None,
+    default=[],
+    type=str,
+    choices=None,
+    required=False,
+    help='PPP Blueprint UUID(s) to Exclude for Eval',
+    metavar='EXCL_PPP_BLUEPRINT_UUID',
+    dest='excl_ppp_blueprint_uuids')
+
+parser___eval___mut_excl_grp = \
+    parser___eval_ppp.add_mutually_exclusive_group(
+        required=False)
+
+parser___eval___mut_excl_grp.add_argument(
+    '-f', '--force-re-eval',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to force re-evaluating & re-saving Benchmark Metrics',
+    dest='force_re_eval')
+
+parser___eval___mut_excl_grp.add_argument(
+    '--no-save',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to skip saving evaluated Benchmark Metrics',
+    dest='no_save')
+
+
+# PPP ANOM SCORE
+parser___ppp_anom_score = \
+    cmd_sub_parsers.add_parser(
+        name=PPP_ANOM_SCORE_CMD,
+        description='%(prog)s: CLI for .ppp_anom_score(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .ppp_anom_score(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___ppp_anom_score.add_argument(
+    'eq_gen_tp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment General Type name',
+    metavar='EQ_GEN_TP_NAME')
+
+parser___ppp_anom_score.add_argument(
+    'eq_unq_tp_grp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment Unique Type Group name',
+    metavar='EQ_UNQ_TP_GRP_NAME')
+
+parser___ppp_anom_score.add_argument(
+    'date',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    help='date (YYYY-MM-DD) / month (YYYY-MM) to score (from)',
+    metavar='DATE')
+
+parser___ppp_anom_score.add_argument(
+    '--to',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='date (YYYY-MM-DD) / month (YYYY-MM) to score to',
+    metavar='TO_DATE',
+    dest='to_date')
+
+parser___ppp_anom_score.add_argument(
+    '--score-batch',
+    action=None,
+    nargs=None,
+    const=None,
+    default=10 ** 3,
+    type=int,
+    choices=None,
+    required=False,
+    help='Deep Learning scoring batch size',
+    metavar='DL_SCORE_BATCH_SIZE',
+    dest='dl_score_batch_size')
+
+parser___ppp_anom_score.add_argument(
+    '-f', '--force',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to force re-calculating PPP Reconstructions',
+    dest='force_calc')
+
+parser___ppp_anom_score.add_argument(
+    '--re-calc-daily',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to re-calculate Daily Anom Scores',
+    dest='re_calc_daily')
+
+parser___ppp_anom_score.add_argument(
+    '--sql-filter',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Custom SQL Filter',
+    metavar='SQL_FILTER',
+    dest='sql_filter')
+
+
+# PPP ANOM ALERT
+parser___ppp_anom_alert = \
+    cmd_sub_parsers.add_parser(
+        name=PPP_ANOM_ALERT_CMD,
+        description='%(prog)s: CLI for .ppp_anom_alert(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .ppp_anom_alert(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___ppp_anom_alert.add_argument(
+    'eq_gen_tp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment General Type name',
+    metavar='EQ_GEN_TP_NAME')
+
+parser___ppp_anom_alert.add_argument(
+    'eq_unq_tp_grp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment Unique Type Group name',
+    metavar='EQ_UNQ_TP_GRP_NAME')
+
+parser___ppp_anom_alert.add_argument(
+    '--from',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Anom Alert From Month',
+    metavar='FROM_MONTH',
+    dest='from_date')
+
+parser___ppp_anom_alert.add_argument(
+    '--to',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='Anom Alert To Month',
+    metavar='TO_MONTH',
+    dest='to_date')
+
+parser___ppp_anom_alert.add_argument(
+    '--redo',
+    action='store_true',
+    default=False,
+    required=False,
+    help='Whether to Redo All Anom Alerts for concerned Unique Type Group',
+    dest='redo')
+
+# AGG DATA
+parser___agg_data = \
+    cmd_sub_parsers.add_parser(
+        name=AGG_DATA_CMD,
+        description='%(prog)s: CLI for .agg_daily_equipment_data(...) >>>',
+        epilog='^^^ %(prog)s: CLI for .agg_daily_equipment_data(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+parser___agg_data.add_argument(
+    'eq_gen_tp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment General Type name',
+    metavar='EQ_GEN_TP_NAME')
+
+parser___agg_data.add_argument(
+    'eq_unq_tp_grp_name',
+    action=None,
+    nargs=None,
+    const=None,
+    type=str,
+    choices=None,
+    help='Equipment Unique Type Group name',
+    metavar='EQ_UNQ_TP_GRP_NAME')
+
+parser___agg_data.add_argument(
+    'date',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    help='date (YYYY-MM-DD) / month (YYYY-MM) to aggregate (from)',
+    metavar='DATE')
+
+parser___agg_data.add_argument(
+    '--to',
+    action=None,
+    nargs=None,
+    const=None,
+    default=None,
+    type=str,
+    choices=None,
+    required=False,
+    help='date (YYYY-MM-DD) / month (YYYY-MM) to aggregate to',
+    metavar='TO_DATE',
+    dest='to_date')
+
+
+parser___agg_data.add_argument(
+    '-f', '--force-re-agg',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to force re-aggregation',
+    dest='force_re_agg')
+
+
+parser___agg_data.add_argument(
+    '--re-insert-to-db',
+    action='store_true',
+    default=False,
+    required=False,
+    help='whether to force re-inserting to DB',
+    dest='force_re_insert_to_db')
+
+
+# RM S3 TMP
+parser___rm_s3_tmp = \
+    cmd_sub_parsers.add_parser(
+        name=RM_S3_TMP,
+        description='%(prog)s: CLI for {}.rm_s3_tmp(...) >>>',
+        epilog='^^^ %(prog)s: CLI for {}.rm_s3_tmp(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=argparse.SUPPRESS,
+        conflict_handler='error',
+        add_help=True)
+
+
+# parse args
+args = Namespace(**parser.parse_args().__dict__)
+
+
+cmd = args[CMD_ARG_NAME]
+
+
+if cmd == UPLOAD_CONFIG_FILE:
+    loaded_project = project(args.project, download_config_file=False)
+
+    local_project_config_file_name = args.project + _YAML_EXT
+
+    local_project_config_file_path = \
+        os.path.join(
+            Project.CONFIG_DIR_PATH,
+            local_project_config_file_name)
+
+    print('Uploading "{}" to "s3://{}/{}"... '
+          .format(local_project_config_file_path, Project.CONFIGS_S3_BUCKET, local_project_config_file_name),
+          end='')
+
+    loaded_project.s3_client.upload_file(
+        Filename=local_project_config_file_path,
+        Bucket=Project.CONFIGS_S3_BUCKET,
+        Key=local_project_config_file_name)
+
+    print('done!')
+
+    exit()
+
+
+# get project
+PROJECT = project(name=args.project)
+
+
+if cmd == PROFILE_DATA_FIELDS_CMD:
+    for to_month in tqdm.tqdm([None] + args.to_months):
+        print(PROJECT.profile_equipment_data_fields(
+            equipment_general_type_name=args.eq_gen_tp_name,
+            equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+            to_month=to_month))
+
+
+elif cmd == PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD:
+    print(PROJECT.profile_equipment_data_field_pairwise_correlations(
+            equipment_general_type_name=args.eq_gen_tp_name,
+            equipment_unique_type_group_name=args.eq_unq_tp_grp_name))
+
+
+elif cmd == RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD:
+    PROJECT.recommend_auto_included_ppp_input_equipment_data_fields(
+        equipment_general_type_name=args.eq_gen_tp_name,
+        equipment_unique_type_group_name=args.eq_unq_tp_grp_name)
+
+
+elif cmd == TRAIN_PPP_CMD:
+    if args.input_seq_len > 1:
+        args.dl_train_keras = True
+
+    if args.dl_train_keras:
+        __model_params__ = \
+            {'factory.name':
+                 'arimo.dl.experimental.keras.simple_lstm_regressor'
+                 if args.input_seq_len > 1
+                 else 'arimo.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
+             'train.n_samples': 248 * 10 ** 6,
+             'train.n_train_samples_per_epoch': 10 ** 6,
+             'train.min_n_val_samples_per_epoch': 10 ** 5,
+             'train.batch_size': 500,
+             'train.val_batch_size': 10 ** 4}
+
+        if args.input_seq_len > 1:
+            __model_params__['factory.n_fdfwd_hid_nodes'] = 68
+
+        else:
+            __model_params__['factory.n_hid_nodes'] = 168, 168, 168
+
+    else:
+        __model_params__ = \
+            {'factory.name': 'arimo.dl.cross_sectional.FfnResnetRegressor',
+             'factory.hidden_size': 1024,
+             'factory.num_residual_blocks': 4,
+             'factory.residual_block_keep_prob': .95,
+             'factory.residual_layer_keep_prob': .9,
+             'factory.hidden_size_multiplier': .5,
+             'factory.learning_rate': 1e-4,
+             'factory.batch_size': 512,
+             'factory.vocab_size': None,
+             'factory.embedding_size': None,
+             
+             'train.n_samples': 248 * 10 ** 6,
+             'train.n_train_samples_per_epoch': 10 ** 6,
+             'train.min_n_val_samples_per_epoch': 10 ** 5,
+             'train.batch_size': 500,
+             'train.val_batch_size': 10 ** 4}
+
+    for to_month in args.ref_to:
+        PROJECT.train_ppp_blueprint(
+            equipment_general_type_name=args.eq_gen_tp_name,
+            equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+            to_month=to_month,
+            timeser_input_len=args.input_seq_len, incl_time_features=True,
+            __model_params__=__model_params__,
+            __gen_queue_size__=args.dl_train_gen_q_size,
+            __n_workers__=args.dl_train_n_workers,
+            __multiproc__=True,
+            __n_gpus__=args.dl_train_n_gpus,
+            __cpu_merge__=args.dl_train_cpu_merge,
+            __cpu_reloc__=False,   # *** cpu_relocation MAKES TEMPLATE MODEL WEIGHTS FAIL TO UPDATE ***
+            verbose=True,
+            _spark=False)
+
+
+elif cmd == EVAL_PPP_CMD:
+    if args.ppp_blueprint_uuids:
+        for ppp_blueprint_uuid in args.ppp_blueprint_uuids:
+            PROJECT.eval_ppp_blueprint(
+                uuid=ppp_blueprint_uuid,
+                sql_filter=args.sql_filter,
+                save=not args.no_save, _force_re_eval=args.force_re_eval,
+                verbose=True)
+
+    elif args.eq_gen_tp_name:
+        if args.force_re_eval:
+            for _bp_obj in \
+                    (PROJECT.data.PredMaintBlueprints.filter(
+                        equipment_unique_type_group__name=args.eq_unq_tp_grp_name)
+                     if args.eq_unq_tp_grp_name
+                     else PROJECT.data.PredMaintBlueprints.all()) \
+                    .exclude(uuid__in=args.excl_ppp_blueprint_uuids):
+                PROJECT.eval_ppp_blueprint(
+                    uuid=_bp_obj.uuid,
+                    sql_filter=args.sql_filter,
+                    save=not args.no_save, _force_re_eval=True,
+                    verbose=True)
+
+        else:
+            if args.eq_unq_tp_grp_name:
+                _bp_objs_wo_benchmark_metrics = \
+                    [_bp_obj
+                     for _bp_obj in PROJECT.data.PredMaintBlueprints.filter(
+                        equipment_unique_type_group__name=args.eq_unq_tp_grp_name)
+                     if not _bp_obj.benchmark_metrics]
+
+            else:
+                _bp_objs_wo_benchmark_metrics = \
+                    [_bp_obj
+                     for _bp_obj in PROJECT.data.PredMaintBlueprints.all()
+                     if not _bp_obj.benchmark_metrics]
+
+            while _bp_objs_wo_benchmark_metrics:
+                random.shuffle(_bp_objs_wo_benchmark_metrics)
+
+                PROJECT.eval_ppp_blueprint(
+                    uuid=_bp_objs_wo_benchmark_metrics[0].uuid,
+                    sql_filter=args.sql_filter,
+                    save=not args.no_save, _force_re_eval=False,
+                    verbose=True)
+
+                if args.eq_unq_tp_grp_name:
+                    _bp_objs_wo_benchmark_metrics = \
+                        [_bp_obj
+                         for _bp_obj in PROJECT.data.PredMaintBlueprints.filter(
+                            equipment_unique_type_group__name=args.eq_unq_tp_grp_name)
+                         if not _bp_obj.benchmark_metrics]
+
+                else:
+                    _bp_objs_wo_benchmark_metrics = \
+                        [_bp_obj
+                         for _bp_obj in PROJECT.data.PredMaintBlueprints.all()
+                         if not _bp_obj.benchmark_metrics]
+
+    elif args.force_re_eval:
+        for _bp_obj in PROJECT.data.PredMaintBlueprints.all():
+            PROJECT.eval_ppp_blueprint(
+                uuid=_bp_obj.uuid,
+                sql_filter=args.sql_filter,
+                save=not args.no_save, _force_re_eval=True,
+                verbose=True)
+
+    else:
+        _bp_objs_wo_benchmark_metrics = \
+            [_bp_obj
+             for _bp_obj in PROJECT.data.PredMaintBlueprints.all()
+             if not _bp_obj.benchmark_metrics]
+
+        while _bp_objs_wo_benchmark_metrics:
+            random.shuffle(_bp_objs_wo_benchmark_metrics)
+
+            PROJECT.eval_ppp_blueprint(
+                uuid=_bp_objs_wo_benchmark_metrics[0].uuid,
+                sql_filter=args.sql_filter,
+                save=not args.no_save, _force_re_eval=False,
+                verbose=True)
+
+            _bp_objs_wo_benchmark_metrics = \
+                [_bp_obj
+                 for _bp_obj in PROJECT.data.PredMaintBlueprints.all()
+                 if not _bp_obj.benchmark_metrics]
+
+
+elif cmd == PPP_ANOM_SCORE_CMD:
+    PROJECT.ppp_anom_score(
+        equipment_general_type_name=args.eq_gen_tp_name,
+        equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+        date=args.date, to_date=args.to_date,
+        monthly=(len(args.date) == 7),
+        __batch_size__=args.dl_score_batch_size,
+        _force_calc=args.force_calc,
+        re_calc_daily=args.re_calc_daily,
+        sql_filter=args.sql_filter)
+
+
+elif cmd == PPP_ANOM_ALERT_CMD:
+    PROJECT.ppp_anom_alert(
+        equipment_general_type_name=args.eq_gen_tp_name,
+        equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+        from_date=args.from_date, to_date=args.to_date,
+        _redo=args.redo)
+
+
+elif cmd == AGG_DATA_CMD:
+    PROJECT.agg_daily_equipment_data(
+        equipment_general_type_name=args.eq_gen_tp_name,
+        equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
+        date=args.date, to_date=args.to_date,
+        monthly=(len(args.date) == 7),
+        _force_re_agg=args.force_re_agg,
+        _force_re_insert_to_db=args.force_re_insert_to_db)
+
+
+elif cmd == RM_S3_TMP:
+    PROJECT.rm_s3_tmp()

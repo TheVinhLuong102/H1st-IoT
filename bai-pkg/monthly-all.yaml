@@ -1,0 +1,85 @@
+parameters:
+  PROJECT:
+    type: string
+    required: true
+
+  EQUIPMENT_GENERAL_TYPE:
+    type: string
+    required: true
+
+  EQUIPMENT_UNIQUE_TYPE_GROUP:
+    type: string
+    required: true
+
+  N_FEEDERS:
+    type: int
+    default: 9
+
+  WORKER_ROLE:
+    type: string
+    default: etl   # run on BAI CPU worker
+
+  YARN_CLUSTER:
+    type: string
+    default: yarn-ccpm-xlarge
+
+  SLACK_CHANNEL:
+    type: string
+    default: '#devops-alerts'
+
+tasks:
+  - name: monthly-test-load-data
+    type: call
+    wait: false   # run in parallel to monthly-train below
+    worker_role: etl-dev
+    workflow: monthly-test-load-data
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      WORKER_ROLE: ${WORKER_ROLE}
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+  - name: monthly-train
+    type: call
+    wait: true
+    worker_role: etl-dev
+    workflow: monthly-train
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      N_FEEDERS: ${N_FEEDERS}
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+  - name: monthly-eval
+    type: call
+    worker_role: etl-dev
+    workflow: monthly-eval
+    params:
+      PROJECT: ${PROJECT}
+      EQUIPMENT_GENERAL_TYPE: ${EQUIPMENT_GENERAL_TYPE}
+      EQUIPMENT_UNIQUE_TYPE_GROUP: ${EQUIPMENT_UNIQUE_TYPE_GROUP}
+      WORKER_ROLE: ${WORKER_ROLE}
+      YARN_CLUSTER: ${YARN_CLUSTER}
+      SLACK_CHANNEL: ${SLACK_CHANNEL}
+
+on_failure:
+  - type: parallel
+
+    tasks:
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: monthly-all has failed :cry:'
+
+on_success:
+  - type: parallel
+
+    tasks:
+      - name: slack-notification
+        type: slack
+        worker_role: ${WORKER_ROLE}
+        channel: ${SLACK_CHANNEL}
+        text: 'Arimo.IoT.PredMaint BAI-pkg: monthly-all has succeeded :smile:'
