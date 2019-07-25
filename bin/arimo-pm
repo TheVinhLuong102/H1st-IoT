@@ -21,8 +21,8 @@ UPLOAD_CONFIG_FILE = 'upload-config-file'
 
 PROFILE_DATA_FIELDS_CMD = 'profile-data-flds'
 PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD = 'profile-data-fld-corrs'
-RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD = 'rec-auto-incl-input-data-flds'
 
+RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD = 'rec-auto-incl-ppp-input-data-flds'
 TRAIN_PPP_CMD = 'train-ppp'
 EVAL_PPP_CMD = 'eval-ppp'
 PPP_ANOM_SCORE_CMD = 'ppp-anom-score'

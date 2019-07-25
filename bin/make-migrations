@@ -6,53 +6,46 @@ import os
 from ruamel import yaml
 import shutil
 
-from arimo.IoT.DataAdmin import Project
-from arimo.IoT.DataAdmin._django_root.settings import _CONFIGS_FILE_PATH
+from arimo.IoT.DataAdmin._django_root.settings import _CONFIG_FILE_PATH
 from arimo.IoT.DataAdmin.util import _YAML_EXT
-
+from arimo.IoT.PredMaint import Project
 
 parser = argparse.ArgumentParser()
-
-parser.add_argument(
-    'project',
-    nargs='?',
-    default='TEST')
-
+parser.add_argument('project')
 args = parser.parse_args()
 
 
-configs_file_path = \
+config_file_path = \
     os.path.join(
-        Project.CONFIG_DIR_PATH,
+        Project.CONFIG_LOCAL_DIR_PATH,
         args.project + _YAML_EXT)
 
-db_creds = \
-    yaml.safe_load(stream=open(configs_file_path, 'r'))['db']
+db_creds = yaml.safe_load(stream=open(config_file_path, 'r'))['db']
 assert db_creds['host'] \
    and db_creds['db_name'] \
    and db_creds['user'] \
    and db_creds['password']
 
-CONFIGS_ORIG_FILE_PATH = _CONFIGS_FILE_PATH + '.orig'
+CONFIG_ORIG_FILE_PATH = _CONFIG_FILE_PATH + '.orig'
 
-assert not os.path.isfile(CONFIGS_ORIG_FILE_PATH)
-
-shutil.copyfile(
-    src=_CONFIGS_FILE_PATH,
-    dst=CONFIGS_ORIG_FILE_PATH)
-
-assert os.path.isfile(CONFIGS_ORIG_FILE_PATH)
+assert not os.path.isfile(CONFIG_ORIG_FILE_PATH)
 
 shutil.copyfile(
-    src=configs_file_path,
-    dst=_CONFIGS_FILE_PATH)
+    src=_CONFIG_FILE_PATH,
+    dst=CONFIG_ORIG_FILE_PATH)
+
+assert os.path.isfile(CONFIG_ORIG_FILE_PATH)
+
+shutil.copyfile(
+    src=config_file_path,
+    dst=_CONFIG_FILE_PATH)
 
 os.system('python3 manage.py makemigrations')
 
 shutil.copyfile(
-    src=CONFIGS_ORIG_FILE_PATH,
-    dst=_CONFIGS_FILE_PATH)
+    src=CONFIG_ORIG_FILE_PATH,
+    dst=_CONFIG_FILE_PATH)
 
-os.remove(CONFIGS_ORIG_FILE_PATH)
+os.remove(CONFIG_ORIG_FILE_PATH)
 
-assert not os.path.isfile(CONFIGS_ORIG_FILE_PATH)
+assert not os.path.isfile(CONFIG_ORIG_FILE_PATH)
