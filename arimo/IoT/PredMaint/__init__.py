@@ -386,29 +386,24 @@ class Project(object):
                         equipment_general_type_name.upper(),
                         equipment_unique_type_group_name)
 
-                try:
+                s3_parquet_df = \
+                    self.load_equipment_data(
+                        equipment_unique_type_group_data_set_name,
+                        spark=False, set_i_col=True, set_t_col=True,
+                        verbose=True)
+
+                if to_month:
+                    to_date = month_end(to_month)
+
                     s3_parquet_df = \
-                        self.load_equipment_data(
-                            equipment_unique_type_group_data_set_name,
-                            spark=False, set_i_col=True, set_t_col=True,
-                            verbose=True)
+                        s3_parquet_df.filterByPartitionKeys(
+                            (DATE_COL,
+                             str((datetime.datetime.strptime('{}-01'.format(to_month), '%Y-%m-%d') -
+                                  relativedelta(months=self.REF_N_MONTHS - 1)).date()),
+                             str(to_date)))
 
-                    if to_month:
-                        to_date = month_end(to_month)
-
-                        s3_parquet_df = \
-                            s3_parquet_df.filterByPartitionKeys(
-                                (DATE_COL,
-                                 str((datetime.datetime.strptime('{}-01'.format(to_month), '%Y-%m-%d') -
-                                      relativedelta(months=self.REF_N_MONTHS - 1)).date()),
-                                 str(to_date)))
-
-                    else:
-                        to_date = None
-
-                except Exception as err:
-                    print('*** {}: {} ***'.format(equipment_unique_type_group_data_set_name, err))
-                    continue
+                else:
+                    to_date = None
 
                 equipment_unique_type_group = \
                     self.data.EquipmentUniqueTypeGroups.get(
@@ -429,10 +424,8 @@ class Project(object):
                                 equipment_data_field.lower_numeric_null, \
                                 equipment_data_field.upper_numeric_null
 
-                        _distinct_values = \
-                            s3_parquet_df.distinct(equipment_data_field_name, count=True).to_dict()
-
-                        _n_distinct_values = len(_distinct_values)
+                        _distinct_values_proportions = s3_parquet_df.distinct(equipment_data_field_name, count=True).to_dict()
+                        _n_distinct_values = len(_distinct_values_proportions)
 
                         equipment_unique_type_group_data_field_profile = \
                             self.data.EquipmentUniqueTypeGroupDataFieldProfiles.create(
@@ -443,8 +436,7 @@ class Project(object):
                                 n_distinct_values=_n_distinct_values)
 
                         if _n_distinct_values <= self._MAX_N_DISTINCT_VALUES_TO_PROFILE:
-                            equipment_unique_type_group_data_field_profile.distinct_values = \
-                                _distinct_values
+                            equipment_unique_type_group_data_field_profile.distinct_values = _distinct_values_proportions
 
                         if s3_parquet_df.typeIsNum(equipment_data_field_name):
                             quartiles = \
@@ -513,16 +505,11 @@ class Project(object):
                         equipment_general_type_name.upper(),
                         equipment_unique_type_group_name)
 
-                try:
-                    s3_parquet_df = \
-                        self.load_equipment_data(
-                            equipment_unique_type_group_data_set_name,
-                            spark=False, set_i_col=True, set_t_col=True,
-                            verbose=True)
-
-                except Exception as err:
-                    print('*** {}: {} ***'.format(equipment_unique_type_group_data_set_name, err))
-                    continue
+                s3_parquet_df = \
+                    self.load_equipment_data(
+                        equipment_unique_type_group_data_set_name,
+                        spark=False, set_i_col=True, set_t_col=True,
+                        verbose=True)
 
                 equipment_unique_type_group = \
                     self.data.EquipmentUniqueTypeGroups.get(
@@ -533,9 +520,7 @@ class Project(object):
                     equipment_unique_type_group=equipment_unique_type_group) \
                 .delete()
 
-                equipment_data_fields = \
-                    equipment_unique_type_group.equipment_data_fields.filter(
-                        data_type=self.NUM_DATA_TYPE)
+                equipment_data_fields = equipment_unique_type_group.equipment_data_fields.filter(data_type=self.NUM_DATA_TYPE)
 
                 n_equipment_data_fields = equipment_data_fields.count()
 
@@ -630,8 +615,7 @@ class Project(object):
                 tqdm.tqdm(equipment_unique_type_group_service_config.equipment_unique_type_group_monitored_data_field_configs.all()):
             _equipment_unique_type_group_data_field_pairwise_correlations = \
                 equipment_unique_type_group_data_field_pairwise_correlations.filter(
-                    equipment_data_field=
-                        equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field)
+                    equipment_data_field=equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field)
 
             equipment_unique_type_group_monitored_data_field_config.highly_correlated_numeric_equipment_data_fields = \
                 [(i['equipment_data_field_2__name'], i['sample_correlation'])
@@ -672,7 +656,6 @@ class Project(object):
             equipment_general_type_name,
             equipment_unique_type_group_name,
             to_month,
-            set_i_col=True,
             verbose=True):
         equipment_unique_type_group_data_set_name = \
             '{}---{}'.format(
@@ -698,9 +681,7 @@ class Project(object):
                             equipment_unique_type_group_train_val_data_set_name + _PARQUET_EXT),
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
-                        if set_i_col
-                        else None,
+                    iCol=None,
                     tCol=self._DATE_TIME_COL_NAME,
                     verbose=verbose)
 
@@ -712,9 +693,7 @@ class Project(object):
                             equipment_unique_type_group_data_set_name + _PARQUET_EXT),
                     aws_access_key_id=self.params.s3.access_key_id,
                     aws_secret_access_key=self.params.s3.secret_access_key,
-                    iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
-                        if set_i_col
-                        else None,
+                    iCol=None,
                     tCol=self._DATE_TIME_COL_NAME,
                     verbose=verbose) \
                 .filterByPartitionKeys(
@@ -760,7 +739,6 @@ class Project(object):
             equipment_general_type_name,
             equipment_unique_type_group_name,
             to_month,
-            set_i_col=True,
             verbose=True):
         return S3ParquetDistributedDataFrame(
                 path=os.path.join(
@@ -773,9 +751,7 @@ class Project(object):
                             _PARQUET_EXT)),
                 aws_access_key_id=self.params.s3.access_key_id,
                 aws_secret_access_key=self.params.s3.secret_access_key,
-                iCol=self._EQUIPMENT_INSTANCE_ID_COL_NAME
-                    if set_i_col
-                    else None,
+                iCol=None,
                 tCol=self._DATE_TIME_COL_NAME,
                 verbose=verbose)
 
@@ -794,15 +770,9 @@ class Project(object):
             if uuid not in self._LOADED_BLUEPRINTS:
                 self._LOADED_BLUEPRINTS[uuid] = \
                     load_blueprint(
-                        dir_path=
-                            os.path.join(
-                                self.params.s3.ppp.blueprints_dir_path,
-                                uuid),
+                        dir_path=os.path.join(self.params.s3.ppp.blueprints_dir_path, uuid),
                         s3_bucket=self.params.s3.bucket,
-                        s3_dir_prefix=
-                            os.path.join(
-                                self.params.s3.ppp.blueprints_dir_prefix,
-                                uuid),
+                        s3_dir_prefix=os.path.join(self.params.s3.ppp.blueprints_dir_prefix, uuid),
                         aws_access_key_id=self.params.s3.access_key_id,
                         aws_secret_access_key=self.params.s3.secret_access_key,
                         s3_client=self.s3_client,
@@ -811,8 +781,6 @@ class Project(object):
             return self._LOADED_BLUEPRINTS[uuid]
 
         else:
-            assert equipment_general_type_name and equipment_unique_type_group_name
-
             equipment_unique_type_group = \
                 self.data.EquipmentUniqueTypeGroups.get(
                     equipment_general_type__name=equipment_general_type_name,
@@ -860,19 +828,15 @@ class Project(object):
                                 data=Namespace(
                                         label=Namespace(
                                             var=monitored_measure_numeric_equipment_data_field_name),
-
                                         pred_vars=
                                             _pred_vars_incl +
                                             included_excluded_equipment_data_field_names.included,
-
                                         pred_vars_excl=
                                             _pred_vars_excl +
                                             [monitored_measure_numeric_equipment_data_field_name] +
                                             included_excluded_equipment_data_field_names.excluded,
-
                                         force_cat=cat_equipment_data_field_names,
                                         force_num=num_equipment_data_field_names)),
-
                         verbose=False)
 
             blueprint_params = \
@@ -880,16 +844,12 @@ class Project(object):
                     data=Namespace(
                             id_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME,
                             time_col=self._DATE_TIME_COL_NAME,
-
                             force_cat=cat_equipment_data_field_names,
                             force_num=num_equipment_data_field_names,
-
                             nulls={equipment_data_field.name: (equipment_data_field.lower_numeric_null, equipment_data_field.upper_numeric_null)
                                    for equipment_data_field in equipment_unique_type_group.equipment_data_fields.all()}),
-
                     model=Namespace(
                             component_blueprints=component_blueprints),
-
                     persist=Namespace(
                             s3=Namespace(
                                 bucket=self.params.s3.bucket,
@@ -918,7 +878,6 @@ class Project(object):
                  'train.val_batch_size': 10 ** 4},
             params={},
             verbose=True,
-            spark=False,
             **kwargs):
         self.profile_equipment_data_fields(
             equipment_general_type_name=equipment_general_type_name,
@@ -939,11 +898,6 @@ class Project(object):
                 equipment_unique_type_group_name=equipment_unique_type_group_name,
                 incl_time_features=incl_time_features, excl_mth_time_features=False,
                 __model_params__=__model_params__, params=params)
-
-        print('TRAINING PPP BLUEPRINT for "{}---{}":\n{}'.format(
-                equipment_general_type_name.upper(),
-                equipment_unique_type_group_name,
-                self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name]))
 
         ppp_blueprint.train(
             df=self._train_val_s3_parquet_df(
@@ -975,8 +929,7 @@ class Project(object):
 
         label_var_names = []
 
-        for label_var_name in \
-                self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[bp_obj.equipment_unique_type_group.equipment_general_type.name][bp_obj.equipment_unique_type_group.name]:
+        for label_var_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[bp_obj.equipment_unique_type_group.equipment_general_type.name][bp_obj.equipment_unique_type_group.name]:
             benchmark_metrics_for_label_var_name = benchmark_metrics.get(label_var_name)
 
             if benchmark_metrics_for_label_var_name:
