@@ -254,19 +254,6 @@ parser___train_ppp.add_argument(
     metavar='REF_DATA_TO_MONTH')
 
 parser___train_ppp.add_argument(
-    '--seq-len',
-    action=None,
-    nargs=None,
-    const=None,
-    default=1,
-    type=int,
-    choices=None,
-    required=False,
-    help='input sequence length',
-    metavar='INPUT_SEQ_LEN',
-    dest='input_seq_len')
-
-parser___train_ppp.add_argument(
     '--gen-q',
     action=None,
     nargs=None,
@@ -734,26 +721,15 @@ elif cmd == RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD:
 
 
 elif cmd == TRAIN_PPP_CMD:
-    if args.input_seq_len > 1:
-        args.dl_train_keras = True
-
     if args.dl_train_keras:
         __model_params__ = \
-            {'factory.name':
-                 'arimo.dl.experimental.keras.simple_lstm_regressor'
-                 if args.input_seq_len > 1
-                 else 'arimo.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
+            {'factory.name': 'arimo.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
              'train.n_samples': 248 * 10 ** 6,
              'train.n_train_samples_per_epoch': 10 ** 6,
              'train.min_n_val_samples_per_epoch': 10 ** 5,
              'train.batch_size': 500,
-             'train.val_batch_size': 10 ** 4}
-
-        if args.input_seq_len > 1:
-            __model_params__['factory.n_fdfwd_hid_nodes'] = 68
-
-        else:
-            __model_params__['factory.n_hid_nodes'] = 168, 168, 168
+             'train.val_batch_size': 10 ** 4,
+             'factory.n_hid_nodes': (168, 168, 168)}
 
     else:
         __model_params__ = \
@@ -779,7 +755,7 @@ elif cmd == TRAIN_PPP_CMD:
             equipment_general_type_name=args.eq_gen_tp_name,
             equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
             to_month=to_month,
-            timeser_input_len=args.input_seq_len, incl_time_features=True,
+            incl_time_features=True,
             __model_params__=__model_params__,
             __gen_queue_size__=args.dl_train_gen_q_size,
             __n_workers__=args.dl_train_n_workers,

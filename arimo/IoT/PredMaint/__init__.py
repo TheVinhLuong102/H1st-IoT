@@ -829,7 +829,7 @@ class Project(object):
     def _ppp_blueprint(
             self, uuid=None, set_uuid=None,
             equipment_general_type_name=None, equipment_unique_type_group_name=None,
-            timeser_input_len=1, incl_time_features=True, excl_mth_time_features=False,
+            incl_time_features=True, excl_mth_time_features=False,
             __model_params__=
                 {'train.n_samples': 248 * 10 ** 6,
                  'train.n_train_samples_per_epoch': 10 ** 6,
@@ -902,30 +902,7 @@ class Project(object):
                         data_type=self.NUM_DATA_TYPE)
 
                 component_blueprints[monitored_measure_numeric_equipment_data_field_name] = \
-                    ts_regr.DLBlueprint(
-                        params=Namespace(
-                                data=Namespace(
-                                        label=Namespace(
-                                            var=monitored_measure_numeric_equipment_data_field_name),
-
-                                        pred_vars=
-                                            _pred_vars_incl +
-                                            included_excluded_equipment_data_field_names.included,
-
-                                        pred_vars_excl=
-                                            _pred_vars_excl +
-                                            [monitored_measure_numeric_equipment_data_field_name] +
-                                            included_excluded_equipment_data_field_names.excluded,
-
-                                        force_cat=cat_equipment_data_field_names,
-                                        force_num=num_equipment_data_field_names),
-
-                                min_input_ser_len=timeser_input_len,
-                                max_input_ser_len=timeser_input_len),
-
-                        verbose=False) \
-                    if timeser_input_len > 1 \
-                    else cs_regr.DLBlueprint(
+                    cs_regr.DLBlueprint(
                         params=Namespace(
                                 data=Namespace(
                                         label=Namespace(
@@ -967,21 +944,19 @@ class Project(object):
 
             blueprint_params.update(params)
 
-            return (ts_anom.DLPPPBlueprint
-                    if timeser_input_len > 1
-                    else cs_anom.DLPPPBlueprint)(
-                            uuid=set_uuid,
-                            params=blueprint_params, __model_params__=__model_params__,
-                            aws_access_key_id=self.params.s3.access_key_id,
-                            aws_secret_access_key=self.params.s3.secret_access_key,
-                            verbose=False,
-                            **kwargs)
+            return cs_anom.DLPPPBlueprint(
+                    uuid=set_uuid,
+                    params=blueprint_params, __model_params__=__model_params__,
+                    aws_access_key_id=self.params.s3.access_key_id,
+                    aws_secret_access_key=self.params.s3.secret_access_key,
+                    verbose=False,
+                    **kwargs)
 
     def train_ppp_blueprint(
             self,
             equipment_general_type_name, equipment_unique_type_group_name,
             to_month,
-            timeser_input_len=1, incl_time_features=True,
+            incl_time_features=True,
             __model_params__=
                 {'train.n_samples': 248 * 10 ** 6,
                  'train.n_train_samples_per_epoch': 10 ** 6,
@@ -1009,7 +984,6 @@ class Project(object):
                 set_uuid=ppp_blueprint_uuid,
                 equipment_general_type_name=equipment_general_type_name,
                 equipment_unique_type_group_name=equipment_unique_type_group_name,
-                timeser_input_len=timeser_input_len,
                 incl_time_features=incl_time_features, excl_mth_time_features=False,
                 __model_params__=__model_params__, params=params)
 
@@ -1023,7 +997,7 @@ class Project(object):
                 equipment_general_type_name=equipment_general_type_name,
                 equipment_unique_type_group_name=equipment_unique_type_group_name,
                 to_month=to_month,
-                set_i_col=timeser_input_len > 1,
+                set_i_col=False,
                 verbose=verbose),
             verbose=verbose,
             **kwargs)
