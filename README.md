@@ -1,11 +1,9 @@
-# Arimo IoT Data Admin
-
-Arimo's framework for managing IoT equipment data
+# Arimo Predictive Maintenance
 
 
 ## Deployment
 
-Sync config files from `arimo-iot-pm` S3 bucket down to `~/.arimo/IoT/`.
+Sync config files from `arimo-iot-pm` S3 bucket down to `~/.arimo/pm/`.
 
 The names of the YAML config files are the Project Names.
 
