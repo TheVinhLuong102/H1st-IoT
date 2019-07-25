@@ -41,7 +41,7 @@ from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 class Project(object):
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
     CONFIG_S3_BUCKET = 'arimo-iot-pm'
-    _AWS_PROFILE_NAME = 'arimo'
+    AWS_PROFILE_NAME = 'arimo'
 
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
@@ -207,7 +207,7 @@ class Project(object):
         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
             EquipmentDataFieldType.objects.get_or_create(name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
 
-        self.params.s3.bucket = self.data.GlobalConfigs.get_or_create(key='S3_BUCKET')[0].value
+        self.params.s3.bucket = GlobalConfig.objects.get_or_create(key='S3_BUCKET')[0].value
 
         if self.params.s3.bucket:
             if 'access_key_id' in self.params.s3:
@@ -215,11 +215,11 @@ class Project(object):
 
             else:
                 self.params.s3.access_key_id = \
-                    self.data.GlobalConfigs.get_or_create(
+                    GlobalConfig.objects.get_or_create(
                         key='AWS_ACCESS_KEY_ID')[0].value
 
                 self.params.s3.secret_access_key = \
-                    self.data.GlobalConfigs.get_or_create(
+                    GlobalConfig.objects.get_or_create(
                         key='AWS_SECRET_ACCESS_KEY')[0].value
 
             self.s3_client = \
@@ -238,53 +238,50 @@ class Project(object):
                     self.params.s3.equipment_data.raw_dir_prefix)
 
             self.params.s3.equipment_data.daily_agg_dir_path = \
-                os.path.join(
-                    's3://{}'.format(self.params.s3.bucket),
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
                     self.params.s3.equipment_data.daily_agg_dir_prefix)
 
             self.params.s3.equipment_data.train_val_benchmark_dir_path = \
-                os.path.join(
-                    's3://{}'.format(self.params.s3.bucket),
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
                     self.params.s3.equipment_data.train_val_benchmark_dir_prefix)
     
             self.params.s3.ppp.blueprints_dir_path = \
-                os.path.join(
-                    's3://{}'.format(self.params.s3.bucket),
+                's3://{}/{}'.format(
+                    self.params.s3.bucket,
                     self.params.s3.ppp.blueprints_dir_prefix)
 
         self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+            AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR,
                 defaults=dict(index=0))[0]
 
         self.ALERT_DIAGNOSIS_STATUS_MONITORING = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+            AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_MONITORING_STR,
                 defaults=dict(index=1))[0]
 
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+            AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=9))[0]
 
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS = \
-            self.data.PredMaintAlertDiagnosisStatuses.get_or_create(
+            AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=10))[0]
 
         # Equipment Unique Type Groups' Monitored & Included/Excluded Data Fields
         self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields = Namespace()
 
-        for equipment_unique_type_group_service_config in \
-                self.data.EquipmentUniqueTypeGroupPredMaintServiceConfigs.filter(active=True):
-            equipment_general_type_name = \
-                equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_general_type.name
+        for equipment_unique_type_group_service_config in EquipmentUniqueTypeGroupServiceConfig.objects.filter(active=True):
+            equipment_general_type_name = equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_general_type.name
 
             if equipment_general_type_name not in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields:
                 self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name] = Namespace()
 
-            equipment_unique_type_group_name = \
-                equipment_unique_type_group_service_config.equipment_unique_type_group.name
+            equipment_unique_type_group_name = equipment_unique_type_group_service_config.equipment_unique_type_group.name
 
             if equipment_unique_type_group_name not in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name]:
                 self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name] = Namespace()
@@ -292,8 +289,8 @@ class Project(object):
             included_categorical_equipment_data_field_names = \
                 {categorical_equipment_data_field.name
                  for categorical_equipment_data_field in
-                    equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_data_fields.exclude(
-                        data_type=self.NUM_DATA_TYPE)} \
+                    equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_data_fields
+                    .exclude(data_type=self.NUM_DATA_TYPE)} \
                 if equipment_unique_type_group_service_config.include_categorical_equipment_data_fields \
                 else set()
 
@@ -321,33 +318,6 @@ class Project(object):
                                             all=False))
                                 .difference(excluded_equipment_data_field_names)),
                         excluded=excluded_equipment_data_field_names)
-
-    def equipment_general_type(self, equipment_general_type_name):
-        return self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
-
-    def equipment_unique_type_group(self, equipment_general_type_name, equipment_unique_type_group_name):
-        return self.data.EquipmentUniqueTypeGroups.get(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_unique_type_group_name)
-
-    def equipment_data_field(self, equipment_general_type_name, equipment_data_field_name, control=False):
-        kwargs = \
-            dict(equipment_data_field_type=self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE) \
-                if control \
-                else dict(equipment_data_field_type__in=
-                          [self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
-                           self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
-                           self.ALARM_EQUIPMENT_DATA_FIELD_TYPE])
-
-        return self.data.EquipmentDataFields.get(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_data_field_name,
-                **kwargs)
-
-    def equipment_instance(self, equipment_general_type_name, equipment_instance_name):
-        return self.data.EquipmentInstances.get(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_instance_name)
 
     def load_equipment_data(
             self, equipment_data_set_name,
@@ -457,9 +427,9 @@ class Project(object):
                     continue
 
                 equipment_unique_type_group = \
-                    self.equipment_unique_type_group(
-                        equipment_general_type_name=equipment_general_type_name,
-                        equipment_unique_type_group_name=equipment_unique_type_group_name)
+                    self.data.EquipmentUniqueTypeGroups.get(
+                        equipment_general_type__name=equipment_general_type_name,
+                        name=equipment_unique_type_group_name)
 
                 self.data.EquipmentUniqueTypeGroupDataFieldProfiles.filter(
                     equipment_unique_type_group=equipment_unique_type_group,
@@ -572,9 +542,9 @@ class Project(object):
                     continue
 
                 equipment_unique_type_group = \
-                    self.equipment_unique_type_group(
-                        equipment_general_type_name=equipment_general_type_name,
-                        equipment_unique_type_group_name=equipment_unique_type_group_name)
+                    self.data.EquipmentUniqueTypeGroups.get(
+                        equipment_general_type__name=equipment_general_type_name,
+                        name=equipment_unique_type_group_name)
 
                 self.data.EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations.filter(
                     equipment_unique_type_group=equipment_unique_type_group) \
@@ -661,9 +631,9 @@ class Project(object):
             absolute_correlation_lower_threshold=.2,
             absolute_correlation_upper_threshold=.9):
         equipment_unique_type_group = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
         equipment_unique_type_group_service_config = \
             self.data.EquipmentUniqueTypeGroupPredMaintServiceConfigs.get(
@@ -785,9 +755,9 @@ class Project(object):
                             from_month, to_month, _PARQUET_EXT)))
 
         equipment_unique_type_group = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
         for col in train_val_s3_parquet_df.possibleNumContentCols:
             equipment_data_field = \
@@ -861,9 +831,9 @@ class Project(object):
             assert equipment_general_type_name and equipment_unique_type_group_name
 
             equipment_unique_type_group = \
-                self.equipment_unique_type_group(
-                    equipment_general_type_name=equipment_general_type_name,
-                    equipment_unique_type_group_name=equipment_unique_type_group_name)
+                self.data.EquipmentUniqueTypeGroups.get(
+                    equipment_general_type__name=equipment_general_type_name,
+                    name=equipment_unique_type_group_name)
 
             cat_equipment_data_field_names = []
             num_equipment_data_field_names = []
@@ -1008,9 +978,9 @@ class Project(object):
                 uuid=ppp_blueprint_uuid,
 
                 equipment_unique_type_group=
-                    self.equipment_unique_type_group(
-                        equipment_general_type_name=equipment_general_type_name,
-                        equipment_unique_type_group_name=equipment_unique_type_group_name),
+                    self.data.EquipmentUniqueTypeGroups.get(
+                        equipment_general_type__name=equipment_general_type_name,
+                        name=equipment_unique_type_group_name),
 
                 trained_to_date=month_end(to_month))
 
@@ -1189,14 +1159,17 @@ class Project(object):
                         equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile = \
                             self.data.EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles.update_or_create(
                                 equipment_unique_type_group=
-                                    self.equipment_unique_type_group(
-                                        equipment_general_type_name=equipment_general_type_name,
-                                        equipment_unique_type_group_name=equipment_unique_type_group_name),
+                                    self.data.EquipmentUniqueTypeGroups.get(
+                                        equipment_general_type__name=equipment_general_type_name,
+                                        name=equipment_unique_type_group_name),
                                 equipment_data_field=
-                                    self.equipment_data_field(
-                                        equipment_general_type_name=equipment_general_type_name,
-                                        equipment_data_field_name=label_var_name,
-                                        control=False),
+                                    self.data.EquipmentDataFields.get(
+                                        equipment_general_type__name=equipment_general_type_name,
+                                        name=label_var_name,
+                                        equipment_data_field_type__in=
+                                            [self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE,
+                                             self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
+                                             self.ALARM_EQUIPMENT_DATA_FIELD_TYPE]),
                                 trained_to_date=_active_bp_obj.trained_to_date,
                                 defaults=dict(
                                     n=global_benchmark_metrics['n']))[0]
@@ -1229,9 +1202,9 @@ class Project(object):
         _ARROW_PARQUET_MAX_N_ROWS_PER_FILE = 10 ** 9   # https://issues.apache.org/jira/browse/ARROW-2369
 
         equipment_unique_type_group = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
         equipment_unique_type_group_data_set_name = \
             '{}---{}'.format(
@@ -1751,9 +1724,7 @@ class Project(object):
                 anom_scores_df.loc[
                     anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
-            equipment_general_type = \
-                self.equipment_general_type(
-                    equipment_general_type_name=equipment_general_type_name)
+            equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
             equipment_instances = \
                 {equipment_instance_id:
@@ -1804,13 +1775,11 @@ class Project(object):
         anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
         
         equipment_unique_type_group = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
-        equipment_general_type = \
-            self.equipment_general_type(
-                equipment_general_type_name=equipment_general_type_name)
+        equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
         equipment_instances = \
             {equipment_instance_id:
@@ -1847,9 +1816,9 @@ class Project(object):
             from_date=None, to_date=None,
             _redo=False):
         equipment_unique_type_group = \
-            self.equipment_unique_type_group(
-                equipment_general_type_name=equipment_general_type_name,
-                equipment_unique_type_group_name=equipment_unique_type_group_name)
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
         if from_date:
             from_date = \
@@ -1930,9 +1899,9 @@ class Project(object):
                         equipment_unique_type_group=equipment_unique_type_group,
 
                         equipment_instance=
-                            self.equipment_instance(
-                                equipment_general_type_name=equipment_general_type_name,
-                                equipment_instance_name=equipment_instance_id),
+                            self.data.EquipmentInstances.get(
+                                equipment_general_type__name=equipment_general_type_name,
+                                name=equipment_instance_id),
 
                         risk_score_name=anom_score_name,
                         threshold=threshold,
@@ -2428,9 +2397,7 @@ class Project(object):
                     (DATE_COL,
                      copy_agg_daily_equipment_data_to_db_for_dates))
 
-            equipment_general_type = \
-                self.equipment_general_type(
-                    equipment_general_type_name=equipment_general_type_name)
+            equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
             equipment_instances = \
                 {equipment_instance_id:
@@ -2451,9 +2418,9 @@ class Project(object):
             from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
 
             equipment_unique_type_group = \
-                self.equipment_unique_type_group(
-                    equipment_general_type_name=equipment_general_type_name,
-                    equipment_unique_type_group_name=equipment_unique_type_group_name)
+                self.data.EquipmentUniqueTypeGroups.get(
+                    equipment_general_type__name=equipment_general_type_name,
+                    name=equipment_unique_type_group_name)
 
             assert equipment_unique_type_group.equipment_data_fields.count(), \
                 '*** {} HAS NO DATA FIELDS ***'.format(equipment_unique_type_group)
@@ -2546,7 +2513,7 @@ def project(name, download_config_file=True):
               .format(Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
               end='')
 
-        key, secret = key_pair(profile=Project._AWS_PROFILE_NAME)
+        key, secret = key_pair(profile=Project.AWS_PROFILE_NAME)
 
         s3.client(
             access_key_id=key,
