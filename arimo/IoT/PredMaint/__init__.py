@@ -1019,32 +1019,15 @@ class Project(object):
                 print(label_var_name,
                       ppp_blueprint.params.benchmark_metrics[label_var_name][ppp_blueprint._GLOBAL_EVAL_KEY])
 
-    def _reactivate_ppp_blueprints(self):
-        for bp_obj in tqdm.tqdm(self.data.PredMaintBlueprints.all()):
-            good = self._good_ppp_blueprint(bp_obj=bp_obj)
-
-            if good is None:
-                assert not (bp_obj.benchmark_metrics or bp_obj.active), \
-                    '*** {} ***'.format(bp_obj.uuid)
-
-            elif bp_obj.active != good:
-                print('{}ACTIVATING {}... '.format(
-                    '' if good else '*** IN',
-                    bp_obj.uuid),
-                    end='')
-
-                bp_obj.active = good
-                bp_obj.save()
-
-                print('done!')
-
     def profile_ppp_blueprints(self, equipment_general_type_name, equipment_unique_type_group_name):
-        equipment_general_type_name = clean_lower_str(equipment_general_type_name)
-        equipment_unique_type_group_name = clean_lower_str(equipment_unique_type_group_name)
+        equipment_unique_type_group = \
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
         _active_bp_objs = \
             self.data.PredMaintBlueprints.filter(
-                equipment_unique_type_group__name=equipment_unique_type_group_name,
+                equipment_unique_type_group=equipment_unique_type_group,
                 active=True)
 
         if _active_bp_objs.count():
@@ -1053,17 +1036,12 @@ class Project(object):
                         max(_bp_obj.timestamp
                             for _bp_obj in _active_bp_objs.filter(
                                 trained_to_date=_active_bp_obj.trained_to_date)):
-                    d = dict(trained_to_date=_active_bp_obj.trained_to_date)
-
                     for label_var_name, benchmark_metrics in _active_bp_obj.benchmark_metrics.items():
                         global_benchmark_metrics = benchmark_metrics[AbstractPPPBlueprint._GLOBAL_EVAL_KEY]
 
                         equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile = \
                             self.data.EquipmentUniqueTypeGroupDataFieldPredMaintBlueprintBenchmarkMetricProfiles.update_or_create(
-                                equipment_unique_type_group=
-                                    self.data.EquipmentUniqueTypeGroups.get(
-                                        equipment_general_type__name=equipment_general_type_name,
-                                        name=equipment_unique_type_group_name),
+                                equipment_unique_type_group=equipment_unique_type_group,
                                 equipment_data_field=
                                     self.data.EquipmentDataFields.get(
                                         equipment_general_type__name=equipment_general_type_name,
@@ -1073,25 +1051,12 @@ class Project(object):
                                              self.CALC_EQUIPMENT_DATA_FIELD_TYPE,
                                              self.ALARM_EQUIPMENT_DATA_FIELD_TYPE]),
                                 trained_to_date=_active_bp_obj.trained_to_date,
-                                defaults=dict(
-                                    n=global_benchmark_metrics['n']))[0]
+                                defaults=dict(n=global_benchmark_metrics['n']))[0]
 
-                        _R2_col_name = '{}___R2'.format(label_var_name)
-                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.r2 = \
-                            d[_R2_col_name] = global_benchmark_metrics['R2']
-
-                        _MAE_col_name = '{}___MAE'.format(label_var_name)
-                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.mae = \
-                            d[_MAE_col_name] = global_benchmark_metrics['MAE']
-
-                        _MedAE_col_name = '{}___MedAE'.format(label_var_name)
-                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.medae = \
-                            d[_MedAE_col_name] = global_benchmark_metrics['MedAE']
-
-                        _RMSE_col_name = '{}___RMSE'.format(label_var_name)
-                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.rmse = \
-                            d[_RMSE_col_name] = global_benchmark_metrics['RMSE']
-
+                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.r2 = global_benchmark_metrics['R2']
+                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.mae = global_benchmark_metrics['MAE']
+                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.medae = global_benchmark_metrics['MedAE']
+                        equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.rmse = global_benchmark_metrics['RMSE']
                         equipment_unique_type_group_data_field_blueprint_benchmark_metric_profile.save()
     
     def ppp_anom_score(
