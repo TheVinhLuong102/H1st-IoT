@@ -906,7 +906,6 @@ class Project(object):
                 equipment_general_type_name=equipment_general_type_name,
                 equipment_unique_type_group_name=equipment_unique_type_group_name,
                 to_month=to_month,
-                set_i_col=False,
                 verbose=verbose),
             verbose=verbose,
             **kwargs)
@@ -985,7 +984,6 @@ class Project(object):
                     equipment_general_type_name=equipment_general_type_name,
                     equipment_unique_type_group_name=equipment_unique_type_group_name,
                     to_month=to_month,
-                    set_i_col=False,
                     verbose=verbose)
 
             if sql_filter:
