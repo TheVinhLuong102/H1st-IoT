@@ -1764,27 +1764,6 @@ class Project(object):
 
         ppp_anom_scores_df = ppp_anom_scores_s3_parquet_df.collect()
 
-        try:
-            ppp_anom_scores_df[DATE_COL] = \
-                ppp_anom_scores_df[DATE_COL].dt.date
-            
-        except:
-            ppp_anom_scores_df[DATE_COL] = \
-                pandas.to_datetime(
-                    arg=ppp_anom_scores_df[DATE_COL],
-                    errors='raise',
-                    dayfirst=False,
-                    yearfirst=True,
-                    utc=None,
-                    box=True,
-                    format='%Y-%m-%d',
-                    exact=True,
-                    unit=None,   # cannot specify both format and unit
-                    infer_datetime_format=False,
-                    origin='unix',
-                    cache=False
-                ).dt.date
-
         if from_date or to_date:
             ppp_anom_scores_df = ppp_anom_scores_df.loc[
                 ((ppp_anom_scores_df[DATE_COL] >= from_date) if from_date else True) &
