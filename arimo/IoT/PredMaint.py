@@ -2332,8 +2332,8 @@ def project(name, download_config_file=True):
                 dir=Project.CONFIG_LOCAL_DIR_PATH,
                 hdfs=False)
 
-        print('Downloading "s3://{}/{}" to "{}"... '
-              .format(Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
+        print('Downloading "s3://{}/{}" to "{}"... '.format(
+                Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
               end='')
 
         key, secret = key_pair(profile=Project.AWS_PROFILE_NAME)
