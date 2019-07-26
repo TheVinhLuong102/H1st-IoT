@@ -2107,6 +2107,11 @@ class Project(object):
                                         '{}={}'.format(DATE_COL, _date)))):
                     if _force_re_insert_to_db:
                         copy_agg_daily_equipment_data_to_db_for_dates.append(_date)
+
+                        self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
+                            equipment_unique_type_group=equipment_unique_type_group,
+                            date=_date,
+                            defaults=dict(finished=None))
                             
                     continue
 
