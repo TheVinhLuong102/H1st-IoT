@@ -2224,8 +2224,6 @@ class Project(object):
                 date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
             .delete()
 
-            from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
-
             equipment_unique_type_group = \
                 self.data.EquipmentUniqueTypeGroups.get(
                     equipment_general_type__name=equipment_general_type_name,
@@ -2233,6 +2231,14 @@ class Project(object):
 
             assert equipment_unique_type_group.equipment_data_fields.count(), \
                 '*** {} HAS NO DATA FIELDS ***'.format(equipment_unique_type_group)
+
+            for date in tqdm.tqdm(copy_agg_daily_equipment_data_to_db_for_dates):
+                self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
+                    equipment_unique_type_group=equipment_unique_type_group,
+                    date=date,
+                    defaults=dict(finished=None))
+
+            from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
 
             for equipment_unique_type_group_daily_agg_df in \
                     tqdm.tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),
@@ -2302,6 +2308,14 @@ class Project(object):
                                         equipment_instance_data_field_daily_aggs.append(equipment_instance_data_field_daily_agg)
 
                     self.data.EquipmentInstanceDataFieldDailyAggs.bulk_create(equipment_instance_data_field_daily_aggs)
+
+            finish_date_time = datetime.datetime.utcnow()
+
+            for date in tqdm.tqdm(copy_agg_daily_equipment_data_to_db_for_dates):
+                self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
+                    equipment_unique_type_group=equipment_unique_type_group,
+                    date=date,
+                    defaults=dict(finished=finish_date_time))
 
 
 def project(name, download_config_file=True):
