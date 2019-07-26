@@ -1549,6 +1549,11 @@ class Project(object):
                 date__gte=copy_anom_scores_from_date) \
             .delete()
 
+            self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
+                equipment_unique_type_group=equipment_unique_type_group,
+                date__gte=copy_anom_scores_from_date) \
+            .update(finished=None)
+
             anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
             equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
@@ -1578,18 +1583,17 @@ class Project(object):
                         risk_score_name=risk_score_name,
                         date=row[DATE_COL],
                         risk_score_value=row[risk_score_name])
-
                     for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                         for risk_score_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                             if pandas.notnull(row[risk_score_name]))
 
-            date_time = datetime.datetime.utcnow()
+            finish_date_time = datetime.datetime.utcnow()
 
             for date in tqdm.tqdm(anom_scores_df[DATE_COL].unique()):
                 self.data.EquipmentUniqueTypeGroupRiskScoringTasks.update_or_create(
                     equipment_unique_type_group=equipment_unique_type_group,
                     date=date,
-                    defaults=dict(finished=date_time))
+                    defaults=dict(finished=finish_date_time))
 
     def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
         import pandas as pd
