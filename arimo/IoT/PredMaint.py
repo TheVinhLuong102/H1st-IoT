@@ -1582,13 +1582,11 @@ class Project(object):
                         for risk_score_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                             if pandas.notnull(row[risk_score_name]))
 
-            finish_date_time = datetime.datetime.utcnow()
-
-            for date in tqdm.tqdm(anom_scores_df[DATE_COL]):
-                self.data.EquipmentUniqueTypeGroupRiskScoringTasks.update_or_create(
-                    equipment_unique_type_group=equipment_unique_type_group,
-                    date=date,
-                    defaults=dict(finished=finish_date_time))
+            self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
+                equipment_unique_type_group=equipment_unique_type_group,
+                date__in=anom_scores_df[DATE_COL]) \
+            .update(
+                finished=datetime.datetime.utcnow())
 
     def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
         import pandas as pd
@@ -2300,13 +2298,11 @@ class Project(object):
 
                     self.data.EquipmentInstanceDataFieldDailyAggs.bulk_create(equipment_instance_data_field_daily_aggs)
 
-            finish_date_time = datetime.datetime.utcnow()
-
-            for date in tqdm.tqdm(copy_agg_daily_equipment_data_to_db_for_dates):
-                self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
-                    equipment_unique_type_group=equipment_unique_type_group,
-                    date=date,
-                    defaults=dict(finished=finish_date_time))
+            self.data.EquipmentUniqueTypeGroupDataAggTasks.filter(
+                equipment_unique_type_group=equipment_unique_type_group,
+                date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
+            .update(
+                finished=datetime.datetime.utcnow())
 
 
 def project(name, download_config_file=True):
