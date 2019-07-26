@@ -44,9 +44,9 @@ class EquipmentUniqueTypeGroupRiskScoringTask(Model):
             '-date'
 
 
-class EquipmentUniqueTypeGroupCopyRiskScoresToDBTask(Model):
-    RELATED_NAME = 'equipment_unique_type_group_copy_risk_scores_to_db_task'
-    RELATED_QUERY_NAME = 'equipment_unique_type_group_copy_risk_scores_to_db_tasks'
+class EquipmentUniqueTypeGroupDataAggTask(Model):
+    RELATED_NAME = 'equipment_unique_type_group_data_agg_task'
+    RELATED_QUERY_NAME = 'equipment_unique_type_group_data_agg_tasks'
 
     equipment_unique_type_group = \
         ForeignKey(

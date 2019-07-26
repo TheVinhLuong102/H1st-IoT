@@ -12,7 +12,7 @@ for s in open('requirements.txt').readlines():
             if lower_s.startswith('django >=')
             else ('Django-AutoComplete-Light >= 3.2.10, < 3.3'   # last 3.2.x ver compat w/ Py2
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
-                  else ('DjangoRESTFramework-Filters >= 0.10.2, < 1'   # last 0.x ver compat w/ Py2
+                  else ('DjangoRESTFramework-Filters >= 0.11.1, < 1'   # last 0.x ver compat w/ Py2
                         if six.PY2 and lower_s.startswith('djangorestframework-filters')
                         else ('DjangoRESTFramework >= 3.9.4'   # last 3.9 ver compat w/ Py2
                               if six.PY2 and lower_s.startswith('djangorestframework')

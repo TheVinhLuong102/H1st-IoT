@@ -3,7 +3,8 @@ from django.contrib.admin import ModelAdmin, site
 from silk.profiling.profiler import silk_profile
 
 from .models import \
-    EquipmentUniqueTypeGroupRiskScoringTask, EquipmentUniqueTypeGroupCopyRiskScoresToDBTask
+    EquipmentUniqueTypeGroupRiskScoringTask, \
+    EquipmentUniqueTypeGroupDataAggTask
 
 
 class EquipmentUniqueTypeGroupRiskScoringTaskAdmin(ModelAdmin):
@@ -24,7 +25,7 @@ class EquipmentUniqueTypeGroupRiskScoringTaskAdmin(ModelAdmin):
     list_select_related = \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
@@ -51,7 +52,7 @@ site.register(
     admin_class=EquipmentUniqueTypeGroupRiskScoringTaskAdmin)
 
 
-class EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin(ModelAdmin):
+class EquipmentUniqueTypeGroupDataAggTaskAdmin(ModelAdmin):
     list_display = \
         'equipment_unique_type_group', \
         'date', \
@@ -69,22 +70,22 @@ class EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin(ModelAdmin):
     list_select_related = \
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
 
-    show_full_result_count = False   # too many
+    show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
         'date', \
         'finished'
 
-    @silk_profile(name='ADMIN: Equipment Unique Type Group Copy Risk Scores to DB Tasks')
+    @silk_profile(name='ADMIN: Equipment Unique Type Group Data Agg Tasks')
     def changelist_view(self, request, extra_context=None):
-        return super(EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin, self).changelist_view(
+        return super(EquipmentUniqueTypeGroupDataAggTaskAdmin, self).changelist_view(
                 request=request,
                 extra_context=extra_context)
 
-    @silk_profile(name='ADMIN: Equipment Unique Type Group Copy Risk Scores to DB  Task')
+    @silk_profile(name='ADMIN: Equipment Unique Type Group Data Agg Task')
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        return super(EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin, self).changeform_view(
+        return super(EquipmentUniqueTypeGroupDataAggTaskAdmin, self).changeform_view(
                 request=request,
                 object_id=object_id,
                 form_url=form_url,
@@ -92,5 +93,5 @@ class EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin(ModelAdmin):
 
 
 site.register(
-    EquipmentUniqueTypeGroupCopyRiskScoresToDBTask,
-    admin_class=EquipmentUniqueTypeGroupCopyRiskScoresToDBTaskAdmin)
+    EquipmentUniqueTypeGroupDataAggTask,
+    admin_class=EquipmentUniqueTypeGroupDataAggTaskAdmin)
