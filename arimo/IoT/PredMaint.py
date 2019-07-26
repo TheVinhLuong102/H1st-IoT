@@ -2024,6 +2024,9 @@ class Project(object):
 
                 _tmp_dir_path = tempfile.mkdtemp()
 
+                if _equipment_unique_type_group_s3_parquet_ddf.nPieces == 1:
+                    _equipment_unique_type_group_s3_parquet_ddf.tCol = self._DATE_TIME_COL_NAME
+
                 _equipment_unique_type_group_s3_parquet_ddf(
                     'SELECT \
                         {0}, \
@@ -2069,12 +2072,11 @@ class Project(object):
                         secret_access_key=self.params.s3.secret_access_key,
                         verbose=False)
 
+                    copy_agg_daily_equipment_data_to_db_for_dates.append(partition_key[(len(DATE_COL) + 1):])
+
                 fs.rm(path=_tmp_dir_path,
                       is_dir=True,
                       hdfs=False)
-
-                copy_agg_daily_equipment_data_to_db_for_dates += \
-                    pandas.date_range(start=_mth_str + '-01', end=month_end(_mth_str)).date.tolist()
 
                 _mth_str = month_str(_mth_str, n_months_offset=1)
 
