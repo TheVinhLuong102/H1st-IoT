@@ -1,5 +1,3 @@
-from __future__ import division
-
 from django.db.models import \
     Model, \
     DateField, DateTimeField, \
@@ -39,6 +37,10 @@ class EquipmentUniqueTypeGroupRiskScoringTask(Model):
             auto_now_add=False)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'date'
+
         ordering = \
             'equipment_unique_type_group', \
             '-date'
@@ -74,6 +76,10 @@ class EquipmentUniqueTypeGroupDataAggTask(Model):
             auto_now_add=False)
 
     class Meta:
+        unique_together = \
+            'equipment_unique_type_group', \
+            'date'
+
         ordering = \
             'equipment_unique_type_group', \
             '-date'

@@ -2155,8 +2155,7 @@ class Project(object):
                                  else _equipment_unique_type_group_s3_parquet_ddf).distinct(col))
 
                     else:
-                        n_distinct_values = \
-                            len(_equipment_unique_type_group_s3_parquet_ddf.distinct(col))
+                        n_distinct_values = len(_equipment_unique_type_group_s3_parquet_ddf.distinct(col))
 
                     if n_distinct_values <= self._MAX_N_DISTINCT_VALUES_TO_PROFILE:
                         agg_col_strs.append(

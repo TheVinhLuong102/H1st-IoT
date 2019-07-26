@@ -22,15 +22,19 @@ class EquipmentUniqueTypeGroupRiskScoringTaskAdmin(ModelAdmin):
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name'
 
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
-
     show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
         'date', \
         'finished'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+            .select_related(
+                'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+            .defer(
+                'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated')
 
     @silk_profile(name='ADMIN: Equipment Unique Type Group Risk Scoring Tasks')
     def changelist_view(self, request, extra_context=None):
@@ -67,15 +71,19 @@ class EquipmentUniqueTypeGroupDataAggTaskAdmin(ModelAdmin):
         'equipment_unique_type_group__equipment_general_type__name', \
         'equipment_unique_type_group__name'
 
-    list_select_related = \
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type'
-
     show_full_result_count = False
 
     readonly_fields = \
         'equipment_unique_type_group', \
         'date', \
         'finished'
+
+    def get_queryset(self, request):
+        return super(type(self), self).get_queryset(request=request) \
+                .select_related(
+                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
+                .defer(
+                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated')
 
     @silk_profile(name='ADMIN: Equipment Unique Type Group Data Agg Tasks')
     def changelist_view(self, request, extra_context=None):
