@@ -1611,8 +1611,6 @@ class Project(object):
 
         from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
-        msg = 'Writing Anom Scores into DB...'
-
         for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
             _anom_scores_df = \
                 anom_scores_df.iloc[
@@ -1949,6 +1947,14 @@ class Project(object):
 
         copy_agg_daily_equipment_data_to_db_for_dates = []
 
+        equipment_unique_type_group = \
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
+
+        assert equipment_unique_type_group.equipment_data_fields.count(), \
+            '*** {} HAS NO DATA FIELDS ***'.format(equipment_unique_type_group)
+
         if monthly:
             mth_str = date
             assert len(mth_str) == 7
@@ -2008,8 +2014,7 @@ class Project(object):
                                  else _equipment_unique_type_group_s3_parquet_ddf).distinct(col))
 
                     else:
-                        n_distinct_values = \
-                            len(_equipment_unique_type_group_s3_parquet_ddf.distinct(col))
+                        n_distinct_values = len(_equipment_unique_type_group_s3_parquet_ddf.distinct(col))
 
                     if n_distinct_values <= self._MAX_N_DISTINCT_VALUES_TO_PROFILE:
                         agg_col_strs.append(
@@ -2070,7 +2075,14 @@ class Project(object):
                         secret_access_key=self.params.s3.secret_access_key,
                         verbose=False)
 
-                    copy_agg_daily_equipment_data_to_db_for_dates.append(partition_key[(len(DATE_COL) + 1):])
+                    _date = partition_key[(len(DATE_COL) + 1):]
+
+                    copy_agg_daily_equipment_data_to_db_for_dates.append(_date)
+
+                    self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
+                        equipment_unique_type_group=equipment_unique_type_group,
+                        date=_date,
+                        defaults=dict(finished=None))
 
                 fs.rm(path=_tmp_dir_path,
                       is_dir=True,
@@ -2172,6 +2184,11 @@ class Project(object):
 
                 copy_agg_daily_equipment_data_to_db_for_dates.append(_date)
 
+                self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
+                    equipment_unique_type_group=equipment_unique_type_group,
+                    date=_date,
+                    defaults=dict(finished=None))
+
         if copy_agg_daily_equipment_data_to_db_for_dates:
             # free up Spark resources for other tasks
             arimo.backend.spark.stop()
@@ -2212,20 +2229,6 @@ class Project(object):
                 equipment_instance__in=equipment_instances.values(),
                 date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
             .delete()
-
-            equipment_unique_type_group = \
-                self.data.EquipmentUniqueTypeGroups.get(
-                    equipment_general_type__name=equipment_general_type_name,
-                    name=equipment_unique_type_group_name)
-
-            assert equipment_unique_type_group.equipment_data_fields.count(), \
-                '*** {} HAS NO DATA FIELDS ***'.format(equipment_unique_type_group)
-
-            for date in tqdm.tqdm(copy_agg_daily_equipment_data_to_db_for_dates):
-                self.data.EquipmentUniqueTypeGroupDataAggTasks.update_or_create(
-                    equipment_unique_type_group=equipment_unique_type_group,
-                    date=date,
-                    defaults=dict(finished=None))
 
             from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
 
