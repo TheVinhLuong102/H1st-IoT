@@ -142,7 +142,8 @@ class Project(object):
             AlertDiagnosisStatus, Alert
 
         from arimo.IoT.DataAdmin.tasks.models import \
-            EquipmentUniqueTypeGroupRiskScoringTask
+            EquipmentUniqueTypeGroupRiskScoringTask, \
+            EquipmentUniqueTypeGroupDataAggTask
 
         self.data = \
             Namespace(
@@ -189,7 +190,8 @@ class Project(object):
                 PredMaintAlertDiagnosisStatuses=AlertDiagnosisStatus.objects,
                 PredMaintAlerts=Alert.objects,
 
-                EquipmentUniqueTypeGroupRiskScoringTasks=EquipmentUniqueTypeGroupRiskScoringTask.objects)
+                EquipmentUniqueTypeGroupRiskScoringTasks=EquipmentUniqueTypeGroupRiskScoringTask.objects,
+                EquipmentUniqueTypeGroupDataAggTasks=EquipmentUniqueTypeGroupDataAggTask.objects)
 
         self.CAT_DATA_TYPE = DataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
 
