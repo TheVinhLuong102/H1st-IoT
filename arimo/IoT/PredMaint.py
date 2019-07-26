@@ -452,26 +452,21 @@ class Project(object):
                                     errors='raise') \
                                 .to_dict()
 
-                            equipment_unique_type_group_data_field_profile.sample_min = \
-                                quartiles['min']
+                            equipment_unique_type_group_data_field_profile.sample_min = quartiles['min']
 
                             equipment_unique_type_group_data_field_profile.outlier_rst_min = \
                                 s3_parquet_df.outlierRstMin(equipment_data_field_name)
 
-                            equipment_unique_type_group_data_field_profile.sample_quartile = \
-                                quartiles['25%']
+                            equipment_unique_type_group_data_field_profile.sample_quartile = quartiles['25%']
 
-                            equipment_unique_type_group_data_field_profile.sample_median = \
-                                quartiles['50%']
+                            equipment_unique_type_group_data_field_profile.sample_median = quartiles['50%']
 
-                            equipment_unique_type_group_data_field_profile.sample_3rd_quartile = \
-                                quartiles['75%']
+                            equipment_unique_type_group_data_field_profile.sample_3rd_quartile = quartiles['75%']
 
                             equipment_unique_type_group_data_field_profile.outlier_rst_max = \
                                 s3_parquet_df.outlierRstMax(equipment_data_field_name)
 
-                            equipment_unique_type_group_data_field_profile.sample_max = \
-                                quartiles['max']
+                            equipment_unique_type_group_data_field_profile.sample_max = quartiles['max']
 
                         equipment_unique_type_group_data_field_profile.save()
 
