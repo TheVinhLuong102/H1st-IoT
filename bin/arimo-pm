@@ -261,7 +261,7 @@ parser___eval_ppp.add_argument(
 parser___eval_ppp.add_argument(
     '--uuid',
     nargs='+',
-    help='PPP Blueprint UUID(s) to use for scoring',
+    help='UUID(s) of PPP Blueprint(s) to evaluate',
     metavar='PPP_BLUEPRINT_UUID',
     dest='ppp_blueprint_uuids')
 
@@ -323,7 +323,7 @@ parser___ppp_anom_score.add_argument(
 parser___ppp_anom_score.add_argument(
     '--re-calc-daily',
     action='store_true',
-    help='whether to re-calculate Daily Anom Scores',
+    help='whether to re-calculate Daily PPP Anomaly Scores',
     dest='re_calc_daily')
 
 parser___ppp_anom_score.add_argument(
@@ -358,20 +358,20 @@ parser___ppp_anom_alert.add_argument(
 
 parser___ppp_anom_alert.add_argument(
     '--from',
-    help='Anom Alert From Month',
+    help='PPP Anomaly Alert from Month (YYYY-MM)',
     metavar='FROM_MONTH',
     dest='from_date')
 
 parser___ppp_anom_alert.add_argument(
     '--to',
-    help='Anom Alert To Month',
+    help='PPP Anomaly Alert to Month (YYYY-MM)',
     metavar='TO_MONTH',
     dest='to_date')
 
 parser___ppp_anom_alert.add_argument(
     '--redo',
     action='store_true',
-    help='Whether to Redo All Anom Alerts for concerned Unique Type Group',
+    help='whether to REDO all PPP Anomaly Alerts for concerned Equipment Unique Type Group',
     dest='redo')
 
 
