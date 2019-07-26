@@ -336,8 +336,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
 
         ordering = \
             '-active', \
-            'equipment_unique_type_group_service_config', \
-            'monitored_equipment_data_field'
+            'monitored_equipment_data_field__name'
 
 
 @python_2_unicode_compatible
