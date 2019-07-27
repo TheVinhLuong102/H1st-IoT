@@ -546,7 +546,7 @@ elif cmd == EVAL_PPP_CMD:
             PROJECT.eval_ppp_blueprint(
                 uuid=ppp_blueprint_uuid,
                 sql_filter=args.sql_filter,
-                save=not args.no_save, _force_re_eval=args.force_re_eval,
+                _force_re_eval=args.force_re_eval,
                 verbose=True)
 
     elif args.eq_gen_tp_name:
@@ -559,7 +559,7 @@ elif cmd == EVAL_PPP_CMD:
                 PROJECT.eval_ppp_blueprint(
                     uuid=_bp_obj.uuid,
                     sql_filter=args.sql_filter,
-                    save=not args.no_save, _force_re_eval=True,
+                    _force_re_eval=True,
                     verbose=True)
 
         else:
@@ -582,7 +582,7 @@ elif cmd == EVAL_PPP_CMD:
                 PROJECT.eval_ppp_blueprint(
                     uuid=_bp_objs_wo_benchmark_metrics[0].uuid,
                     sql_filter=args.sql_filter,
-                    save=not args.no_save, _force_re_eval=False,
+                    _force_re_eval=False,
                     verbose=True)
 
                 if args.eq_unq_tp_grp_name:
@@ -603,7 +603,7 @@ elif cmd == EVAL_PPP_CMD:
             PROJECT.eval_ppp_blueprint(
                 uuid=_bp_obj.uuid,
                 sql_filter=args.sql_filter,
-                save=not args.no_save, _force_re_eval=True,
+                _force_re_eval=True,
                 verbose=True)
 
     else:
@@ -618,7 +618,7 @@ elif cmd == EVAL_PPP_CMD:
             PROJECT.eval_ppp_blueprint(
                 uuid=_bp_objs_wo_benchmark_metrics[0].uuid,
                 sql_filter=args.sql_filter,
-                save=not args.no_save, _force_re_eval=False,
+                _force_re_eval=False,
                 verbose=True)
 
             _bp_objs_wo_benchmark_metrics = \
