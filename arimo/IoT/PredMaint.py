@@ -1545,7 +1545,9 @@ class Project(object):
 
             anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
-            for date in tqdm.tqdm(anom_scores_df[DATE_COL]):
+            dates = anom_scores_df[DATE_COL].unique()
+
+            for date in tqdm.tqdm(dates):
                 self.data.EquipmentUniqueTypeGroupRiskScoringTasks.update_or_create(
                     equipment_unique_type_group=equipment_unique_type_group,
                     date=date,
@@ -1584,7 +1586,7 @@ class Project(object):
 
             self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
                 equipment_unique_type_group=equipment_unique_type_group,
-                date__in=anom_scores_df[DATE_COL]) \
+                date__in=dates) \
             .update(
                 finished=datetime.datetime.utcnow())
 
