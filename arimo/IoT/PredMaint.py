@@ -1159,7 +1159,7 @@ class Project(object):
                         _to_calc = True
 
                     except Exception as err:
-                        print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                        print('*** NO DATA FOR {} IN {}: {} ***'.format(
                                 equipment_unique_type_group_data_set_name, _mth_str, err))
 
                         _to_calc = False
@@ -1270,7 +1270,7 @@ class Project(object):
                                 equipment_unique_type_group_data_set_name, _date, err))
 
             if blueprints_to_calc_for_dates:
-                print('*** SCORING "{}" BY {} ***'.format(
+                print('*** SCORING {} BY {} ***'.format(
                         equipment_unique_type_group_data_set_name, blueprints_to_calc_for_dates))
 
                 err_mults_s3_dir_path = \
@@ -1358,7 +1358,7 @@ class Project(object):
                 if monthly \
                 else min(calc_daily_for_dates)
 
-            print('*** AGGREGATING DAILY ERROR MULTIPLES FOR "{}" ON ~{:,} DATES FROM {} TO {} ***'.format(
+            print('*** AGGREGATING DAILY ERROR MULTIPLES FOR {} ON ~{:,} DATES FROM {} TO {} ***'.format(
                     equipment_unique_type_group_data_set_name,
                     len(calc_daily_for_dates), min(calc_daily_for_dates), max(calc_daily_for_dates)))
 
@@ -1973,7 +1973,7 @@ class Project(object):
             _mth_str = mth_str
 
             while _mth_str <= to_mth_str:
-                print('*** AGGREGATING "{}" DATA FOR {} ***'.format(
+                print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _mth_str))
 
                 try:
@@ -1984,7 +1984,7 @@ class Project(object):
                              _mth_str + '-31'))
 
                 except Exception as err:
-                    print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                    print('*** NO DATA FOR {} IN {}: {} ***'.format(
                             equipment_unique_type_group_data_set_name, _mth_str, err))
 
                     _mth_str = month_str(_mth_str, n_months_offset=1)
@@ -2117,7 +2117,7 @@ class Project(object):
                             
                     continue
 
-                print('*** AGGREGATING "{}" DATA FOR {} ***'.format(
+                print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _date))
 
                 try:
@@ -2127,7 +2127,7 @@ class Project(object):
                              _date))
 
                 except Exception as err:
-                    print('*** NO DATA FOR "{}" IN {}: {} ***'.format(
+                    print('*** NO DATA FOR {} IN {}: {} ***'.format(
                             equipment_unique_type_group_data_set_name, _date, err))
 
                     continue
