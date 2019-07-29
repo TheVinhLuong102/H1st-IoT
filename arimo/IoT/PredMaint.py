@@ -1002,7 +1002,7 @@ class Project(object):
             equipment_general_type_name=equipment_general_type_name,
             equipment_unique_type_group_name=equipment_unique_type_group_name)
 
-        print('{}{} ({})'.format(uuid, '' if active else ' (*** INACTIVATED ***)'))
+        print('{}{}'.format(uuid, '' if active else ' (*** INACTIVATED ***)'))
         for label_var_name, component_blueprint_params in ppp_blueprint.params.model.component_blueprints.items():
             if component_blueprint_params.model.ver:
                 print(label_var_name,
