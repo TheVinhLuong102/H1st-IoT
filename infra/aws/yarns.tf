@@ -12,9 +12,9 @@ module "yarn-medium" {
   # TODO : support ebs for master node
 
   workers              = 1
-  instance_type        = "c5.9xlarge"
-  master_instance_type = "m5.2xlarge"
-  yarn_worker_memory   = "70000"
+  instance_type        = "c5n.9xlarge"
+  master_instance_type = "m5a.2xlarge"
+  yarn_worker_memory   = "96000"
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
@@ -35,9 +35,9 @@ module "yarn-large" {
   # TODO : support ebs for master node
 
   workers              = 1
-  instance_type        = "c5.18xlarge"
-  master_instance_type = "m5.2xlarge"
-  yarn_worker_memory   = "145000"
+  instance_type        = "c5n.18xlarge"
+  master_instance_type = "m5a.2xlarge"
+  yarn_worker_memory   = "192000"
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
@@ -58,9 +58,9 @@ module "yarn-xlarge" {
   # TODO : support ebs for master node
 
   workers              = 3
-  instance_type        = "c5.9xlarge"
-  master_instance_type = "m5.2xlarge"
-  yarn_worker_memory   = "70000"
+  instance_type        = "c5n.18xlarge"
+  master_instance_type = "m5a.2xlarge"
+  yarn_worker_memory   = "192000"
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
@@ -82,8 +82,8 @@ module "yarn-xxlarge" {
 
   workers              = 9
   instance_type        = "c5.18xlarge"
-  master_instance_type = "m5.2xlarge"
-  yarn_worker_memory   = "70000"
+  master_instance_type = "m5a.2xlarge"
+  yarn_worker_memory   = "192000"
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
