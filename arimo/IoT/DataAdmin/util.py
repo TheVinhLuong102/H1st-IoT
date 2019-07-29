@@ -24,22 +24,3 @@ def clean_lower_str(s):
 
 def clean_upper_str(s):
     return _clean_str(s).upper()
-
-
-def missing_date_strs(among_dates):
-    import pandas
-
-    return {str(date)
-            for date in
-            pandas.date_range(
-                start=min(among_dates),
-                end=max(among_dates),
-                periods=None,
-                freq='D',
-                tz=None,
-                normalize=False,
-                name=None,
-                closed=None).date} \
-        .difference(
-            str(date)
-            for date in among_dates)
