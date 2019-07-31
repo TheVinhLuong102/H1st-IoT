@@ -870,11 +870,6 @@ class Project(object):
             params={},
             verbose=True,
             **kwargs):
-        self.profile_equipment_data_fields(
-            equipment_general_type_name=equipment_general_type_name,
-            equipment_unique_type_group_name=equipment_unique_type_group_name,
-            to_month=to_month)
-
         ppp_blueprint_uuid = \
             '{}---{}---to-{}---{}'.format(
                 equipment_general_type_name.upper(),
