@@ -1473,6 +1473,8 @@ class Project(object):
                     DATE_COL,
                     *daily_mean_abs_mae_mult_col_names)
 
+            assert isinstance(daily_err_mults_df[DATE_COL].iloc[0], datetime.date)
+
             overall_anom_score_col_name = \
                 self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + \
                 AbstractPPPBlueprint._dailyMean_PREFIX + \
@@ -1494,6 +1496,8 @@ class Project(object):
                     overall_anom_score_col_name,
                     *daily_mean_abs_mae_mult_col_names,
                     id_col=self._EQUIPMENT_INSTANCE_ID_COL_NAME)
+
+            assert isinstance(anom_scores_df[DATE_COL].iloc[0], datetime.date)
 
             anom_scores_parquet_file_name = 'PPPAnomScores' + _PARQUET_EXT
 
