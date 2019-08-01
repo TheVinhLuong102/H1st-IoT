@@ -1762,8 +1762,6 @@ class Project(object):
 
         ppp_anom_scores_df = ppp_anom_scores_s3_parquet_df.collect()
 
-        assert isinstance(ppp_anom_scores_df[DATE_COL].iloc[0], datetime.date)
-
         if from_date or to_date:
             ppp_anom_scores_df = ppp_anom_scores_df.loc[
                 ((ppp_anom_scores_df[DATE_COL] >= from_date) if from_date else True) &
@@ -1783,8 +1781,6 @@ class Project(object):
                 inplace=False,
                 col_level=0,
                 col_fill='')
-
-        assert isinstance(ppp_anom_scores_df[DATE_COL].iloc[0], datetime.date)
 
         n_rows = len(ppp_anom_scores_df)
 
