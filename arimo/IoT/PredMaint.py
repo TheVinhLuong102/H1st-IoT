@@ -751,7 +751,7 @@ class Project(object):
             equipment_general_type_name=None, equipment_unique_type_group_name=None,
             incl_time_features=True, excl_mth_time_features=False,
             __model_params__=
-                {'train.n_samples': 248 * 10 ** 6,
+                {'train.n_samples': 10 ** 8,
                  'train.n_train_samples_per_epoch': 10 ** 6,
                  'train.min_n_val_samples_per_epoch': 10 ** 5,
                  'train.batch_size': 500,
