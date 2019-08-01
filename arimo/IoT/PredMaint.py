@@ -1506,9 +1506,7 @@ class Project(object):
 
             anom_scores_df.to_parquet(
                 fname=_tmp_parquet_file_path,
-                engine='pyarrow',
-                compression='snappy',
-                flavor='spark')
+                index=False)
 
             s3.mv(
                 from_path=_tmp_parquet_file_path,
