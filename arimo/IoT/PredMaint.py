@@ -1540,8 +1540,6 @@ class Project(object):
                 date__gte=copy_anom_scores_from_date) \
             .update(finished=None)
 
-            _anom_scores_df = anom_scores_df
-
             anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
             dates = anom_scores_df[DATE_COL].unique()
@@ -1588,8 +1586,6 @@ class Project(object):
                 date__in=dates) \
             .update(
                 finished=datetime.datetime.utcnow())
-
-            return _anom_scores_df
 
     def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
         import pandas as pd
