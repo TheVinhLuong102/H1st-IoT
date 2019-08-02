@@ -497,7 +497,7 @@ elif cmd == TRAIN_PPP_CMD:
     if args.dl_train_keras:
         __model_params__ = \
             {'factory.name': 'arimo.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
-             'train.n_samples': 248 * 10 ** 6,
+             'train.n_samples': 10 ** 8,
              'train.n_train_samples_per_epoch': 10 ** 6,
              'train.min_n_val_samples_per_epoch': 10 ** 5,
              'train.batch_size': 500,
@@ -517,7 +517,7 @@ elif cmd == TRAIN_PPP_CMD:
              'factory.vocab_size': None,
              'factory.embedding_size': None,
              
-             'train.n_samples': 248 * 10 ** 6,
+             'train.n_samples': 10 ** 8,
              'train.n_train_samples_per_epoch': 10 ** 6,
              'train.min_n_val_samples_per_epoch': 10 ** 5,
              'train.batch_size': 500,
