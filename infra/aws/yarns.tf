@@ -64,7 +64,7 @@ module "yarn-xlarge" {
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
-  cluster_version      = "20190729"
+  cluster_version      = "20190802"
 }
 
 module "yarn-xxlarge" {
@@ -81,11 +81,11 @@ module "yarn-xxlarge" {
   # TODO : support ebs for master node
 
   workers              = 9
-  instance_type        = "c5.18xlarge"
+  instance_type        = "c5n.18xlarge"
   master_instance_type = "m5a.2xlarge"
   yarn_worker_memory   = "192000"
   project_tag          = var.project_tag
   environment_tag      = var.environment_tag
 
-  cluster_version      = "20190729"
+  cluster_version      = "20190730"
 }
