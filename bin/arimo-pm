@@ -532,7 +532,6 @@ elif cmd == TRAIN_PPP_CMD:
             __model_params__=__model_params__,
             __gen_queue_size__=args.dl_train_gen_q_size,
             __n_workers__=args.dl_train_n_workers,
-            __multiproc__=True,
             __n_gpus__=args.dl_train_n_gpus,
             __cpu_merge__=args.dl_train_cpu_merge,
             __cpu_reloc__=False,   # *** cpu_relocation MAKES TEMPLATE MODEL WEIGHTS FAIL TO UPDATE ***
