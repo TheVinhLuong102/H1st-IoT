@@ -37,7 +37,7 @@ resource "aws_instance" "master" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = "64"
+    volume_size = "256"
   }
 
   volume_tags = {
