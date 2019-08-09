@@ -1154,7 +1154,7 @@ class Project(object):
                         _to_calc = True
 
                     except Exception as err:
-                        print('*** NO DATA FOR {} IN {}: {} ***'.format(
+                        print('*** CANNOT LOAD DATA FOR {} IN {}: {} ***'.format(
                                 equipment_unique_type_group_data_set_name, _mth_str, err))
 
                         _to_calc = False
@@ -1261,7 +1261,7 @@ class Project(object):
                             blueprints_to_calc_for_dates[active_ppp_blueprint_train_to_date] = [_date]
 
                     except Exception as err:
-                        print('*** NO DATA FOR {} ON {}: {} ***'.format(
+                        print('*** CANNOT LOAD DATA FOR {} ON {}: {} ***'.format(
                                 equipment_unique_type_group_data_set_name, _date, err))
 
             if blueprints_to_calc_for_dates:
@@ -1977,7 +1977,7 @@ class Project(object):
                              _mth_str + '-31'))
 
                 except Exception as err:
-                    print('*** NO DATA FOR {} IN {}: {} ***'.format(
+                    print('*** CANNOT LOAD DATA FOR {} IN {}: {} ***'.format(
                             equipment_unique_type_group_data_set_name, _mth_str, err))
 
                     _mth_str = month_str(_mth_str, n_months_offset=1)
@@ -2120,7 +2120,7 @@ class Project(object):
                              _date))
 
                 except Exception as err:
-                    print('*** NO DATA FOR {} IN {}: {} ***'.format(
+                    print('*** CANNOT LOAD DATA FOR {} IN {}: {} ***'.format(
                             equipment_unique_type_group_data_set_name, _date, err))
 
                     continue
