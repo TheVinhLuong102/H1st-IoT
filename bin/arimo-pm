@@ -12,7 +12,7 @@ from arimo.util import Namespace
 from arimo.util.aws import s3
 
 from arimo.IoT.DataAdmin.util import _YAML_EXT
-from arimo.IoT.PredMaint import Project, project
+from arimo.IoT.PredMaint import Project
 
 
 CMD_ARG_NAME = 'cmd'
@@ -446,7 +446,7 @@ cmd = args[CMD_ARG_NAME]
 
 
 if cmd == UPLOAD_CONFIG_FILE:
-    loaded_project = project(args.project, download_config_file=False)
+    PROJECT = Project(name=args.project, download_config_file=False)
 
     local_project_config_file_name = args.project + _YAML_EXT
 
@@ -459,7 +459,7 @@ if cmd == UPLOAD_CONFIG_FILE:
           .format(local_project_config_file_path, Project.CONFIG_S3_BUCKET, local_project_config_file_name),
           end='')
 
-    loaded_project.s3_client.upload_file(
+    PROJECT.s3_client.upload_file(
         Filename=local_project_config_file_path,
         Bucket=Project.CONFIG_S3_BUCKET,
         Key=local_project_config_file_name)
@@ -470,7 +470,7 @@ if cmd == UPLOAD_CONFIG_FILE:
 
 
 # get project
-PROJECT = project(name=args.project)
+PROJECT = Project(name=args.project)
 
 
 if cmd == PROFILE_DATA_FIELDS_CMD:

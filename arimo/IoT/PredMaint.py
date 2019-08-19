@@ -102,9 +102,41 @@ class Project(object):
     _MAX_N_DISTINCT_VALUES_TO_PROFILE = 30
     _MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME = 10 ** 3
 
-    def __init__(self, params, **kwargs):
+    def __init__(self, name, download_config_file=True, **kwargs):
+        local_project_config_file_name = name + _YAML_EXT
+
+        local_project_config_file_path = \
+            os.path.join(
+                self.CONFIG_LOCAL_DIR_PATH,
+                local_project_config_file_name)
+    
+        if download_config_file:
+            if not os.path.isdir(self.CONFIG_LOCAL_DIR_PATH):
+                fs.mkdir(
+                    dir=self.CONFIG_LOCAL_DIR_PATH,
+                    hdfs=False)
+    
+            print('Downloading "s3://{}/{}" to "{}"... '.format(
+                    self.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
+                  end='')
+    
+            key, secret = key_pair(profile=self.AWS_PROFILE_NAME)
+    
+            s3.client(
+                access_key_id=key,
+                secret_access_key=secret) \
+            .download_file(
+                Bucket=self.CONFIG_S3_BUCKET,
+                Key=local_project_config_file_name,
+                Filename=local_project_config_file_path)
+    
+            print('done!')
+
         self.params = Namespace(**self._DEFAULT_PARAMS)
-        self.params.update(params, **kwargs)
+        self.params.update(
+            yaml.safe_load(
+                open(local_project_config_file_path, 'r')),
+            **kwargs)
 
         assert self.params.db.host \
            and self.params.db.db_name \
@@ -2305,38 +2337,3 @@ class Project(object):
                 date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
             .update(
                 finished=datetime.datetime.utcnow())
-
-
-def project(name, download_config_file=True):
-    local_project_config_file_name = name + _YAML_EXT
-
-    local_project_config_file_path = \
-        os.path.join(
-            Project.CONFIG_LOCAL_DIR_PATH,
-            local_project_config_file_name)
-
-    if download_config_file:
-        if not os.path.isdir(Project.CONFIG_LOCAL_DIR_PATH):
-            fs.mkdir(
-                dir=Project.CONFIG_LOCAL_DIR_PATH,
-                hdfs=False)
-
-        print('Downloading "s3://{}/{}" to "{}"... '.format(
-                Project.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
-              end='')
-
-        key, secret = key_pair(profile=Project.AWS_PROFILE_NAME)
-
-        s3.client(
-            access_key_id=key,
-            secret_access_key=secret) \
-        .download_file(
-            Bucket=Project.CONFIG_S3_BUCKET,
-            Key=local_project_config_file_name,
-            Filename=local_project_config_file_path)
-
-        print('done!')
-
-    return Project(
-            params=yaml.safe_load(
-                    open(local_project_config_file_path, 'r')))
