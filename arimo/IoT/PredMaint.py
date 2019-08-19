@@ -1173,11 +1173,14 @@ class Project(object):
                         _to_calc = False
                         
                 else:
+                    equipment_unique_type_group_s3_parquet_ddf = \
+                        self.load_equipment_data(
+                            equipment_unique_type_group_data_set_name,
+                            spark=True, set_i_col=False)
+
                     try:
                         s3_parquet_ddf = \
-                            self.load_equipment_data(
-                                equipment_unique_type_group_data_set_name,
-                                spark=True, set_i_col=False) \
+                            equipment_unique_type_group_s3_parquet_ddf \
                             .filterByPartitionKeys(
                                 (DATE_COL,
                                  _mth_str + '-01',
@@ -1277,12 +1280,15 @@ class Project(object):
                                 blueprints_to_calc_for_dates[active_ppp_blueprint_train_to_date] = [_date]
 
                 else:
+                    equipment_unique_type_group_s3_parquet_ddf = \
+                        self.load_equipment_data(
+                            equipment_unique_type_group_data_set_name,
+                            spark=True, set_i_col=False)
+
                     try:
                         # load to make sure the equipment data does exist properly
                         s3_parquet_ddf = \
-                            self.load_equipment_data(
-                                equipment_unique_type_group_data_set_name,
-                                spark=True, set_i_col=False) \
+                            equipment_unique_type_group_s3_parquet_ddf \
                             .filterByPartitionKeys(
                                 (DATE_COL,
                                  _date))
@@ -1957,11 +1963,6 @@ class Project(object):
                 equipment_general_type_name.upper(),
                 equipment_unique_type_group_name)
 
-        equipment_unique_type_group_s3_parquet_ddf = \
-            self.load_equipment_data(
-                equipment_unique_type_group_data_set_name,
-                spark=True, set_i_col=False, set_t_col=False)
-
         s3_dir_prefix = \
             os.path.join(
                 self.params.s3.equipment_data.daily_agg_dir_prefix,
@@ -2000,6 +2001,11 @@ class Project(object):
             while _mth_str <= to_mth_str:
                 print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _mth_str))
+
+                equipment_unique_type_group_s3_parquet_ddf = \
+                    self.load_equipment_data(
+                        equipment_unique_type_group_data_set_name,
+                        spark=True, set_i_col=False, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2144,6 +2150,11 @@ class Project(object):
 
                 print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _date))
+
+                equipment_unique_type_group_s3_parquet_ddf = \
+                    self.load_equipment_data(
+                        equipment_unique_type_group_data_set_name,
+                        spark=True, set_i_col=False, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
