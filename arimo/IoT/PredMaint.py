@@ -2232,8 +2232,9 @@ class Project(object):
                     defaults=dict(finished=None))
 
         if copy_agg_daily_equipment_data_to_db_for_dates:
-            # free up Spark resources for other tasks
-            arimo.backend.spark.stop()
+            if arimo.backend.chkSpark():
+                # free up Spark resources for other tasks
+                arimo.backend.spark.stop()
 
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
