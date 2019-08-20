@@ -1173,7 +1173,6 @@ class Project(object):
                         _to_calc = False
                         
                 else:
-                    print('*** LOADING DDF ***')
                     equipment_unique_type_group_s3_parquet_ddf = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
