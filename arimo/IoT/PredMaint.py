@@ -1983,6 +1983,8 @@ class Project(object):
         assert equipment_unique_type_group.equipment_data_fields.count(), \
             '*** {} HAS NO DATA FIELDS ***'.format(equipment_unique_type_group)
 
+        equipment_unique_type_group_s3_parquet_ddf = None
+
         if monthly:
             mth_str = date
             assert len(mth_str) == 7
@@ -2002,10 +2004,11 @@ class Project(object):
                 print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _mth_str))
 
-                equipment_unique_type_group_s3_parquet_ddf = \
-                    self.load_equipment_data(
-                        equipment_unique_type_group_data_set_name,
-                        spark=True, set_i_col=False, set_t_col=False)
+                if not equipment_unique_type_group_s3_parquet_ddf:
+                    equipment_unique_type_group_s3_parquet_ddf = \
+                        self.load_equipment_data(
+                            equipment_unique_type_group_data_set_name,
+                            spark=True, set_i_col=False, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2151,10 +2154,11 @@ class Project(object):
                 print('*** AGGREGATING {} DATA FOR {} ***'.format(
                         equipment_unique_type_group_data_set_name, _date))
 
-                equipment_unique_type_group_s3_parquet_ddf = \
-                    self.load_equipment_data(
-                        equipment_unique_type_group_data_set_name,
-                        spark=True, set_i_col=False, set_t_col=False)
+                if not equipment_unique_type_group_s3_parquet_ddf:
+                    equipment_unique_type_group_s3_parquet_ddf = \
+                        self.load_equipment_data(
+                            equipment_unique_type_group_data_set_name,
+                            spark=True, set_i_col=False, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
