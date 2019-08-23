@@ -89,3 +89,26 @@ module "yarn-xxlarge" {
 
   cluster_version      = "20190730"
 }
+
+module "yarn-xxxlarge" {
+  source             = "./yarn-cluster"
+  name               = "${var.project_tag}-xxxlarge"
+  domain             = "yarn-${var.project_tag}-xxxlarge.jp"
+  subnet_id          = var.subnet1_id
+  security_group_ids = [var.internal_security_group_id]
+  instance_profile   = aws_iam_instance_profile.yarn.name
+
+  ssh_user_data    = module.ssh.user_data
+  s3_config_bucket = var.storage_bucket_name
+
+  # TODO : support ebs for master node
+
+  workers              = 27
+  instance_type        = "c5n.18xlarge"
+  master_instance_type = "m5a.2xlarge"
+  yarn_worker_memory   = "192000"
+  project_tag          = var.project_tag
+  environment_tag      = var.environment_tag
+
+  cluster_version      = "20190730"
+}
