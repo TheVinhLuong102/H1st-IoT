@@ -2592,7 +2592,7 @@ class Project(object):
                                 verbose=True) \
                             .collect()
 
-                    daily_err_mults_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
+                    daily_err_mults_df = self._daily_err_mults_dfs[equipment_unique_type_group_name]
 
                     daily_err_mults_df = \
                         daily_err_mults_df.loc[
