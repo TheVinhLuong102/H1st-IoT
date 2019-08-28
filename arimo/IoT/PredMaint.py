@@ -2424,9 +2424,7 @@ class Project(object):
                         equipment_general_type_name.upper(),
                         equipment_unique_type_group_name)
 
-                _tup = equipment_general_type_name, equipment_unique_type_group_name
-
-                if _tup not in self._daily_anom_scores_dfs:
+                if equipment_unique_type_group_name not in self._daily_anom_scores_dfs:
                     try:
                         daily_anom_scores_s3_parquet_df = \
                             S3ParquetDataFeeder(
@@ -2441,12 +2439,12 @@ class Project(object):
                                 verbose=True)
 
                     except:
-                        self._daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df = None
+                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = daily_anom_scores_s3_parquet_df = None
 
                     if daily_anom_scores_s3_parquet_df:
-                        self._daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df.collect()
+                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = daily_anom_scores_s3_parquet_df.collect()
 
-                daily_anom_scores_df = self._daily_anom_scores_dfs[_tup]
+                daily_anom_scores_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
 
                 if daily_anom_scores_df is not None:
                     daily_anom_scores_df = \
@@ -2579,8 +2577,8 @@ class Project(object):
                             print('*** {}: {} ***'.format(file_name, err))
 
                     # plot (non-EWMA) Abs MAE Mults
-                    if _tup not in self._daily_err_mults_dfs:
-                        self._daily_anom_scores_dfs[_tup] = \
+                    if equipment_unique_type_group_name not in self._daily_err_mults_dfs:
+                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = \
                             S3ParquetDataFeeder(
                                 path=os.path.join(
                                         's3://{}/{}'.format(
@@ -2592,7 +2590,7 @@ class Project(object):
                                 verbose=True) \
                             .collect()
 
-                    daily_err_mults_df = self._daily_anom_scores_dfs[_tup]
+                    daily_err_mults_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
 
                     daily_err_mults_df = \
                         daily_err_mults_df.loc[
