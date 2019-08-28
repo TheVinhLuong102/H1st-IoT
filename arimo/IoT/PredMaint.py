@@ -2445,7 +2445,7 @@ class Project(object):
 
                 daily_anom_scores_df = daily_anom_scores_dfs[_tup]
 
-                if daily_anom_scores_df:
+                if daily_anom_scores_df is not None:
                     daily_anom_scores_df = \
                         daily_anom_scores_df.loc[
                             (daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] == equipment_instance_id) &
