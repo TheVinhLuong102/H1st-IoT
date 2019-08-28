@@ -2678,15 +2678,15 @@ class Project(object):
                                 daily_err_mults_df[
                                     [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
                                      AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name,
-                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + '{}MAE_Mult__' + label_var_name,
-                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name]] \
+                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + 'MAE_Mult__' + label_var_name,
+                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + 'MAE_Mult__' + label_var_name]] \
                                 .rename(
                                     index=None,
                                     columns={(AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name):
                                                 'Act - Pred',
                                              (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + 'MAE_Mult__' + label_var_name):
                                                 'under',
-                                             (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name):
+                                             (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + 'MAE_Mult__' + label_var_name):
                                                 'over'},
                                     copy=False,
                                     inplace=False,
