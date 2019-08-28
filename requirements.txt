@@ -13,3 +13,6 @@ CoreAPI >= 2.3.3   # ??? REQUIRED FOR REST API TO WORK ???
 # deployment-related
 AWSEBCLI >= 3.15.3
 Ruamel.YAML >= 0.16.5
+
+# viz
+PlotNine >= 0.5.1
