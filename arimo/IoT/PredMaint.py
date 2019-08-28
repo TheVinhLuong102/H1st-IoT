@@ -2361,6 +2361,9 @@ class Project(object):
             .update(
                 finished=datetime.datetime.utcnow())
 
+    _daily_anom_scores_dfs = {}
+    _daily_err_mults_dfs = {}
+
     def ppp_viz(
             self,
             equipment_instance_id, dir_path='/tmp/.arimo/viz',
@@ -2402,9 +2405,6 @@ class Project(object):
         if to_month:
             to_month_end_date = month_end(to_month)
 
-        daily_anom_scores_dfs = {}
-        daily_err_mults_dfs = {}
-
         equipment_instance = self.data.EquipmentInstances.get(name=equipment_instance_id)
         equipment_general_type_name = equipment_instance.equipment_general_type.name
 
@@ -2426,7 +2426,7 @@ class Project(object):
 
                 _tup = equipment_general_type_name, equipment_unique_type_group_name
 
-                if _tup not in daily_anom_scores_dfs:
+                if _tup not in self._daily_anom_scores_dfs:
                     try:
                         daily_anom_scores_s3_parquet_df = \
                             S3ParquetDataFeeder(
@@ -2441,12 +2441,12 @@ class Project(object):
                                 verbose=True)
 
                     except:
-                        daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df = None
+                        self._daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df = None
 
                     if daily_anom_scores_s3_parquet_df:
-                        daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df.collect()
+                        self._daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df.collect()
 
-                daily_anom_scores_df = daily_anom_scores_dfs[_tup]
+                daily_anom_scores_df = self._daily_anom_scores_dfs[_tup]
 
                 if daily_anom_scores_df is not None:
                     daily_anom_scores_df = \
@@ -2579,8 +2579,8 @@ class Project(object):
                             print('*** {}: {} ***'.format(file_name, err))
 
                     # plot (non-EWMA) Abs MAE Mults
-                    if _tup not in daily_err_mults_dfs:
-                        daily_err_mults_dfs[_tup] = \
+                    if _tup not in self._daily_err_mults_dfs:
+                        self._daily_anom_scores_dfs[_tup] = \
                             S3ParquetDataFeeder(
                                 path=os.path.join(
                                         's3://{}/{}'.format(
@@ -2592,7 +2592,7 @@ class Project(object):
                                 verbose=True) \
                             .collect()
 
-                    daily_err_mults_df = daily_err_mults_dfs[_tup]
+                    daily_err_mults_df = self._daily_anom_scores_dfs[_tup]
 
                     daily_err_mults_df = \
                         daily_err_mults_df.loc[
