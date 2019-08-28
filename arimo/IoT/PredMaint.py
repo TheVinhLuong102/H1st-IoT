@@ -1,5 +1,8 @@
 from __future__ import absolute_import, division, print_function
 
+import matplotlib
+matplotlib.use('Agg')
+
 from collections import Counter
 import datetime
 from dateutil.relativedelta import relativedelta
