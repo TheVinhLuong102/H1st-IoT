@@ -2580,7 +2580,7 @@ class Project(object):
 
                     # plot (non-EWMA) Abs MAE Mults
                     if equipment_unique_type_group_name not in self._daily_err_mults_dfs:
-                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = \
+                        self._daily_err_mults_dfs[equipment_unique_type_group_name] = \
                             S3ParquetDataFeeder(
                                 path=os.path.join(
                                         's3://{}/{}'.format(
