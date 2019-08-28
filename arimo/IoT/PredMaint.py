@@ -2424,215 +2424,71 @@ class Project(object):
                 _tup = equipment_general_type_name, equipment_unique_type_group_name
 
                 if _tup not in daily_anom_scores_dfs:
-                    daily_anom_scores_dfs[_tup] = \
-                        S3ParquetDataFeeder(
-                            path=os.path.join(
+                    try:
+                        daily_anom_scores_s3_parquet_df = \
+                            S3ParquetDataFeeder(
+                                path=os.path.join(
                                     's3://{}/{}'.format(
                                         self.params.s3.bucket,
                                         self.params.s3.anom_scores.dir_prefix),
                                     equipment_unique_type_group_data_set_name,
                                     'PPPAnomScores' + _PARQUET_EXT),
-                            aws_access_key_id=self.params.s3.access_key_id,
-                            aws_secret_access_key=self.params.s3.secret_access_key,
-                            verbose=True) \
-                        .collect()
+                                aws_access_key_id=self.params.s3.access_key_id,
+                                aws_secret_access_key=self.params.s3.secret_access_key,
+                                verbose=True)
+
+                    except:
+                        daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df = None
+
+                    if daily_anom_scores_s3_parquet_df:
+                        daily_anom_scores_dfs[_tup] = daily_anom_scores_s3_parquet_df.collect()
 
                 daily_anom_scores_df = daily_anom_scores_dfs[_tup]
 
-                daily_anom_scores_df = \
-                    daily_anom_scores_df.loc[
-                        (daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] == equipment_instance_id) &
-                        ((daily_anom_scores_df[DATE_COL] >= from_month_start_date) if from_month else True) &
-                        ((daily_anom_scores_df[DATE_COL] <= to_month_end_date) if to_month else True)]
+                if daily_anom_scores_df:
+                    daily_anom_scores_df = \
+                        daily_anom_scores_df.loc[
+                            (daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] == equipment_instance_id) &
+                            ((daily_anom_scores_df[DATE_COL] >= from_month_start_date) if from_month else True) &
+                            ((daily_anom_scores_df[DATE_COL] <= to_month_end_date) if to_month else True)]
 
-                _alpha_str = '{:.3f}'.format(self.DEFAULT_EWMA_ALPHA)[-3:]
+                    _alpha_str = '{:.3f}'.format(self.DEFAULT_EWMA_ALPHA)[-3:]
 
-                _ewma_prefix = AbstractPPPBlueprint._EWMA_PREFIX + _alpha_str + '__'
+                    _ewma_prefix = AbstractPPPBlueprint._EWMA_PREFIX + _alpha_str + '__'
 
-                plot_title_prefix = \
-                    '{} #{}\n'.format(
-                        equipment_unique_type_group_data_set_name,
-                        equipment_instance_id)
+                    plot_title_prefix = \
+                        '{} #{}\n'.format(
+                            equipment_unique_type_group_data_set_name,
+                            equipment_instance_id)
 
-                # plot Anom Scores
-                dailyMean_AnomScores_df = \
-                    daily_anom_scores_df[
-                        [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
-                         self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
-                         AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult']
-                    ].rename(
-                        index=None,
-                        columns={(self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
-                                  AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult'): 'high dayMean MAE x'},
-                        copy=False,
-                        inplace=False,
-                        level=None)
+                    # plot Anom Scores
+                    dailyMean_AnomScores_df = \
+                        daily_anom_scores_df[
+                            [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
+                             self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
+                             AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult']
+                        ].rename(
+                            index=None,
+                            columns={(self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
+                                      AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult'): 'high dayMean MAE x'},
+                            copy=False,
+                            inplace=False,
+                            level=None)
 
-                if len(dailyMean_AnomScores_df) and dailyMean_AnomScores_df.iloc[:, 2:].notnull().any().any():
-                    anom_scores_plot = \
-                        ggplot(
-                            aes(x=DATE_COL,
-                                y=ANOM_SCORE_STR,
-                                color=SCORE_STR,
-                                group=SCORE_STR),
-                            data=pandas.melt(
-                                    frame=dailyMean_AnomScores_df,
-                                    id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
-                                    value_vars=None,
-                                    var_name=SCORE_STR,
-                                    value_name=ANOM_SCORE_STR,
-                                    col_level=None)) + \
-                        geom_line() + \
-                        geom_vline(
-                            xintercept=dates_of_interest,
-                            color='red',
-                            linetype='dotted',   # 'solid', 'dashed', 'dashdot'
-                            size=.3) + \
-                        scale_x_datetime(
-                            date_breaks='1 month',
-                            date_labels='%Y-%m') + \
-                        scale_y_continuous(
-                            limits=(0, 9),
-                            breaks=(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
-                        ggtitle(plot_title_prefix + ANOM_SCORE_STR) + \
-                        theme(axis_text_x=element_text(rotation=90))
-
-                    file_name = '{}---ANOM-SCORES.png'.format(equipment_instance_id)
-
-                    fs.mkdir(
-                        dir=_dir_path,
-                        hdfs=False)
-
-                    try:
-                        anom_scores_plot.save(
-                            filename=file_name,
-                            path=_dir_path,
-                            width=None, height=None, dpi=300,
-                            verbose=False)
-
-                    except Exception as err:
-                        print('*** {}: {} ***'.format(file_name, err))
-
-                # plot EWMA Anom Scores
-                ewma_dailyMean_AnomScores_df = \
-                    daily_anom_scores_df[
-                        [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
-                         _ewma_prefix + self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
-                         AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult']
-                    ].rename(
-                        index=None,
-                        columns={(_ewma_prefix + self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
-                                  AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult'): 'ewma high dailyMean MAE x'},
-                        copy=False,
-                        inplace=False,
-                        level=None)
-
-                if len(ewma_dailyMean_AnomScores_df) and ewma_dailyMean_AnomScores_df.iloc[:, 2:].notnull().any().any():
-                    ewma_anom_scores_plot = \
-                        ggplot(
-                            aes(x=DATE_COL,
-                                y=ANOM_SCORE_STR,
-                                color=SCORE_STR,
-                                group=SCORE_STR),
-                            data=pandas.melt(
-                                    frame=ewma_dailyMean_AnomScores_df,
-                                    id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
-                                    value_vars=None,
-                                    var_name=SCORE_STR,
-                                    value_name=ANOM_SCORE_STR,
-                                    col_level=None)) + \
-                        geom_line() + \
-                        geom_vline(
-                            xintercept=dates_of_interest,
-                            color='red',
-                            linetype='dotted',   # 'solid', 'dashed', 'dashdot'
-                            size=.3) + \
-                        scale_x_datetime(
-                            date_breaks='1 month',
-                            date_labels='%Y-%m') + \
-                        scale_y_continuous(
-                            limits=(0, 9),
-                            breaks=(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
-                        ggtitle(plot_title_prefix + ANOM_SCORE_STR + ' (EWMA alpha={})'.format(self.DEFAULT_EWMA_ALPHA)) + \
-                        theme(axis_text_x=element_text(rotation=90))
-
-                    file_name = '{}---EWMA-ANOM-SCORES.png'.format(equipment_instance_id)
-
-                    try:
-                        ewma_anom_scores_plot.save(
-                            filename=file_name,
-                            path=_dir_path,
-                            width=None, height=None, dpi=300,
-                            verbose=False)
-
-                    except Exception as err:
-                        print('*** {}: {} ***'.format(file_name, err))
-
-                # plot (non-EWMA) Abs MAE Mults
-                if _tup not in daily_err_mults_dfs:
-                    daily_err_mults_dfs[_tup] = \
-                        S3ParquetDataFeeder(
-                            path=os.path.join(
-                                    's3://{}/{}'.format(
-                                    self.params.s3.bucket,
-                                    self.params.s3.ppp.daily_err_mults_dir_prefix),
-                                    equipment_unique_type_group_data_set_name + _PARQUET_EXT),
-                            aws_access_key_id=self.params.s3.access_key_id,
-                            aws_secret_access_key=self.params.s3.secret_access_key,
-                            verbose=True) \
-                        .collect()
-
-                daily_err_mults_df = daily_err_mults_dfs[_tup]
-
-                daily_err_mults_df = \
-                    daily_err_mults_df.loc[
-                        (daily_err_mults_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] == equipment_instance_id) &
-                        ((daily_err_mults_df[DATE_COL] >= from_month_start_date) if from_month else True) &
-                        ((daily_err_mults_df[DATE_COL] <= to_month_end_date) if to_month else True)]
-
-                _dailyMean_abs_mult_prefix = \
-                    AbstractPPPBlueprint._dailyMean_PREFIX + \
-                    AbstractPPPBlueprint._ABS_PREFIX + \
-                    'MAE_Mult__'
-
-                _dailyMean_abs_mult_prefix_len = len(_dailyMean_abs_mult_prefix)
-
-                _dailyMean_abs_mult_cols = \
-                    [col for col in daily_err_mults_df.columns
-                     if col.startswith(_dailyMean_abs_mult_prefix)]
-
-                assert _dailyMean_abs_mult_cols, \
-                    '*** {} ***'.format(_dailyMean_abs_mult_prefix)
-
-                _dailyMean_abs_mult_cols_rename_dict = \
-                    {col: col[_dailyMean_abs_mult_prefix_len:]
-                     for col in _dailyMean_abs_mult_cols}
-
-                dailyMean_abs_mults_df = \
-                    daily_err_mults_df[
-                        [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL] +
-                         _dailyMean_abs_mult_cols] \
-                    .rename(
-                        index=None,
-                        columns=_dailyMean_abs_mult_cols_rename_dict,
-                        copy=False,
-                        inplace=False,
-                        level=None)
-
-                if len(dailyMean_abs_mults_df) and dailyMean_abs_mults_df.iloc[:, 2:].notnull().any().any():
-                    abs_mults_plot = \
-                        ggplot(
-                            aes(x=DATE_COL,
-                                y=MEAN_ABS_MULT_STR,
-                                color=SENSOR_NAME_STR,
-                                group=SENSOR_NAME_STR),
-                            data=pandas.melt(
-                                    frame=dailyMean_abs_mults_df,
-                                    id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
-                                    value_vars=None,
-                                    var_name=SENSOR_NAME_STR,
-                                    value_name=MEAN_ABS_MULT_STR,
-                                    col_level=None)) + \
+                    if len(dailyMean_AnomScores_df) and dailyMean_AnomScores_df.iloc[:, 2:].notnull().any().any():
+                        anom_scores_plot = \
+                            ggplot(
+                                aes(x=DATE_COL,
+                                    y=ANOM_SCORE_STR,
+                                    color=SCORE_STR,
+                                    group=SCORE_STR),
+                                data=pandas.melt(
+                                        frame=dailyMean_AnomScores_df,
+                                        id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
+                                        value_vars=None,
+                                        var_name=SCORE_STR,
+                                        value_name=ANOM_SCORE_STR,
+                                        col_level=None)) + \
                             geom_line() + \
                             geom_vline(
                                 xintercept=dates_of_interest,
@@ -2645,57 +2501,145 @@ class Project(object):
                             scale_y_continuous(
                                 limits=(0, 9),
                                 breaks=(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
-                            ggtitle(plot_title_prefix + MEAN_ABS_MULT_STR) + \
+                            ggtitle(plot_title_prefix + ANOM_SCORE_STR) + \
                             theme(axis_text_x=element_text(rotation=90))
 
-                    file_name = '{}---ABS-MAE-MULTS.png'.format(equipment_instance_id)
+                        file_name = '{}---ANOM-SCORES.png'.format(equipment_instance_id)
 
-                    try:
-                        abs_mults_plot.save(
-                            filename=file_name,
-                            path=_dir_path,
-                            width=None, height=None, dpi=300,
-                            verbose=False)
+                        fs.mkdir(
+                            dir=_dir_path,
+                            hdfs=False)
 
-                    except Exception as err:
-                        print('*** {}: {} ***'.format(file_name, err))
+                        try:
+                            anom_scores_plot.save(
+                                filename=file_name,
+                                path=_dir_path,
+                                width=None, height=None, dpi=300,
+                                verbose=False)
 
-                # plot Indiv Target Sensor non-EWMA MAE Mults
-                for label_var_name in \
-                        self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name]:
-                    if ('MAE__' + label_var_name) in daily_err_mults_df.columns:
-                        err_mults_df = \
-                            daily_err_mults_df[
-                                [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
-                                 AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name,
-                                 AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + '{}MAE_Mult__' + label_var_name,
-                                 AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name]] \
-                            .rename(
-                                index=None,
-                                columns={(AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name):
-                                            'Act - Pred',
-                                         (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + 'MAE_Mult__' + label_var_name):
-                                            'under',
-                                         (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name):
-                                            'over'},
-                                copy=False,
-                                inplace=False,
-                                level=None)
+                        except Exception as err:
+                            print('*** {}: {} ***'.format(file_name, err))
 
-                        if len(err_mults_df) and err_mults_df.iloc[:, 2:].notnull().any().any():
-                            mults_plot = \
-                                ggplot(
-                                    aes(x=DATE_COL,
-                                        y=MEAN_MULT_STR,
-                                        color=label_var_name,
-                                        group=label_var_name),
-                                    data=pandas.melt(
-                                            frame=err_mults_df,
-                                            id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
-                                            value_vars=None,
-                                            var_name=label_var_name,
-                                            value_name=MEAN_MULT_STR,
-                                            col_level=None)) + \
+                    # plot EWMA Anom Scores
+                    ewma_dailyMean_AnomScores_df = \
+                        daily_anom_scores_df[
+                            [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
+                             _ewma_prefix + self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
+                             AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult']
+                        ].rename(
+                            index=None,
+                            columns={(_ewma_prefix + self._OVERALL_PPP_ANOM_SCORE_NAME_PREFIX + AbstractPPPBlueprint._dailyMean_PREFIX +
+                                      AbstractPPPBlueprint._ABS_PREFIX + 'MAE_Mult'): 'ewma high dailyMean MAE x'},
+                            copy=False,
+                            inplace=False,
+                            level=None)
+
+                    if len(ewma_dailyMean_AnomScores_df) and ewma_dailyMean_AnomScores_df.iloc[:, 2:].notnull().any().any():
+                        ewma_anom_scores_plot = \
+                            ggplot(
+                                aes(x=DATE_COL,
+                                    y=ANOM_SCORE_STR,
+                                    color=SCORE_STR,
+                                    group=SCORE_STR),
+                                data=pandas.melt(
+                                        frame=ewma_dailyMean_AnomScores_df,
+                                        id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
+                                        value_vars=None,
+                                        var_name=SCORE_STR,
+                                        value_name=ANOM_SCORE_STR,
+                                        col_level=None)) + \
+                            geom_line() + \
+                            geom_vline(
+                                xintercept=dates_of_interest,
+                                color='red',
+                                linetype='dotted',   # 'solid', 'dashed', 'dashdot'
+                                size=.3) + \
+                            scale_x_datetime(
+                                date_breaks='1 month',
+                                date_labels='%Y-%m') + \
+                            scale_y_continuous(
+                                limits=(0, 9),
+                                breaks=(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
+                            ggtitle(plot_title_prefix + ANOM_SCORE_STR + ' (EWMA alpha={})'.format(self.DEFAULT_EWMA_ALPHA)) + \
+                            theme(axis_text_x=element_text(rotation=90))
+
+                        file_name = '{}---EWMA-ANOM-SCORES.png'.format(equipment_instance_id)
+
+                        try:
+                            ewma_anom_scores_plot.save(
+                                filename=file_name,
+                                path=_dir_path,
+                                width=None, height=None, dpi=300,
+                                verbose=False)
+
+                        except Exception as err:
+                            print('*** {}: {} ***'.format(file_name, err))
+
+                    # plot (non-EWMA) Abs MAE Mults
+                    if _tup not in daily_err_mults_dfs:
+                        daily_err_mults_dfs[_tup] = \
+                            S3ParquetDataFeeder(
+                                path=os.path.join(
+                                        's3://{}/{}'.format(
+                                        self.params.s3.bucket,
+                                        self.params.s3.ppp.daily_err_mults_dir_prefix),
+                                        equipment_unique_type_group_data_set_name + _PARQUET_EXT),
+                                aws_access_key_id=self.params.s3.access_key_id,
+                                aws_secret_access_key=self.params.s3.secret_access_key,
+                                verbose=True) \
+                            .collect()
+
+                    daily_err_mults_df = daily_err_mults_dfs[_tup]
+
+                    daily_err_mults_df = \
+                        daily_err_mults_df.loc[
+                            (daily_err_mults_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] == equipment_instance_id) &
+                            ((daily_err_mults_df[DATE_COL] >= from_month_start_date) if from_month else True) &
+                            ((daily_err_mults_df[DATE_COL] <= to_month_end_date) if to_month else True)]
+
+                    _dailyMean_abs_mult_prefix = \
+                        AbstractPPPBlueprint._dailyMean_PREFIX + \
+                        AbstractPPPBlueprint._ABS_PREFIX + \
+                        'MAE_Mult__'
+
+                    _dailyMean_abs_mult_prefix_len = len(_dailyMean_abs_mult_prefix)
+
+                    _dailyMean_abs_mult_cols = \
+                        [col for col in daily_err_mults_df.columns
+                         if col.startswith(_dailyMean_abs_mult_prefix)]
+
+                    assert _dailyMean_abs_mult_cols, \
+                        '*** {} ***'.format(_dailyMean_abs_mult_prefix)
+
+                    _dailyMean_abs_mult_cols_rename_dict = \
+                        {col: col[_dailyMean_abs_mult_prefix_len:]
+                         for col in _dailyMean_abs_mult_cols}
+
+                    dailyMean_abs_mults_df = \
+                        daily_err_mults_df[
+                            [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL] +
+                             _dailyMean_abs_mult_cols] \
+                        .rename(
+                            index=None,
+                            columns=_dailyMean_abs_mult_cols_rename_dict,
+                            copy=False,
+                            inplace=False,
+                            level=None)
+
+                    if len(dailyMean_abs_mults_df) and dailyMean_abs_mults_df.iloc[:, 2:].notnull().any().any():
+                        abs_mults_plot = \
+                            ggplot(
+                                aes(x=DATE_COL,
+                                    y=MEAN_ABS_MULT_STR,
+                                    color=SENSOR_NAME_STR,
+                                    group=SENSOR_NAME_STR),
+                                data=pandas.melt(
+                                        frame=dailyMean_abs_mults_df,
+                                        id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
+                                        value_vars=None,
+                                        var_name=SENSOR_NAME_STR,
+                                        value_name=MEAN_ABS_MULT_STR,
+                                        col_level=None)) + \
                                 geom_line() + \
                                 geom_vline(
                                     xintercept=dates_of_interest,
@@ -2706,20 +2650,83 @@ class Project(object):
                                     date_breaks='1 month',
                                     date_labels='%Y-%m') + \
                                 scale_y_continuous(
-                                    limits=(-9, 9),
-                                    breaks=(-9, -5, -4.5, -4, -3.5, -3, -2.5, -2, -1.5, -1, -.5,
-                                            0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
-                                ggtitle(plot_title_prefix + MEAN_MULT_STR + ': ' + label_var_name) + \
+                                    limits=(0, 9),
+                                    breaks=(0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
+                                ggtitle(plot_title_prefix + MEAN_ABS_MULT_STR) + \
                                 theme(axis_text_x=element_text(rotation=90))
 
-                            file_name = '{}---SIGNED-MAE-MULTS.{}.png'.format(equipment_instance_id, label_var_name)
+                        file_name = '{}---ABS-MAE-MULTS.png'.format(equipment_instance_id)
 
-                            try:
-                                mults_plot.save(
-                                    filename=file_name,
-                                    path=_dir_path,
-                                    width=None, height=None, dpi=300,
-                                    verbose=False)
+                        try:
+                            abs_mults_plot.save(
+                                filename=file_name,
+                                path=_dir_path,
+                                width=None, height=None, dpi=300,
+                                verbose=False)
 
-                            except Exception as err:
-                                print('*** {}: {} ***'.format(file_name, err))
+                        except Exception as err:
+                            print('*** {}: {} ***'.format(file_name, err))
+
+                    # plot Indiv Target Sensor non-EWMA MAE Mults
+                    for label_var_name in \
+                            self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name]:
+                        if ('MAE__' + label_var_name) in daily_err_mults_df.columns:
+                            err_mults_df = \
+                                daily_err_mults_df[
+                                    [self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL,
+                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name,
+                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + '{}MAE_Mult__' + label_var_name,
+                                     AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name]] \
+                                .rename(
+                                    index=None,
+                                    columns={(AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._SGN_PREFIX + 'MAE_Mult__' + label_var_name):
+                                                'Act - Pred',
+                                             (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._NEG_PREFIX + 'MAE_Mult__' + label_var_name):
+                                                'under',
+                                             (AbstractPPPBlueprint._dailyMean_PREFIX + AbstractPPPBlueprint._POS_PREFIX + '{}MAE_Mult__' + label_var_name):
+                                                'over'},
+                                    copy=False,
+                                    inplace=False,
+                                    level=None)
+
+                            if len(err_mults_df) and err_mults_df.iloc[:, 2:].notnull().any().any():
+                                mults_plot = \
+                                    ggplot(
+                                        aes(x=DATE_COL,
+                                            y=MEAN_MULT_STR,
+                                            color=label_var_name,
+                                            group=label_var_name),
+                                        data=pandas.melt(
+                                                frame=err_mults_df,
+                                                id_vars=[self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL],
+                                                value_vars=None,
+                                                var_name=label_var_name,
+                                                value_name=MEAN_MULT_STR,
+                                                col_level=None)) + \
+                                    geom_line() + \
+                                    geom_vline(
+                                        xintercept=dates_of_interest,
+                                        color='red',
+                                        linetype='dotted',   # 'solid', 'dashed', 'dashdot'
+                                        size=.3) + \
+                                    scale_x_datetime(
+                                        date_breaks='1 month',
+                                        date_labels='%Y-%m') + \
+                                    scale_y_continuous(
+                                        limits=(-9, 9),
+                                        breaks=(-9, -5, -4.5, -4, -3.5, -3, -2.5, -2, -1.5, -1, -.5,
+                                                0, .5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 9)) + \
+                                    ggtitle(plot_title_prefix + MEAN_MULT_STR + ': ' + label_var_name) + \
+                                    theme(axis_text_x=element_text(rotation=90))
+
+                                file_name = '{}---SIGNED-MAE-MULTS.{}.png'.format(equipment_instance_id, label_var_name)
+
+                                try:
+                                    mults_plot.save(
+                                        filename=file_name,
+                                        path=_dir_path,
+                                        width=None, height=None, dpi=300,
+                                        verbose=False)
+
+                                except Exception as err:
+                                    print('*** {}: {} ***'.format(file_name, err))
