@@ -2439,10 +2439,12 @@ class Project(object):
                                 verbose=True)
 
                     except:
-                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = daily_anom_scores_s3_parquet_df = None
+                        daily_anom_scores_s3_parquet_df = None
 
-                    if daily_anom_scores_s3_parquet_df:
-                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = daily_anom_scores_s3_parquet_df.collect()
+                    self._daily_anom_scores_dfs[equipment_unique_type_group_name] = \
+                        daily_anom_scores_s3_parquet_df.collect() \
+                        if daily_anom_scores_s3_parquet_df \
+                        else None
 
                 daily_anom_scores_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
 
