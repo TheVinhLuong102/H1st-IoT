@@ -103,6 +103,7 @@ class Project(object):
     _MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME = 10 ** 3
 
     def __init__(self, params, **kwargs):
+        print("Is this working!!!")
         self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(params, **kwargs)
 
@@ -1565,7 +1566,7 @@ class Project(object):
                 _anom_scores_df = \
                     anom_scores_df.iloc[
                         (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
-
+                
                 self.data.EquipmentInstanceDailyRiskScores.bulk_create(
                     EquipmentInstanceDailyRiskScore(
                         equipment_unique_type_group=equipment_unique_type_group,
@@ -1573,6 +1574,7 @@ class Project(object):
                         risk_score_name=risk_score_name,
                         date=row[DATE_COL],
                         risk_score_value=row[risk_score_name])
+                    
                     for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                         for risk_score_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                             if pandas.notnull(row[risk_score_name]))
@@ -1586,9 +1588,15 @@ class Project(object):
     def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
         import pandas as pd
         df_vae_anom_score = pd.read_parquet(s3_path)
-        print(df_vae_anom_score.shape)
+        df_vae_anom_score = df_vae_anom_score.iloc[0:1]
+        
+#         df_vae_anom_score['date'] = df_vae_anom_score.date.astype(dtype='object')
+        df_vae_anom_score = df_vae_anom_score[['date','equipment_unique_type_group','equipment_instance_id','risk_score_name','risk_score_value']]
+        print(df_vae_anom_score.info())
 
-        anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
+#         anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
+        print("Is this working!")
+        anom_scores_df = df_vae_anom_score
         
         equipment_unique_type_group = \
             self.data.EquipmentUniqueTypeGroups.get(
@@ -1596,6 +1604,7 @@ class Project(object):
                 name=equipment_unique_type_group_name)
 
         equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
+#         print(equipment_unique_type_group)
 
         equipment_instances = \
             {equipment_instance_id:
@@ -1603,6 +1612,7 @@ class Project(object):
                     equipment_general_type=equipment_general_type,
                     name=clean_lower_str(str(equipment_instance_id)))[0]
              for equipment_instance_id in tqdm.tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
+#         print(equipment_instances)
 
         from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
@@ -1611,6 +1621,7 @@ class Project(object):
                 anom_scores_df.iloc[
                     (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
 
+#             print(_anom_scores_df)
             self.data.EquipmentInstanceDailyRiskScores.bulk_create(
                 EquipmentInstanceDailyRiskScore(
                     equipment_unique_type_group=equipment_unique_type_group,
@@ -1621,6 +1632,11 @@ class Project(object):
                 for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                     for col_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                         if pandas.notnull(row[col_name]))
+            self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
+                equipment_unique_type_group=equipment_unique_type_group,
+                date__in=dates) \
+            .update(
+                finished=datetime.datetime.utcnow())
 
     def ppp_anom_alert(
             self,
