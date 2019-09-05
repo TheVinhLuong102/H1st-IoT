@@ -1,6 +1,6 @@
 # Django
 Django >= 2.2.5
-Django-AutoComplete-Light == 3.3.4   # *** 3.3.5 has static file bugs ***
+Django-AutoComplete-Light >= 3.3.5
 Django-Silk >= 3.0.2
 PsycoPG2-binary >= 2.8.3
 
