@@ -475,16 +475,16 @@ PROJECT = Project(name=args.project)
 
 if cmd == PROFILE_DATA_FIELDS_CMD:
     for to_month in tqdm.tqdm([None] + args.to_months):
-        print(PROJECT.profile_equipment_data_fields(
+        PROJECT.profile_equipment_data_fields(
             equipment_general_type_name=args.eq_gen_tp_name,
             equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
-            to_month=to_month))
+            to_month=to_month)
 
 
 elif cmd == PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD:
-    print(PROJECT.profile_equipment_data_field_pairwise_correlations(
-            equipment_general_type_name=args.eq_gen_tp_name,
-            equipment_unique_type_group_name=args.eq_unq_tp_grp_name))
+    PROJECT.profile_equipment_data_field_pairwise_correlations(
+        equipment_general_type_name=args.eq_gen_tp_name,
+        equipment_unique_type_group_name=args.eq_unq_tp_grp_name)
 
 
 elif cmd == RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD:
