@@ -16,3 +16,4 @@ Ruamel.YAML >= 0.16.5
 
 # viz
 PlotNine >= 0.4.0
+StatsModels >= 0.10.1
