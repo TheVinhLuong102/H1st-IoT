@@ -1585,18 +1585,13 @@ class Project(object):
             .update(
                 finished=datetime.datetime.utcnow())
 
-    def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
+    def update_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
         import pandas as pd
         df_vae_anom_score = pd.read_parquet(s3_path)
-        df_vae_anom_score = df_vae_anom_score.iloc[0:1]
         
-#         df_vae_anom_score['date'] = df_vae_anom_score.date.astype(dtype='object')
         df_vae_anom_score = df_vae_anom_score[['date','equipment_unique_type_group','equipment_instance_id','risk_score_name','risk_score_value']]
-        print(df_vae_anom_score.info())
-
-#         anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
-        print("Is this working!")
-        anom_scores_df = df_vae_anom_score
+        copy_anom_scores_from_date = df_vae_anom_score[DATE_COL].max()
+        
         
         equipment_unique_type_group = \
             self.data.EquipmentUniqueTypeGroups.get(
@@ -1604,7 +1599,21 @@ class Project(object):
                 name=equipment_unique_type_group_name)
 
         equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
-#         print(equipment_unique_type_group)
+        
+        for _ in tqdm.tqdm(range(len(df_vae_anom_score[df_vae_anom_score.date>=copy_anom_scores_from_date]))):
+            self.data.EquipmentInstanceDailyRiskScores.filter(
+                    equipment_unique_type_group=equipment_unique_type_group,
+                    risk_score_name__contains='__VAE',   
+                    date__gte=copy_anom_scores_from_date) \
+                .delete()
+        
+        df_vae_anom_score = df_vae_anom_score.loc[df_vae_anom_score[DATE_COL] >= copy_anom_scores_from_date]
+        print(df_vae_anom_score)
+        
+        if (not from_date) & (not to_date):
+            anom_scores_df = df_vae_anom_score
+        else:anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
+        
 
         equipment_instances = \
             {equipment_instance_id:
@@ -1612,7 +1621,11 @@ class Project(object):
                     equipment_general_type=equipment_general_type,
                     name=clean_lower_str(str(equipment_instance_id)))[0]
              for equipment_instance_id in tqdm.tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
-#         print(equipment_instances)
+        
+        
+        
+        
+        
 
         from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
@@ -1629,14 +1642,13 @@ class Project(object):
                     risk_score_name=row['risk_score_name'],
                     date=row[DATE_COL],
                     risk_score_value=row['risk_score_value'])
-                for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
-                    for col_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
-                        if pandas.notnull(row[col_name]))
-            self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
-                equipment_unique_type_group=equipment_unique_type_group,
-                date__in=dates) \
-            .update(
-                finished=datetime.datetime.utcnow())
+                for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df)))
+    ###### TODO : ADD LOOP TO INSERT TO DB FROM VAEANOMSCORES.PARQUET ON S3
+#             self.data.EquipmentUniqueTypeGroupRiskScoringTasks.filter(
+#                 equipment_unique_type_group=equipment_unique_type_group,
+#                 date__in=dates) \
+#             .update(
+#                 finished=datetime.datetime.utcnow())
 
     def ppp_anom_alert(
             self,
