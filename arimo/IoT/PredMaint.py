@@ -60,7 +60,7 @@ class Project(object):
     _EQUIPMENT_INSTANCE_ID_COL_NAME = 'equipment_instance_id'
     _DATE_TIME_COL_NAME = 'date_time'
 
-    REF_N_MONTHS = 18
+    REF_N_MONTHS = 24
 
     BENCHMARK_REF_DATA_PROPORTION = .32
 
