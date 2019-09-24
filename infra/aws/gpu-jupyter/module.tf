@@ -27,7 +27,7 @@ resource "aws_instance" "master" {
   instance_type = "${var.instance_type}"
 
   subnet_id              = "${var.subnet_id}"
-  vpc_security_group_ids = ["${var.security_group_ids}"]
+  vpc_security_group_ids = var.security_group_ids
 
   # source_dest_check      = false
   iam_instance_profile = "${length(var.instance_profile) > 0 ? var.instance_profile : ""}"
