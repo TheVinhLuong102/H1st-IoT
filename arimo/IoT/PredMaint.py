@@ -465,7 +465,7 @@ class Project(object):
                                 equipment_data_field.lower_numeric_null, \
                                 equipment_data_field.upper_numeric_null
 
-                        _distinct_values_proportions = s3_parquet_df.distinct(equipment_data_field_name, count=True).to_dict()
+                        _distinct_values_proportions = s3_parquet_df.distinct(equipment_data_field_name).to_dict()
                         _n_distinct_values = len(_distinct_values_proportions)
 
                         equipment_unique_type_group_data_field_profile = \
