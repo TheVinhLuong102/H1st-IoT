@@ -588,14 +588,14 @@ class Project(object):
                                                 s3_parquet_df.reprSample[equipment_data_field_name].between(
                                                     outlier_rst_min,
                                                     outlier_rst_max,
-                                                    inclusive=True) &
+                                                    inclusive=False) &
                                                 s3_parquet_df.reprSample[equipment_data_field_name_2].between(
                                                     outlier_rst_min_2,
                                                     outlier_rst_max_2,
-                                                    inclusive=True),
+                                                    inclusive=False),
                                                 [equipment_data_field_name, equipment_data_field_name_2]]
 
-                                        if len(sample_df) > 1:
+                                        if len(sample_df) > 1000:
                                             outlier_rst_min = float(sample_df[equipment_data_field_name].min())
                                             outlier_rst_max = float(sample_df[equipment_data_field_name].max())
 
