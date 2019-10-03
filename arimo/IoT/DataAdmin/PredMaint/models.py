@@ -6,7 +6,7 @@ from django.db.models import \
     Model, \
     BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
     ForeignKey, ManyToManyField, OneToOneField, \
-    PROTECT
+    CASCADE, PROTECT
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField, JSONField
 from django.utils.encoding import python_2_unicode_compatible
@@ -274,7 +274,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True,
             null=True,
-            on_delete=PROTECT)
+            on_delete=CASCADE)
 
     monitored_equipment_data_field = \
         ForeignKey(
