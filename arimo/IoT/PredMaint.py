@@ -2017,7 +2017,7 @@ class Project(object):
                     equipment_unique_type_group_s3_parquet_ddf = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
-                            spark=True, set_i_col=False, set_t_col=False)
+                            spark=True, set_i_col=True, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2167,7 +2167,7 @@ class Project(object):
                     equipment_unique_type_group_s3_parquet_ddf = \
                         self.load_equipment_data(
                             equipment_unique_type_group_data_set_name,
-                            spark=True, set_i_col=False, set_t_col=False)
+                            spark=True, set_i_col=True, set_t_col=False)
 
                 try:
                     _equipment_unique_type_group_s3_parquet_ddf = \
@@ -2252,7 +2252,7 @@ class Project(object):
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
                     equipment_unique_type_group_data_set_name,
-                    spark=False, set_i_col=False, set_t_col=False) \
+                    spark=False, set_i_col=True, set_t_col=False) \
                 .filterByPartitionKeys(
                     (DATE_COL,
                      copy_agg_daily_equipment_data_to_db_for_dates))
