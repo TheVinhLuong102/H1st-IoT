@@ -1590,6 +1590,24 @@ class Project(object):
 
             anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
+            _n_anom_scores_rows_before_dedup = len(anom_scores_df)
+
+            anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
+                    lambda equipment_instance_id: clean_lower_str(str(equipment_instance_id)))
+
+            anom_scores_df.drop_duplicates(
+                subset=(self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL),
+                keep='first',
+                inplace=True)
+
+            _n_anom_scores_rows = len(anom_scores_df)
+
+            _n_anom_scores_row_dropped = _n_anom_scores_rows_before_dedup - _n_anom_scores_rows
+            if _n_anom_scores_row_dropped:
+                print('*** DROPPED {:,} DUPLICATE ROWS OF {} ***'
+                      .format(_n_anom_scores_row_dropped, anom_scores_df.columns))
+
             dates = anom_scores_df[DATE_COL].unique()
 
             for date in tqdm.tqdm(dates):
@@ -1604,14 +1622,14 @@ class Project(object):
                 {equipment_instance_id:
                     self.data.EquipmentInstances.get_or_create(
                         equipment_general_type=equipment_general_type,
-                        name=clean_lower_str(str(equipment_instance_id)))[0]
+                        name=equipment_instance_id)[0]
                  for equipment_instance_id in tqdm.tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
             from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
             print('Writing {} Anom Scores to DB: {:,} Rows x {}...'.format(
                     equipment_unique_type_group_data_set_name,
-                    len(anom_scores_df), anom_scores_df.columns))
+                    _n_anom_scores_rows, anom_scores_df.columns))
 
             for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                 _anom_scores_df = \
