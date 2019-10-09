@@ -99,7 +99,7 @@ class Project(object):
 
             equipment_monitoring=Namespace(
                 anom_score_names_and_thresholds=dict(
-                    rowHigh__dailyMean__abs__MAE_Mult=(2, 2.5, 3, 3.5, 4, 4.5, 5))))
+                    rowHigh__dailyMean__abs__MAE_Mult=(2.5, 3, 3.5, 4, 4.5, 5))))
 
     _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
     _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
