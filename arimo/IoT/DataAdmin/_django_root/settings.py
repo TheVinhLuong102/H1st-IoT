@@ -169,6 +169,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, '_static_files')
 STATIC_URL = '/static/'
 
 
+# Data Upload
+DATA_UPLOAD_MAX_MEMORY_SIZE = 8388608   # 8 MB
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 3000
+
+
 # REST Framework settings
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
