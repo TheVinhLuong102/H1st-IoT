@@ -19,7 +19,7 @@ from pyspark.sql import functions
 from ruamel import yaml
 from scipy.stats import pearsonr
 import tempfile
-import tqdm
+from tqdm import tqdm
 import uuid
 
 import arimo.backend
@@ -420,8 +420,8 @@ class Project(object):
                 for equipment_general_type_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields
             })
 
-        for equipment_general_type_name, equipment_unique_type_group_names in tqdm.tqdm(results.items()):
-            for equipment_unique_type_group_name in tqdm.tqdm(equipment_unique_type_group_names):
+        for equipment_general_type_name, equipment_unique_type_group_names in tqdm(results.items()):
+            for equipment_unique_type_group_name in tqdm(equipment_unique_type_group_names):
                 equipment_unique_type_group_data_set_name = \
                     '{}---{}'.format(
                         equipment_general_type_name.upper(),
@@ -456,7 +456,7 @@ class Project(object):
                     to_date=to_date) \
                 .delete()
 
-                for equipment_data_field in tqdm.tqdm(equipment_unique_type_group.equipment_data_fields.all()):
+                for equipment_data_field in tqdm(equipment_unique_type_group.equipment_data_fields.all()):
                     equipment_data_field_name = equipment_data_field.name
 
                     if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleFeatureContentCols:
@@ -530,8 +530,8 @@ class Project(object):
                 for equipment_general_type_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields
             })
 
-        for equipment_general_type_name, equipment_unique_type_group_names in tqdm.tqdm(results.items()):
-            for equipment_unique_type_group_name in tqdm.tqdm(equipment_unique_type_group_names):
+        for equipment_general_type_name, equipment_unique_type_group_names in tqdm(results.items()):
+            for equipment_unique_type_group_name in tqdm(equipment_unique_type_group_names):
                 equipment_unique_type_group_data_set_name = \
                     '{}---{}'.format(
                         equipment_general_type_name.upper(),
@@ -558,7 +558,7 @@ class Project(object):
 
                 from arimo.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
 
-                for i in tqdm.tqdm(range(n_equipment_data_fields - 1)):
+                for i in tqdm(range(n_equipment_data_fields - 1)):
                     equipment_data_field = equipment_data_fields[i]
                     equipment_data_field_name = equipment_data_field.name
 
@@ -571,7 +571,7 @@ class Project(object):
                         outlier_rst_max = equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name)
 
                         if outlier_rst_min < outlier_rst_max:
-                            for i_2 in tqdm.tqdm(range(i + 1, n_equipment_data_fields)):
+                            for i_2 in tqdm(range(i + 1, n_equipment_data_fields)):
                                 equipment_data_field_2 = equipment_data_fields[i_2]
                                 equipment_data_field_name_2 = equipment_data_field_2.name
 
@@ -644,7 +644,7 @@ class Project(object):
                 equipment_unique_type_group=equipment_unique_type_group)
 
         for equipment_unique_type_group_monitored_data_field_config in \
-                tqdm.tqdm(equipment_unique_type_group_service_config.equipment_unique_type_group_monitored_data_field_configs.all()):
+                tqdm(equipment_unique_type_group_service_config.equipment_unique_type_group_monitored_data_field_configs.all()):
             _equipment_unique_type_group_data_field_pairwise_correlations = \
                 equipment_unique_type_group_data_field_pairwise_correlations.filter(
                     equipment_data_field=equipment_unique_type_group_monitored_data_field_config.monitored_equipment_data_field)
@@ -1258,7 +1258,7 @@ class Project(object):
 
             blueprints_to_calc_for_dates = {}
 
-            for _date in tqdm.tqdm(pandas.date_range(start=date, end=to_date).date):
+            for _date in tqdm(pandas.date_range(start=date, end=to_date).date):
                 for i, _trained_to_date in enumerate(_trained_to_dates):
                     if _trained_to_date >= _date:
                         if i:
@@ -1375,7 +1375,7 @@ class Project(object):
                             must_succeed=True)
 
                     for partition_key in \
-                            tqdm.tqdm(sorted(
+                            tqdm(sorted(
                                 partition_key
                                 for partition_key in os.listdir(_tmp_dir_path)
                                 if partition_key.startswith('{}='.format(DATE_COL)))):
@@ -1469,7 +1469,7 @@ class Project(object):
                         must_succeed=True)
 
                 for partition_key in \
-                        tqdm.tqdm(sorted(
+                        tqdm(sorted(
                             partition_key
                             for partition_key in os.listdir(_tmp_dir_path)
                             if partition_key.startswith('{}='.format(DATE_COL)))):
@@ -1610,7 +1610,7 @@ class Project(object):
 
             dates = anom_scores_df[DATE_COL].unique()
 
-            for date in tqdm.tqdm(dates):
+            for date in tqdm(dates):
                 self.data.EquipmentUniqueTypeGroupRiskScoringTasks.update_or_create(
                     equipment_unique_type_group=equipment_unique_type_group,
                     date=date,
@@ -1623,7 +1623,7 @@ class Project(object):
                     self.data.EquipmentInstances.get_or_create(
                         equipment_general_type=equipment_general_type,
                         name=equipment_instance_id)[0]
-                 for equipment_instance_id in tqdm.tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
+                 for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
             from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
@@ -1631,7 +1631,7 @@ class Project(object):
                     equipment_unique_type_group_data_set_name,
                     _n_anom_scores_rows, anom_scores_df.columns))
 
-            for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
+            for i in tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                 _anom_scores_df = \
                     anom_scores_df.iloc[
                         (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
@@ -1643,7 +1643,7 @@ class Project(object):
                         risk_score_name=risk_score_name,
                         date=row[DATE_COL],
                         risk_score_value=row[risk_score_name])
-                    for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
+                    for _, row in tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                         for risk_score_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                             if pandas.notnull(row[risk_score_name]))
 
@@ -1672,11 +1672,11 @@ class Project(object):
                 self.data.EquipmentInstances.get_or_create(
                     equipment_general_type=equipment_general_type,
                     name=clean_lower_str(str(equipment_instance_id)))[0]
-             for equipment_instance_id in tqdm.tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
+             for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
         from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
-        for i in tqdm.tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
+        for i in tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
             _anom_scores_df = \
                 anom_scores_df.iloc[
                     (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
@@ -1688,7 +1688,7 @@ class Project(object):
                     risk_score_name=row['risk_score_name'],
                     date=row[DATE_COL],
                     risk_score_value=row['risk_score_value'])
-                for _, row in tqdm.tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
+                for _, row in tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
                     for col_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
                         if pandas.notnull(row[col_name]))
 
@@ -1773,33 +1773,29 @@ class Project(object):
     
                 alert.save()
     
-                print('{} (UPDATED)'.format(alert))
-    
             else:
-                print('{} (CREATED)'.format(
-                    self.data.PredMaintAlerts.create(
-                        equipment_unique_type_group=equipment_unique_type_group,
+                self.data.PredMaintAlerts.create(
+                    equipment_unique_type_group=equipment_unique_type_group,
 
-                        equipment_instance=
-                            self.data.EquipmentInstances.get(
-                                equipment_general_type__name=equipment_general_type_name,
-                                name=equipment_instance_id),
+                    equipment_instance=
+                        self.data.EquipmentInstances.get(
+                            equipment_general_type__name=equipment_general_type_name,
+                            name=equipment_instance_id),
 
-                        risk_score_name=anom_score_name,
-                        threshold=threshold,
+                    risk_score_name=anom_score_name,
+                    threshold=threshold,
 
-                        from_date=start_date,
-                        to_date=end_date,
-                        ongoing=ongoing,
+                    from_date=start_date,
+                    to_date=end_date,
+                    ongoing=ongoing,
 
-                        cumulative_excess_risk_score=cumulative_excess_risk_score,
-                        last_risk_score=last_risk_score,
+                    cumulative_excess_risk_score=cumulative_excess_risk_score,
+                    last_risk_score=last_risk_score,
 
-                        info=
-                            dict(ppp_monitored_equipment_data_field_cumulative_excess_risk_scores=
-                                    ppp_monitored_equipment_data_field_cumulative_excess_risk_scores)
-                            if ppp_monitored_equipment_data_field_cumulative_excess_risk_scores
-                            else {})))
+                    info=dict(ppp_monitored_equipment_data_field_cumulative_excess_risk_scores=
+                                ppp_monitored_equipment_data_field_cumulative_excess_risk_scores)
+                        if ppp_monitored_equipment_data_field_cumulative_excess_risk_scores
+                        else {})
 
         equipment_unique_type_group_data_set_name = \
             '{}---{}'.format(
@@ -1857,7 +1853,7 @@ class Project(object):
 
         ppp_monitored_equipment_data_field_anom_score_name_prefixes_and_prefix_lengths = {}
 
-        for i, row in ppp_anom_scores_df.iterrows():
+        for i, row in tqdm(ppp_anom_scores_df.iterrows(), total=n_rows):
             equipment_instance_id = row[self._EQUIPMENT_INSTANCE_ID_COL_NAME]
             date = row[DATE_COL]
 
@@ -2125,7 +2121,7 @@ class Project(object):
                         must_succeed=True)
 
                 for partition_key in \
-                        tqdm.tqdm(sorted(
+                        tqdm(sorted(
                             partition_key
                             for partition_key in os.listdir(_tmp_dir_path)
                             if partition_key.startswith('{}='.format(DATE_COL)))):
@@ -2165,7 +2161,7 @@ class Project(object):
             else:
                 to_date = date
 
-            for _date in tqdm.tqdm(pandas.date_range(start=date, end=to_date).date):
+            for _date in tqdm(pandas.date_range(start=date, end=to_date).date):
                 if (not _force_re_agg) and \
                         ('Contents' in
                             self.s3_client.list_objects_v2(
@@ -2299,7 +2295,7 @@ class Project(object):
                         equipment_general_type=equipment_general_type,
                         name=clean_lower_str(str(equipment_instance_id)))[0]
                     for equipment_instance_id in
-                        tqdm.tqdm(
+                        tqdm(
                             numpy.unique(
                                 equipment_unique_type_group_s3_parquet_df.map(mapper=lambda pandas_df: pandas_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())
                                 .collect(self._EQUIPMENT_INSTANCE_ID_COL_NAME, reducer=numpy.hstack)))}
@@ -2312,21 +2308,19 @@ class Project(object):
             from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
 
             for equipment_unique_type_group_daily_agg_df in \
-                    tqdm.tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),
+                    tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),
                               total=equipment_unique_type_group_daily_agg_s3_parquet_df.nPieces):
                 date = equipment_unique_type_group_daily_agg_df[DATE_COL].iloc[0]
 
-                for i in tqdm.tqdm(range(int(math.ceil(len(equipment_unique_type_group_daily_agg_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
+                for i in tqdm(range(int(math.ceil(len(equipment_unique_type_group_daily_agg_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                     _equipment_unique_type_group_daily_agg_df = \
                         equipment_unique_type_group_daily_agg_df.iloc[
                             (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
 
                     equipment_instance_data_field_daily_aggs = []
 
-                    for _, row in \
-                            tqdm.tqdm(
-                                _equipment_unique_type_group_daily_agg_df.iterrows(),
-                                total=len(_equipment_unique_type_group_daily_agg_df)):
+                    for _, row in tqdm(_equipment_unique_type_group_daily_agg_df.iterrows(),
+                                       total=len(_equipment_unique_type_group_daily_agg_df)):
                         for equipment_data_field in equipment_unique_type_group.equipment_data_fields.all():
                             equipment_data_field_name = equipment_data_field.name
 
