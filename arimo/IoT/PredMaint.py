@@ -1590,11 +1590,11 @@ class Project(object):
 
             anom_scores_df = anom_scores_df.loc[anom_scores_df[DATE_COL] >= copy_anom_scores_from_date]
 
-            _n_anom_scores_rows_before_dedup = len(anom_scores_df)
-
             anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
                 anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
                     lambda equipment_instance_id: clean_lower_str(str(equipment_instance_id)))
+
+            _n_anom_scores_rows_before_dedup = len(anom_scores_df)
 
             anom_scores_df.drop_duplicates(
                 subset=(self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL),
@@ -1603,10 +1603,10 @@ class Project(object):
 
             _n_anom_scores_rows = len(anom_scores_df)
 
-            _n_anom_scores_row_dropped = _n_anom_scores_rows_before_dedup - _n_anom_scores_rows
-            if _n_anom_scores_row_dropped:
+            _n_anom_scores_rows_dropped = _n_anom_scores_rows_before_dedup - _n_anom_scores_rows
+            if _n_anom_scores_rows_dropped:
                 print('*** DROPPED {:,} DUPLICATE ROWS OF {} ***'
-                      .format(_n_anom_scores_row_dropped, anom_scores_df.columns))
+                      .format(_n_anom_scores_rows_dropped, anom_scores_df.columns))
 
             dates = anom_scores_df[DATE_COL].unique()
 
@@ -2289,16 +2289,17 @@ class Project(object):
 
             equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
 
-            equipment_instances = \
-                {equipment_instance_id:
+            equipment_instances = {}
+            for equipment_instance_id in \
+                tqdm(numpy.unique(
+                        equipment_unique_type_group_s3_parquet_df.map(
+                            mapper=lambda pandas_df: pandas_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())
+                        .collect(self._EQUIPMENT_INSTANCE_ID_COL_NAME, reducer=numpy.hstack))):
+                clean_str_equipment_instance_id = clean_lower_str(str(equipment_instance_id))
+                equipment_instances[clean_str_equipment_instance_id] = \
                     self.data.EquipmentInstances.get_or_create(
                         equipment_general_type=equipment_general_type,
-                        name=clean_lower_str(str(equipment_instance_id)))[0]
-                    for equipment_instance_id in
-                        tqdm(
-                            numpy.unique(
-                                equipment_unique_type_group_s3_parquet_df.map(mapper=lambda pandas_df: pandas_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())
-                                .collect(self._EQUIPMENT_INSTANCE_ID_COL_NAME, reducer=numpy.hstack)))}
+                        name=clean_str_equipment_instance_id)[0]
 
             self.data.EquipmentInstanceDataFieldDailyAggs.filter(
                 equipment_instance__in=equipment_instances.values(),
@@ -2311,6 +2312,24 @@ class Project(object):
                     tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),
                               total=equipment_unique_type_group_daily_agg_s3_parquet_df.nPieces):
                 date = equipment_unique_type_group_daily_agg_df[DATE_COL].iloc[0]
+
+                equipment_unique_type_group_daily_agg_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                    equipment_unique_type_group_daily_agg_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
+                        lambda equipment_instance_id: clean_lower_str(str(equipment_instance_id)))
+
+                _n_agg_rows_before_dedup = len(equipment_unique_type_group_daily_agg_df)
+
+                equipment_unique_type_group_daily_agg_df.drop_duplicates(
+                    subset=(self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL),
+                    keep='first',
+                    inplace=True)
+
+                _n_agg_rows = len(equipment_unique_type_group_daily_agg_df)
+
+                _n_agg_rows_dropped = _n_agg_rows_before_dedup - _n_agg_rows
+                if _n_agg_rows_dropped:
+                    print('*** {}: DROPPED {:,} DUPLICATE ROWS ***'
+                          .format(date, _n_agg_rows_dropped))
 
                 for i in tqdm(range(int(math.ceil(len(equipment_unique_type_group_daily_agg_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
                     _equipment_unique_type_group_daily_agg_df = \
