@@ -15,8 +15,7 @@ from .models import \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem, \
-    Error
+    EquipmentSystem
 
 from ..util import clean_lower_str
 
@@ -419,12 +418,3 @@ class EquipmentSystemSerializer(ModelSerializer):
             'name', \
             'date', \
             'equipment_instances'
-
-
-class ErrorSerializer(ModelSerializer):
-    class Meta:
-        model = Error
-
-        fields = \
-            'key', \
-            'value'

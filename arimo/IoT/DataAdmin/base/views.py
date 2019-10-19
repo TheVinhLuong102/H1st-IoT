@@ -19,8 +19,7 @@ from .filters import \
     EquipmentFacilityFilter, \
     EquipmentInstanceFilter, \
     EquipmentInstanceDataFieldDailyAggFilter, \
-    EquipmentSystemFilter, \
-    ErrorFilter
+    EquipmentSystemFilter
 
 from .query_sets import \
     GLOBAL_CONFIG_QUERY_SET, \
@@ -35,8 +34,7 @@ from .query_sets import \
     EQUIPMENT_FACILITY_REST_API_QUERY_SET, \
     EQUIPMENT_INSTANCE_REST_API_QUERY_SET, \
     EQUIPMENT_SYSTEM_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET, \
-    ERROR_QUERY_SET
+    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -51,8 +49,7 @@ from .serializers import \
     EquipmentFacilitySerializer, \
     EquipmentInstanceSerializer, \
     EquipmentInstanceDataFieldDailyAggSerializer, \
-    EquipmentSystemSerializer, \
-    ErrorSerializer
+    EquipmentSystemSerializer
 
 
 class GlobalConfigViewSet(ModelViewSet):
@@ -778,50 +775,5 @@ class EquipmentSystemViewSet(ModelViewSet):
         return super(type(self), self).list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment System')
-    def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
-
-
-class ErrorViewSet(ReadOnlyModelViewSet):
-    """
-    list:
-    `GET` a filterable, paginated list of Errors
-
-    retrieve:
-    `GET` the Error specified by `key`
-    """
-    queryset = ERROR_QUERY_SET
-
-    serializer_class = ErrorSerializer
-
-    authentication_classes = \
-        BasicAuthentication, \
-        RemoteUserAuthentication, \
-        SessionAuthentication, \
-        TokenAuthentication
-
-    permission_classes = IsAuthenticated,
-
-    filter_class = ErrorFilter
-
-    ordering_fields = 'key',
-
-    ordering = 'key',
-
-    pagination_class = LimitOffsetPagination
-
-    lookup_field = 'key'
-
-    lookup_url_kwarg = 'error_key'
-
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
-    @silk_profile(name='API: Errors')
-    def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
-
-    @silk_profile(name='API: Error')
     def retrieve(self, request, *args, **kwargs):
         return super(type(self), self).retrieve(request, *args, **kwargs)

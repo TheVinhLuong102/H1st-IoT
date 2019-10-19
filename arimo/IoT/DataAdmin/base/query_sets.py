@@ -13,8 +13,7 @@ from .models import \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem, \
-    Error
+    EquipmentSystem
 
 
 GLOBAL_CONFIG_QUERY_SET = \
@@ -343,7 +342,3 @@ EQUIPMENT_SYSTEM_REST_API_QUERY_SET = \
         Prefetch(
             lookup='equipment_instances',
             queryset=EQUIPMENT_INSTANCE_NAME_ONLY_QUERY_SET))
-
-
-ERROR_QUERY_SET = \
-    Error.objects.all()

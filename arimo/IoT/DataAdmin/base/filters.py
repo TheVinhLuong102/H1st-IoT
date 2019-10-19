@@ -15,8 +15,7 @@ from .models import \
     EquipmentFacility, \
     EquipmentInstance, \
     EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem, \
-    Error
+    EquipmentSystem
 
 
 class GlobalConfigFilter(FilterSet):
@@ -553,27 +552,3 @@ class EquipmentSystemFilter(FilterSet):
                 'month__in',
                 'month__range'
             ])
-
-
-class ErrorFilter(FilterSet):
-    class Meta:
-        model = Error
-
-        fields = dict(
-            key=[
-                'exact', 'iexact',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
-                'regex', 'iregex'
-            ],
-
-            value='__all__'
-        )
-
-        filter_overrides = {
-            JSONField: dict(
-                filter_class=CharFilter
-                # 'extra': lambda f: {'lookup_expr': 'icontains'}
-            )
-        }

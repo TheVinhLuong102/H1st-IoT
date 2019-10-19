@@ -1005,66 +1005,6 @@ class EquipmentInstance(Model):
         super(type(self), self).save(*args, **kwargs)
 
 
-class EquipmentInstanceDailyMetadata(Model):
-    RELATED_NAME = 'equipment_instance_daily_metadata'
-    RELATED_QUERY_NAME = 'equipment_instance_daily_metadata'
-
-    equipment_instance = \
-        ForeignKey(
-            to=EquipmentInstance,
-            related_name=RELATED_NAME,
-            related_query_name=RELATED_QUERY_NAME,
-            blank=False,
-            null=False,
-            on_delete=PROTECT)
-
-    date = \
-        DateField(
-            blank=True,
-            null=True,
-            db_index=True)
-
-    url = \
-        URLField(
-            blank=False,
-            null=False,
-            max_length=1000)
-
-    schema = \
-        JSONField(
-            blank=False,
-            null=False)
-
-    n_columns = \
-        IntegerField(
-            blank=False,
-            null=False)
-
-    n_rows = \
-        IntegerField(
-            blank=False,
-            null=False)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
-    class Meta:
-        verbose_name_plural = 'Equipment Instance Daily Metadata'
-
-        unique_together = \
-            'equipment_instance', \
-            'date'
-
-    def __str__(self):
-        return '{} on {} @ {} ({} columns x {} rows)'.format(
-                self.equipment_instance,
-                self.date,
-                self.url,
-                self.n_columns,
-                self.n_rows)
-
-
 class EquipmentInstanceDataFieldDailyAgg(Model):
     RELATED_NAME = 'equipment_instance_data_field_daily_aggs'
     RELATED_QUERY_NAME = 'equipment_instance_data_field_daily_agg'
@@ -1218,25 +1158,3 @@ class EquipmentSystem(Model):
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
-
-
-@python_2_unicode_compatible
-class Error(Model):
-    key = \
-        CharField(
-            blank=False,
-            null=False,
-            unique=True,
-            db_index=True,
-            max_length=MAX_CHAR_LEN)
-
-    value = \
-        JSONField(
-            blank=False,
-            null=False)
-
-    class Meta:
-        ordering = 'key',
-
-    def __str__(self):
-        return '{} = {}'.format(self.key, self.value)

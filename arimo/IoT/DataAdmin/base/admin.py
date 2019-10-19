@@ -22,8 +22,7 @@ from .models import \
     EquipmentUniqueType, \
     EquipmentFacility, \
     EquipmentInstance, \
-    EquipmentSystem, \
-    Error
+    EquipmentSystem
 
 from .query_sets import \
     EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET, \
@@ -653,32 +652,3 @@ class EquipmentSystemAdmin(ModelAdmin):
 site.register(
     EquipmentSystem,
     admin_class=EquipmentSystemAdmin)
-
-
-class ErrorAdmin(ModelAdmin):
-    list_display = \
-        'key', \
-        'value'
-
-    search_fields = \
-        'key', \
-        'value'
-
-    show_full_result_count = False
-
-    readonly_fields = \
-        'key', \
-        'value'
-
-    @silk_profile(name='Admin: Errors')
-    def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Error')
-    def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
-
-
-site.register(
-    Error,
-    admin_class=ErrorAdmin)
