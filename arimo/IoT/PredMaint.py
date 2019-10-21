@@ -166,9 +166,8 @@ class Project(object):
             EquipmentComponent, \
             EquipmentDataField, \
             EquipmentUniqueTypeGroup, EquipmentUniqueType, \
-            EquipmentInstance, EquipmentInstanceDailyMetadata, EquipmentInstanceDataFieldDailyAgg, \
-            EquipmentFacility, EquipmentSystem, \
-            Error
+            EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, \
+            EquipmentFacility, EquipmentSystem
 
         from arimo.IoT.DataAdmin.PredMaint.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
@@ -200,13 +199,10 @@ class Project(object):
                 EquipmentUniqueTypes=EquipmentUniqueType.objects,
 
                 EquipmentInstances=EquipmentInstance.objects,
-                EquipmentInstanceDailyMetadata=EquipmentInstanceDailyMetadata.objects,
                 EquipmentInstanceDataFieldDailyAggs=EquipmentInstanceDataFieldDailyAgg.objects,
 
                 EquipmentFacilities=EquipmentFacility.objects,
                 EquipmentSystems=EquipmentSystem.objects,
-
-                Errors=Error.objects,
 
                 EquipmentUniqueTypeGroupDataFieldProfiles=
                     EquipmentUniqueTypeGroupDataFieldProfile.objects,
