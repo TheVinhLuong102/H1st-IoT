@@ -2481,7 +2481,7 @@ class Project(object):
                     if daily_anom_scores_s3_parquet_df:
                         daily_anom_scores_df = daily_anom_scores_s3_parquet_df.collect()
 
-                        daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                        daily_anom_scores_df.loc[:, self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
                             daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
                                 lambda _equipment_instance_id: clean_lower_str(str(_equipment_instance_id)))
 
@@ -2639,8 +2639,8 @@ class Project(object):
                                 verbose=True) \
                             .collect()
 
-                        daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
-                            daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
+                        daily_err_mults_df.loc[:, self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                            daily_err_mults_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
                                 lambda _equipment_instance_id: clean_lower_str(str(_equipment_instance_id)))
 
                         self._daily_err_mults_dfs[equipment_unique_type_group_name] = daily_err_mults_df
