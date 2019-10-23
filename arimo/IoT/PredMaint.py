@@ -2458,7 +2458,10 @@ class Project(object):
                         equipment_general_type_name.upper(),
                         equipment_unique_type_group_name)
 
-                if equipment_unique_type_group_name not in self._daily_anom_scores_dfs:
+                if equipment_unique_type_group_name in self._daily_anom_scores_dfs:
+                    daily_anom_scores_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
+
+                else:
                     try:
                         daily_anom_scores_s3_parquet_df = \
                             S3ParquetDataFeeder(
@@ -2475,12 +2478,19 @@ class Project(object):
                     except:
                         daily_anom_scores_s3_parquet_df = None
 
-                    self._daily_anom_scores_dfs[equipment_unique_type_group_name] = \
-                        daily_anom_scores_s3_parquet_df.collect() \
-                        if daily_anom_scores_s3_parquet_df \
-                        else None
+                    if daily_anom_scores_s3_parquet_df:
+                        daily_anom_scores_df = daily_anom_scores_s3_parquet_df.collect()
 
-                daily_anom_scores_df = self._daily_anom_scores_dfs[equipment_unique_type_group_name]
+                        daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                            daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
+                                lambda _equipment_instance_id: clean_lower_str(str(_equipment_instance_id)))
+
+                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = daily_anom_scores_df
+
+                    else:
+                        self._daily_anom_scores_dfs[equipment_unique_type_group_name] = \
+                            daily_anom_scores_df = \
+                            None
 
                 if daily_anom_scores_df is not None:
                     daily_anom_scores_df = \
@@ -2613,8 +2623,11 @@ class Project(object):
                             print('*** {}: {} ***'.format(file_name, err))
 
                     # plot (non-EWMA) Abs MAE Mults
-                    if equipment_unique_type_group_name not in self._daily_err_mults_dfs:
-                        self._daily_err_mults_dfs[equipment_unique_type_group_name] = \
+                    if equipment_unique_type_group_name in self._daily_err_mults_dfs:
+                        daily_err_mults_df = self._daily_err_mults_dfs[equipment_unique_type_group_name]
+
+                    else:
+                        daily_err_mults_df = \
                             S3ParquetDataFeeder(
                                 path=os.path.join(
                                         's3://{}/{}'.format(
@@ -2626,7 +2639,11 @@ class Project(object):
                                 verbose=True) \
                             .collect()
 
-                    daily_err_mults_df = self._daily_err_mults_dfs[equipment_unique_type_group_name]
+                        daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
+                            daily_anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].map(
+                                lambda _equipment_instance_id: clean_lower_str(str(_equipment_instance_id)))
+
+                        self._daily_err_mults_dfs[equipment_unique_type_group_name] = daily_err_mults_df
 
                     daily_err_mults_df = \
                         daily_err_mults_df.loc[
