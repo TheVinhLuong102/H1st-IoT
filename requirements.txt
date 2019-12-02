@@ -1,5 +1,5 @@
 # Django
-Django >= 2.2.7
+Django >= 2.2.8, < 3.0
 Django-AutoComplete-Light >= 3.4.1
 Django-Silk >= 3.0.4
 PsycoPG2-binary >= 2.8.4
