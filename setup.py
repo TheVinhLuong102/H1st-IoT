@@ -8,7 +8,7 @@ for s in open('requirements.txt').readlines():
         s = s.strip()
         lower_s = s.lower()
         install_requires.append(
-            'Django >= 1.11.26, < 2'   # last 1.x ver compat w/ Py2
+            'Django >= 1.11.27, < 2'   # last 1.x ver compat w/ Py2
             if lower_s.startswith('django ')
             else ('Django-AutoComplete-Light >= 3.2.10, < 3.3'   # last 3.2.x ver compat w/ Py2
                   if six.PY2 and lower_s.startswith('django-autocomplete-light')
