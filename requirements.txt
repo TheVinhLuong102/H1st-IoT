@@ -1,19 +1,19 @@
 # Django
-Django >= 2.2.9, < 3
-Django-AutoComplete-Light >= 3.4.1
-Django-Silk >= 3.0.4
+Django >= 3.0.2
+Django-AutoComplete-Light >= 3.5.0
+Django-Silk >= 4.0.0
 PsycoPG2-binary >= 2.8.4
 
 # REST API
-DjangoRESTFramework >= 3.10.3
+DjangoRESTFramework >= 3.11.0
 DjangoRESTFramework-Filters >= 1.0.0.dev0
-DRF-Writable-Nested >= 0.5.1
+DRF-Writable-Nested >= 0.5.4
 CoreAPI >= 2.3.3   # ??? REQUIRED FOR REST API TO WORK ???
 
 # deployment-related
-AWSEBCLI >= 3.15.3
-Ruamel.YAML >= 0.16.5
+AWSEBCLI >= 3.17.0
+Ruamel.YAML >= 0.16.6
 
 # viz
-PlotNine >= 0.4.0
-StatsModels >= 0.10.1
+PlotNine >= 0.6.0
+StatsModels >= 0.11.0
