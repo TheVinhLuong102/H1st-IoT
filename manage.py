@@ -5,10 +5,6 @@ import os
 import sys
 
 
-# TODO: DEBUG WHY CANNOT IMPORT arimo.IoT RIGHT AWAY
-import arimo.util
-
-
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "arimo.IoT.DataAdmin._django_root.settings")
 
