@@ -9,7 +9,6 @@ from django.db.models import \
     CASCADE, PROTECT
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField, JSONField
-from django.utils.encoding import python_2_unicode_compatible
 
 from psycopg2.extras import DateRange
 
@@ -24,7 +23,6 @@ _ONE_DAY_TIME_DELTA = timedelta(days=1)
 _ONE_DAY_TIME_DELTA_TOTAL_SECONDS = _ONE_DAY_TIME_DELTA.total_seconds()
 
 
-@python_2_unicode_compatible
 class GlobalConfig(Model):
     key = \
         CharField(
@@ -43,6 +41,8 @@ class GlobalConfig(Model):
 
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
+
+    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
@@ -193,7 +193,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
             'equipment_data_field_2'
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroupServiceConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_service_configs'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_service_config'
@@ -261,6 +260,8 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
                 '' if self.active
                    else '(INACTIVE) ',
                 self.equipment_unique_type_group.name)
+
+    __unicode__ = __str__
 
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
@@ -339,7 +340,6 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
             'monitored_equipment_data_field__name'
 
 
-@python_2_unicode_compatible
 class Blueprint(Model):
     RELATED_NAME = 'blueprints'
     RELATED_QUERY_NAME = 'blueprint'
@@ -400,6 +400,8 @@ class Blueprint(Model):
                 self.timestamp,
                 '' if self.active
                    else ' (INACTIVE)')
+
+    __unicode__ = __str__
 
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
@@ -470,7 +472,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
             '-trained_to_date'
 
 
-@python_2_unicode_compatible
 class EquipmentInstanceDailyRiskScore(Model):
     RELATED_NAME = 'equipment_instance_daily_risk_scores'
     RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
@@ -534,8 +535,9 @@ class EquipmentInstanceDailyRiskScore(Model):
                 self.risk_score_name,
                 self.risk_score_value)
 
+    __unicode__ = __str__
 
-@python_2_unicode_compatible
+
 class EquipmentProblemType(Model):
     name = \
         CharField(
@@ -552,12 +554,13 @@ class EquipmentProblemType(Model):
     def __str__(self):
         return 'EqProbTp {}'.format(self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentInstanceAlarmPeriod(Model):
     RELATED_NAME = 'equipment_instance_alarm_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alarm_period'
@@ -654,6 +657,8 @@ class EquipmentInstanceAlarmPeriod(Model):
                     if self.to_utc_date_time
                     else ' (ONGOING)')
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         if self.to_utc_date_time:
             self.duration_in_days = \
@@ -675,7 +680,6 @@ class EquipmentInstanceAlarmPeriod(Model):
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentProblemPeriod(Model):
     RELATED_NAME = 'equipment_instance_problem_diagnoses'
     RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
@@ -796,6 +800,8 @@ class EquipmentProblemPeriod(Model):
                     if self.dismissed
                     else '')
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.date_range = \
             DateRange(
@@ -816,7 +822,6 @@ class EquipmentProblemPeriod(Model):
 EquipmentInstanceProblemDiagnosis = EquipmentProblemPeriod
 
 
-@python_2_unicode_compatible
 class AlertDiagnosisStatus(Model):
     RELATED_NAME = 'alert_diagnosis_statuses'
     RELATED_QUERY_NAME = 'alert_diagnosis_status'
@@ -846,12 +851,13 @@ class AlertDiagnosisStatus(Model):
     def __str__(self):
         return '{}. {}'.format(self.index, self.name)
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class Alert(Model):
     RELATED_NAME = 'equipment_instance_alert_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alert_period'
@@ -1029,6 +1035,8 @@ class Alert(Model):
                 self.risk_score_name,
                 self.threshold,
                 self.duration)
+
+    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.date_range = \

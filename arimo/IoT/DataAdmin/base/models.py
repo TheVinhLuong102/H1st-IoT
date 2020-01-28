@@ -7,14 +7,12 @@ from django.db.models import \
     PROTECT
 from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import m2m_changed, pre_delete
-from django.utils.encoding import python_2_unicode_compatible
 
 import warnings
 
 from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
 
-@python_2_unicode_compatible
 class GlobalConfig(Model):
     key = \
         CharField(
@@ -35,12 +33,13 @@ class GlobalConfig(Model):
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class DataType(Model):
     name = \
         CharField(
@@ -57,12 +56,13 @@ class DataType(Model):
     def __str__(self):
         return 'DataTp {}'.format(self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class NumericMeasurementUnit(Model):
     name = \
         CharField(
@@ -84,12 +84,13 @@ class NumericMeasurementUnit(Model):
     def __str__(self):
         return u'NumMeasureUnit "{}"'.format(self.name)
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = self.name.strip()
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentDataFieldType(Model):
     name = \
         CharField(
@@ -106,12 +107,13 @@ class EquipmentDataFieldType(Model):
     def __str__(self):
         return 'EqDataFldTp {}'.format(self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentGeneralType(Model):
     name = \
         CharField(
@@ -128,12 +130,13 @@ class EquipmentGeneralType(Model):
     def __str__(self):
         return 'EqGenTp {}'.format(self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentComponent(Model):
     RELATED_NAME = 'equipment_components'
     RELATED_QUERY_NAME = 'equipment_component'
@@ -208,12 +211,13 @@ class EquipmentComponent(Model):
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentDataField(Model):
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
@@ -344,12 +348,13 @@ class EquipmentDataField(Model):
                 '' if self.max_val is None
                    else ', max {}'.format(self.max_val))
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueTypeGroup(Model):
     RELATED_NAME = 'equipment_unique_type_groups'
     RELATED_QUERY_NAME = 'equipment_unique_type_group'
@@ -412,12 +417,13 @@ class EquipmentUniqueTypeGroup(Model):
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentUniqueType(Model):
     RELATED_NAME = 'equipment_unique_types'
     RELATED_QUERY_NAME = 'equipment_unique_type'
@@ -482,6 +488,8 @@ class EquipmentUniqueType(Model):
         return '{} UnqTp {}'.format(
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
+
+    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -884,7 +892,6 @@ pre_delete.connect(
     apps=None)
 
 
-@python_2_unicode_compatible
 class EquipmentFacility(Model):
     RELATED_NAME = 'equipment_facilities'
     RELATED_QUERY_NAME = 'equipment_facility'
@@ -915,12 +922,13 @@ class EquipmentFacility(Model):
     def __str__(self):
         return 'EqFacility "{}"'.format(self.name)
 
+    __unicode__ = __str__
+
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
 
 
-@python_2_unicode_compatible
 class EquipmentInstance(Model):
     RELATED_NAME = 'equipment_instances'
     RELATED_QUERY_NAME = 'equipment_instance'
@@ -990,6 +998,8 @@ class EquipmentInstance(Model):
                     if self.equipment_unique_type
                     else '',
                 self.name)
+
+    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -1097,7 +1107,6 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             'date'
 
 
-@python_2_unicode_compatible
 class EquipmentSystem(Model):
     RELATED_NAME = 'equipment_systems'
     RELATED_QUERY_NAME = 'equipment_system'
@@ -1154,6 +1163,8 @@ class EquipmentSystem(Model):
                     if self.equipment_facility
                     else '',
                 self.date)
+
+    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
