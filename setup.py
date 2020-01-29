@@ -18,7 +18,9 @@ for s in open('requirements.txt').readlines():
                               if six.PY2 and lower_s.startswith('djangorestframework')
                               else ('Django-Filter >= 1.1.0, < 2'   # last 1.x ver compat w/ Py2
                                     if six.PY2 and lower_s.startswith('django-filter')
-                                    else s)))))
+                                    else ('Django-Silk >= 3.0.4, < 4'   # last 3.x ver compat w/ Py2
+                                          if six.PY2 and lower_s.startswith('django-silk')
+                                          else s))))))
 
 
 setup(
