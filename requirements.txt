@@ -15,5 +15,5 @@ AWSEBCLI >= 3.17.0
 Ruamel.YAML >= 0.16.6
 
 # viz
-PlotNine >= 0.6.0
+PlotNine >= 0.4.0   # > 0.4 incompat w/ Py2
 StatsModels >= 0.11.0
