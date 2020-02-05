@@ -82,7 +82,7 @@ class NumericMeasurementUnit(Model):
         ordering = 'name',
 
     def __str__(self):
-        return u'NumMeasureUnit "{}"'.format(self.name)
+        return 'NumMeasureUnit "{}"'.format(self.name.encode('utf-8'))
 
     __unicode__ = __str__
 
@@ -330,14 +330,14 @@ class EquipmentDataField(Model):
             'name'
         
     def __str__(self):
-        return u'{} [{}] {} [{}{}{}{}{}{}]'.format(
+        return '{} [{}] {} [{}{}{}{}{}{}]'.format(
                 self.equipment_general_type.name.upper(),
                 self.equipment_data_field_type.name,
                 self.name,
                 self.data_type.name
                     if self.data_type
                     else 'UNTYPED',
-                u', unit {}'.format(self.numeric_measurement_unit.name.upper())
+                ', unit {}'.format(self.numeric_measurement_unit.name.encode('utf-8').upper())
                     if self.numeric_measurement_unit and self.numeric_measurement_unit.name
                     else '',
                 ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null),
