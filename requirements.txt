@@ -11,7 +11,7 @@ DRF-Writable-Nested >= 0.5.4
 CoreAPI >= 2.3.3   # ??? REQUIRED FOR REST API TO WORK ???
 
 # deployment-related
-AWSEBCLI >= 3.17.0
+AWSEBCLI >= 3.17.1
 Ruamel.YAML >= 0.16.7
 
 # viz
