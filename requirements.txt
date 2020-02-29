@@ -1,6 +1,6 @@
 # Django
-Django >= 3.0.2
-Django-AutoComplete-Light >= 3.5.0
+Django >= 3.0.3
+Django-AutoComplete-Light >= 3.5.1
 Django-Silk >= 4.0.0
 PsycoPG2-binary >= 2.8.4
 
@@ -12,7 +12,7 @@ CoreAPI >= 2.3.3   # ??? REQUIRED FOR REST API TO WORK ???
 
 # deployment-related
 AWSEBCLI >= 3.17.1
-Ruamel.YAML >= 0.16.7
+Ruamel.YAML >= 0.16.10
 
 # viz
 PlotNine >= 0.4.0   # > 0.4 incompat w/ Py2
