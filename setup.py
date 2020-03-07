@@ -3,7 +3,7 @@ from setuptools import find_namespace_packages, setup
 
 setup(
     name='Arimo-PredMaint',
-    author='Arimo',
+    author='Arimo LLC',
     author_email='DSAR@Arimo.com',
     url='https://github.com/adatao/PredMaint',
     version='0.0.0',
