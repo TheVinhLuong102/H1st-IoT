@@ -454,8 +454,7 @@ if cmd == UPLOAD_CONFIG_FILE:
             local_project_config_file_name)
 
     print('Uploading "{}" to "s3://{}/{}"... '
-          .format(local_project_config_file_path, Project.CONFIG_S3_BUCKET, local_project_config_file_name),
-          end='')
+          .format(local_project_config_file_path, Project.CONFIG_S3_BUCKET, local_project_config_file_name))
 
     PROJECT.s3_client.upload_file(
         Filename=local_project_config_file_path,
