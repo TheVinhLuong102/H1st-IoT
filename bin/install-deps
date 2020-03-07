@@ -17,7 +17,7 @@ git config --global credential.helper cache
 git config --global credential.helper "cache --timeout=3600"
 
 
-python2 -m pip install --upgrade pip --user
+python3 -m pip install --upgrade pip --user
 
 
 if [ ! -d $SDK_DIR_NAME ]; then
@@ -28,7 +28,7 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python2 -m pip install -e $SDK_DIR_NAME --upgrade --user
+python3 -m pip install -e $SDK_DIR_NAME --upgrade --user
 
 
 if [ ! -d $BAI_DEV_DIR_NAME ]; then
@@ -39,11 +39,11 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python2 -m pip install -e $BAI_DEV_DIR_NAME --upgrade --user
+python3 -m pip install -e $BAI_DEV_DIR_NAME --upgrade --user
 
 
 cd $PRED_MAINT_DIR_NAME
 git pull
 cd $CURRENT_DIR_PATH
 
-python2 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user
+python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user
