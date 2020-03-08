@@ -14,7 +14,7 @@ from plotnine import \
     ggtitle, element_text, theme
 from psycopg2.extras import DateRange
 from pyspark.sql import functions
-from ruamel import yaml
+import yaml
 from scipy.stats import pearsonr
 import tempfile
 from tqdm import tqdm
