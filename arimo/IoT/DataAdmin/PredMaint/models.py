@@ -42,8 +42,6 @@ class GlobalConfig(Model):
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
         super(type(self), self).save( *args, **kwargs)
@@ -261,8 +259,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
                    else '(INACTIVE) ',
                 self.equipment_unique_type_group.name)
 
-    __unicode__ = __str__
-
 
 class EquipmentUniqueTypeGroupMonitoredDataFieldConfig(Model):
     RELATED_NAME = 'equipment_unique_type_group_monitored_data_field_configs'
@@ -401,8 +397,6 @@ class Blueprint(Model):
                 '' if self.active
                    else ' (INACTIVE)')
 
-    __unicode__ = __str__
-
 
 class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
     RELATED_NAME = 'equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles'
@@ -535,8 +529,6 @@ class EquipmentInstanceDailyRiskScore(Model):
                 self.risk_score_name,
                 self.risk_score_value)
 
-    __unicode__ = __str__
-
 
 class EquipmentProblemType(Model):
     name = \
@@ -553,8 +545,6 @@ class EquipmentProblemType(Model):
 
     def __str__(self):
         return 'EqProbTp {}'.format(self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -656,8 +646,6 @@ class EquipmentInstanceAlarmPeriod(Model):
                 ' to {} ({:.3f} Days)'.format(self.to_utc_date_time, self.duration_in_days)
                     if self.to_utc_date_time
                     else ' (ONGOING)')
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         if self.to_utc_date_time:
@@ -800,8 +788,6 @@ class EquipmentProblemPeriod(Model):
                     if self.dismissed
                     else '')
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.date_range = \
             DateRange(
@@ -850,8 +836,6 @@ class AlertDiagnosisStatus(Model):
 
     def __str__(self):
         return '{}. {}'.format(self.index, self.name)
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -1035,8 +1019,6 @@ class Alert(Model):
                 self.risk_score_name,
                 self.threshold,
                 self.duration)
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.date_range = \
