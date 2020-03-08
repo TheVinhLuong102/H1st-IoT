@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function
+
 import matplotlib
 matplotlib.use('Agg')
 
@@ -26,13 +28,13 @@ from arimo.blueprints.cs import anom as cs_anom, regr as cs_regr
 from arimo.data.parquet import S3ParquetDataFeeder
 from arimo.data.distributed import DDF
 from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
-from arimo.utils import fs, Namespace
-from arimo.utils.aws import key_pair, s3
-from arimo.utils.date_time import \
+from arimo.util import fs, Namespace
+from arimo.util.aws import key_pair, s3
+from arimo.util.date_time import \
     DATE_COL, MONTH_COL, \
     _PRED_VARS_INCL_T_AUX_COLS, _T_WoM_COL, _T_DoW_COL, _T_DELTA_COL, _T_PoM_COL, _T_PoW_COL, _T_PoD_COL, \
     month_end, month_str
-from arimo.utils.types.spark_sql import _BOOL_TYPE
+from arimo.util.types.spark_sql import _BOOL_TYPE
 
 from django.conf import settings
 from django.core.management import call_command
