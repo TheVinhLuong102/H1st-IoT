@@ -33,8 +33,6 @@ class GlobalConfig(Model):
     def __str__(self):
         return '{} = {}'.format(self.key, self.value)
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
         super(type(self), self).save(*args, **kwargs)
@@ -55,8 +53,6 @@ class DataType(Model):
 
     def __str__(self):
         return 'DataTp {}'.format(self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -84,8 +80,6 @@ class NumericMeasurementUnit(Model):
     def __str__(self):
         return 'NumMeasureUnit "{}"'.format(self.name.encode('utf-8'))
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.name = self.name.strip()
         super(type(self), self).save(*args, **kwargs)
@@ -107,8 +101,6 @@ class EquipmentDataFieldType(Model):
     def __str__(self):
         return 'EqDataFldTp {}'.format(self.name.upper())
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
@@ -129,8 +121,6 @@ class EquipmentGeneralType(Model):
 
     def __str__(self):
         return 'EqGenTp {}'.format(self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -210,8 +200,6 @@ class EquipmentComponent(Model):
         return '{} Component {}'.format(
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -348,8 +336,6 @@ class EquipmentDataField(Model):
                 '' if self.max_val is None
                    else ', max {}'.format(self.max_val))
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
@@ -416,8 +402,6 @@ class EquipmentUniqueTypeGroup(Model):
         return '{} UnqTpGrp {}'.format(
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -488,8 +472,6 @@ class EquipmentUniqueType(Model):
         return '{} UnqTp {}'.format(
                 self.equipment_general_type.name.upper(),
                 self.name.upper())
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -922,8 +904,6 @@ class EquipmentFacility(Model):
     def __str__(self):
         return 'EqFacility "{}"'.format(self.name)
 
-    __unicode__ = __str__
-
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
         super(type(self), self).save(*args, **kwargs)
@@ -998,8 +978,6 @@ class EquipmentInstance(Model):
                     if self.equipment_unique_type
                     else '',
                 self.name)
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -1163,8 +1141,6 @@ class EquipmentSystem(Model):
                     if self.equipment_facility
                     else '',
                 self.date)
-
-    __unicode__ = __str__
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
