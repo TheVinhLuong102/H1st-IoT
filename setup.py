@@ -10,6 +10,7 @@ setup(
     description='Arimo Predictive Maintenance',
     long_description='Arimo Predictive Maintenance',
     keywords='Arimo Predictive Maintenance',
+    namespace_packages=['arimo'],
     packages=find_namespace_packages(include=['arimo.*']),
     include_package_data=True,
     install_requires=
