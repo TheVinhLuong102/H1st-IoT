@@ -7,6 +7,9 @@ CURRENT_DIR_PATH=$(pwd)
 SDK_REPO_URL=https://github.com/adatao/SDK
 SDK_DIR_NAME=SDK
 
+BAI_DEV_REPO_URL=https://github.com/adatao/BAI-dev
+BAI_DEV_DIR_NAME=BAI-dev
+
 PRED_MAINT_DIR_NAME=PredMaint
 
 
@@ -26,6 +29,17 @@ else
 fi
 
 python3 -m pip install -e $SDK_DIR_NAME --upgrade --user
+
+
+if [ ! -d $BAI_DEV_DIR_NAME ]; then
+  git clone $BAI_DEV_REPO_URL
+else
+  cd $BAI_DEV_DIR_NAME
+  git pull
+  cd $CURRENT_DIR_PATH
+fi
+
+python3 -m pip install -e $BAI_DEV_DIR_NAME --upgrade --user
 
 
 cd $PRED_MAINT_DIR_NAME

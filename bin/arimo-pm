@@ -1,13 +1,15 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
+
+from __future__ import print_function
 
 import argparse
 import os
 import random
 import tqdm
 
-from arimo.utils import Namespace
-from arimo.utils.aws import s3
+from arimo.util import Namespace
+from arimo.util.aws import s3
 
 from arimo.IoT.DataAdmin.util import _YAML_EXT
 from arimo.IoT.PredMaint import Project
