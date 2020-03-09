@@ -22,7 +22,7 @@ import tempfile
 from tqdm import tqdm
 import uuid
 
-import arimo.backend
+import arimo.util.data_backend
 from arimo.blueprints import AbstractPPPBlueprint, load as load_blueprint
 from arimo.blueprints.cs import anom as cs_anom, regr as cs_regr
 from arimo.data.parquet import S3ParquetDataFeeder
@@ -1458,7 +1458,7 @@ class Project(object):
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                arimo.backend.spark.stop()
+                arimo.util.data_backend.spark.stop()
 
                 if fs._ON_LINUX_CLUSTER_WITH_HDFS:
                     fs.get(
@@ -1501,7 +1501,7 @@ class Project(object):
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                arimo.backend.spark.stop()
+                arimo.util.data_backend.spark.stop()
 
             daily_mean_abs_mae_mult_prefix = \
                 AbstractPPPBlueprint._dailyMean_PREFIX + \
@@ -2263,9 +2263,9 @@ class Project(object):
                     defaults=dict(finished=None))
 
         if copy_agg_daily_equipment_data_to_db_for_dates:
-            if arimo.backend.chkSpark():
+            if arimo.util.data_backend.chkSpark():
                 # free up Spark resources for other tasks
-                arimo.backend.spark.stop()
+                arimo.util.data_backend.spark.stop()
 
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
