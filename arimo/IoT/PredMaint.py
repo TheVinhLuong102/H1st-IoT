@@ -1554,7 +1554,7 @@ class Project(object):
             anom_scores_df.columns = anom_scores_df.columns.map(str)   # Arrow Parquet columns cannot be Unicode
 
             anom_scores_df.to_parquet(
-                fname=_tmp_parquet_file_path,
+                path=_tmp_parquet_file_path,
                 index=False)
 
             s3.mv(
