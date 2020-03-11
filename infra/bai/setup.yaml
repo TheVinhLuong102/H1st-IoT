@@ -10,8 +10,7 @@ ssh_ca_pub_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDWgkmugVoI2pni5fkPA1NLY/V
 model_manager_url: https://ccpm.jp.arimo.com
 
 project_tag: PM
-version: 1.2.7
-peng_version: 1.2.8-SNAPSHOT
+version: 1.3.2
 
 # ================================
 

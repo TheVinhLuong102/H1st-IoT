@@ -12,11 +12,7 @@ env:
   PUBLIC_URL: https://ccpm.jp.arimo.com
 
 
-  PBI_VERSION: 1.2.7
-
-
-  PENG_VERSION: 1.2.8-SNAPSHOT
-
+  PBI_VERSION: 1.3.2
 
 provisioner:
   dlots:
