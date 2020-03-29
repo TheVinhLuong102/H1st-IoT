@@ -312,7 +312,7 @@ class Project(object):
 
         self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields = Namespace()
 
-        for equipment_unique_type_group_service_config in EquipmentUniqueTypeGroupServiceConfig.objects.filter(active=True):
+        for equipment_unique_type_group_service_config in EquipmentUniqueTypeGroupServiceConfig.objects.all():
             equipment_general_type_name = equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_general_type.name
 
             if equipment_general_type_name not in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields:
