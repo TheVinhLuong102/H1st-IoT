@@ -1,7 +1,7 @@
 # Django
 Django >= 3.0.4
 Django-AutoComplete-Light >= 3.5.1
-Django-Silk >= 4.0.0
+Django-Silk >= 4.0.1
 PsycoPG2-binary >= 2.8.4
 
 # REST API
