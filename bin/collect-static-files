@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-
-rm -rf arimo/IoT/DataAdmin/_static_files
-
-python3 manage.py collectstatic
