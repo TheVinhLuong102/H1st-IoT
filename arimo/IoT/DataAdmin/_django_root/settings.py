@@ -1,6 +1,5 @@
 import os
 from ruamel import yaml
-import six
 import sys
 
 
@@ -167,6 +166,4 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'rest_framework_filters.backends.ComplexFilterBackend'   # RestFrameworkFilterBackend
     ]
-    if six.PY3
-    else []
 }
