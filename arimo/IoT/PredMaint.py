@@ -2479,7 +2479,7 @@ class Project(object):
                     except:
                         daily_anom_scores_s3_parquet_df = None
 
-                    if daily_anom_scores_s3_parquet_df:
+                    if daily_anom_scores_s3_parquet_df is not None:
                         daily_anom_scores_df = daily_anom_scores_s3_parquet_df.collect()
 
                         daily_anom_scores_df.loc[:, self._EQUIPMENT_INSTANCE_ID_COL_NAME] = \
