@@ -290,6 +290,9 @@ class Project(object):
                     self.params.s3.bucket,
                     self.params.s3.ppp.blueprints_dir_prefix)
 
+        else:
+            self.s3_client = s3.client()
+
         self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR,
