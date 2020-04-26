@@ -263,7 +263,9 @@ class Project(object):
             self.s3_client = \
                 s3.client(
                     access_key_id=self.params.s3.access_key_id,
-                    secret_access_key=self.params.s3.secret_access_key)
+                    secret_access_key=self.params.s3.secret_access_key) \
+                if self.params.s3.access_key_id and self.params.s3.secret_access_key \
+                else s3.client()
 
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
