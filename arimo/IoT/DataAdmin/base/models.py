@@ -78,7 +78,7 @@ class NumericMeasurementUnit(Model):
         ordering = 'name',
 
     def __str__(self):
-        return 'NumMeasureUnit "{}"'.format(self.name.encode('utf-8'))
+        return f'NumMeasureUnit "{self.name}"'
 
     def save(self, *args, **kwargs):
         self.name = self.name.strip()
