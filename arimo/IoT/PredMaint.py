@@ -260,11 +260,6 @@ class Project(object):
                     GlobalConfig.objects.get_or_create(
                         key='AWS_SECRET_ACCESS_KEY')[0].value
 
-            self.s3_client = \
-                s3.client(
-                    access_key_id=self.params.s3.access_key_id,
-                    secret_access_key=self.params.s3.secret_access_key)
-
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
@@ -290,8 +285,13 @@ class Project(object):
                     self.params.s3.bucket,
                     self.params.s3.ppp.blueprints_dir_prefix)
 
-        else:
-            self.s3_client = s3.client()
+        if not (self.params.s3.access_key_id and self.params.s3.secret_access_key):
+            self.params.s3.access_key_id, self.params.s3.secret_access_key = key_pair()
+
+        self.s3_client = \
+            s3.client(
+                access_key_id=self.params.s3.access_key_id,
+                secret_access_key=self.params.s3.secret_access_key)
 
         self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
             AlertDiagnosisStatus.objects.get_or_create(
