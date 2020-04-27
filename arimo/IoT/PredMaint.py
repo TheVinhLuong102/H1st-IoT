@@ -977,7 +977,7 @@ class Project(object):
         return label_var_names
 
     def _good_ppp_blueprint(self, bp_obj=None, benchmark_metrics=None):
-        if isinstance(bp_obj, (str, unicode)):
+        if isinstance(bp_obj, str):
             bp_obj = self.data.PredMaintBlueprints.get(uuid=bp_obj)
 
         if not benchmark_metrics:
