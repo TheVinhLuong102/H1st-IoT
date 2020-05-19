@@ -22,6 +22,7 @@ module "jupyter-beta" {
   ssh_user_data      = module.ssh.user_data
 
   instance_type = "g3.16xlarge"
+  project_tag = "FCPM"
 
   domain = "jupyter-beta.jp"
 }

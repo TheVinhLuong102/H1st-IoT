@@ -1,5 +1,8 @@
 #!/bin/bash
 
+apt-mark hold `uname -r`
+apt-mark hold linux-image-aws
+
 sleep 10
 
 mkdir -p /opt/arimo/data

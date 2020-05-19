@@ -37,7 +37,7 @@ resource "aws_instance" "master" {
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = "256"
+    volume_size = "196"
   }
 
   volume_tags = {
@@ -77,8 +77,8 @@ resource "aws_ebs_volume" "ebs" {
 
 resource "aws_volume_attachment" "ebs_att" {
   device_name = "/dev/xvdh"
-  volume_id   = "${aws_ebs_volume.ebs.id}"
-  instance_id = "${aws_instance.master.id}"
+  volume_id   = aws_ebs_volume.ebs.id
+  instance_id = aws_instance.master.id
 
   # this may be required for running instance
   force_detach = true
