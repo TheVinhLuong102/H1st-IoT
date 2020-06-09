@@ -165,8 +165,8 @@ def impute_nan_with_outlier(df, imputation_columns, std_multiplier=1.5):
     for col in imputation_columns:
         imputation[col] = df.select(min(col)).collect()[0][0] \
                           - std_multiplier*df.select(stddev(col)).collect()[0][0]
-    print "=== imputation === "
-    print imputation
+    print("=== imputation === ")
+    print(imputation)
     
     # fillna_dic = {}
     # for major_null_col in imputation_columns:
@@ -191,7 +191,7 @@ def get_categoric_to_onehotencoding_stages(categoric_cols):
 def get_vectorassembler_stage(categoric_cols, numeric_cols):
     assemblerInputs = [c + "_onehot" for c in categoric_cols] + numeric_cols
 
-    print "assemblerInputs:", len(assemblerInputs), assemblerInputs
+    print("assemblerInputs:", len(assemblerInputs), assemblerInputs)
 
     assembler_stage = VectorAssembler(inputCols=assemblerInputs, outputCol="features")
     return assembler_stage
@@ -248,10 +248,10 @@ def preprocess_data(data_config, spark_config):
     ### 5. Sort DF
     df = df.orderBy([data_config['id_column'], data_config['datetime_column']])
     ### 6. Save Meta Data
-    meta_json = get_metadata_json(df, numeric_columns, string_columns)
-    meta_json['imputation'] = impute_json
-    with open(data_config['metadata_json_save_path'], 'w') as outfile:
-        json.dump(meta_json, outfile)
+#     meta_json = get_metadata_json(df, numeric_columns, string_columns)
+#     meta_json['imputation'] = impute_json
+#     with open(data_config['metadata_json_save_path'], 'w') as outfile:
+#         json.dump(meta_json, outfile)
     ### 7. Categoric to Onehot-encoding & Normalization of all columns
     categoric_to_onehotencoding_stages = get_categoric_to_onehotencoding_stages(string_columns)
 #     print("Finished Categoricals!")
@@ -267,11 +267,11 @@ def preprocess_data(data_config, spark_config):
 #     print("Finished fitting, transforming and saving pipeline model")
     datetime_column = "date_time"
     df = df.withColumn(datetime_column, date_format(datetime_column, 'yyyy-MM-dd HH:mm:ss'))
-#     print "=== final output example ==="
-#     print df.show(1, truncate=False)
+#     print("=== final output example ===")
+#     print(df.show(1, truncate=False))
     ### 8. Save output tfrecords
     df.write.format("tfrecords").option("recordType", "Example")\
-        .save(data_config['tfrecord_save_path'])
+        .mode("overwrite").save(data_config['tfrecord_save_path'])
 
     
 data_config = {
