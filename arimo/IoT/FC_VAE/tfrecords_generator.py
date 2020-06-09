@@ -20,7 +20,6 @@ from pyspark.ml.feature import OneHotEncoderEstimator
 from pyspark.ml import PipelineModel
 from pyspark.sql.functions import date_format
 from pyspark.ml import Pipeline
-from pyspark_dist_explore import hist
 import matplotlib.pyplot as plt
 
 
