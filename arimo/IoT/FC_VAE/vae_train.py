@@ -44,7 +44,7 @@ def main(train_param, tfr_info):
 
 
 INPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE/preprocessed"
-OUTPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE/chkpoints"
+OUTPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE/checkpoints"
 
 
 if __name__ == "__main__":
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     target_date = sys.argv[2] if len(sys.argv) > 2 else "*"
 
     input_prefix = "%s/FUEL_CELL---%s.tfrecords/date=%s" % (INPUT_PREFIX, type_group, target_date)
-    output_prefix = "%s/FUEL_CELL---%s" % (OUTPUT_PREFIX, type_group)
+    output_prefix = "%s/FUEL_CELL---%s/date=%s" % (OUTPUT_PREFIX, type_group, target_date)
 
     train_param = {
         "data_cache": True,

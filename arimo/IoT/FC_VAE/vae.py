@@ -469,7 +469,7 @@ class PredictiveMaintenanceVAE(object):
                 # Model restore
                 checkpoint_dir = model_path
                 if not checkpoint:
-                    checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
+                    checkpoint_prefix = os.path.join(checkpoint_dir, "model.ckpt")
                     latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
                 else:
                     latest_checkpoint = os.path.join(checkpoint_dir, checkpoint)
@@ -759,12 +759,12 @@ class PredictiveMaintenanceVAE(object):
         train_dataset = train_dataset.repeat()
         train_dataset = train_dataset.batch(batch_size)
         train_dataset = train_dataset.prefetch(4)
-        train_iterator = train_dataset.make_one_shot_iterator()
+        train_iterator = tf.compat.v1.data.make_one_shot_iterator(train_dataset)
 
         val_dataset = val_dataset.repeat()
         val_dataset = val_dataset.batch(10 * batch_size)
         val_dataset = val_dataset.prefetch(4)
-        val_iterator = val_dataset.make_one_shot_iterator()
+        val_iterator = tf.compat.v1.data.make_one_shot_iterator(val_dataset)
 
         return [train_iterator, val_iterator, batchs_per_train, batchs_per_val]
 
@@ -811,9 +811,8 @@ class PredictiveMaintenanceVAE(object):
                                     is_train=False, cache=False):
 
         print("folder_path:", folder_path)
-        result = re.search("s3:\/\/(.+?)\/(.*)", folder_path)
-        bucket_name = result.group(1)
-        tfr_path = result.group(2)
+        o = urlparse(folder_path)
+        bucket_name, tfr_path = o.netloc, o.path[1:]
         client = boto3.client('s3')
         response = client.list_objects(Bucket=bucket_name,
                                        Prefix=os.path.join(tfr_path, pre_fix))
@@ -824,7 +823,10 @@ class PredictiveMaintenanceVAE(object):
             print("Couldn't get any data from the provided path.")
             exit()
 
-        DATASET_SIZE = round(n_row)
+        if not n_row:
+            DATASET_SIZE = self._count_record(filenames)
+        else:
+            DATASET_SIZE = n_row
         batchs_per_train = int(DATASET_SIZE / batch_size) + 1
         dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=1)
         _tmp_dataset = lambda x: self._decode2(
@@ -841,7 +843,7 @@ class PredictiveMaintenanceVAE(object):
             dataset = dataset.repeat()
         dataset = dataset.batch(batch_size)
         dataset = dataset.prefetch(4)
-        iterator = dataset.make_one_shot_iterator()
+        iterator = tf.compat.v1.data.make_one_shot_iterator(dataset)
         return [iterator, batchs_per_train]
 
     def get_iterator_from_tfr_in_local(self, folder_path, batch_size, tfr_id_key, tfr_datetime_key,
