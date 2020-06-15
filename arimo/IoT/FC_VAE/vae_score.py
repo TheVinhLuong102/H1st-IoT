@@ -81,7 +81,7 @@ if __name__ == "__main__":
             "tfr_file_prefix": "part",
             "rows": None,
             "tfr_path": tfrecords_prefix,
-            "columns": 9,
+            "columns": 30,
             "interval": 1,
             "column_names": {"id_key": "equipment_instance_id", "datetime_key": "date_time",
                              "feature_key": "scaledFeatures", "label_key": "label"}
