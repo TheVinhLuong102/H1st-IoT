@@ -55,14 +55,15 @@ def main(score_param, model_param, tfr_info):
         summary=score_param['summary'])
 
 
-INPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE"
-OUTPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE"
+INPUT_PREFIX = os.environ["INPUT_PREFIX"]
+OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX", INPUT_PREFIX)
+MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
 
 
 if __name__ == "__main__":
     type_group, target_date = sys.argv[1:]
     tfrecords_prefix = "%s/preprocessed/FUEL_CELL---%s.tfrecords/date=%s" % (INPUT_PREFIX, type_group, target_date)
-    model_prefix = "%s/checkpoints/FUEL_CELL---%s/date=%s" % (INPUT_PREFIX, type_group, target_date)
+    model_prefix = "%s/checkpoints/FUEL_CELL---%s/%s" % (INPUT_PREFIX, type_group, MODEL_VERSION)
     output_prefix = "%s/results/FUEL_CELL---%s/date=%s" % (OUTPUT_PREFIX, type_group, target_date)
 
     for score_idx in range(0, 200, 50):

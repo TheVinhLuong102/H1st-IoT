@@ -1,5 +1,6 @@
 from vae import PredictiveMaintenanceVAE
 
+import os
 import sys
 
 
@@ -43,8 +44,9 @@ def main(train_param, tfr_info):
         printing_step=train_param['printing_step'])
 
 
-INPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE/preprocessed"
-OUTPUT_PREFIX = "s3://arimo-panasonic-ap-jp-fc-pm/.arimo/PredMaint/VAE/checkpoints"
+INPUT_PREFIX = os.environ["INPUT_PREFIX"]
+OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX", INPUT_PREFIX)
+MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
 
 
 if __name__ == "__main__":
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     target_date = sys.argv[2] if len(sys.argv) > 2 else "*"
 
     input_prefix = "%s/FUEL_CELL---%s.tfrecords/date=%s" % (INPUT_PREFIX, type_group, target_date)
-    output_prefix = "%s/FUEL_CELL---%s/date=%s" % (OUTPUT_PREFIX, type_group, target_date)
+    output_prefix = "%s/FUEL_CELL---%s/%s" % (OUTPUT_PREFIX, type_group, MODEL_VERSION)
 
     train_param = {
         "data_cache": True,
