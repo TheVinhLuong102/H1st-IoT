@@ -58,6 +58,7 @@ def main(score_param, model_param, tfr_info):
 INPUT_PREFIX = os.environ["INPUT_PREFIX"]
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX", INPUT_PREFIX)
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
+N_COLUMNS = int(os.environ.get("N_COLUMNS", 30))
 
 
 if __name__ == "__main__":
@@ -82,7 +83,7 @@ if __name__ == "__main__":
             "tfr_file_prefix": "part",
             "rows": None,
             "tfr_path": tfrecords_prefix,
-            "columns": 30,
+            "columns": N_COLUMNS,
             "interval": 1,
             "column_names": {"id_key": "equipment_instance_id", "datetime_key": "date_time",
                              "feature_key": "scaledFeatures", "label_key": "label"}
