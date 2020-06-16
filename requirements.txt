@@ -16,3 +16,11 @@ Ruamel.YAML >= 0.16.10
 # viz
 PlotNine >= 0.6.0
 StatsModels >= 0.11.1
+
+pathos
+boto3
+pathos
+s3fs
+sklearn
+tensorflow
+tensorflow_probability
