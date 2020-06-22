@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+
+python3 -m pip install "TensorFlow < 2.1" "Keras < 2.4" --upgrade --user
