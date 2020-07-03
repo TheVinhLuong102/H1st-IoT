@@ -18,83 +18,84 @@ s3_fs = s3fs.S3FileSystem()
 
 default_cols = ['equipment_instance_id', 'date_time']
 
-air_sensors = ['bb_fan_speed',
-               'bb_fan_operation_amount',
-               'bp_inlet_temperature',  # float32 good
-               'bh_thermocouple_temperature',  # float32
-               'p_flow_rate',
-               'combustion_air_flow_rate',
-               'air_blower_operation_amount',
-               'stack_current',
-               'fc_power_generation_amount',
-               'pcs_input_voltage_dc_voltage',
-               'conversion'
-               ]
+SENSOR_MAPPING = {
+    'air': [
+        'bb_fan_speed',
+        'bb_fan_operation_amount',
+        'bp_inlet_temperature',  # float32 good
+        'bh_thermocouple_temperature',  # float32
+        'p_flow_rate',
+        'combustion_air_flow_rate',
+        'air_blower_operation_amount',
+        'stack_current',
+        'fc_power_generation_amount',
+        'pcs_input_voltage_dc_voltage',
+        'conversion'
+    ],
 
-gas_sensors = ['br_thermocouple_temperature',
-               'fc_power_generation_amount',
-               'pcs_input_voltage_dc_voltage',
-               'conversion',
-               'stack_current',
-               'gas_base_pressure',
-               'booster_pump_operation_amount',
-               'raw_material_flow_rate_fc_unit_consumption_gas',
-               'uf']
+    'gas': [
+        'br_thermocouple_temperature',
+        'fc_power_generation_amount',
+        'pcs_input_voltage_dc_voltage',
+        'conversion',
+        'stack_current',
+        'gas_base_pressure',
+        'booster_pump_operation_amount',
+        'raw_material_flow_rate_fc_unit_consumption_gas',
+        'uf'],
 
-water_sensors = ['cd_tank_temperature',
+    'water': ['cd_tank_temperature',
 
-                 'r_circulation_p_operation_amount',  # float32
-                 'r_circulation_p_rotational_speed',
-                 # int32
-                 'c_circulation_p_rotational_speed',  # int32
-                 'c_circulation_p_operation_amount',  # float32  ### both 
-                 'fc_inlet_temperature',
-                 'fc_outlet_temperature',
-                 'r_tank_th',
-                 'sys_inlet_temperature',
-                 'sys_outlet_temperature',
-                 'fc_unit_heat_recovery_flow_rate',
-                 'reformed_water_flow_rate',
-                 'reforming_water_pump_operation_amount']
+              'r_circulation_p_operation_amount',  # float32
+              'r_circulation_p_rotational_speed',
+              # int32
+              'c_circulation_p_rotational_speed',  # int32
+              'c_circulation_p_operation_amount',  # float32  ### both
+              'fc_inlet_temperature',
+              'fc_outlet_temperature',
+              'r_tank_th',
+              'sys_inlet_temperature',
+              'sys_outlet_temperature',
+              'fc_unit_heat_recovery_flow_rate',
+              'reformed_water_flow_rate',
+              'reforming_water_pump_operation_amount'],
 
-all_sensors = [
-    'bp_inlet_temperature',  # float32 good
-    'bh_thermocouple_temperature',  # float32
-    'br_thermocouple_temperature',  # float32
+    'all': [
+        'bp_inlet_temperature',  # float32 good
+        'bh_thermocouple_temperature',  # float32
+        'br_thermocouple_temperature',  # float32
 
-    'bb_fan_speed',
-    'bb_fan_operation_amount',
-    'cd_tank_temperature',
+        'bb_fan_speed',
+        'bb_fan_operation_amount',
+        'cd_tank_temperature',
 
-    'r_circulation_p_operation_amount',  # float32
-    'r_circulation_p_rotational_speed',
-    # int32
-    'c_circulation_p_rotational_speed',  # int32
-    'c_circulation_p_operation_amount',  # float32  ### both 
-    'fc_inlet_temperature',
-    'fc_outlet_temperature',
-    'fc_power_generation_amount',
-    'pcs_input_voltage_dc_voltage',
-    'p_flow_rate',
-    'r_tank_th',
-    'sys_inlet_temperature',
-    'sys_outlet_temperature',
-    'uf',
-    'gas_base_pressure',
-    'stack_current',
-    'booster_pump_operation_amount',
-    'raw_material_flow_rate_fc_unit_consumption_gas',
-    'reformed_water_flow_rate',
-    'reforming_water_pump_operation_amount',
-    'combustion_air_flow_rate',
-    'air_blower_operation_amount',
-    'conversion',
-    'fc_unit_heat_recovery_flow_rate',
-    'generated_electric_power_command_value_a_v'
-]
-
-selected_columns = default_cols + all_sensors
-print(len(selected_columns), selected_columns)
+        'r_circulation_p_operation_amount',  # float32
+        'r_circulation_p_rotational_speed',
+        # int32
+        'c_circulation_p_rotational_speed',  # int32
+        'c_circulation_p_operation_amount',  # float32  ### both
+        'fc_inlet_temperature',
+        'fc_outlet_temperature',
+        'fc_power_generation_amount',
+        'pcs_input_voltage_dc_voltage',
+        'p_flow_rate',
+        'r_tank_th',
+        'sys_inlet_temperature',
+        'sys_outlet_temperature',
+        'uf',
+        'gas_base_pressure',
+        'stack_current',
+        'booster_pump_operation_amount',
+        'raw_material_flow_rate_fc_unit_consumption_gas',
+        'reformed_water_flow_rate',
+        'reforming_water_pump_operation_amount',
+        'combustion_air_flow_rate',
+        'air_blower_operation_amount',
+        'conversion',
+        'fc_unit_heat_recovery_flow_rate',
+        'generated_electric_power_command_value_a_v'
+    ]
+}
 
 
 def get_column_name_with_type(df, col_type):
@@ -151,7 +152,7 @@ def get_categoric_to_onehotencoding_stages(categoric_cols):
     # Make the pipeline of stages
     stages = []
 
-    # Indexing and Onehot-Encoding on Categorical Columns 
+    # Indexing and Onehot-Encoding on Categorical Columns
     categoric_json = {}
     for categoric_col in categoric_cols:
         stringIndexer = StringIndexer(inputCol=categoric_col, outputCol=categoric_col + '_idx')
@@ -190,10 +191,10 @@ def df_transform_with_pipeline(df, id_column, datetime_column, scaled_output_nam
 
 
 def preprocess_data(data_config):
-    ### 1. Setup pyspark        
+    ### 1. Setup pyspark
     spark = SparkSession.builder.appName('Test_UDF').getOrCreate()
 
-    ### 2. Load data 
+    ### 2. Load data
     df = spark.read.option("mergeSchema", "true").parquet(data_config['parquet_data_path']).select(
         data_config['selected_columns'])
     df = change_integer_into_type(df, 'equipment_instance_id', StringType())
@@ -205,7 +206,7 @@ def preprocess_data(data_config):
                        x not in string_columns and x != data_config['datetime_column']]
     df = change_integer_into_type(df, 'equipment_instance_id', StringType())
     for column in numeric_columns:
-        df = change_integer_into_type(df, column, FloatType())  # FloatType DoubleType   
+        df = change_integer_into_type(df, column, FloatType())  # FloatType DoubleType
     if data_config['id_column'] in string_columns:
         string_columns.remove(data_config['id_column'])
     ### 4. Impute Major NaN and drop minor NaN
@@ -245,18 +246,8 @@ def preprocess_data(data_config):
     print(df.show(1, truncate=False))
 
     ### 8. Save output tfrecords
-    df.write.mode('overwrite').format("tfrecords").option("recordType", "Example")\
+    df.write.mode('overwrite').format("tfrecords").option("recordType", "Example") \
         .save(data_config['tfrecord_save_path'])
-
-
-data_config = {
-    'id_column': 'equipment_instance_id',
-    'datetime_column': 'date_time',
-    'selected_columns': selected_columns,
-    'impute_columns': [],
-    'vector_assembler_output_name': 'features',
-    'scaled_output_name': 'scaledFeatures',
-}
 
 
 def daterange(start_time, end_time):
@@ -265,16 +256,26 @@ def daterange(start_time, end_time):
 
 
 if __name__ == "__main__":
-    input_prefix, output_prefix, unique_type_group, start_date_str, end_date_str = sys.argv[1:]
-    tfrecord_prefix = "%s/preprocessed" % output_prefix
-    model_pipeline_prefix = "%s/model_pipelines" % output_prefix
+    input_path, tfrecords_path, model_pipeline_path, type_group, sensors, start_date_str, end_date_str = sys.argv[1:]
+
+    unique_type_group = "FUEL_CELL---%s" % type_group
+    selected_columns = default_cols + SENSOR_MAPPING[sensors]
+    # print(len(selected_columns), selected_columns)
+    data_config = {
+        'id_column': 'equipment_instance_id',
+        'datetime_column': 'date_time',
+        'selected_columns': selected_columns,
+        'impute_columns': [],
+        'vector_assembler_output_name': 'features',
+        'scaled_output_name': 'scaledFeatures',
+    }
 
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
     end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
     for d in [dt.strftime("%Y-%m-%d") for dt in daterange(start_date, end_date)]:
-        data_config['parquet_data_path'] = "%s/FUEL_CELL---%s.parquet/date=%s/*" % (input_prefix, unique_type_group, d)
-        data_config['tfrecord_save_path'] = "%s/%s.tfrecords/date=%s" % (tfrecord_prefix, unique_type_group, d)
-        data_config['pipeline_save_path'] = "%s/%s/date=%s" % (model_pipeline_prefix, unique_type_group, d)
+        data_config['parquet_data_path'] = "%s/%s.parquet/date=%s/*" % (input_path, unique_type_group, d)
+        data_config['tfrecord_save_path'] = "%s/%s.tfrecords/date=%s" % (tfrecords_path, unique_type_group, d)
+        data_config['pipeline_save_path'] = "%s/%s/date=%s" % (model_pipeline_path, unique_type_group, d)
         try:
             preprocess_data(data_config)
         except Exception as ex:

@@ -64,13 +64,15 @@ N_COLUMNS = int(os.environ.get("N_COLUMNS", 30))
 
 if __name__ == "__main__":
     type_group, target_date = sys.argv[1:]
-    tfrecords_prefix = "%s/FUEL_CELL---%s.tfrecords/date=%s" % (TFRECORDS_PREFIX, type_group, target_date)
-    checkpoints_prefix = "%s/FUEL_CELL---%s/%s" % (CHECKPOINTS_PREFIX, type_group, MODEL_VERSION)
-    output_prefix = "%s/FUEL_CELL---%s/date=%s" % (OUTPUT_PREFIX, type_group, target_date)
+
+    unique_type_group = "FUEL_CELL---%s" % type_group
+    tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (TFRECORDS_PREFIX, unique_type_group, target_date)
+    checkpoint_prefix = "%s/%s/%s" % (CHECKPOINTS_PREFIX, unique_type_group, MODEL_VERSION)
+    output_prefix = "%s/%s/date=%s" % (OUTPUT_PREFIX, unique_type_group, target_date)
 
     for score_idx in range(0, 200, 50):
         score_param = {
-            "model_path": checkpoints_prefix,
+            "model_path": checkpoint_prefix,
             "model_checkpoint": None,
             "result_path": output_prefix,
             "num_sample": 20,

@@ -54,8 +54,9 @@ if __name__ == "__main__":
     type_group = sys.argv[1]
     target_date = sys.argv[2] if len(sys.argv) > 2 else "*"
 
-    input_prefix = "%s/FUEL_CELL---%s.tfrecords/date=%s" % (INPUT_PREFIX, type_group, target_date)
-    output_prefix = "%s/FUEL_CELL---%s/%s" % (OUTPUT_PREFIX, type_group, MODEL_VERSION)
+    unique_type_group = "FUEL_CELL---%s" % type_group
+    input_prefix = "%s/%s.tfrecords/date=%s" % (INPUT_PREFIX, unique_type_group, target_date)
+    output_prefix = "%s/%s/%s" % (OUTPUT_PREFIX, unique_type_group, MODEL_VERSION)
 
     train_param = {
         "data_cache": True,
