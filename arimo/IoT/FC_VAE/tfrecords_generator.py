@@ -11,91 +11,16 @@ from pyspark.ml import Pipeline
 
 from datetime import datetime, timedelta
 
+import boto3
 import s3fs
 import sys
 
+ssm = boto3.client('ssm')
 s3_fs = s3fs.S3FileSystem()
 
-default_cols = ['equipment_instance_id', 'date_time']
 
-SENSOR_MAPPING = {
-    'air': [
-        'bb_fan_speed',
-        'bb_fan_operation_amount',
-        'bp_inlet_temperature',  # float32 good
-        'bh_thermocouple_temperature',  # float32
-        'p_flow_rate',
-        'combustion_air_flow_rate',
-        'air_blower_operation_amount',
-        'stack_current',
-        'fc_power_generation_amount',
-        'pcs_input_voltage_dc_voltage',
-        'conversion'
-    ],
-
-    'gas': [
-        'br_thermocouple_temperature',
-        'fc_power_generation_amount',
-        'pcs_input_voltage_dc_voltage',
-        'conversion',
-        'stack_current',
-        'gas_base_pressure',
-        'booster_pump_operation_amount',
-        'raw_material_flow_rate_fc_unit_consumption_gas',
-        'uf'],
-
-    'water': ['cd_tank_temperature',
-
-              'r_circulation_p_operation_amount',  # float32
-              'r_circulation_p_rotational_speed',
-              # int32
-              'c_circulation_p_rotational_speed',  # int32
-              'c_circulation_p_operation_amount',  # float32  ### both
-              'fc_inlet_temperature',
-              'fc_outlet_temperature',
-              'r_tank_th',
-              'sys_inlet_temperature',
-              'sys_outlet_temperature',
-              'fc_unit_heat_recovery_flow_rate',
-              'reformed_water_flow_rate',
-              'reforming_water_pump_operation_amount'],
-
-    'all': [
-        'bp_inlet_temperature',  # float32 good
-        'bh_thermocouple_temperature',  # float32
-        'br_thermocouple_temperature',  # float32
-
-        'bb_fan_speed',
-        'bb_fan_operation_amount',
-        'cd_tank_temperature',
-
-        'r_circulation_p_operation_amount',  # float32
-        'r_circulation_p_rotational_speed',
-        # int32
-        'c_circulation_p_rotational_speed',  # int32
-        'c_circulation_p_operation_amount',  # float32  ### both
-        'fc_inlet_temperature',
-        'fc_outlet_temperature',
-        'fc_power_generation_amount',
-        'pcs_input_voltage_dc_voltage',
-        'p_flow_rate',
-        'r_tank_th',
-        'sys_inlet_temperature',
-        'sys_outlet_temperature',
-        'uf',
-        'gas_base_pressure',
-        'stack_current',
-        'booster_pump_operation_amount',
-        'raw_material_flow_rate_fc_unit_consumption_gas',
-        'reformed_water_flow_rate',
-        'reforming_water_pump_operation_amount',
-        'combustion_air_flow_rate',
-        'air_blower_operation_amount',
-        'conversion',
-        'fc_unit_heat_recovery_flow_rate',
-        'generated_electric_power_command_value_a_v'
-    ]
-}
+def get_parameter(name):
+    return ssm.get_parameter(Name=name)['Parameter']['Value']
 
 
 def get_column_name_with_type(df, col_type):
@@ -255,11 +180,13 @@ def daterange(start_time, end_time):
         yield start_time + timedelta(n)
 
 
-if __name__ == "__main__":
-    input_path, tfrecords_path, model_pipeline_path, type_group, sensors, start_date_str, end_date_str = sys.argv[1:]
+DEFAULT_COLS = ['equipment_instance_id', 'date_time']
 
-    unique_type_group = "FUEL_CELL---%s" % type_group
-    selected_columns = default_cols + SENSOR_MAPPING[sensors]
+
+if __name__ == "__main__":
+    input_path, tfrecords_path, model_pipeline_path, type_group, sensor_group, start_date, end_date = sys.argv[1:]
+
+    selected_columns = DEFAULT_COLS + get_parameter("/fuelcell/%s_sensors" % sensor_group).split(',')
     # print(len(selected_columns), selected_columns)
     data_config = {
         'id_column': 'equipment_instance_id',
@@ -270,9 +197,10 @@ if __name__ == "__main__":
         'scaled_output_name': 'scaledFeatures',
     }
 
-    start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
-    for d in [dt.strftime("%Y-%m-%d") for dt in daterange(start_date, end_date)]:
+    unique_type_group = "FUEL_CELL---%s" % type_group
+    start_date_dt = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date_dt = datetime.strptime(end_date, '%Y-%m-%d')
+    for d in [dt.strftime("%Y-%m-%d") for dt in daterange(start_date_dt, end_date_dt)]:
         data_config['parquet_data_path'] = "%s/%s.parquet/date=%s/*" % (input_path, unique_type_group, d)
         data_config['tfrecord_save_path'] = "%s/%s.tfrecords/date=%s" % (tfrecords_path, unique_type_group, d)
         data_config['pipeline_save_path'] = "%s/%s/date=%s" % (model_pipeline_path, unique_type_group, d)
