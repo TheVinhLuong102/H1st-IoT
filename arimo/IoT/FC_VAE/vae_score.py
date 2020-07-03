@@ -56,7 +56,7 @@ def main(score_param, model_param, tfr_info):
 
 
 TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
-CHECKPOINTS_PREFIX = os.environ.get("CHECKPOINTS_PREFIX")
+CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
 N_COLUMNS = int(os.environ.get("N_COLUMNS", 30))
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     unique_type_group = "FUEL_CELL---%s" % type_group
     tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (TFRECORDS_PREFIX, unique_type_group, target_date)
-    checkpoint_prefix = "%s/%s/%s" % (CHECKPOINTS_PREFIX, unique_type_group, MODEL_VERSION)
+    checkpoint_prefix = "%s/%s/%s" % (CHECKPOINT_PREFIX, unique_type_group, MODEL_VERSION)
     output_prefix = "%s/%s/date=%s" % (OUTPUT_PREFIX, unique_type_group, target_date)
 
     for score_idx in range(0, 200, 50):
