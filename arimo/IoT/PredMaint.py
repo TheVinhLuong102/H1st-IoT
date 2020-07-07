@@ -42,7 +42,7 @@ import arimo.IoT.DataAdmin._django_root.settings
 from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 
 
-class Project(object):
+class Project:
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
     CONFIG_S3_BUCKET = 'arimo-iot-pm'
     AWS_PROFILE_NAME = 'arimo'
