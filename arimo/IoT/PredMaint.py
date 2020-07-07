@@ -44,7 +44,7 @@ from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 
 class Project(object):
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
-    CONFIG_S3_BUCKET = 'arimo-iot-pm'
+    CONFIG_S3_BUCKET = 'pana-ap-accdc-fc'
     AWS_PROFILE_NAME = 'arimo'
 
     _CAT_DATA_TYPE_NAME = 'cat'
