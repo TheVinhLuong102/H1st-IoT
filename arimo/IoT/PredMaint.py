@@ -151,8 +151,8 @@ class Project(object):
         django_db_settings = arimo.IoT.DataAdmin._django_root.settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.host
         django_db_settings['NAME'] = self.params.db.db_name
-        django_db_settings['USER'] = self.params.db.user
-        django_db_settings['PASSWORD'] = self.params.db.password
+        django_db_settings['USER'] = 'arimo'
+        django_db_settings['PASSWORD'] = 'arimoiscool'
         settings.configure(
             **{K: v
                for K, v in arimo.IoT.DataAdmin._django_root.settings.__dict__.items()

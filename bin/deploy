@@ -25,10 +25,7 @@ config_file_path = \
 configs = yaml.safe_load(stream=open(config_file_path, 'r'))
 
 db_creds = configs['db']
-assert db_creds['host'] \
-   and db_creds['db_name'] \
-   and db_creds['user'] \
-   and db_creds['password']
+assert db_creds['host'] and db_creds['db_name']
 
 CONFIG_ORIG_FILE_PATH = _CONFIG_FILE_PATH + '.orig'
 

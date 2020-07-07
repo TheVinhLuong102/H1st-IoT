@@ -105,7 +105,7 @@ DATABASES = \
     dict(default=
             dict(ENGINE='django.db.backends.postgresql', PORT='5432',
                  HOST=_db_creds['host'],
-                 USER=_db_creds['user'], PASSWORD=_db_creds['password'],
+                 USER='arimo', PASSWORD='arimoiscool',
                  NAME=_db_creds['db_name']))
 
 
