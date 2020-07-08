@@ -2340,7 +2340,7 @@ class Project:
 
                     for _, row in tqdm(_equipment_unique_type_group_daily_agg_df.iterrows(),
                                        total=len(_equipment_unique_type_group_daily_agg_df)):
-                        for equipment_data_field in equipment_unique_type_group.equipment_data_fields.all():
+                        for equipment_data_field in equipment_unique_type_group.equipment_general_type.equipment_data_fields.all():
                             equipment_data_field_name = equipment_data_field.name
 
                             if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleFeatureContentCols:
