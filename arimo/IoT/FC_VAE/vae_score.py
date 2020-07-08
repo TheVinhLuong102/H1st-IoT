@@ -1,24 +1,17 @@
 from vae import PredictiveMaintenanceVAE
 
+import boto3
 import json
 import os
 import sys
 import s3fs
 
+ssm = boto3.client('ssm')
 s3_fs = s3fs.S3FileSystem()
 
-gas_sensors = ['br_thermocouple_temperature',
-               'fc_power_generation_amount',
-               'pcs_input_voltage_dc_voltage',
-               'conversion',
-               'stack_current',
-               'gas_base_pressure',
-               'booster_pump_operation_amount',
-               'raw_material_flow_rate_fc_unit_consumption_gas',
-               'uf']
 
-selected_columns = gas_sensors
-print(selected_columns, len(selected_columns))
+def get_parameter(name):
+    return ssm.get_parameter(Name=name)['Parameter']['Value']
 
 
 def main(score_param, model_param, tfr_info):
@@ -59,13 +52,17 @@ TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
 CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
-N_COLUMNS = int(os.environ.get("N_COLUMNS", 30))
 
 
 if __name__ == "__main__":
-    type_group, target_date = sys.argv[1:]
+    type_group, sensor_group, target_date = sys.argv[1:]
 
     unique_type_group = "FUEL_CELL---%s" % type_group
+
+    selected_columns = get_parameter("/fuelcell/%s_sensors" % sensor_group).split(',')
+    print(selected_columns, len(selected_columns))
+    n_columns = len(selected_columns)
+
     tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (TFRECORDS_PREFIX, unique_type_group, target_date)
     checkpoint_prefix = "%s/%s/%s" % (CHECKPOINT_PREFIX, unique_type_group, MODEL_VERSION)
     output_prefix = "%s/%s/date=%s" % (OUTPUT_PREFIX, unique_type_group, target_date)
@@ -86,7 +83,7 @@ if __name__ == "__main__":
             "tfr_file_prefix": "part",
             "rows": None,
             "tfr_path": tfrecords_prefix,
-            "columns": N_COLUMNS,
+            "columns": n_columns,
             "interval": 1,
             "column_names": {"id_key": "equipment_instance_id", "datetime_key": "date_time",
                              "feature_key": "scaledFeatures", "label_key": "label"}

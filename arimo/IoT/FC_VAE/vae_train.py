@@ -1,7 +1,14 @@
 from vae import PredictiveMaintenanceVAE
 
+import boto3
 import os
 import sys
+
+ssm = boto3.client('ssm')
+
+
+def get_parameter(name):
+    return ssm.get_parameter(Name=name)['Parameter']['Value']
 
 
 def main(train_param, tfr_info):
@@ -47,14 +54,17 @@ def main(train_param, tfr_info):
 INPUT_PREFIX = os.environ["INPUT_PREFIX"]
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX", INPUT_PREFIX)
 MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
-N_COLUMNS = int(os.environ.get("N_COLUMNS", 30))
 
 
 if __name__ == "__main__":
-    type_group = sys.argv[1]
-    target_date = sys.argv[2] if len(sys.argv) > 2 else "*"
+    type_group, sensor_group = sys.argv[1:3]
+    target_date = sys.argv[3] if len(sys.argv) > 3 else "*"
 
     unique_type_group = "FUEL_CELL---%s" % type_group
+
+    selected_columns = get_parameter("/fuelcell/%s_sensors" % sensor_group).split(',')
+    n_columns = len(selected_columns)
+
     input_prefix = "%s/%s.tfrecords/date=%s" % (INPUT_PREFIX, unique_type_group, target_date)
     output_prefix = "%s/%s/%s" % (OUTPUT_PREFIX, unique_type_group, MODEL_VERSION)
 
@@ -83,7 +93,7 @@ if __name__ == "__main__":
         "tfr_file_prefix": "part",
         "rows": None,
         "tfr_path": input_prefix,
-        "columns": N_COLUMNS,
+        "columns": n_columns,
         "interval": 1,
         "column_names": {"id_key": "equipment_instance_id", "datetime_key": "date_time",
                          "feature_key": "scaledFeatures", "label_key": "label"}
