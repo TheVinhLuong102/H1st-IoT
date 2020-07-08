@@ -1,7 +1,9 @@
 branch-defaults:
+  ACCDC:
+    environment: PanaAP-JP-FC-ACCDC
+    group_suffix: null
   master:
     environment: TEST
-
 global:
   application_name: Arimo-IoT
   branch: null
