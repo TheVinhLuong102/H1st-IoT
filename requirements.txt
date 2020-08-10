@@ -1,15 +1,15 @@
 # Django
-Django >= 3.0.8
+Django >= 3.1
 Django-AutoComplete-Light >= 3.5.0, < 3.5.1
-Django-Silk >= 4.0.1
+Django-Silk >= 4.1.0
 PsycoPG2-binary >= 2.8.5
 
 # REST API
-DjangoRESTFramework >= 3.11.0
+DjangoRESTFramework >= 3.11.1
 DjangoRESTFramework-Filters >= 1.0.0.dev0
 Django-Filter >= 2.2.0, < 2.3.0
     # *** 2.3.0: TypeError: 'Meta.fields' must not contain non-model field names ***
-DRF-Writable-Nested >= 0.6.0
+DRF-Writable-Nested >= 0.6.1
 CoreAPI >= 2.3.3
     # ??? REQUIRED FOR REST API TO WORK ???
 
@@ -17,5 +17,5 @@ CoreAPI >= 2.3.3
 Ruamel.YAML >= 0.16.10
 
 # viz
-PlotNine >= 0.7.0
+PlotNine >= 0.7.1
 StatsModels >= 0.11.1
