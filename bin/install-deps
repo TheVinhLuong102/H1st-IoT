@@ -28,7 +28,9 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python3 -m pip install -e $UTIL_DIR_NAME --upgrade --user --use-feature=2020-resolver
+cd $UTIL_DIR_NAME
+python3 -m pip install -e . --upgrade --user --use-feature=2020-resolver
+cd $CURRENT_DIR_PATH
 
 
 if [ ! -d $SDK_DIR_NAME ]; then
@@ -39,11 +41,12 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python3 -m pip install -e $SDK_DIR_NAME --upgrade --user --use-feature=2020-resolver
+cd $SDK_DIR_NAME
+python3 -m pip install -e . --upgrade --user --use-feature=2020-resolver
+cd $CURRENT_DIR_PATH
 
 
 cd $PRED_MAINT_DIR_NAME
 git pull
+python3 -m pip install -e . --upgrade --user --use-feature=2020-resolver
 cd $CURRENT_DIR_PATH
-
-python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user --use-feature=2020-resolver
