@@ -28,6 +28,7 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
+python3 -m pip uninstall Arimo-Util
 python3 -m pip install -e $UTIL_DIR_NAME --upgrade --user --use-feature=2020-resolver
 
 
@@ -39,6 +40,7 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
+python3 -m pip uninstall Arimo-SDK
 python3 -m pip install -e $SDK_DIR_NAME --upgrade --user --use-feature=2020-resolver
 
 
@@ -46,4 +48,5 @@ cd $PRED_MAINT_DIR_NAME
 git pull
 cd $CURRENT_DIR_PATH
 
+python3 -m pip uninstall Arimo-PredMaint
 python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user --use-feature=2020-resolver
