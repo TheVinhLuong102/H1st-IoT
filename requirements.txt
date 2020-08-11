@@ -19,3 +19,7 @@ Ruamel.YAML >= 0.16.10
 # viz
 PlotNine >= 0.7.1
 StatsModels >= 0.11.1
+
+Pandas >= 1.0.5, < 1.1.0
+    # *** BUG in 1.1.0 ***
+    # TypeError: incompatible index of inserted column with frame index
