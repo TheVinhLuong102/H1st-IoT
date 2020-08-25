@@ -9,5 +9,6 @@ src/
 *.iml
 .idea/
 
-# Virtual Env
-.venv
+# Visual Studio Code
+.vscode/
+*.code-workspace

@@ -42,7 +42,7 @@ import arimo.IoT.DataAdmin._django_root.settings
 from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 
 
-class Project(object):
+class Project:
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
     CONFIG_S3_BUCKET = 'arimo-iot-pm'
     AWS_PROFILE_NAME = 'arimo'
@@ -911,10 +911,10 @@ class Project(object):
             params={},
             verbose=True,
             **kwargs):
-        self.profile_equipment_data_fields(
-            equipment_general_type_name=equipment_general_type_name,
-            equipment_unique_type_group_name=equipment_unique_type_group_name,
-            to_month=to_month)
+        # self.profile_equipment_data_fields(
+        #     equipment_general_type_name=equipment_general_type_name,
+        #     equipment_unique_type_group_name=equipment_unique_type_group_name,
+        #     to_month=to_month)
 
         ppp_blueprint_uuid = \
             '{}---{}---to-{}---{}'.format(
@@ -2340,7 +2340,7 @@ class Project(object):
 
                     for _, row in tqdm(_equipment_unique_type_group_daily_agg_df.iterrows(),
                                        total=len(_equipment_unique_type_group_daily_agg_df)):
-                        for equipment_data_field in equipment_unique_type_group.equipment_data_fields.all():
+                        for equipment_data_field in equipment_unique_type_group.equipment_general_type.equipment_data_fields.all():
                             equipment_data_field_name = equipment_data_field.name
 
                             if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleFeatureContentCols:

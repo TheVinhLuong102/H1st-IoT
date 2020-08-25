@@ -1,20 +1,25 @@
 # Django
-Django >= 3.0.6
+Django >= 3.0.9, < 3.1
 Django-AutoComplete-Light >= 3.5.0, < 3.5.1
-Django-Silk >= 4.0.1
+Django-Silk >= 4.1.0
 PsycoPG2-binary >= 2.8.5
 
 # REST API
-DjangoRESTFramework >= 3.11.0
-DjangoRESTFramework-Filters >= 1.0.0.dev0
-DRF-Writable-Nested >= 0.6.0
-CoreAPI >= 2.3.3   # ??? REQUIRED FOR REST API TO WORK ???
+DjangoRESTFramework >= 3.11.1
+DjangoRESTFramework-Filters == 1.0.0.dev0
+    # dev1/2: TypeError: 'Meta.fields' contains fields that are not defined on this FilterSet: equipment_instances.
+Django-Filter >= 2.2.0, < 2.3.0
+    # *** 2.3.0: TypeError: 'Meta.fields' must not contain non-model field names ***
+DRF-Writable-Nested >= 0.6.1
+CoreAPI >= 2.3.3
+    # ??? REQUIRED FOR REST API TO WORK ???
 
 # misc
 Ruamel.YAML >= 0.16.10
 
 # viz
-PlotNine >= 0.6.0
+PlotNine >= 0.7.0, < 0.7.1
+    # plotnine 0.7.1 depends on pandas>=1.1.0
 StatsModels >= 0.11.1
 
 pathos
@@ -22,5 +27,7 @@ boto3
 pathos
 s3fs
 sklearn
-tensorflow
-tensorflow_probability
+
+Pandas >= 1.0.5, < 1.1.0
+    # *** BUG in 1.1.0 ***
+    # TypeError: incompatible index of inserted column with frame index

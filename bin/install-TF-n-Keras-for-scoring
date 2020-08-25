@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+
+python3 -m pip uninstall TF-Nightly
+python3 -m pip install TensorFlow Keras --upgrade --user --use-feature=2020-resolver
