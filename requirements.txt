@@ -22,6 +22,12 @@ PlotNine >= 0.7.0, < 0.7.1
     # plotnine 0.7.1 depends on pandas>=1.1.0
 StatsModels >= 0.11.1
 
+pathos
+boto3
+pathos
+s3fs
+sklearn
+
 Pandas >= 1.0.5, < 1.1.0
     # *** BUG in 1.1.0 ***
     # TypeError: incompatible index of inserted column with frame index
