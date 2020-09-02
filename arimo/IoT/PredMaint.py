@@ -960,6 +960,16 @@ class Project:
 
         label_var_names = []
 
+        try:
+            bp_obj.equipment_unique_type_group
+        except Exception as err:
+            # force reconnect with db to overcome django.db.utils.OperationalError: SSL SYSCALL error: EOF detected
+            # ref: https://stackoverflow.com/questions/48329685/how-can-i-force-django-to-restart-a-database-connection-from-the-shell
+            print(f'*** {err} ***')
+            from django.db import connection
+            connection.connect()
+            bp_obj.equipment_unique_type_group
+
         for label_var_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[bp_obj.equipment_unique_type_group.equipment_general_type.name][bp_obj.equipment_unique_type_group.name]:
             benchmark_metrics_for_label_var_name = benchmark_metrics.get(label_var_name)
 
