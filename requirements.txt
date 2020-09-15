@@ -15,7 +15,7 @@ CoreAPI >= 2.3.3
     # ??? REQUIRED FOR REST API TO WORK ???
 
 # misc
-Ruamel.YAML >= 0.16.10
+Ruamel.YAML >= 0.16.12
 
 # viz
 PlotNine >= 0.7.0, < 0.7.1
