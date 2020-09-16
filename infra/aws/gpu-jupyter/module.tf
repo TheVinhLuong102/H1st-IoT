@@ -23,10 +23,10 @@ data "template_cloudinit_config" "init" {
 }
 
 resource "aws_instance" "master" {
-  ami           = "${var.ami_id}"
-  instance_type = "${var.instance_type}"
+  ami           = var.ami_id
+  instance_type = var.instance_type
 
-  subnet_id              = "${var.subnet_id}"
+  subnet_id              = var.subnet_id
   vpc_security_group_ids = var.security_group_ids
 
   # source_dest_check      = false
@@ -57,7 +57,7 @@ resource "aws_instance" "master" {
   }
 
   lifecycle {
-    ignore_changes = ["ami"]
+    ignore_changes = [ami]
   }
 }
 
