@@ -2,7 +2,7 @@
 Django >= 3.0.10, < 3.1
 Django-AutoComplete-Light >= 3.5.0, < 3.5.1
 Django-Silk >= 4.1.0
-PsycoPG2-binary >= 2.8.5
+PsycoPG2-binary >= 2.8.6
 
 # REST API
 DjangoRESTFramework >= 3.11.1
