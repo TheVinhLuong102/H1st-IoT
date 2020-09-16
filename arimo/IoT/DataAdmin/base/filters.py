@@ -312,11 +312,6 @@ class EquipmentUniqueTypeFilter(FilterSet):
 
 
 class EquipmentFacilityFilter(FilterSet):
-    equipment_instances = \
-        RelatedFilter(
-            queryset=EquipmentInstance.objects.all(),
-            filterset='EquipmentInstanceFilter')
-
     class Meta:
         model = EquipmentFacility
 
