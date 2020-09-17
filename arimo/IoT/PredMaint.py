@@ -145,10 +145,7 @@ class Project:
                 open(local_project_config_file_path, 'r')),
             **kwargs)
 
-        assert self.params.db.host \
-           and self.params.db.db_name \
-           and self.params.db.user \
-           and self.params.db.password
+        assert self.params.db.host and self.params.db.db_name
 
         django_db_settings = arimo.IoT.DataAdmin._django_root.settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.host
