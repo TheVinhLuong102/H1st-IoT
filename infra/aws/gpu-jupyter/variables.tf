@@ -7,7 +7,7 @@ variable "ssh_user_data" {}
 
 # If empty, the security group named "infrastructure-allow_all" in the VPC will be used.
 variable "security_group_ids" {
-  type    = "list"
+  type    = list
   default = []
 }
 

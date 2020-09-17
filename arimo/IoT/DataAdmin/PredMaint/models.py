@@ -5,10 +5,11 @@ from datetime import timedelta
 from django.db.models import \
     Model, \
     BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
+    JSONField, \
     ForeignKey, ManyToManyField, OneToOneField, \
     CASCADE, PROTECT
 from django.db.models.signals import post_save
-from django.contrib.postgres.fields import DateRangeField, JSONField
+from django.contrib.postgres.fields import DateRangeField
 
 from psycopg2.extras import DateRange
 

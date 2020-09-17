@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.db.models.fields.json import JSONField
 
 from rest_framework_filters import CharFilter, FilterSet, RelatedFilter
 
@@ -312,11 +312,6 @@ class EquipmentUniqueTypeFilter(FilterSet):
 
 
 class EquipmentFacilityFilter(FilterSet):
-    equipment_instances = \
-        RelatedFilter(
-            queryset=EquipmentInstance.objects.all(),
-            filterset='EquipmentInstanceFilter')
-
     class Meta:
         model = EquipmentFacility
 
