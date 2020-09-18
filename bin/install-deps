@@ -17,7 +17,8 @@ git config --global credential.helper cache
 git config --global credential.helper "cache --timeout=3600"
 
 
-python3 -m pip install --upgrade pip --user
+python3 -m pip install pip --upgrade --user
+python3 -m pip install Ruamel.YAML --upgrade --user --use-feature=2020-resolver
 
 
 if [ ! -d $UTIL_DIR_NAME ]; then

@@ -6,7 +6,7 @@ import os
 import random
 import tqdm
 
-from arimo.util import Namespace
+from arimo.util import fs, Namespace
 from arimo.util.aws import s3
 
 from arimo.IoT.DataAdmin.util import _YAML_EXT
@@ -537,6 +537,9 @@ elif cmd == TRAIN_PPP_CMD:
 
 
 elif cmd == EVAL_PPP_CMD:
+    assert fs._ON_LINUX_CLUSTER_WITH_HDFS, \
+        '*** HDFS NOT DETECTED ***'
+
     if args.ppp_blueprint_uuids:
         for ppp_blueprint_uuid in args.ppp_blueprint_uuids:
             PROJECT.eval_ppp_blueprint(
@@ -624,6 +627,9 @@ elif cmd == EVAL_PPP_CMD:
 
 
 elif cmd == PPP_ANOM_SCORE_CMD:
+    assert fs._ON_LINUX_CLUSTER_WITH_HDFS, \
+        '*** HDFS NOT DETECTED ***'
+
     PROJECT.ppp_anom_score(
         equipment_general_type_name=args.eq_gen_tp_name,
         equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
@@ -644,6 +650,9 @@ elif cmd == PPP_ANOM_ALERT_CMD:
 
 
 elif cmd == AGG_DATA_CMD:
+    assert fs._ON_LINUX_CLUSTER_WITH_HDFS, \
+        '*** HDFS NOT DETECTED ***'
+
     PROJECT.agg_daily_equipment_data(
         equipment_general_type_name=args.eq_gen_tp_name,
         equipment_unique_type_group_name=args.eq_unq_tp_grp_name,

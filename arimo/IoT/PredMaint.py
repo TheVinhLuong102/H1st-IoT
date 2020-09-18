@@ -99,6 +99,8 @@ class Project:
                 anom_score_names_and_thresholds=dict(
                     rowHigh__dailyMean__abs__MAE_Mult=(2.5, 3, 3.5, 4, 4.5, 5))))
 
+    _ALERT_RECURRENCE_GROUPING_INTERVAL = 30
+
     _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
     _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
     _ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS_STR = 'concluded_true_equipment_problems'
@@ -959,6 +961,16 @@ class Project:
             benchmark_metrics = bp_obj.benchmark_metrics
 
         label_var_names = []
+
+        try:
+            bp_obj.equipment_unique_type_group
+        except Exception as err:
+            # force reconnect with db to overcome django.db.utils.OperationalError: SSL SYSCALL error: EOF detected
+            # ref: https://stackoverflow.com/questions/48329685/how-can-i-force-django-to-restart-a-database-connection-from-the-shell
+            print(f'*** {err} ***')
+            from django.db import connection
+            connection.connect()
+            bp_obj.equipment_unique_type_group
 
         for label_var_name in self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[bp_obj.equipment_unique_type_group.equipment_general_type.name][bp_obj.equipment_unique_type_group.name]:
             benchmark_metrics_for_label_var_name = benchmark_metrics.get(label_var_name)
@@ -1940,7 +1952,8 @@ class Project:
 
                     elif pandas.notnull(anom_score) and \
                             unfinished_anomaly.start_date and unfinished_anomaly.end_date and \
-                            unfinished_anomaly.cumulative_excess_risk_score:
+                            unfinished_anomaly.cumulative_excess_risk_score and \
+                            ((date - unfinished_anomaly.end_date).days > self._ALERT_RECURRENCE_GROUPING_INTERVAL):
                         update_or_create_anom_alert(
                             equipment_instance_id=current_equipment_instance_id,
 

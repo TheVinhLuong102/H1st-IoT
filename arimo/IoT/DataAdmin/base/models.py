@@ -3,9 +3,9 @@ from __future__ import print_function
 from django.db.models import \
     Model, \
     BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
+    JSONField, \
     ForeignKey, ManyToManyField, \
     PROTECT
-from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import m2m_changed, pre_delete
 
 import warnings
