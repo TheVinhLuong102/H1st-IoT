@@ -608,12 +608,9 @@ class PredictiveMaintenanceVAE(object):
     def get_proper_hidden_dim(self, input_dim):
         return int(min(512, pow(2, math.ceil(math.log(input_dim, 2)) + 2)))
 
+    @tf.function
     def _count_record(self, files):
-        c = 0
-        for i, fn in enumerate(files):
-            for record in tf.compat.v1.python_io.tf_record_iterator(fn):
-                c += 1
-        return c
+        return sum(1 for _ in tf.data.TFRecordDataset(files))
 
     #     def _decode(self, serialized_example, decode_key, n_feature=None):
     #         features = tf.io.parse_single_example(

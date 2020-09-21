@@ -1101,7 +1101,7 @@ class Project:
     def ppp_anom_score(
             self,
             equipment_general_type_name, equipment_unique_type_group_name,
-            date, to_date=None, monthly=False,
+            date, to_date=None, monthly=False, _max_n_dates_at_one_time=3,
             _force_calc=False, re_calc_daily=False,
             __batch_size__=10 ** 3,
             sql_filter=None):
@@ -1341,72 +1341,75 @@ class Project:
 
                     ppp_blueprint = self._ppp_blueprint(uuid=blueprint_uuid)
 
-                    s3_parquet_ddf = \
-                        self.load_equipment_data(
-                            equipment_unique_type_group_data_set_name,
-                            spark=True, set_i_col=False, set_t_col=True) \
-                        .filterByPartitionKeys(
-                            (DATE_COL,
-                             dates))
+                    for i in tqdm(range(0, len(dates), _max_n_dates_at_one_time)):
+                        _dates = dates[i:(i + _max_n_dates_at_one_time)]
 
-                    if sql_filter:
-                        try:
-                            s3_parquet_ddf.filter(
-                                condition=sql_filter,
-                                inplace=True)
+                        s3_parquet_ddf = \
+                            self.load_equipment_data(
+                                equipment_unique_type_group_data_set_name,
+                                spark=True, set_i_col=False, set_t_col=True) \
+                            .filterByPartitionKeys(
+                                (DATE_COL,
+                                 _dates))
 
-                        except Exception as err:
-                            print(err)
+                        if sql_filter:
+                            try:
+                                s3_parquet_ddf.filter(
+                                    condition=sql_filter,
+                                    inplace=True)
 
-                    _tmp_dir_path = tempfile.mkdtemp()
+                            except Exception as err:
+                                print(err)
 
-                    ppp_blueprint.err_mults(
-                        ppp_blueprint.score(
-                            df=s3_parquet_ddf,
-                            __batch_size__=__batch_size__),
-                        *self._good_ppp_label_var_names(bp_obj=bp_obj),
-                        max_indiv_ref_benchmark_metric_over_global_ref_benchmark_metric_ratio=
-                            self.MAX_INDIV_REF_BENCHMARK_METRIC_OVER_GLOBAL_REF_BENCHMARK_METRIC_RATIO
-                        ).withColumn(
-                            colName=self._BLUEPRINT_UUID_COL,
-                            col=functions.lit(blueprint_uuid)
-                        ).save(
-                            path=_tmp_dir_path,
-                            format='parquet',
-                            partitionBy=(DATE_COL, self._BLUEPRINT_UUID_COL),
-                            verbose=True)
+                        _tmp_dir_path = tempfile.mkdtemp()
 
-                    if fs._ON_LINUX_CLUSTER_WITH_HDFS:
-                        fs.get(
-                            from_hdfs=_tmp_dir_path,
-                            to_local=_tmp_dir_path,
-                            is_dir=True, overwrite=True, _mv=True,
-                            must_succeed=True)
+                        ppp_blueprint.err_mults(
+                            ppp_blueprint.score(
+                                df=s3_parquet_ddf,
+                                __batch_size__=__batch_size__),
+                            *self._good_ppp_label_var_names(bp_obj=bp_obj),
+                            max_indiv_ref_benchmark_metric_over_global_ref_benchmark_metric_ratio=
+                                self.MAX_INDIV_REF_BENCHMARK_METRIC_OVER_GLOBAL_REF_BENCHMARK_METRIC_RATIO
+                            ).withColumn(
+                                colName=self._BLUEPRINT_UUID_COL,
+                                col=functions.lit(blueprint_uuid)
+                            ).save(
+                                path=_tmp_dir_path,
+                                format='parquet',
+                                partitionBy=(DATE_COL, self._BLUEPRINT_UUID_COL),
+                                verbose=True)
 
-                    for partition_key in \
-                            tqdm(sorted(
-                                partition_key
-                                for partition_key in os.listdir(_tmp_dir_path)
-                                if partition_key.startswith('{}='.format(DATE_COL)))):
-                        s3.sync(
-                            from_dir_path=
-                                os.path.join(
-                                    _tmp_dir_path,
-                                    partition_key),
-                            to_dir_path=
-                                os.path.join(
-                                    err_mults_s3_dir_path,
-                                    partition_key),
-                            delete=True, quiet=True,
-                            access_key_id=self.params.s3.access_key_id,
-                            secret_access_key=self.params.s3.secret_access_key,
-                            verbose=False)
+                        if fs._ON_LINUX_CLUSTER_WITH_HDFS:
+                            fs.get(
+                                from_hdfs=_tmp_dir_path,
+                                to_local=_tmp_dir_path,
+                                is_dir=True, overwrite=True, _mv=True,
+                                must_succeed=True)
 
-                    fs.rm(path=_tmp_dir_path,
-                          is_dir=True,
-                          hdfs=False)
+                        for partition_key in \
+                                tqdm(sorted(
+                                    partition_key
+                                    for partition_key in os.listdir(_tmp_dir_path)
+                                    if partition_key.startswith('{}='.format(DATE_COL)))):
+                            s3.sync(
+                                from_dir_path=
+                                    os.path.join(
+                                        _tmp_dir_path,
+                                        partition_key),
+                                to_dir_path=
+                                    os.path.join(
+                                        err_mults_s3_dir_path,
+                                        partition_key),
+                                delete=True, quiet=True,
+                                access_key_id=self.params.s3.access_key_id,
+                                secret_access_key=self.params.s3.secret_access_key,
+                                verbose=False)
 
-                    calc_daily_for_dates.update(dates)
+                        fs.rm(path=_tmp_dir_path,
+                              is_dir=True,
+                              hdfs=False)
+
+                        calc_daily_for_dates.update(_dates)
 
         if calc_daily_for_dates:
             copy_anom_scores_from_date = \
