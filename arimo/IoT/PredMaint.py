@@ -103,6 +103,7 @@ class Project:
     _ALERT_RECURRENCE_GROUPING_INTERVAL = 30
 
     _ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR = 'to_diagnose'
+    _ALERT_DIAGNOSIS_STATUS_PRELIM_DIAGNOSED_STR = 'prelim_diagnosed'
     _ALERT_DIAGNOSIS_STATUS_MONITORING_STR = 'monitoring'
     _ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS_STR = 'concluded_true_equipment_problems'
     _ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS_STR = 'concluded_no_equipment_problems'
@@ -310,6 +311,10 @@ class Project:
         self.ALERT_DIAGNOSIS_STATUS_MONITORING = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_MONITORING_STR,
+                defaults=dict(index=1))[0]
+        self.ALERT_DIAGNOSIS_STATUS_PRELIM_DIAGNOSED = \
+            AlertDiagnosisStatus.objects.get_or_create(
+                name=self._ALERT_DIAGNOSIS_STATUS_PRELIM_DIAGNOSED_STR,
                 defaults=dict(index=1))[0]
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS = \
             AlertDiagnosisStatus.objects.get_or_create(
