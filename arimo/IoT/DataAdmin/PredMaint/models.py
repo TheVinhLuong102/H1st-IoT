@@ -545,10 +545,10 @@ class EquipmentProblemType(Model):
         ordering = 'name',
 
     def __str__(self):
-        return 'EqProbTp {}'.format(self.name.upper())
+        return f'EqProbTp "{self.name}""'
 
     def save(self, *args, **kwargs):
-        self.name = clean_lower_str(self.name)
+        self.name = self.name.strip()
         super(type(self), self).save(*args, **kwargs)
 
 
