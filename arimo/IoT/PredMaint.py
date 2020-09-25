@@ -315,7 +315,7 @@ class Project:
         self.ALERT_DIAGNOSIS_STATUS_PRELIM_DIAGNOSED = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_PRELIM_DIAGNOSED_STR,
-                defaults=dict(index=1))[0]
+                defaults=dict(index=2))[0]
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS_STR,
