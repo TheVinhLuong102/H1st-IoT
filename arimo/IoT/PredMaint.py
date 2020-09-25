@@ -413,185 +413,181 @@ class Project:
         return df
 
     def profile_equipment_data_fields(self, equipment_general_type_name: str, equipment_unique_type_group_name: str, to_month=None):
-        for equipment_general_type_name, equipment_unique_type_group_names in tqdm(results.items()):
-            for equipment_unique_type_group_name in tqdm(equipment_unique_type_group_names):
-                equipment_unique_type_group_data_set_name = \
-                    '{}---{}'.format(
-                        equipment_general_type_name.upper(),
-                        equipment_unique_type_group_name)
+        equipment_unique_type_group_data_set_name = \
+            '{}---{}'.format(
+                equipment_general_type_name.upper(),
+                equipment_unique_type_group_name)
 
-                equipment_unique_type_group_s3_parquet_df = \
-                    self.load_equipment_data(
-                        equipment_unique_type_group_data_set_name,
-                        spark=False, set_i_col=True, set_t_col=False,
-                        verbose=True)
+        equipment_unique_type_group_s3_parquet_df = \
+            self.load_equipment_data(
+                equipment_unique_type_group_data_set_name,
+                spark=False, set_i_col=True, set_t_col=False,
+                verbose=True)
 
-                if to_month:
-                    to_date = month_end(to_month)
+        if to_month:
+            to_date = month_end(to_month)
 
-                    equipment_unique_type_group_s3_parquet_df = \
-                        equipment_unique_type_group_s3_parquet_df.filterByPartitionKeys(
-                            (DATE_COL,
-                             str((datetime.datetime.strptime('{}-01'.format(to_month), '%Y-%m-%d') -
-                                  relativedelta(months=self.REF_N_MONTHS - 1)).date()),
-                             str(to_date)))
+            equipment_unique_type_group_s3_parquet_df = \
+                equipment_unique_type_group_s3_parquet_df.filterByPartitionKeys(
+                    (DATE_COL,
+                        str((datetime.datetime.strptime('{}-01'.format(to_month), '%Y-%m-%d') -
+                            relativedelta(months=self.REF_N_MONTHS - 1)).date()),
+                        str(to_date)))
 
-                else:
-                    to_date = None
+        else:
+            to_date = None
 
-                equipment_unique_type_group = \
-                    self.data.EquipmentUniqueTypeGroups.get(
-                        equipment_general_type__name=equipment_general_type_name,
-                        name=equipment_unique_type_group_name)
+        equipment_unique_type_group = \
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
-                self.data.EquipmentUniqueTypeGroupDataFieldProfiles.filter(
-                    equipment_unique_type_group=equipment_unique_type_group,
-                    to_date=to_date) \
-                .delete()
+        self.data.EquipmentUniqueTypeGroupDataFieldProfiles.filter(
+            equipment_unique_type_group=equipment_unique_type_group,
+            to_date=to_date) \
+        .delete()
 
-                for equipment_data_field in tqdm(equipment_unique_type_group.equipment_data_fields.all()):
-                    equipment_data_field_name = equipment_data_field.name
+        for equipment_data_field in tqdm(equipment_unique_type_group.equipment_data_fields.all()):
+            equipment_data_field_name = equipment_data_field.name
 
-                    if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleFeatureContentCols:
-                        if equipment_unique_type_group_s3_parquet_df.typeIsNum(equipment_data_field_name):
-                            equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name] = \
-                                equipment_data_field.lower_numeric_null, \
-                                equipment_data_field.upper_numeric_null
+            if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleFeatureContentCols:
+                if equipment_unique_type_group_s3_parquet_df.typeIsNum(equipment_data_field_name):
+                    equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name] = \
+                        equipment_data_field.lower_numeric_null, \
+                        equipment_data_field.upper_numeric_null
 
-                        _distinct_values_proportions = \
-                            equipment_unique_type_group_s3_parquet_df.distinct(equipment_data_field_name).to_dict()
-                        _n_distinct_values = len(_distinct_values_proportions)
+                _distinct_values_proportions = \
+                    equipment_unique_type_group_s3_parquet_df.distinct(equipment_data_field_name).to_dict()
+                _n_distinct_values = len(_distinct_values_proportions)
 
-                        equipment_unique_type_group_data_field_profile = \
-                            self.data.EquipmentUniqueTypeGroupDataFieldProfiles.create(
-                                equipment_unique_type_group=equipment_unique_type_group,
-                                equipment_data_field=equipment_data_field,
-                                to_date=to_date,
-                                valid_proportion=
-                                    equipment_unique_type_group_s3_parquet_df.nonNullProportion(equipment_data_field_name),
-                                n_distinct_values=_n_distinct_values)
+                equipment_unique_type_group_data_field_profile = \
+                    self.data.EquipmentUniqueTypeGroupDataFieldProfiles.create(
+                        equipment_unique_type_group=equipment_unique_type_group,
+                        equipment_data_field=equipment_data_field,
+                        to_date=to_date,
+                        valid_proportion=
+                            equipment_unique_type_group_s3_parquet_df.nonNullProportion(equipment_data_field_name),
+                        n_distinct_values=_n_distinct_values)
 
-                        if _n_distinct_values <= self._MAX_N_DISTINCT_VALUES_TO_PROFILE:
-                            equipment_unique_type_group_data_field_profile.distinct_values = _distinct_values_proportions
+                if _n_distinct_values <= self._MAX_N_DISTINCT_VALUES_TO_PROFILE:
+                    equipment_unique_type_group_data_field_profile.distinct_values = _distinct_values_proportions
 
-                        if equipment_unique_type_group_s3_parquet_df.typeIsNum(equipment_data_field_name):
-                            quartiles = \
-                                equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name] \
-                                .describe(
-                                    percentiles=(.25, .5, .75)) \
-                                .drop(
-                                    index='count',
-                                    level=None,
-                                    inplace=False,
-                                    errors='raise') \
-                                .to_dict()
+                if equipment_unique_type_group_s3_parquet_df.typeIsNum(equipment_data_field_name):
+                    quartiles = \
+                        equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name] \
+                        .describe(
+                            percentiles=(.25, .5, .75)) \
+                        .drop(
+                            index='count',
+                            level=None,
+                            inplace=False,
+                            errors='raise') \
+                        .to_dict()
 
-                            equipment_unique_type_group_data_field_profile.sample_min = quartiles['min']
-                            equipment_unique_type_group_data_field_profile.outlier_rst_min = \
-                                equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name)
-                            equipment_unique_type_group_data_field_profile.sample_quartile = quartiles['25%']
-                            equipment_unique_type_group_data_field_profile.sample_median = quartiles['50%']
-                            equipment_unique_type_group_data_field_profile.sample_3rd_quartile = quartiles['75%']
-                            equipment_unique_type_group_data_field_profile.outlier_rst_max = \
-                                equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name)
-                            equipment_unique_type_group_data_field_profile.sample_max = quartiles['max']
+                    equipment_unique_type_group_data_field_profile.sample_min = quartiles['min']
+                    equipment_unique_type_group_data_field_profile.outlier_rst_min = \
+                        equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name)
+                    equipment_unique_type_group_data_field_profile.sample_quartile = quartiles['25%']
+                    equipment_unique_type_group_data_field_profile.sample_median = quartiles['50%']
+                    equipment_unique_type_group_data_field_profile.sample_3rd_quartile = quartiles['75%']
+                    equipment_unique_type_group_data_field_profile.outlier_rst_max = \
+                        equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name)
+                    equipment_unique_type_group_data_field_profile.sample_max = quartiles['max']
 
-                        equipment_unique_type_group_data_field_profile.save()
+                equipment_unique_type_group_data_field_profile.save()
 
     def profile_equipment_data_field_pairwise_correlations(self, equipment_general_type_name: str, equipment_unique_type_group_name: str):
-        for equipment_general_type_name, equipment_unique_type_group_names in tqdm(results.items()):
-            for equipment_unique_type_group_name in tqdm(equipment_unique_type_group_names):
-                equipment_unique_type_group_data_set_name = \
-                    '{}---{}'.format(
-                        equipment_general_type_name.upper(),
-                        equipment_unique_type_group_name)
+        equipment_unique_type_group_data_set_name = \
+            '{}---{}'.format(
+                equipment_general_type_name.upper(),
+                equipment_unique_type_group_name)
 
-                equipment_unique_type_group_s3_parquet_df = \
-                    self.load_equipment_data(
-                        equipment_unique_type_group_data_set_name,
-                        spark=False, set_i_col=True, set_t_col=False,
-                        verbose=True)
+        equipment_unique_type_group_s3_parquet_df = \
+            self.load_equipment_data(
+                equipment_unique_type_group_data_set_name,
+                spark=False, set_i_col=True, set_t_col=False,
+                verbose=True)
 
-                equipment_unique_type_group = \
-                    self.data.EquipmentUniqueTypeGroups.get(
-                        equipment_general_type__name=equipment_general_type_name,
-                        name=equipment_unique_type_group_name)
+        equipment_unique_type_group = \
+            self.data.EquipmentUniqueTypeGroups.get(
+                equipment_general_type__name=equipment_general_type_name,
+                name=equipment_unique_type_group_name)
 
-                self.data.EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations.filter(
-                    equipment_unique_type_group=equipment_unique_type_group) \
-                .delete()
+        self.data.EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations.filter(
+            equipment_unique_type_group=equipment_unique_type_group) \
+        .delete()
 
-                equipment_data_fields = equipment_unique_type_group.equipment_data_fields.filter(data_type=self.NUM_DATA_TYPE)
+        equipment_data_fields = equipment_unique_type_group.equipment_data_fields.filter(data_type=self.NUM_DATA_TYPE)
 
-                n_equipment_data_fields = equipment_data_fields.count()
+        n_equipment_data_fields = equipment_data_fields.count()
 
-                from arimo.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
+        from arimo.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
 
-                for i in tqdm(range(n_equipment_data_fields - 1)):
-                    equipment_data_field = equipment_data_fields[i]
-                    equipment_data_field_name = equipment_data_field.name
+        for i in tqdm(range(n_equipment_data_fields - 1)):
+            equipment_data_field = equipment_data_fields[i]
+            equipment_data_field_name = equipment_data_field.name
 
-                    if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleNumContentCols:
-                        equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name] = \
-                            equipment_data_field.lower_numeric_null, \
-                            equipment_data_field.upper_numeric_null
+            if equipment_data_field_name in equipment_unique_type_group_s3_parquet_df.possibleNumContentCols:
+                equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name] = \
+                    equipment_data_field.lower_numeric_null, \
+                    equipment_data_field.upper_numeric_null
 
-                        outlier_rst_min = equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name)
-                        outlier_rst_max = equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name)
+                outlier_rst_min = equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name)
+                outlier_rst_max = equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name)
 
-                        if outlier_rst_min < outlier_rst_max:
-                            for i_2 in tqdm(range(i + 1, n_equipment_data_fields)):
-                                equipment_data_field_2 = equipment_data_fields[i_2]
-                                equipment_data_field_name_2 = equipment_data_field_2.name
+                if outlier_rst_min < outlier_rst_max:
+                    for i_2 in tqdm(range(i + 1, n_equipment_data_fields)):
+                        equipment_data_field_2 = equipment_data_fields[i_2]
+                        equipment_data_field_name_2 = equipment_data_field_2.name
 
-                                if (equipment_data_field_name_2 != equipment_data_field_name) and \
-                                        (equipment_data_field_name_2 in equipment_unique_type_group_s3_parquet_df.possibleNumContentCols):
-                                    equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name_2] = \
-                                        equipment_data_field_2.lower_numeric_null, \
-                                        equipment_data_field_2.upper_numeric_null
+                        if (equipment_data_field_name_2 != equipment_data_field_name) and \
+                                (equipment_data_field_name_2 in equipment_unique_type_group_s3_parquet_df.possibleNumContentCols):
+                            equipment_unique_type_group_s3_parquet_df._nulls[equipment_data_field_name_2] = \
+                                equipment_data_field_2.lower_numeric_null, \
+                                equipment_data_field_2.upper_numeric_null
 
-                                    outlier_rst_min_2 = equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name_2)
-                                    outlier_rst_max_2 = equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name_2)
+                            outlier_rst_min_2 = equipment_unique_type_group_s3_parquet_df.outlierRstMin(equipment_data_field_name_2)
+                            outlier_rst_max_2 = equipment_unique_type_group_s3_parquet_df.outlierRstMax(equipment_data_field_name_2)
 
-                                    if outlier_rst_min_2 < outlier_rst_max_2:
-                                        sample_df = \
-                                            equipment_unique_type_group_s3_parquet_df.reprSample.loc[
-                                                equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name].between(
-                                                    outlier_rst_min,
-                                                    outlier_rst_max,
-                                                    inclusive=False) &
-                                                equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name_2].between(
-                                                    outlier_rst_min_2,
-                                                    outlier_rst_max_2,
-                                                    inclusive=False),
-                                                [equipment_data_field_name, equipment_data_field_name_2]]
+                            if outlier_rst_min_2 < outlier_rst_max_2:
+                                sample_df = \
+                                    equipment_unique_type_group_s3_parquet_df.reprSample.loc[
+                                        equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name].between(
+                                            outlier_rst_min,
+                                            outlier_rst_max,
+                                            inclusive=False) &
+                                        equipment_unique_type_group_s3_parquet_df.reprSample[equipment_data_field_name_2].between(
+                                            outlier_rst_min_2,
+                                            outlier_rst_max_2,
+                                            inclusive=False),
+                                        [equipment_data_field_name, equipment_data_field_name_2]]
 
-                                        if len(sample_df) > 1000:
-                                            outlier_rst_min = float(sample_df[equipment_data_field_name].min())
-                                            outlier_rst_max = float(sample_df[equipment_data_field_name].max())
+                                if len(sample_df) > 1000:
+                                    outlier_rst_min = float(sample_df[equipment_data_field_name].min())
+                                    outlier_rst_max = float(sample_df[equipment_data_field_name].max())
 
-                                            if outlier_rst_min < outlier_rst_max:
-                                                outlier_rst_min_2 = float(sample_df[equipment_data_field_name_2].min())
-                                                outlier_rst_max_2 = float(sample_df[equipment_data_field_name_2].max())
+                                    if outlier_rst_min < outlier_rst_max:
+                                        outlier_rst_min_2 = float(sample_df[equipment_data_field_name_2].min())
+                                        outlier_rst_max_2 = float(sample_df[equipment_data_field_name_2].max())
 
-                                                if outlier_rst_min_2 < outlier_rst_max_2:
-                                                    sample_correlation = \
-                                                        pearsonr(
-                                                            x=sample_df[equipment_data_field_name],
-                                                            y=sample_df[equipment_data_field_name_2])[0]
+                                        if outlier_rst_min_2 < outlier_rst_max_2:
+                                            sample_correlation = \
+                                                pearsonr(
+                                                    x=sample_df[equipment_data_field_name],
+                                                    y=sample_df[equipment_data_field_name_2])[0]
 
-                                                    if pandas.notnull(sample_correlation):
-                                                        self.data.EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations.bulk_create(
-                                                            [EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(
-                                                                equipment_unique_type_group=equipment_unique_type_group,
-                                                                equipment_data_field=equipment_data_field,
-                                                                equipment_data_field_2=equipment_data_field_2,
-                                                                sample_correlation=sample_correlation),
-                                                             EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(
-                                                                equipment_unique_type_group=equipment_unique_type_group,
-                                                                equipment_data_field=equipment_data_field_2,
-                                                                equipment_data_field_2=equipment_data_field,
-                                                                sample_correlation=sample_correlation)])
+                                            if pandas.notnull(sample_correlation):
+                                                self.data.EquipmentUniqueTypeGroupDataFieldPairwiseCorrelations.bulk_create(
+                                                    [EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(
+                                                        equipment_unique_type_group=equipment_unique_type_group,
+                                                        equipment_data_field=equipment_data_field,
+                                                        equipment_data_field_2=equipment_data_field_2,
+                                                        sample_correlation=sample_correlation),
+                                                        EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(
+                                                        equipment_unique_type_group=equipment_unique_type_group,
+                                                        equipment_data_field=equipment_data_field_2,
+                                                        equipment_data_field_2=equipment_data_field,
+                                                        sample_correlation=sample_correlation)])
 
     def recommend_auto_included_ppp_input_equipment_data_fields(
             self,
