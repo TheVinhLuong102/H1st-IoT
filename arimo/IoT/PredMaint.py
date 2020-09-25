@@ -324,7 +324,7 @@ class Project:
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=10))[0]
-        print(f'Set Up S3 Alert Diagnosis Statuses ({time() - tic:.3f}s)')
+        print(f'Set Up Alert Diagnosis Statuses ({time() - tic:.3f}s)')
 
         self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields = Namespace()
 
