@@ -17,6 +17,7 @@ from pyspark.sql import functions
 import yaml
 from scipy.stats import pearsonr
 import tempfile
+from time import time
 from tqdm import tqdm
 import uuid
 
@@ -159,8 +160,11 @@ class Project:
             **{K: v
                for K, v in arimo.IoT.DataAdmin._django_root.settings.__dict__.items()
                if K.isupper()})
+        
+        tic = time()
         get_wsgi_application()
         call_command('migrate')
+        print(f'Connected to Django ({time() - tic:.3f}s)')
 
         from arimo.IoT.DataAdmin.base.models import \
             GlobalConfig, \
@@ -231,36 +235,39 @@ class Project:
                 EquipmentUniqueTypeGroupRiskScoringTasks=EquipmentUniqueTypeGroupRiskScoringTask.objects,
                 EquipmentUniqueTypeGroupDataAggTasks=EquipmentUniqueTypeGroupDataAggTask.objects)
 
+        tic = time()
         self.CAT_DATA_TYPE = DataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
-
         self.NUM_DATA_TYPE = DataType.objects.get_or_create(name=self._NUM_DATA_TYPE_NAME)[0]
+        print(f'Set Up CAT/NUM Data Types ({time() - tic:.3f}s)')
 
+        tic = time()
         self.CONTROL_EQUIPMENT_DATA_FIELD_TYPE = \
             EquipmentDataFieldType.objects.get_or_create(name=self._CONTROL_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
-
         self.MEASURE_EQUIPMENT_DATA_FIELD_TYPE = \
             EquipmentDataFieldType.objects.get_or_create(name=self._MEASURE_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
-
         self.CALC_EQUIPMENT_DATA_FIELD_TYPE = \
             EquipmentDataFieldType.objects.get_or_create(name=self._CALC_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
-
         self.ALARM_EQUIPMENT_DATA_FIELD_TYPE = \
             EquipmentDataFieldType.objects.get_or_create(name=self._ALARM_EQUIPMENT_DATA_FIELD_TYPE_NAME)[0]
+        print(f'Set Up Equipment Data Field Types ({time() - tic:.3f}s)')
 
+        tic = time()
         self.params.s3.bucket = GlobalConfig.objects.get_or_create(key='S3_BUCKET')[0].value
+        print(f'Looked Up S3 Bucket ({time() - tic:.3f}s)')
 
         if self.params.s3.bucket:
             if 'access_key_id' in self.params.s3:
                 assert 'secret_access_key' in self.params.s3
 
             else:
+                tic = time()
                 self.params.s3.access_key_id = \
                     GlobalConfig.objects.get_or_create(
                         key='AWS_ACCESS_KEY_ID')[0].value
-
                 self.params.s3.secret_access_key = \
                     GlobalConfig.objects.get_or_create(
                         key='AWS_SECRET_ACCESS_KEY')[0].value
+                print(f'Looked Up S3 Credentials ({time() - tic:.3f}s)')
 
             self.params.s3.equipment_data.dir_path = \
                 's3://{}/{}'.format(
@@ -295,27 +302,28 @@ class Project:
                 access_key_id=self.params.s3.access_key_id,
                 secret_access_key=self.params.s3.secret_access_key)
 
+        tic = time()
         self.ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_TO_DIAGNOSE_STR,
                 defaults=dict(index=0))[0]
-
         self.ALERT_DIAGNOSIS_STATUS_MONITORING = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_MONITORING_STR,
                 defaults=dict(index=1))[0]
-
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_TRUE_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=9))[0]
-
         self.ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS = \
             AlertDiagnosisStatus.objects.get_or_create(
                 name=self._ALERT_DIAGNOSIS_STATUS_CONCLUDED_NO_EQUIPMENT_PROBLEMS_STR,
                 defaults=dict(index=10))[0]
+        print(f'Set Up S3 Alert Diagnosis Statuses ({time() - tic:.3f}s)')
 
         self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields = Namespace()
+
+        tic = time()
 
         for equipment_unique_type_group_service_config in EquipmentUniqueTypeGroupServiceConfig.objects.all():
             equipment_general_type_name = equipment_unique_type_group_service_config.equipment_unique_type_group.equipment_general_type.name
@@ -360,6 +368,8 @@ class Project:
                                             all=False))
                                 .difference(excluded_equipment_data_field_names)),
                         excluded=excluded_equipment_data_field_names)
+
+        print(f'Looked Up Equipment Unique Type Group Pred Maint Service Configs ({time() - tic:.3f}s)')
 
     def load_equipment_data(
             self, equipment_data_set_name,
