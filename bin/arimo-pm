@@ -626,6 +626,18 @@ elif cmd == PPP_ANOM_SCORE_CMD:
     assert fs._ON_LINUX_CLUSTER_WITH_HDFS, \
         '*** HDFS NOT DETECTED ***'
 
+    import arimo.util.data_backend as b
+
+    b.initSpark()
+
+    b.spark.sparkContext.addFile('/home/arimo/data/model.h5')
+
+    cmd = "import os; print(os.path.isfile('model.h5'))"
+    b.runSparkWorkerCmd(f'/opt/miniconda3/bin/python3 -c "{cmd}"')
+
+    cmd = "from dl import _load_keras_model; m = _load_keras_model('model.h5'); print(m)"
+    b.runSparkWorkerCmd(f'/opt/miniconda3/bin/python3 -c "{cmd}"')
+
     PROJECT.ppp_anom_score(
         equipment_general_type_name=args.eq_gen_tp_name,
         equipment_unique_type_group_name=args.eq_unq_tp_grp_name,
