@@ -381,6 +381,8 @@ class Project:
 
             self.params.equipment_monitoring.equipment_unique_type_groups_monitored_and_included_excluded_data_fields[equipment_general_type_name][equipment_unique_type_group_name] = namespace
 
+            return namespace
+
     def load_equipment_data(
             self, equipment_data_set_name,
             spark=False, set_i_col=False, set_t_col=False,
