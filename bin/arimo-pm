@@ -91,16 +91,14 @@ parser___profile_equipment_data_fields = \
         add_help=True)
 
 parser___profile_equipment_data_fields.add_argument(
-    '--gen-tp',
+    'eq_gen_tp_name',
     help='Equipment General Type name to filter',
-    metavar='EQ_GEN_TP_NAME',
-    dest='eq_gen_tp_name')
+    metavar='EQ_GEN_TP_NAME')
 
 parser___profile_equipment_data_fields.add_argument(
-    '--unq-tp-grp',
+    'eq_unq_tp_grp_name',
     help='Equipment Unique Type Group name to filter',
-    metavar='EQ_UNQ_TP_GRP_NAME',
-    dest='eq_unq_tp_grp_name')
+    metavar='EQ_UNQ_TP_GRP_NAME')
 
 parser___profile_equipment_data_fields.add_argument(
     'to_months',
@@ -123,16 +121,14 @@ parser___profile_equipment_data_field_correlations = \
         add_help=True)
 
 parser___profile_equipment_data_field_correlations.add_argument(
-    '--gen-tp',
+    'eq_gen_tp_name',
     help='Equipment General Type name to filter',
-    metavar='EQ_GEN_TP_NAME',
-    dest='eq_gen_tp_name')
+    metavar='EQ_GEN_TP_NAME')
 
 parser___profile_equipment_data_field_correlations.add_argument(
-    '--unq-tp-grp',
+    'eq_unq_tp_grp_name',
     help='Equipment Unique Type Group name to filter',
-    metavar='EQ_UNQ_TP_GRP_NAME',
-    dest='eq_unq_tp_grp_name')
+    metavar='EQ_UNQ_TP_GRP_NAME')
 
 
 # RECOMMEND AUTO-INCLUDED PPP INPUT EQUIPMENT DATA FIELDS
