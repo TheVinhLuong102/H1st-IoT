@@ -14,6 +14,7 @@ import boto3
 import numpy as np
 import pandas as pd
 import s3fs
+import tensorflow as tf
 
 s3_fs = s3fs.S3FileSystem()
 
@@ -27,8 +28,6 @@ from sklearn.decomposition import PCA
 # tf.disable_v2_behavior()
 
 s3 = boto3.resource("s3")
-
-import tensorflow as tf
 
 tf.executing_eagerly()
 # tf.disable_v2_behavior()
@@ -105,7 +104,7 @@ class PredictiveMaintenanceVAE(object):
         # self.position_encoding = self.get_position_encoding(
         #     num_positions=n_window,
         #     num_features=input_dim,
-        #     min_val=10000)        
+        #     min_val=10000)
         self.model_param = {'n_input': input_dim,
                             'n_window': n_window,
                             'n_z': self.z_dim,
@@ -597,7 +596,7 @@ class PredictiveMaintenanceVAE(object):
 
         pos_encoding = np.concatenate([sines, cosines], axis=-1)
         pos_encoding = pos_encoding.reshape([1, -1])
-        # pos_encoding = pos_encoding[np.newaxis, :]    
+        # pos_encoding = pos_encoding[np.newaxis, :]
         # return pos_encoding
         return pos_encoding / 5
         # return tf.cast(pos_encoding, dtype=tf.float32)
@@ -608,15 +607,12 @@ class PredictiveMaintenanceVAE(object):
     def get_proper_hidden_dim(self, input_dim):
         return int(min(512, pow(2, math.ceil(math.log(input_dim, 2)) + 2)))
 
-    @tf.function
     def _count_record(self, files):
-        return sum(1 for _ in tf.data.TFRecordDataset(files))
-
-    #     def _decode(self, serialized_example, decode_key, n_feature=None):
-    #         features = tf.io.parse_single_example(
-    #             serialized_example,
-    #             features = {decode_key: tf.FixedLenFeature([n_feature], dtype=tf.float32)})
-    #         return features
+        c = 0
+        for i, fn in enumerate(files):
+            for record in tf.compat.v1.python_io.tf_record_iterator(fn):
+                c += 1
+        return c
 
     def _decode(self, serialized_example, decode_key, n_feature=None):
 
@@ -631,7 +627,7 @@ class PredictiveMaintenanceVAE(object):
         if pre_fix[-1] != '*':
             pre_fix += '*'
         filenames = ['s3://' + k for k in s3_fs.glob(os.path.join(folder_path, pre_fix))]
-        # print "filenames:", filenames
+        print("filenames:", filenames)
         if not filenames:
             print("Couldn't get any data from the provided path.")
             exit()
@@ -804,8 +800,8 @@ class PredictiveMaintenanceVAE(object):
         return unserialized
 
     def get_iterator_from_tfr_in_s3(self, folder_path, batch_size, tfr_id_key,
-                                    tfr_datetime_key, tfr_feature_key, n_input, n_window, n_row, pre_fix,
-                                    is_train=False, cache=False):
+                                    tfr_datetime_key, tfr_feature_key, n_input, n_window, n_row, tfr_score_index,
+                                    pre_fix, is_train=False, cache=False):
 
         print("folder_path:", folder_path)
         o = urlparse(folder_path)
@@ -814,6 +810,8 @@ class PredictiveMaintenanceVAE(object):
         response = client.list_objects(Bucket=bucket_name,
                                        Prefix=os.path.join(tfr_path, pre_fix))
         filenames = [os.path.join('s3://', bucket_name, item['Key']) for item in response['Contents']]
+        filenames = sorted(filenames)[tfr_score_index[0]:tfr_score_index[1]]
+
         # print "filenames length:", len(filenames)
         # print filenames[:2]
         if not filenames:
@@ -885,7 +883,7 @@ class PredictiveMaintenanceVAE(object):
         if "s3://" in input_path:
             iterator, batchs_per_epoch = self.get_iterator_from_tfr_in_s3(
                 input_path, batch_size, tfr_id_key, tfr_datetime_key,
-                tfr_feature_key, n_feature, n_window, n_row, pre_fix, is_train, cache)
+                tfr_feature_key, n_feature, n_window, n_row, tfr_score_index, pre_fix, is_train, cache)
         else:
             iterator, batchs_per_epoch = self.get_iterator_from_tfr_in_local(
                 input_path, batch_size, tfr_id_key, tfr_datetime_key,
