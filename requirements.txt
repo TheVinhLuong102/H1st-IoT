@@ -6,9 +6,9 @@ Django-Silk >= 4.1.0
 PsycoPG2-binary >= 2.8.6
 
 # REST API
-DjangoRESTFramework >= 3.11.1
+DjangoRESTFramework >= 3.12.1
 DjangoRESTFramework-Filters == 1.0.0.dev2
-Django-Filter >= 2.3.0
+Django-Filter >= 2.4.0
 DRF-Writable-Nested >= 0.6.1
 CoreAPI >= 2.3.3
     # ??? REQUIRED FOR REST API TO WORK ???
