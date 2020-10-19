@@ -1074,7 +1074,7 @@ class Project:
     def ppp_anom_score(
             self,
             equipment_general_type_name, equipment_unique_type_group_name,
-            date, to_date=None, monthly=False, _max_n_dates_at_one_time=2,
+            date, to_date=None, monthly=False, _max_n_dates_at_one_time=1,
             _force_calc=False, re_calc_daily=False,
             __batch_size__=10 ** 3,
             sql_filter=None):
