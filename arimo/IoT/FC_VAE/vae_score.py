@@ -81,7 +81,7 @@ if __name__ == "__main__":
             "model_checkpoint": None,
             "result_path": output_prefix,
             "num_sample": 20,
-            "batch_size": 4096,
+            "batch_size": 64,
             "selected_columns": selected_columns,
             "individual_sensor_prob": True,
             "summary": True,
