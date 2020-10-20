@@ -1,5 +1,7 @@
 from vae import PredictiveMaintenanceVAE
 
+from datetime import datetime, timedelta
+
 import boto3
 import json
 import os
@@ -48,6 +50,15 @@ def main(score_param, model_param, tfr_info):
     )
 
 
+def date_range(start_time, end_time):
+    for n in range(int((end_time - start_time).days) + 1):
+        yield (start_time + timedelta(n)).strftime("%Y-%m-%d")
+
+
+def to_dt(date_str):
+    return datetime.strptime(date_str, "%Y-%m-%d")
+
+
 TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
 CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
@@ -55,7 +66,8 @@ MODEL_VERSION = os.environ.get("MODEL_VERSION", "latest")
 
 
 if __name__ == "__main__":
-    type_group, sensor_group, target_date = sys.argv[1:]
+    type_group, sensor_group, start_date = sys.argv[1:4]
+    end_date = sys.argv[4] if len(sys.argv) > 4 else start_date
 
     unique_type_group = "FUEL_CELL---%s" % type_group
 
@@ -63,15 +75,21 @@ if __name__ == "__main__":
     print(selected_columns, len(selected_columns))
     n_columns = len(selected_columns)
 
-    tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (
-        TFRECORDS_PREFIX,
-        unique_type_group,
-        target_date,
-    )
     checkpoint_prefix = "%s/%s/%s" % (
         CHECKPOINT_PREFIX,
         unique_type_group,
         MODEL_VERSION,
+    )
+
+    list_dates = list(date_range(to_dt(start_date), to_dt(end_date)))
+    job_index = int(os.environ.get('AWS_BATCH_JOB_ARRAY_INDEX', 0))
+    target_date = list_dates[job_index]
+    print("target_date:", target_date)
+
+    tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (
+        TFRECORDS_PREFIX,
+        unique_type_group,
+        target_date,
     )
     output_prefix = "%s/%s/date=%s" % (OUTPUT_PREFIX, unique_type_group, target_date)
 
