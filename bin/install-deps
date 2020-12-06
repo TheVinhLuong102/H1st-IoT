@@ -18,7 +18,7 @@ git config --global credential.helper "cache --timeout=3600"
 
 
 python3 -m pip install pip --upgrade --user
-python3 -m pip install Ruamel.YAML --upgrade --user --use-feature=2020-resolver
+python3 -m pip install Ruamel.YAML --upgrade --user
 
 
 if [ ! -d $UTIL_DIR_NAME ]; then
@@ -30,7 +30,7 @@ else
 fi
 
 python3 -m pip uninstall Arimo-Util --yes
-python3 -m pip install -e $UTIL_DIR_NAME --upgrade --user --use-feature=2020-resolver
+python3 -m pip install -e $UTIL_DIR_NAME --upgrade --user
 
 
 if [ ! -d $SDK_DIR_NAME ]; then
@@ -42,7 +42,7 @@ else
 fi
 
 python3 -m pip uninstall Arimo-SDK --yes
-python3 -m pip install -e $SDK_DIR_NAME --upgrade --user --use-feature=2020-resolver
+python3 -m pip install -e $SDK_DIR_NAME --upgrade --user
 
 
 cd $PRED_MAINT_DIR_NAME
@@ -50,4 +50,4 @@ git pull
 cd $CURRENT_DIR_PATH
 
 python3 -m pip uninstall Arimo-PredMaint --yes
-python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user --use-feature=2020-resolver
+python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user
