@@ -153,7 +153,6 @@ class Project:
         import settings as arimo_pm_settings
 
         django_db_settings = arimo_pm_settings.DATABASES['default']
-        print(self.params.db)
         django_db_settings['HOST'] = self.params.db.HOST
         django_db_settings['ENGINE'] = self.params.db.ENGINE
         django_db_settings['USER'] = self.params.db.USER
