@@ -2,8 +2,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-from ..base.urls import URL_PATTERNS as BASE_URL_PATTERNS
-from ..PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
+from arimo.IoT.DataAdmin.base.urls import URL_PATTERNS as BASE_URL_PATTERNS
+from arimo.IoT.DataAdmin.PredMaint.urls import URL_PATTERNS as PRED_MAINT_URL_PATTERNS
 
 
 admin.site.index_title = 'Arimo'
