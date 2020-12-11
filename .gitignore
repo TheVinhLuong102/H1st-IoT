@@ -10,4 +10,4 @@ src/
 *.code-workspace
 
 # Static Files
-_static_files/
+static/
