@@ -8,6 +8,7 @@ import math
 import numpy
 import os
 import pandas
+from pathlib import Path
 from plotnine import \
     ggplot, aes, geom_line, geom_vline, \
     scale_x_datetime, scale_y_continuous, \
@@ -16,6 +17,7 @@ from psycopg2.extras import DateRange
 from pyspark.sql import functions
 import yaml
 from scipy.stats import pearsonr
+import sys
 import tempfile
 from time import time
 from tqdm import tqdm
@@ -39,8 +41,9 @@ from django.conf import settings
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
-import arimo.IoT.DataAdmin._django_root.settings
 from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
+
+from h1st.django.util.config import parse_config_file
 
 
 class Project:
@@ -143,23 +146,22 @@ class Project:
 
         self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(
-            yaml.safe_load(
-                open(local_project_config_file_path, 'r')),
+            parse_config_file(local_project_config_file_path),
             **kwargs)
 
-        assert self.params.db.host \
-           and self.params.db.db_name \
-           and self.params.db.user \
-           and self.params.db.password
+        sys.path.append(Path(__file__).parent.parent.parent)
+        import settings as arimo_pm_settings
 
-        django_db_settings = arimo.IoT.DataAdmin._django_root.settings.DATABASES['default']
-        django_db_settings['HOST'] = self.params.db.host
-        django_db_settings['NAME'] = self.params.db.db_name
-        django_db_settings['USER'] = self.params.db.user
-        django_db_settings['PASSWORD'] = self.params.db.password
+        django_db_settings = arimo_pm_settings.DATABASES['default']
+        print(self.params.db)
+        django_db_settings['HOST'] = self.params.db.HOST
+        django_db_settings['ENGINE'] = self.params.db.ENGINE
+        django_db_settings['USER'] = self.params.db.USER
+        django_db_settings['PASSWORD'] = self.params.db.PASSWORD
+        django_db_settings['NAME'] = self.params.db.NAME
         settings.configure(
             **{K: v
-               for K, v in arimo.IoT.DataAdmin._django_root.settings.__dict__.items()
+               for K, v in arimo_pm_settings.__dict__.items()
                if K.isupper()})
         get_wsgi_application()
 

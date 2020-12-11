@@ -2,6 +2,8 @@ import os
 from ruamel import yaml
 import sys
 
+from h1st.django.util.config import parse_config_file
+
 
 # check if running on Linux cluster or local Mac
 _ON_LINUX_CLUSTER = sys.platform.startswith('linux')
@@ -64,7 +66,7 @@ MIDDLEWARE = [
     'silk.middleware.SilkyMiddleware'
 ]
 
-ROOT_URLCONF = 'arimo.IoT.DataAdmin._django_root.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
@@ -82,31 +84,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
-_CONFIG_FILE_NAME = 'db.yaml'
-_CONFIG_FILE_PATH = os.path.join(_PROJECT_DIR, _CONFIG_FILE_NAME)
-
-try:
-    _db_creds = yaml.safe_load(stream=open(_CONFIG_FILE_PATH, 'r'))['db']
-
-except Exception as err:   # https://stackoverflow.com/questions/50879668/python-setup-py-some-files-are-missing
-    print('*** {} ***'.format(err))
-
-    _db_creds = \
-        dict(host=None,
-             user=None,
-             password=None,
-             db_name=None)
-
-DATABASES = \
-    dict(default=
-            dict(ENGINE='django.db.backends.postgresql', PORT='5432',
-                 HOST=_db_creds['host'],
-                 USER=_db_creds['user'], PASSWORD=_db_creds['password'],
-                 NAME=_db_creds['db_name']))
+DATABASES = {
+    'default': parse_config_file()['db'],
+}
 
 
 # Password validation
