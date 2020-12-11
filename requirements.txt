@@ -1,3 +1,7 @@
+# H1st
+https://GitHub.com/H1st-AI/H1st/archive/master.zip
+https://GitHub.com/TheVinhLuong102/H1st-Django/archive/master.zip
+
 # Django
 Django >= 3.1.4
 Django-AutoComplete-Light >= 3.8.1
