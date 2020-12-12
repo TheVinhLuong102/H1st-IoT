@@ -1,9 +1,3 @@
-branch-defaults:
-  default:
-    environment: TEST
-  master:
-    environment: TEST
-
 global:
   application_name: Arimo-IoT
   branch: null
