@@ -6,13 +6,7 @@ from h1st.django.util.config import parse_config_file
 
 
 # check if running on Linux cluster or local Mac
-_ON_LINUX_CLUSTER = sys.platform.startswith('linux')
-
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-_PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-BASE_DIR = os.path.dirname(_PROJECT_DIR)
+_LINUX = sys.platform.startswith('linux')
 
 
 # Quick-start development settings - unsuitable for production
@@ -21,19 +15,19 @@ BASE_DIR = os.path.dirname(_PROJECT_DIR)
 SECRET_KEY = '_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not _ON_LINUX_CLUSTER
+DEBUG = not _LINUX
 
 
 ALLOWED_HOSTS = \
     ['.arimo.com', '.elasticbeanstalk.com'] \
-    if _ON_LINUX_CLUSTER \
+    if _LINUX \
     else ['127.0.0.1', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    # Django-AutoComplete-Light: add to INSTALLED_APPS BEFORE django.contrib.admin
+    # Django-AutoComplete-Light: add BEFORE django.contrib.admin
     'dal',
     'dal_select2',
 
@@ -83,8 +77,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
