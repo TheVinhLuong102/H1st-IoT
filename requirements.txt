@@ -1,5 +1,5 @@
 # H1st
-https://GitHub.com/H1st-AI/H1st/archive/master.zip
+https://GitHub.com/H1st-AI/H1st/archive/dev.zip
 https://GitHub.com/TheVinhLuong102/H1st-Django/archive/master.zip
 
 DRF-Writable-Nested >= 0.6.2
