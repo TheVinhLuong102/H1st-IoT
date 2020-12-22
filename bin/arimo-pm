@@ -23,6 +23,7 @@ PROFILE_DATA_FIELD_PAIRWISE_CORRELATIONS_CMD = 'profile-data-fld-corrs'
 
 RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD = 'rec-auto-incl-ppp-input-data-flds'
 TRAIN_PPP_CMD = 'train-ppp'
+INSPECT_PPP_CMD = 'inspect-ppp'
 EVAL_PPP_CMD = 'eval-ppp'
 PPP_ANOM_SCORE_CMD = 'ppp-anom-score'
 PPP_ANOM_ALERT_CMD = 'ppp-anom-alert'
@@ -219,6 +220,30 @@ parser___train_ppp.add_argument(
     action='store_true',
     help='whether to use Keras',
     dest='dl_train_keras')
+
+
+# INSPECT PPP
+parser___inspect_ppp = \
+    cmd_sub_parsers.add_parser(
+        name=INSPECT_PPP_CMD,
+        description='%(prog)s: CLI for ._ppp_blueprint(...) >>>',
+        epilog='^^^ %(prog)s: CLI for ._ppp_blueprint(...)\n',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prefix_chars='-',
+        fromfile_prefix_chars='@',
+        argument_default=None,
+        conflict_handler='error',
+        add_help=True)
+
+parser___inspect_ppp.add_argument(
+    'uuid',
+    help='PPP Blueprint UUID',
+    metavar='PPP_BLUEPRINT_UUID')
+
+parser___inspect_ppp.add_argument(
+    'monitored_sensor',
+    help='Monitored Sensor',
+    metavar='MONITORED_SENSOR')
 
 
 # EVAL PPP
@@ -509,7 +534,7 @@ elif cmd == TRAIN_PPP_CMD:
              'factory.batch_size': 512,
              'factory.vocab_size': None,
              'factory.embedding_size': None,
-             
+
              'train.n_samples': 10 ** 8,
              'train.n_train_samples_per_epoch': 10 ** 6,
              'train.min_n_val_samples_per_epoch': 10 ** 5,
@@ -530,6 +555,13 @@ elif cmd == TRAIN_PPP_CMD:
             __cpu_reloc__=False,   # *** cpu_relocation MAKES TEMPLATE MODEL WEIGHTS FAIL TO UPDATE ***
             verbose=True,
             _spark=False)
+
+
+elif cmd == INSPECT_PPP_CMD:
+    ppp_blueprint = PROJECT._ppp_blueprint(uuid=args.uuid)
+    monitored_sensor_ppp_blueprint_params = \
+        ppp_blueprint.params.model.component_blueprints[args.monitored_sensor]
+    print(monitored_sensor_ppp_blueprint_params)
 
 
 elif cmd == EVAL_PPP_CMD:

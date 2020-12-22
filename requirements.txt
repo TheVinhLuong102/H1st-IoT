@@ -1,28 +1,15 @@
-# Django
-Django >= 3.1.1
-Django-AutoComplete-Light >= 3.5.0, < 3.5.1
-    # *** 3.5.1 has bug leading to M2M autocompletes not rendering ***
-Django-Silk >= 4.1.0
-PsycoPG2-binary >= 2.8.6
+# H1st
+https://GitHub.com/H1st-AI/H1st/archive/master.zip
+https://GitHub.com/TheVinhLuong102/H1st-Django/archive/master.zip
 
-# REST API
-DjangoRESTFramework >= 3.11.1
-DjangoRESTFramework-Filters == 1.0.0.dev2
-Django-Filter >= 2.3.0
-DRF-Writable-Nested >= 0.6.1
-CoreAPI >= 2.3.3
-    # ??? REQUIRED FOR REST API TO WORK ???
-
-# misc
-Ruamel.YAML >= 0.16.12
+DRF-Writable-Nested >= 0.6.2
 
 # viz
 PlotNine >= 0.7.1
-StatsModels >= 0.12.0
+StatsModels >= 0.12.1
 
 # misc
 Boto3
-Pandas >= 1.1.2
 Pathos
 S3FS
 SciKit-Learn

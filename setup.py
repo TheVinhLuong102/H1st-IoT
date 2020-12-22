@@ -17,5 +17,5 @@ setup(
         [s for s in
             {i.strip()
              for i in open('requirements.txt').readlines()}
-         if not s.startswith('#')],
+         if not (s.startswith('#') or s.startswith('http'))],
     scripts=['bin/arimo-pm'])

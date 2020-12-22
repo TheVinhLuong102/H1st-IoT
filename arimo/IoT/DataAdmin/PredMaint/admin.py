@@ -409,9 +409,9 @@ class BlueprintAdmin(ModelAdmin):
                 medae = global_benchmark_metrics['MedAE']
                 mae_medae_ratio = mae / medae
                 mae_medae_ratio_text = '{:.3g}x'.format(mae_medae_ratio)
-                if mae_medae_ratio > 3:
+                if mae_medae_ratio > 6:
                     good = False
-                    mae_medae_ratio_text += ' (> 3x)'
+                    mae_medae_ratio_text += ' (> 6x)'
 
                 d[label_var_name.upper()
                   if good
