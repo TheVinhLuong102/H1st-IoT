@@ -51,3 +51,4 @@ cd $CURRENT_DIR_PATH
 
 python3 -m pip uninstall Arimo-PredMaint --yes
 python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user
+python3 -m pip install -r $PRED_MAINT_DIR_NAME/requirements.txt --upgrade --user

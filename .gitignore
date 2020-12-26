@@ -5,10 +5,9 @@ dist/
 src/
 *egg-info*
 
-# IntelliJ IDEA
-*.iml
-.idea/
-
 # Visual Studio Code
 .vscode/
 *.code-workspace
+
+# Static Files
+static/

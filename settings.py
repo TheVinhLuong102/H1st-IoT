@@ -2,15 +2,11 @@ import os
 from ruamel import yaml
 import sys
 
+from h1st.django.util.config import parse_config_file
+
 
 # check if running on Linux cluster or local Mac
-_ON_LINUX_CLUSTER = sys.platform.startswith('linux')
-
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-_PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-BASE_DIR = os.path.dirname(_PROJECT_DIR)
+_LINUX = sys.platform.startswith('linux')
 
 
 # Quick-start development settings - unsuitable for production
@@ -19,19 +15,19 @@ BASE_DIR = os.path.dirname(_PROJECT_DIR)
 SECRET_KEY = '_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not _ON_LINUX_CLUSTER
+DEBUG = not _LINUX
 
 
 ALLOWED_HOSTS = \
     ['.arimo.com', '.elasticbeanstalk.com'] \
-    if _ON_LINUX_CLUSTER \
+    if _LINUX \
     else ['127.0.0.1', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    # Django-AutoComplete-Light: add to INSTALLED_APPS BEFORE django.contrib.admin
+    # Django-AutoComplete-Light: add BEFORE django.contrib.admin
     'dal',
     'dal_select2',
 
@@ -64,7 +60,7 @@ MIDDLEWARE = [
     'silk.middleware.SilkyMiddleware'
 ]
 
-ROOT_URLCONF = 'arimo.IoT.DataAdmin._django_root.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATES = [
     {
@@ -82,31 +78,11 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'arimo.IoT.DataAdmin._django_root.wsgi.application'
-
 
 # Database
-_CONFIG_FILE_NAME = 'db.yaml'
-_CONFIG_FILE_PATH = os.path.join(_PROJECT_DIR, _CONFIG_FILE_NAME)
-
-try:
-    _db_creds = yaml.safe_load(stream=open(_CONFIG_FILE_PATH, 'r'))['db']
-
-except Exception as err:   # https://stackoverflow.com/questions/50879668/python-setup-py-some-files-are-missing
-    print('*** {} ***'.format(err))
-
-    _db_creds = \
-        dict(host=None,
-             user=None,
-             password=None,
-             db_name=None)
-
-DATABASES = \
-    dict(default=
-            dict(ENGINE='django.db.backends.postgresql', PORT='5432',
-                 HOST=_db_creds['host'],
-                 USER=_db_creds['user'], PASSWORD=_db_creds['password'],
-                 NAME=_db_creds['db_name']))
+DATABASES = {
+    'default': parse_config_file()['db'],
+}
 
 
 # Password validation
@@ -135,7 +111,7 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, '_static_files')
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
 
