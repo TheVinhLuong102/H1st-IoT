@@ -1,7 +1,8 @@
 import json
 import os
+import sys
 
-from vae import PredictiveMaintenanceVAE
+from .vae import PredictiveMaintenanceVAE
 
 refrig_display_sensors = [
     "condensing_pressure",
@@ -23,40 +24,37 @@ refrig_3_display_sensors = [
     "showcase_temp1_f9",
 ]
 
-group_1_cols = [
-    "condensing_pressure",
-    "evaporation_pressure",
-    "return_gas_temp",
-    "30_minutes_accumulated_power_consumption",
-    "showcase_temp1_f5",
-    "showcase_temp1_f7",
-    "showcase_temp1_f9",
-]
-
-group_2_cols = [
-    "condensing_pressure",
-    "evaporation_pressure",
-    "return_gas_temp",
-    "30_minutes_accumulated_power_consumption",
-    "showcase_temp1_f5",
-    "showcase_temp1_f7",
-    "showcase_temp1_f9",
-    "showcase_temp1_f11",
-]
-### Different Sensor Groups
-group_5_cols = [
-    "condensing_pressure",
-    "evaporation_pressure",
-    "30_minutes_accumulated_power_consumption",
-    "showcase_temp1_f5",
-    "showcase_temp1_f7",
-    "showcase_temp1_f9",
-    "showcase_temp1_f17",
-    "showcase_temp2_f18",
-]
-
-selected_columns = group_5_cols
-print(selected_columns, len(selected_columns))
+GROUP_COLS = {
+    'group_1': [
+        'condensing_pressure',
+        'evaporation_pressure',
+        'return_gas_temp',
+        '30_minutes_accumulated_power_consumption',
+        'showcase_temp1_f5',
+        'showcase_temp1_f7',
+        'showcase_temp1_f9'
+    ],
+    'group_2': [
+        'condensing_pressure',
+        'evaporation_pressure',
+        'return_gas_temp',
+        '30_minutes_accumulated_power_consumption',
+        'showcase_temp1_f5',
+        'showcase_temp1_f7',
+        'showcase_temp1_f9',
+        'showcase_temp1_f11'
+    ],
+    'group_5': [
+        'condensing_pressure',
+        'evaporation_pressure',
+        '30_minutes_accumulated_power_consumption',
+        'showcase_temp1_f5',
+        'showcase_temp1_f7',
+        'showcase_temp1_f9',
+        'showcase_temp1_f17',
+        'showcase_temp2_f18'
+    ],
+}
 
 
 def main(score_param, model_param, tfr_info):
@@ -93,14 +91,26 @@ def main(score_param, model_param, tfr_info):
     )
 
 
+TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
+CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
+OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
+
 id_column = "store_name"
 
 if __name__ == "__main__":
+    sensor_group_name = sys.argv[1]
+    tfrecords_prefix = "%s/%s" % (TFRECORDS_PREFIX, sensor_group_name)
+    checkpoints_prefix = "%s/%s" % (CHECKPOINT_PREFIX, sensor_group_name)
+    output_prefix = "%s/%s" % (OUTPUT_PREFIX, sensor_group_name)
+
+    selected_columns = GROUP_COLS[sensor_group_name]
+    print(selected_columns, len(selected_columns))
+
     for score_idx in range(0, 200, 200):
         score_param = {
-            "model_path": "/tf/tim/cn_ccpm/vae/tf2/chkpoints/group_5/",
+            "model_path": checkpoints_prefix,
             "model_checkpoint": None,
-            "result_path": "s3://arimo-panasonic-ap-cn-cc-pm/.arimo/PredMaint/VAE/results/group_5/",
+            "result_path": output_prefix,
             "num_sample": 20,
             "batch_size": 64,
             "selected_columns": selected_columns,
@@ -111,7 +121,7 @@ if __name__ == "__main__":
             "tfr_score_index": [score_idx, score_idx + 200],
             "tfr_file_prefix": "part",
             "rows": None,
-            "tfr_path": "/tf/tim/cn_ccpm/data/group_5",
+            "tfr_path": tfrecords_prefix,
             "columns": 8,
             "interval": 1,
             "column_names": {
