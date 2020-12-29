@@ -443,7 +443,7 @@ class PredictiveMaintenanceVAE(object):
               tfr_feature_key, n_feature, n_window, interval, n_row, tfr_score_index, pre_fix, checkpoint=None,
               num_sample=20,
               batch_size=2048, individual_sensor_prob=False, summary=False):
-        if (not os.path.exists(save_path)) and (not "s3://" in save_path):
+        if (not os.path.exists(save_path)) and ("s3://" not in save_path):
             os.mkdir(save_path)
 
         #         if "s3://" in save_path:
@@ -554,39 +554,7 @@ class PredictiveMaintenanceVAE(object):
         df_whole['date_time'] = pd.to_datetime(df_whole['date_time'].str.decode('UTF-8'))
         df_whole[tfr_id_key] = df_whole[tfr_id_key].str.decode('UTF-8')
         print("df_whole.shape:", df_whole.shape)
-        df_whole.to_parquet('/tf/tim/cn_ccpm/data/ad_score_whole/VAEAnomScores30Minutes_group_5_op=cooling.parquet')
-
-        result_df = None
-        df_id_n_datetime = None
-
-        #         df_whole.to_csv(os.path.join(save_path, 'ad_score.csv'))
-        #         ewma10_dailyMean_ad_score = generate_ewma_resample1D_ad_score(df_whole, id_col="equipment_instance_id", date_time_col="date_time")
-        #         ewma10_dailyMean_ad_score.to_parquet(save_path + 'VAEAnomScores_tfr_parts_'+str(tfr_score_index)+'.parquet')
-        #         if summary:
-        #             threshold = self.get_threshold(df_whole, id_col='equipment_instance_id',
-        #                 date_time_col='date_time', resample='1h', portion=0.030)
-        #             print "threshold:", threshold
-        #             df_summary = self.generate_summary(
-        #                 df_whole,
-        #                 id_col='equipment_instance_id',
-        #                 date_time_col='date_time',
-        #                 prob_col='prob',
-        #                 sensor_cols=sensor_cols,
-        #                 threshold=threshold,
-        #                 top_n=n_feature)
-        #             print "df_summary.shape:", df_summary.shape
-        #             df_range_summary = self.get_range_summary(
-        #                 df_summary,
-        #                 id_col='equipment_instance_id',
-        #                 datetime_col='date_time',
-        #                 prob_col='prob',
-        #                 sensor_cols=sensor_cols,
-        #                 top_n=n_feature)
-        #             print "df_range_summary.shape:", df_range_summary.shape
-        #             df_range_summary.to_csv(os.path.join(save_path, 'VAERangeSummary_'+tfr_score_index+'.csv'))
-        df_whole.to_parquet(save_path + 'VAEAnomScores30Minutes_group_5_op=cooling.parquet')
-
-    #         df_whole.to_parquet('VAEAnomScoresMinute_tfr_parts_test.parquet')
+        df_whole.to_parquet(save_path + '/VAEAnomScores30Minutes.parquet')
 
     def get_position_encoding(self, num_positions, num_features, min_val=10000):
         def get_angles(pos, i, d_model):
@@ -829,7 +797,10 @@ class PredictiveMaintenanceVAE(object):
             print("Couldn't get any data from the provided path.")
             exit()
 
-        DATASET_SIZE = round(n_row)
+        if not n_row:
+            DATASET_SIZE = self._count_record(filenames)
+        else:
+            DATASET_SIZE = n_row
         batchs_per_train = int(DATASET_SIZE / batch_size) + 1
         dataset = tf.data.TFRecordDataset(filenames, num_parallel_reads=1)
         _tmp_dataset = lambda x: self._decode2(
@@ -846,7 +817,7 @@ class PredictiveMaintenanceVAE(object):
             dataset = dataset.repeat()
         dataset = dataset.batch(batch_size)
         dataset = dataset.prefetch(4)
-        iterator = dataset.make_one_shot_iterator()
+        iterator = tf.compat.v1.data.make_one_shot_iterator(dataset)
         return [iterator, batchs_per_train]
 
     def get_iterator_from_tfr_in_local(self, folder_path, batch_size, tfr_id_key, tfr_datetime_key,

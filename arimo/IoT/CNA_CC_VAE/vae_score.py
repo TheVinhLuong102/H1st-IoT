@@ -1,8 +1,11 @@
+import s3fs
 import json
 import os
 import sys
 
-from .vae import PredictiveMaintenanceVAE
+from vae import PredictiveMaintenanceVAE
+
+s3_fs = s3fs.S3FileSystem()
 
 refrig_display_sensors = [
     "condensing_pressure",
@@ -95,11 +98,15 @@ TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
 CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
 
-id_column = "store_name"
+N_COLS = {
+    'group_1': 7,
+    'group_2': 8,
+    'group_5': 8,
+}
 
 if __name__ == "__main__":
     sensor_group_name = sys.argv[1]
-    tfrecords_prefix = "%s/%s" % (TFRECORDS_PREFIX, sensor_group_name)
+    tfrecords_prefix = "%s.all/%s.tfrecords" % (TFRECORDS_PREFIX, sensor_group_name)
     checkpoints_prefix = "%s/%s" % (CHECKPOINT_PREFIX, sensor_group_name)
     output_prefix = "%s/%s" % (OUTPUT_PREFIX, sensor_group_name)
 
@@ -122,10 +129,10 @@ if __name__ == "__main__":
             "tfr_file_prefix": "part",
             "rows": None,
             "tfr_path": tfrecords_prefix,
-            "columns": 8,
+            "columns": N_COLS[sensor_group_name],
             "interval": 1,
             "column_names": {
-                "id_key": id_column,
+                "id_key": "store_name",
                 "datetime_key": "date_time",
                 "feature_key": "scaledFeatures",
                 "label_key": "label",
@@ -135,7 +142,8 @@ if __name__ == "__main__":
         model_param_json_path = os.path.join(
             score_param["model_path"], "model_param.json"
         )
-        with open(model_param_json_path) as json_file:
+
+        with s3_fs.open(model_param_json_path) as json_file:
             model_param = json.load(json_file)
 
         main(score_param, model_param, tfr_info)

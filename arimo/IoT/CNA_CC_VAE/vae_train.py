@@ -47,9 +47,15 @@ def main(train_param, tfr_info):
 TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
 CHECKPOINT_PREFIX = os.environ["CHECKPOINT_PREFIX"]
 
+N_COLS = {
+    'group_1': 7,
+    'group_2': 8,
+    'group_5': 8,
+}
+
 if __name__ == "__main__":
     sensor_group_name = sys.argv[1]
-    tfrecords_prefix = "%s/%s.tfrecords" % (TFRECORDS_PREFIX, sensor_group_name)
+    tfrecords_prefix = "%s.all/%s.tfrecords" % (TFRECORDS_PREFIX, sensor_group_name)
     checkpoint_prefix = "%s/%s/" % (CHECKPOINT_PREFIX, sensor_group_name)
 
     train_param = {
@@ -78,7 +84,7 @@ if __name__ == "__main__":
         "tfr_file_prefix": "part",
         "rows": None,
         "tfr_path": tfrecords_prefix,
-        "columns": 7,
+        "columns": N_COLS[sensor_group_name],
         "interval": 1,
         "column_names": {"id_key": "store_name", "datetime_key": "date_time", "feature_key": "scaledFeatures",
                          "label_key": "label"}
