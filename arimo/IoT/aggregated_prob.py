@@ -15,7 +15,7 @@ pd.set_option('display.max_rows', 2000)
 
 
 ##### Compute mean using 'weight' or 'harmonic' method
-def compute_mean(list_array, weights, method= None):
+def compute_mean(list_array=None, weights=None, method=None):
     if len(list_array) == len(weights):
         if method == 'weight':
             weight_avg = np.sum((np.array(list_array))*(np.array(weights).reshape(-1,1)), axis=0)/np.sum(weights)
