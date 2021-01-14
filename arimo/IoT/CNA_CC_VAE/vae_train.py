@@ -53,10 +53,17 @@ N_COLS = {
     'group_5': 8,
 }
 
+BATCH_SIZES = {
+    'group_1': 512,
+    'group_2': 32,
+    'group_5': 32,
+}
+
 if __name__ == "__main__":
     sensor_group_name = sys.argv[1]
-    tfrecords_prefix = "%s.all/%s.tfrecords" % (TFRECORDS_PREFIX, sensor_group_name)
-    checkpoint_prefix = "%s/%s/" % (CHECKPOINT_PREFIX, sensor_group_name)
+    operation_mode = 'Cooling'
+    tfrecords_prefix = "%s.all/%s.tfrecords/operation_mode=%s" % (TFRECORDS_PREFIX, sensor_group_name, operation_mode)
+    checkpoint_prefix = "%s/%s/operation_mode=%s/" % (CHECKPOINT_PREFIX, sensor_group_name, operation_mode)
 
     train_param = {
         "data_cache": True,
@@ -68,7 +75,7 @@ if __name__ == "__main__":
         "alpha": 0.1,
         "beta": 100,
         "n_rank": 3,
-        "batch_size": 512,
+        "batch_size": BATCH_SIZES[sensor_group_name],
         "num_epochs": 50,
         "learning_rate_init": 0.00001,
         "learning_rate_decay_epoch": 1,

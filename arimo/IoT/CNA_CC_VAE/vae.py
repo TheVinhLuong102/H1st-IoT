@@ -178,10 +178,10 @@ class PredictiveMaintenanceVAE(object):
                 for epoch in range(num_epochs):
                     for i in range(batchs_train):
                         start_time = time.time()
-                        print("before run", tfr_feature_key)
+                        # print("before run", tfr_feature_key)
                         x_train_feature = sess.run(x_train_tensor[tfr_feature_key])
-                        print(x_train_feature.shape)
-                        print("after run")
+                        # print(x_train_feature.shape)
+                        # print("after run")
                         _, _, global_step_value = sess.run([train_op,
                                                             train_mae_update_op,
                                                             # val_mae_update_op,
@@ -446,10 +446,6 @@ class PredictiveMaintenanceVAE(object):
         if (not os.path.exists(save_path)) and ("s3://" not in save_path):
             os.mkdir(save_path)
 
-        #         if "s3://" in save_path:
-        #             print "Not Implemented yet."
-        #             exit()
-
         with self.tf_graph.as_default():
             x = tf.keras.Input(name="x_placeholder", shape=[n_feature * n_window], dtype=tf.dtypes.float32)
             iterator, batchs_per_epoch = self.get_iterator_from_tfr(
@@ -554,7 +550,9 @@ class PredictiveMaintenanceVAE(object):
         df_whole['date_time'] = pd.to_datetime(df_whole['date_time'].str.decode('UTF-8'))
         df_whole[tfr_id_key] = df_whole[tfr_id_key].str.decode('UTF-8')
         print("df_whole.shape:", df_whole.shape)
-        df_whole.to_parquet(save_path + '/VAEAnomScores30Minutes.parquet')
+        output_path = save_path + '/VAEAnomScores30Minutes.parquet'
+        print(output_path)
+        df_whole.to_parquet(output_path)
 
     def get_position_encoding(self, num_positions, num_features, min_val=10000):
         def get_angles(pos, i, d_model):

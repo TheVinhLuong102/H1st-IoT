@@ -117,18 +117,17 @@ N_COLS = {
 
 if __name__ == "__main__":
     sensor_group_name = sys.argv[1]
-    tfrecords_prefix = "%s.all/%s.tfrecords" % (TFRECORDS_PREFIX, sensor_group_name)
+    operation_mode = 'Cooling'
+    tfrecords_prefix = "%s.all/%s.tfrecords/operation_mode=%s" % (TFRECORDS_PREFIX, sensor_group_name, operation_mode)
     checkpoints_prefix = "%s/%s" % (CHECKPOINT_PREFIX, sensor_group_name)
-    output_prefix = "%s.all/%s" % (OUTPUT_PREFIX, sensor_group_name)
+    output_prefix = "%s.all/%s/operation_mode=%s" % (OUTPUT_PREFIX, sensor_group_name, operation_mode)
 
     if len(sys.argv) > 2:
-        start_date, end_date = sys.argv[2:4]
-        list_dates = list(date_range(to_dt(start_date), to_dt(end_date)))
-        job_index = int(os.environ.get('AWS_BATCH_JOB_ARRAY_INDEX', 0))
-        target_date = list_dates[job_index]
-        print("target_date:", target_date)
-        tfrecords_prefix = "%s/%s.tfrecords/date=%s" % (TFRECORDS_PREFIX, sensor_group_name, target_date)
-        output_prefix = "%s/%s/date=%s" % (OUTPUT_PREFIX, sensor_group_name, target_date)
+        upload_date = sys.argv[2]
+        tfrecords_prefix = "%s/%s.tfrecords/operation_mode=%s/upload_date=%s" % (
+            TFRECORDS_PREFIX, sensor_group_name, operation_mode, upload_date)
+        output_prefix = "%s/%s/operation_mode=%s/upload_date=%s" % (
+            OUTPUT_PREFIX, sensor_group_name, operation_mode, upload_date)
 
     selected_columns = GROUP_COLS[sensor_group_name]
     print(selected_columns, len(selected_columns))
