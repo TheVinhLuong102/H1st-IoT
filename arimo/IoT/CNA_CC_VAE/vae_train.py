@@ -48,9 +48,9 @@ TFRECORDS_PREFIX = os.environ["TFRECORDS_PREFIX"]
 CHECKPOINT_PREFIX = os.environ["CHECKPOINT_PREFIX"]
 
 N_COLS = {
-    'group_1': 7,
-    'group_2': 8,
-    'group_5': 8,
+    'group_1': 6,
+    'group_2': 7,
+    'group_5': 7,
 }
 
 BATCH_SIZES = {

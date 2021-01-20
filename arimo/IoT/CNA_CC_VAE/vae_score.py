@@ -9,32 +9,12 @@ from vae import PredictiveMaintenanceVAE
 
 s3_fs = s3fs.S3FileSystem()
 
-refrig_display_sensors = [
-    "condensing_pressure",
-    "evaporation_pressure",
-    "return_gas_temp",
-    "30_minutes_accumulated_power_consumption",
-    "showcase_temp1_f5",
-    "showcase_temp1_f7",
-    "showcase_temp1_f9",
-    "showcase_temp1_f11",
-]
-
-refrig_3_display_sensors = [
-    "condensing_pressure",
-    "evaporation_pressure",
-    "return_gas_temp",
-    "showcase_temp1_f5",
-    "showcase_temp1_f7",
-    "showcase_temp1_f9",
-]
-
 GROUP_COLS = {
     'group_1': [
         'condensing_pressure',
         'evaporation_pressure',
         'return_gas_temp',
-        '30_minutes_accumulated_power_consumption',
+        # '30_minutes_accumulated_power_consumption',
         'showcase_temp1_f5',
         'showcase_temp1_f7',
         'showcase_temp1_f9'
@@ -43,7 +23,7 @@ GROUP_COLS = {
         'condensing_pressure',
         'evaporation_pressure',
         'return_gas_temp',
-        '30_minutes_accumulated_power_consumption',
+        # '30_minutes_accumulated_power_consumption',
         'showcase_temp1_f5',
         'showcase_temp1_f7',
         'showcase_temp1_f9',
@@ -52,7 +32,7 @@ GROUP_COLS = {
     'group_5': [
         'condensing_pressure',
         'evaporation_pressure',
-        '30_minutes_accumulated_power_consumption',
+        # '30_minutes_accumulated_power_consumption',
         'showcase_temp1_f5',
         'showcase_temp1_f7',
         'showcase_temp1_f9',
@@ -110,16 +90,16 @@ CHECKPOINT_PREFIX = os.environ.get("CHECKPOINT_PREFIX")
 OUTPUT_PREFIX = os.environ.get("OUTPUT_PREFIX")
 
 N_COLS = {
-    'group_1': 7,
-    'group_2': 8,
-    'group_5': 8,
+    'group_1': 6,
+    'group_2': 7,
+    'group_5': 7,
 }
 
 if __name__ == "__main__":
     sensor_group_name = sys.argv[1]
     operation_mode = 'Cooling'
     tfrecords_prefix = "%s.all/%s.tfrecords/operation_mode=%s" % (TFRECORDS_PREFIX, sensor_group_name, operation_mode)
-    checkpoints_prefix = "%s/%s" % (CHECKPOINT_PREFIX, sensor_group_name)
+    checkpoints_prefix = "%s/%s/operation_mode=%s" % (CHECKPOINT_PREFIX, sensor_group_name, operation_mode)
     output_prefix = "%s.all/%s/operation_mode=%s" % (OUTPUT_PREFIX, sensor_group_name, operation_mode)
 
     if len(sys.argv) > 2:
