@@ -1,5 +1,3 @@
-import os
-from ruamel import yaml
 import sys
 
 from h1st.django.util.config import parse_config_file
@@ -56,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     'silk.middleware.SilkyMiddleware'
 ]
 
@@ -111,8 +109,8 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = 'static'
-STATIC_URL = '/static/'
+STATIC_ROOT = '.staticfiles'   # do NOT change
+STATIC_URL = '/static/'        # do NOT change; must end with a slash
 
 
 # Data Upload
