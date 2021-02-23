@@ -126,10 +126,9 @@ def combine_anom_score(stores, ad_gr1, ad_gr2, ad_gr5, w12=None, w15=None, w125=
                         == len(ad_g2[ad_g2['store_name'] == shop_name].prob.values)):
                     weight_avg = compute_mean([ad_g1[ad_g1['store_name'] == shop_name].prob.values,
                                                ad_g2[ad_g2['store_name'] == shop_name].prob.values], w12, method)
-                    if weight_avg is not None:
-                        tmp_df['prob'] = weight_avg
-                    else:
+                    if weight_avg is None:
                         return
+                    tmp_df['prob'] = weight_avg
                 else:
                     print('lack of data in anomaly group: ', shop_name, list_group)
                 df = df.append(tmp_df[['store_name', 'date_time', 'prob']], ignore_index=True)
@@ -139,10 +138,9 @@ def combine_anom_score(stores, ad_gr1, ad_gr2, ad_gr5, w12=None, w15=None, w125=
                         == len(ad_g5[ad_g5['store_name'] == shop_name].prob.values)):
                     weight_avg = compute_mean([ad_g1[ad_g1['store_name'] == shop_name].prob.values,
                                                ad_g5[ad_g5['store_name'] == shop_name].prob.values], w15, method)
-                    if weight_avg is not None:
-                        tmp_df['prob'] = weight_avg
-                    else:
+                    if weight_avg is None:
                         return
+                    tmp_df['prob'] = weight_avg
                 else:
                     print('lack of data in anomaly group: ', shop_name, list_group)
                 df = df.append(tmp_df[['store_name', 'date_time', 'prob']], ignore_index=True)
@@ -158,10 +156,9 @@ def combine_anom_score(stores, ad_gr1, ad_gr2, ad_gr5, w12=None, w15=None, w125=
                     weight_avg = compute_mean([ad_g1[ad_g1['store_name'] == shop_name].prob.values,
                                                ad_g2[ad_g2['store_name'] == shop_name].prob.values,
                                                ad_g5[ad_g5['store_name'] == shop_name].prob.values], w125, method)
-                    if weight_avg is not None:
-                        tmp_df['prob'] = weight_avg
-                    else:
+                    if weight_avg is None:
                         return
+                    tmp_df['prob'] = weight_avg
                 else:
                     print('lack of data in anomaly group: ', shop_name, list_group)
                 df = df.append(tmp_df[['store_name', 'date_time', 'prob']], ignore_index=True)
@@ -180,20 +177,16 @@ INPUT_PREFIX = "s3://arimo-panasonic-ap-cn-cc-pm/.arimo/PredMaint/VAE/results"
 OUTPUT_PREFIX = "s3://arimo-panasonic-ap-cn-cc-pm/.arimo/PredMaint/VAE/combined_results"
 
 
-def main():
-    operation_mode = 'Cooling'  # parameterize this later if needed
-
+def main(operation_mode='Cooling', upload_date=None):
     input_prefix = "%s.all/__GROUP_NAME__/operation_mode=%s/VAEAnomScores30Minutes.parquet" % (
         INPUT_PREFIX, operation_mode)
     output_prefix = "%s.all/operation_mode=%s/VAEAnomScores30Minutes.parquet" % (OUTPUT_PREFIX, operation_mode)
 
-    if len(sys.argv) > 1:
-        upload_date = sys.argv[1]
-        if upload_date:
-            input_prefix = "%s/__GROUP_NAME__/operation_mode=%s/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
-                INPUT_PREFIX, operation_mode, upload_date)
-            output_prefix = "%s/operation_mode=%s/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
-                OUTPUT_PREFIX, operation_mode, upload_date)
+    if upload_date:
+        input_prefix = "%s/__GROUP_NAME__/operation_mode=%s/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
+            INPUT_PREFIX, operation_mode, upload_date)
+        output_prefix = "%s/operation_mode=%s/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
+            OUTPUT_PREFIX, operation_mode, upload_date)
 
     # read anomaly score from 3 groups
     ad_gr1 = read_df_from_s3(input_prefix.replace('__GROUP_NAME__', 'group_1'))
@@ -207,10 +200,17 @@ def main():
     # run combined 3 groups: group1, group2, and group5
     combined_df = combine_anom_score(STORES, ad_gr1, ad_gr2, ad_gr5,
                                      w12=[0.4, 0.6], w15=[0.4, 0.6], w125=[0.2, 0.4, 0.4], method='harmonic')
-    print(combined_df)
-    print(output_prefix)
+    # print(combined_df)
     combined_df.to_parquet(output_prefix)
+    return output_prefix
+
+
+def lambda_handler(event, context):
+    return {
+        "error_code": 200,
+        "results": main(upload_date=event.get('upload_date'))
+    }
 
 
 if __name__ == '__main__':
-    main()
+    print(main(upload_date=sys.argv[1] if len(sys.argv) > 1 else None))

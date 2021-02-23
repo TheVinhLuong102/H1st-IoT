@@ -1,1 +1,1 @@
-python combine_score.py 2021-01-10
+python combine_score.py 2021-01-24
