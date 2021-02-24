@@ -1,0 +1,8 @@
+boto3
+fastparquet
+numpy
+pandas
+pathos
+pyarrow
+s3fs
+scikit-learn
