@@ -1,9 +1,7 @@
-import matplotlib
-matplotlib.use('Agg')
-
 from collections import Counter
 import datetime
 from dateutil.relativedelta import relativedelta
+from importlib.util import module_from_spec, spec_from_file_location
 import math
 import numpy
 import os
@@ -15,9 +13,7 @@ from plotnine import \
     ggtitle, element_text, theme
 from psycopg2.extras import DateRange
 from pyspark.sql import functions
-import yaml
 from scipy.stats import pearsonr
-import sys
 import tempfile
 from time import time
 from tqdm import tqdm
@@ -121,19 +117,19 @@ class Project:
             os.path.join(
                 self.CONFIG_LOCAL_DIR_PATH,
                 local_project_config_file_name)
-    
+
         if download_config_file:
             if not os.path.isdir(self.CONFIG_LOCAL_DIR_PATH):
                 fs.mkdir(
                     dir=self.CONFIG_LOCAL_DIR_PATH,
                     hdfs=False)
-    
+
             print('Downloading "s3://{}/{}" to "{}"... '.format(
                     self.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
                   end='')
-    
+
             key, secret = key_pair(profile=self.AWS_PROFILE_NAME)
-    
+
             s3.client(
                 access_key_id=key,
                 secret_access_key=secret) \
@@ -141,7 +137,7 @@ class Project:
                 Bucket=self.CONFIG_S3_BUCKET,
                 Key=local_project_config_file_name,
                 Filename=local_project_config_file_path)
-    
+
             print('done!')
 
         self.params = Namespace(**self._DEFAULT_PARAMS)
@@ -149,8 +145,12 @@ class Project:
             parse_config_file(local_project_config_file_path),
             **kwargs)
 
-        sys.path.append(Path(__file__).parent.parent.parent)
-        import settings as arimo_pm_settings
+        import_spec = \
+            spec_from_file_location(
+                name='settings',
+                location=Path(__file__).parent.parent.parent / 'settings.py')
+        arimo_pm_settings = module_from_spec(spec=import_spec)
+        import_spec.loader.exec_module(module=arimo_pm_settings) 
 
         django_db_settings = arimo_pm_settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.HOST
@@ -344,7 +344,7 @@ class Project:
                 self.data.EquipmentUniqueTypeGroupPredMaintServiceConfigs.get(
                     equipment_unique_type_group__equipment_general_type__name=equipment_general_type_name,
                     equipment_unique_type_group__name=equipment_unique_type_group_name)
-            
+
             included_categorical_equipment_data_field_names = \
                 {categorical_equipment_data_field.name
                  for categorical_equipment_data_field in
@@ -352,7 +352,7 @@ class Project:
                     .exclude(data_type=self.NUM_DATA_TYPE)} \
                 if equipment_unique_type_group_service_config.include_categorical_equipment_data_fields \
                 else set()
-            
+
             namespace = Namespace()
 
             for equipment_unique_type_group_monitored_data_field_config in \
