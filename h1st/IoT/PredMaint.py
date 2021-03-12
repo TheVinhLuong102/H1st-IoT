@@ -44,8 +44,8 @@ from h1st.django.util.config import parse_config_file
 
 class Project:
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.h1st/pm')
-    CONFIG_S3_BUCKET = 'h1st-iot-pm'
-    AWS_PROFILE_NAME = 'h1st'
+    CONFIG_S3_BUCKET = 'arimo-iot-pm'
+    AWS_PROFILE_NAME = 'default'
 
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
