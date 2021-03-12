@@ -4,10 +4,10 @@
 CURRENT_DIR_PATH=$(pwd)
 
 
-UTIL_REPO_URL=https://github.com/adatao/Util
+UTIL_REPO_URL=https://github.com/H1st-AI/Util
 UTIL_DIR_NAME=Util
 
-SDK_REPO_URL=https://github.com/adatao/SDK
+SDK_REPO_URL=https://github.com/H1st-AI/SDK
 SDK_DIR_NAME=SDK
 
 PRED_MAINT_DIR_NAME=PredMaint
