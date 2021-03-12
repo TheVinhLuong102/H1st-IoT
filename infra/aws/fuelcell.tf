@@ -2,17 +2,17 @@ data "aws_iam_policy_document" "fc_s3_access" {
   statement {
     actions = ["s3:*"]
     resources = [
-      "arn:aws:s3:::arimo-bai/*",
-      "arn:aws:s3:::arimo-iot-pm/*",
-      # "arn:aws:s3:::arimo-panasonic-ap",
-      # "arn:aws:s3:::arimo-panasonic-ap/*",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm/*",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-fc-pm",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-fc-pm/*",
-      "arn:aws:s3:::arimo-panasonic-iot-pm",
-      "arn:aws:s3:::arimo-panasonic-iot-pm/*",
-      "arn:aws:s3:::arimo-bai-clusters/custom_provisioner/ccpm*",
+      "arn:aws:s3:::h1st-bai/*",
+      "arn:aws:s3:::h1st-iot-pm/*",
+      # "arn:aws:s3:::h1st-panasonic-ap",
+      # "arn:aws:s3:::h1st-panasonic-ap/*",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-cc-pm",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-cc-pm/*",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-fc-pm",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-fc-pm/*",
+      "arn:aws:s3:::h1st-panasonic-iot-pm",
+      "arn:aws:s3:::h1st-panasonic-iot-pm/*",
+      "arn:aws:s3:::h1st-bai-clusters/custom_provisioner/ccpm*",
     ]
   }
 
@@ -90,7 +90,7 @@ resource "aws_instance" "fc-app" {
   tags = {
     Name        = "FCPM - App"
     Cluster     = "FCPM"
-    Vendor      = "ARIMO"
+    Vendor      = "h1st"
     Environment = var.environment_tag
     Project     = var.project_tag
   }

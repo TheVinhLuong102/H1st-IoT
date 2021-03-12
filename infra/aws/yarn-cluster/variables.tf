@@ -39,12 +39,12 @@ variable "domain" {
 }
 
 variable "route53_zone_name" {
-  default = "arimo.com."
+  default = "h1st.com."
 }
 
 # Must be a private zone in the VPC of the subnet specified above.
 variable "route53_internal_zone_name" {
-  default = "arimo.internal."
+  default = "h1st.internal."
 }
 
 variable "instance_type" {
@@ -74,7 +74,7 @@ variable "worker_ebs_size" {
 }
 
 variable "project_tag" {
-  default = "ARIMO"
+  default = "h1st"
 }
 
 variable "environment_tag" {

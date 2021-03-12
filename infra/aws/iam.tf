@@ -2,15 +2,15 @@ data "aws_iam_policy_document" "s3_access" {
   statement {
     actions = ["s3:*"]
     resources = [
-      "arn:aws:s3:::arimo-bai/*",
-      "arn:aws:s3:::arimo-iot-pm/*",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm",
-      "arn:aws:s3:::arimo-panasonic-ap-jp-cc-pm/*",
-      "arn:aws:s3:::arimo-panasonic-ap",
-      "arn:aws:s3:::arimo-panasonic-ap/*",
-      "arn:aws:s3:::arimo-panasonic-iot-pm",
-      "arn:aws:s3:::arimo-panasonic-iot-pm/*",
-      "arn:aws:s3:::arimo-bai-clusters/custom_provisioner/ccpm*",
+      "arn:aws:s3:::h1st-bai/*",
+      "arn:aws:s3:::h1st-iot-pm/*",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-cc-pm",
+      "arn:aws:s3:::h1st-panasonic-ap-jp-cc-pm/*",
+      "arn:aws:s3:::h1st-panasonic-ap",
+      "arn:aws:s3:::h1st-panasonic-ap/*",
+      "arn:aws:s3:::h1st-panasonic-iot-pm",
+      "arn:aws:s3:::h1st-panasonic-iot-pm/*",
+      "arn:aws:s3:::h1st-bai-clusters/custom_provisioner/ccpm*",
     ]
   }
 

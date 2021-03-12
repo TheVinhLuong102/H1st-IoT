@@ -1,1 +1,1 @@
-default_app_config = 'arimo.IoT.DataAdmin.tasks.apps.TasksConfig'
+default_app_config = 'h1st.IoT.DataAdmin.tasks.apps.TasksConfig'

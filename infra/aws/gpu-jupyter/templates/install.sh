@@ -5,10 +5,10 @@ apt-mark hold linux-image-aws
 
 sleep 10
 
-mkdir -p /opt/arimo/data
+mkdir -p /opt/h1st/data
 
-ebsinit --mount /opt/arimo/data
-sudo chown ubuntu:ubuntu -R /opt/arimo/data
+ebsinit --mount /opt/h1st/data
+sudo chown ubuntu:ubuntu -R /opt/h1st/data
 
 has_gpu=$(lspci | grep NV)
 if [ ! -z "$has_gpu" ]; then
@@ -28,8 +28,8 @@ tf_version=2.0.0-gpu-py3-jupyter
 docker run --name jupyter -d -it --restart always --privileged \
     -u $(id -u):$(id -g) \
     -e NVIDIA_REQUIRE_CUDA="cuda>=10" \
-    -e JUPYTER_TOKEN=arimoiscool \
+    -e JUPYTER_TOKEN=h1stiscool \
     -e PS1="\\W \\$ " \
-    -v /opt/arimo/data:/tf \
+    -v /opt/h1st/data:/tf \
     -p 80:8888 $runtime \
     tensorflow/tensorflow:$tf_version

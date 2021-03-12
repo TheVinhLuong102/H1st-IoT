@@ -19,33 +19,33 @@ from time import time
 from tqdm import tqdm
 import uuid
 
-import arimo.util.data_backend
-from arimo.blueprints import AbstractPPPBlueprint, load as load_blueprint
-from arimo.blueprints.cs import anom as cs_anom, regr as cs_regr
-from arimo.data.parquet import S3ParquetDataFeeder
-from arimo.data.distributed import DDF
-from arimo.data.distributed_parquet import S3ParquetDistributedDataFrame
-from arimo.util import fs, Namespace
-from arimo.util.aws import key_pair, s3
-from arimo.util.date_time import \
+import h1st.util.data_backend
+from h1st.blueprints import AbstractPPPBlueprint, load as load_blueprint
+from h1st.blueprints.cs import anom as cs_anom, regr as cs_regr
+from h1st.data.parquet import S3ParquetDataFeeder
+from h1st.data.distributed import DDF
+from h1st.data.distributed_parquet import S3ParquetDistributedDataFrame
+from h1st.util import fs, Namespace
+from h1st.util.aws import key_pair, s3
+from h1st.util.date_time import \
     DATE_COL, MONTH_COL, \
     _PRED_VARS_INCL_T_AUX_COLS, _T_WoM_COL, _T_DoW_COL, _T_DELTA_COL, _T_PoM_COL, _T_PoW_COL, _T_PoD_COL, \
     month_end, month_str
-from arimo.util.types.spark_sql import _BOOL_TYPE
+from h1st.util.types.spark_sql import _BOOL_TYPE
 
 from django.conf import settings
 from django.core.management import call_command
 from django.core.wsgi import get_wsgi_application
 
-from arimo.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
+from h1st.IoT.DataAdmin.util import _PARQUET_EXT, _YAML_EXT, clean_lower_str
 
 from h1st.django.util.config import parse_config_file
 
 
 class Project:
-    CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.arimo/pm')
-    CONFIG_S3_BUCKET = 'arimo-iot-pm'
-    AWS_PROFILE_NAME = 'arimo'
+    CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.h1st/pm')
+    CONFIG_S3_BUCKET = 'h1st-iot-pm'
+    AWS_PROFILE_NAME = 'h1st'
 
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
@@ -149,10 +149,10 @@ class Project:
             spec_from_file_location(
                 name='settings',
                 location=Path(__file__).parent.parent.parent / 'settings.py')
-        arimo_pm_settings = module_from_spec(spec=import_spec)
-        import_spec.loader.exec_module(module=arimo_pm_settings) 
+        h1st_pm_settings = module_from_spec(spec=import_spec)
+        import_spec.loader.exec_module(module=h1st_pm_settings) 
 
-        django_db_settings = arimo_pm_settings.DATABASES['default']
+        django_db_settings = h1st_pm_settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.HOST
         django_db_settings['ENGINE'] = self.params.db.ENGINE
         django_db_settings['USER'] = self.params.db.USER
@@ -160,7 +160,7 @@ class Project:
         django_db_settings['NAME'] = self.params.db.NAME
         settings.configure(
             **{K: v
-               for K, v in arimo_pm_settings.__dict__.items()
+               for K, v in h1st_pm_settings.__dict__.items()
                if K.isupper()})
         get_wsgi_application()
 
@@ -168,7 +168,7 @@ class Project:
         call_command('migrate')
         print(f'Applied DB Migrations ({time() - tic:.3f}s)')
 
-        from arimo.IoT.DataAdmin.base.models import \
+        from h1st.IoT.DataAdmin.base.models import \
             GlobalConfig, \
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, \
@@ -178,7 +178,7 @@ class Project:
             EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, \
             EquipmentFacility, EquipmentSystem
 
-        from arimo.IoT.DataAdmin.PredMaint.models import \
+        from h1st.IoT.DataAdmin.PredMaint.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
             EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation, \
             EquipmentUniqueTypeGroupServiceConfig, \
@@ -188,7 +188,7 @@ class Project:
             EquipmentProblemType, EquipmentInstanceAlarmPeriod, EquipmentInstanceProblemDiagnosis, \
             AlertDiagnosisStatus, Alert
 
-        from arimo.IoT.DataAdmin.tasks.models import \
+        from h1st.IoT.DataAdmin.tasks.models import \
             EquipmentUniqueTypeGroupRiskScoringTask, \
             EquipmentUniqueTypeGroupDataAggTask
 
@@ -529,7 +529,7 @@ class Project:
 
         n_equipment_data_fields = equipment_data_fields.count()
 
-        from arimo.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
+        from h1st.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
 
         for i in tqdm(range(n_equipment_data_fields - 1)):
             equipment_data_field = equipment_data_fields[i]
@@ -1445,7 +1445,7 @@ class Project:
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                arimo.util.data_backend.spark.stop()
+                h1st.util.data_backend.spark.stop()
 
                 if fs._ON_LINUX_CLUSTER_WITH_HDFS:
                     fs.get(
@@ -1488,7 +1488,7 @@ class Project:
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                arimo.util.data_backend.spark.stop()
+                h1st.util.data_backend.spark.stop()
 
             daily_mean_abs_mae_mult_prefix = \
                 AbstractPPPBlueprint._dailyMean_PREFIX + \
@@ -1611,7 +1611,7 @@ class Project:
                         name=equipment_instance_id)[0]
                  for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
-            from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
+            from h1st.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
             print('Writing {} Anom Scores to DB: {:,} Rows x {}...'.format(
                     equipment_unique_type_group_data_set_name,
@@ -1660,7 +1660,7 @@ class Project:
                     name=clean_lower_str(str(equipment_instance_id)))[0]
              for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
-        from arimo.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
+        from h1st.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
 
         for i in tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
             _anom_scores_df = \
@@ -2251,9 +2251,9 @@ class Project:
                     defaults=dict(finished=None))
 
         if copy_agg_daily_equipment_data_to_db_for_dates:
-            if arimo.util.data_backend.chkSpark():
+            if h1st.util.data_backend.chkSpark():
                 # free up Spark resources for other tasks
-                arimo.util.data_backend.spark.stop()
+                h1st.util.data_backend.spark.stop()
 
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
@@ -2293,7 +2293,7 @@ class Project:
                 date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
             .delete()
 
-            from arimo.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
+            from h1st.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
 
             for equipment_unique_type_group_daily_agg_df in \
                     tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),
@@ -2391,7 +2391,7 @@ class Project:
 
     def ppp_viz(
             self,
-            equipment_instance_id, dir_path='/home/arimo/data/viz',
+            equipment_instance_id, dir_path='/home/h1st/data/viz',
             from_month=None, to_month=None, dates_of_interest=()):
         SCORE_STR = 'score'
         ANOM_SCORE_STR = 'Anomaly Score'

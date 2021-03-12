@@ -16,10 +16,11 @@ SECRET_KEY = '_'
 DEBUG = not _LINUX
 
 
-ALLOWED_HOSTS = \
-    ['.arimo.com', '.elasticbeanstalk.com'] \
-    if _LINUX \
-    else ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    '127.0.0.1', 'localhost',
+    '.aitomatic.io', '.h1st.ai',
+    '.elasticbeanstalk.com'
+]
 
 
 # Application definition
@@ -41,9 +42,9 @@ INSTALLED_APPS = [
 
     'silk',
 
-    'arimo.IoT.DataAdmin.base',
-    'arimo.IoT.DataAdmin.PredMaint',
-    'arimo.IoT.DataAdmin.tasks'
+    'h1st.IoT.DataAdmin.base',
+    'h1st.IoT.DataAdmin.PredMaint',
+    'h1st.IoT.DataAdmin.tasks'
 ]
 
 MIDDLEWARE = [

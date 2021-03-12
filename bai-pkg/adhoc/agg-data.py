@@ -4,14 +4,14 @@ import os
 import subprocess
 import sys
 
-from arimo.IoT.PredMaint import __path__
+from h1st.IoT.PredMaint import __path__
 
 
 PROJECT, EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP, DATE, TO_DATE = sys.argv[1:6]
 
 
 cmd_args = [
-    os.path.join(__path__[0], 'bin', 'arimo-iot-pm'),
+    os.path.join(__path__[0], 'bin', 'h1st-iot-pm'),
     PROJECT,
     'agg-data',
     EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP,

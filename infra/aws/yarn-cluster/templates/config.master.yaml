@@ -1,6 +1,6 @@
 installer:
-  installer_root: /opt/arimo-installer
-  data_root: /opt/arimo-data
+  installer_root: /opt/h1st-installer
+  data_root: /opt/h1st-data
 
 env:
   DOCKER_PULL_METHOD: pull
@@ -22,9 +22,9 @@ env:
 provisioner:
   yarn:
     master:
-      init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
+      init_script: s3://h1st-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
     slave:
-      init_script: s3://arimo-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
+      init_script: s3://h1st-bai-clusters/custom_provisioner/ccpm/yarn-deps.sh
 
 hosts:
   database:

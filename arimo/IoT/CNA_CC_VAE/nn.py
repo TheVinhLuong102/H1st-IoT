@@ -12,7 +12,7 @@ import tensorflow.compat.v1 as tf
 import scipy.stats
 import numpy as np
 
-# from arimo.dl.util.logger import logger
+# from h1st.dl.util.logger import logger
 
 
 import tensorflow_probability as tfp
@@ -23,7 +23,7 @@ tfd = tfp.distributions
 
 layers = tf.keras.layers
 
-_NAME_SCOPE = "arimo"
+_NAME_SCOPE = "h1st"
 
 
 class BaseModelGraph(object):

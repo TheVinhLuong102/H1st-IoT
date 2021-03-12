@@ -1,2 +1,2 @@
-include bin/arimo-pm
+include bin/h1st-pm
 recursive-exclude *.pyc

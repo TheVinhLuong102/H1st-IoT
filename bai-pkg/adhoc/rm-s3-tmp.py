@@ -1,13 +1,13 @@
 import os
 import subprocess
 
-from arimo_pw.runtime import params
+from h1st_pw.runtime import params
 
-from arimo.IoT.PredMaint import __path__
+from h1st.IoT.PredMaint import __path__
 
 
 subprocess.check_call([
-    os.path.join(__path__[0], 'bin', 'arimo-iot-pm'),
+    os.path.join(__path__[0], 'bin', 'h1st-iot-pm'),
     params.PROJECT,
     'rm-s3-tmp'
 ])

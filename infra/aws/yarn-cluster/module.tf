@@ -1,8 +1,8 @@
 locals {
   domain = "${var.domain != "" ? var.domain : "yarn-${var.name}"}"
 
-  public_domain   = "${local.domain}.arimo.com"
-  internal_domain = "${local.domain}.arimo.internal"
+  public_domain   = "${local.domain}.h1st.com"
+  internal_domain = "${local.domain}.h1st.internal"
 }
 
 data "template_cloudinit_config" "master" {
