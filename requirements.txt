@@ -7,9 +7,3 @@ DRF-Writable-Nested >= 0.6.2
 # viz
 PlotNine >= 0.7.1
 StatsModels >= 0.12.2
-
-# misc
-Boto3
-Pathos
-S3FS
-SciKit-Learn
