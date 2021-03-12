@@ -44,8 +44,6 @@ from h1st.django.util.config import parse_config_file
 
 class Project:
     CONFIG_LOCAL_DIR_PATH = os.path.expanduser('~/.h1st/pm')
-    CONFIG_S3_BUCKET = 'arimo-iot-pm'
-    AWS_PROFILE_NAME = 'default'
 
     _CAT_DATA_TYPE_NAME = 'cat'
     _NUM_DATA_TYPE_NAME = 'num'
@@ -110,35 +108,13 @@ class Project:
     _MAX_N_DISTINCT_VALUES_TO_PROFILE = 30
     _MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME = 10 ** 3
 
-    def __init__(self, name, download_config_file=True, **kwargs):
+    def __init__(self, name, **kwargs):
         local_project_config_file_name = name + _YAML_EXT
 
         local_project_config_file_path = \
             os.path.join(
                 self.CONFIG_LOCAL_DIR_PATH,
                 local_project_config_file_name)
-
-        if download_config_file:
-            if not os.path.isdir(self.CONFIG_LOCAL_DIR_PATH):
-                fs.mkdir(
-                    dir=self.CONFIG_LOCAL_DIR_PATH,
-                    hdfs=False)
-
-            print('Downloading "s3://{}/{}" to "{}"... '.format(
-                    self.CONFIG_S3_BUCKET, local_project_config_file_name, local_project_config_file_path),
-                  end='')
-
-            key, secret = key_pair(profile=self.AWS_PROFILE_NAME)
-
-            s3.client(
-                access_key_id=key,
-                secret_access_key=secret) \
-            .download_file(
-                Bucket=self.CONFIG_S3_BUCKET,
-                Key=local_project_config_file_name,
-                Filename=local_project_config_file_path)
-
-            print('done!')
 
         self.params = Namespace(**self._DEFAULT_PARAMS)
         self.params.update(
