@@ -154,10 +154,9 @@ if __name__ == "__main__":
 def lambda_handler(event, context):
     sensor_group = event.get('sensor_group')
     upload_date = event.get('upload_date')
-    # output = main(sensor_group, upload_date)
+    output = main(sensor_group, upload_date)
 
     return {
         "error_code": 200,
-        "output": "%s/%s/operation_mode=Cooling/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
-            OUTPUT_PREFIX, sensor_group, upload_date)
+        "output": output
     }
