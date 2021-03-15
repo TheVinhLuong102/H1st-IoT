@@ -42,7 +42,7 @@ GROUP_COLS = {
 }
 
 
-def main(score_param, model_param, tfr_info):
+def pm_score(score_param, model_param, tfr_info):
     pm_vae = PredictiveMaintenanceVAE(
         input_dim=tfr_info["columns"],
         n_window=model_param["n_window"],
@@ -54,7 +54,7 @@ def main(score_param, model_param, tfr_info):
         n_rank=model_param["n_rank"],
     )
 
-    pm_vae.score(
+    return pm_vae.score(
         selected_columns=score_param["selected_columns"],
         input_path=tfr_info["tfr_path"],
         model_path=score_param["model_path"],
@@ -95,21 +95,20 @@ N_COLS = {
     'group_5': 7,
 }
 
-if __name__ == "__main__":
-    sensor_group_name = sys.argv[1]
+
+def main(sensor_group, upload_date=None):
     operation_mode = 'Cooling'
-    tfrecords_prefix = "%s.all/%s.tfrecords/operation_mode=%s" % (TFRECORDS_PREFIX, sensor_group_name, operation_mode)
-    checkpoints_prefix = "%s/%s/operation_mode=%s" % (CHECKPOINT_PREFIX, sensor_group_name, operation_mode)
-    output_prefix = "%s.all/%s/operation_mode=%s" % (OUTPUT_PREFIX, sensor_group_name, operation_mode)
+    tfrecords_prefix = "%s.all/%s.tfrecords/operation_mode=%s" % (TFRECORDS_PREFIX, sensor_group, operation_mode)
+    checkpoints_prefix = "%s/%s/operation_mode=%s" % (CHECKPOINT_PREFIX, sensor_group, operation_mode)
+    output_prefix = "%s.all/%s/operation_mode=%s" % (OUTPUT_PREFIX, sensor_group, operation_mode)
 
-    if len(sys.argv) > 2:
-        upload_date = sys.argv[2]
+    if upload_date:
         tfrecords_prefix = "%s/%s.tfrecords/operation_mode=%s/upload_date=%s" % (
-            TFRECORDS_PREFIX, sensor_group_name, operation_mode, upload_date)
+            TFRECORDS_PREFIX, sensor_group, operation_mode, upload_date)
         output_prefix = "%s/%s/operation_mode=%s/upload_date=%s" % (
-            OUTPUT_PREFIX, sensor_group_name, operation_mode, upload_date)
+            OUTPUT_PREFIX, sensor_group, operation_mode, upload_date)
 
-    selected_columns = GROUP_COLS[sensor_group_name]
+    selected_columns = GROUP_COLS[sensor_group]
     print(selected_columns, len(selected_columns))
 
     for score_idx in range(0, 200, 200):
@@ -128,7 +127,7 @@ if __name__ == "__main__":
             "tfr_file_prefix": "part",
             "rows": None,
             "tfr_path": tfrecords_prefix,
-            "columns": N_COLS[sensor_group_name],
+            "columns": N_COLS[sensor_group],
             "interval": 1,
             "column_names": {
                 "id_key": "store_name",
@@ -145,4 +144,20 @@ if __name__ == "__main__":
         with s3_fs.open(model_param_json_path) as json_file:
             model_param = json.load(json_file)
 
-        main(score_param, model_param, tfr_info)
+        return pm_score(score_param, model_param, tfr_info)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
+
+
+def lambda_handler(event, context):
+    sensor_group = event.get('sensor_group')
+    upload_date = event.get('upload_date')
+    # output = main(sensor_group, upload_date)
+
+    return {
+        "error_code": 200,
+        "output": "%s/%s/operation_mode=Cooling/upload_date=%s/VAEAnomScores30Minutes.parquet" % (
+            OUTPUT_PREFIX, sensor_group, upload_date)
+    }

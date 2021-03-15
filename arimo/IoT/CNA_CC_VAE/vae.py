@@ -553,6 +553,7 @@ class PredictiveMaintenanceVAE(object):
         output_path = save_path + '/VAEAnomScores30Minutes.parquet'
         print(output_path)
         df_whole.to_parquet(output_path)
+        return output_path
 
     def get_position_encoding(self, num_positions, num_features, min_val=10000):
         def get_angles(pos, i, d_model):
