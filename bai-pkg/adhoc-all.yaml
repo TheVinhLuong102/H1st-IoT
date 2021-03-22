@@ -118,7 +118,7 @@ on_failure:
         type: slack
         worker_role: ${WORKER_ROLE}
         channel: ${SLACK_CHANNEL}
-        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-all has failed :cry:'
+        text: 'h1st.IoT.PredMaint BAI-pkg: adhoc-all has failed :cry:'
 
 on_success:
   - type: parallel
@@ -137,4 +137,4 @@ on_success:
         type: slack
         worker_role: ${WORKER_ROLE}
         channel: ${SLACK_CHANNEL}
-        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-all has succeeded :smile:'
+        text: 'h1st.IoT.PredMaint BAI-pkg: adhoc-all has succeeded :smile:'

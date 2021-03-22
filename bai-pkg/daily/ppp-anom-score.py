@@ -5,7 +5,7 @@ import os
 import subprocess
 import sys
 
-from arimo.IoT.PredMaint import __path__
+from h1st.IoT.PredMaint import __path__
 
 
 PROJECT, EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP = sys.argv[1:4]
@@ -14,7 +14,7 @@ PROJECT, EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP = sys.argv[1:4]
 today = date.today()
 
 cmd_args = [
-    os.path.join(__path__[0], 'bin', 'arimo-iot-pm'),
+    os.path.join(__path__[0], 'bin', 'h1st-iot-pm'),
     PROJECT,
     'ppp-anom-score',
     EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP,

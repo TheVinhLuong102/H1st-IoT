@@ -53,7 +53,7 @@ resource "aws_instance" "master" {
     cluster-group = "${var.project_tag}"
     instance-role = "master"                 # should not be required
 
-    domain = "${var.domain}.arimo.com"
+    domain = "${var.domain}.h1st.com"
   }
 
   lifecycle {
@@ -69,7 +69,7 @@ resource "aws_ebs_volume" "ebs" {
   tags = {
     Name        = "${local.cluster} - EBS"
     Cluster     = "${local.cluster}"
-    Vendor      = "ARIMO"
+    Vendor      = "h1st"
     Environment = "${var.environment_tag}"
     Project     = "${var.project_tag}"
   }

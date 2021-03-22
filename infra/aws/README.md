@@ -1,2 +1,2 @@
-# Arimo IoT Predictive Maintenance AWS Infrastructure
+# h1st IoT Predictive Maintenance AWS Infrastructure
 

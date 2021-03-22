@@ -10,7 +10,7 @@ def get_info(yarn_cluster_name):
     response = \
         requests.get(
             'http://{host}:{port}/ws/v1/cluster/info'.format(
-                host="{}.arimo.internal".format(yarn_cluster_name),
+                host="{}.h1st.internal".format(yarn_cluster_name),
                 port=8088),
             timeout=30)
 

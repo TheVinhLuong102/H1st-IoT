@@ -17,6 +17,6 @@ data "aws_region" "default" {
 }
 
 data "aws_route53_zone" "external" {
-  name = "arimo.com"
+  name = "h1st.com"
 }
 

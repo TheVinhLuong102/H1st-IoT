@@ -13,7 +13,7 @@ resource "aws_instance" "app_dev" {
   tags = {
     Name        = "CCPM - App Dev"
     Cluster     = "CCPM"
-    Vendor      = "ARIMO"
+    Vendor      = "h1st"
     Environment = var.environment_tag
     Project     = var.project_tag
   }

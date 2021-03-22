@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "storage_bucket_name" {
-  default = "arimo-panasonic-ap-jp-cc-pm"
+  default = "h1st-panasonic-ap-jp-cc-pm"
 }
 
 variable "vpc_id" {

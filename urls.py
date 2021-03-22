@@ -2,13 +2,13 @@ from django.urls.conf import include, path
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-from arimo.IoT.DataAdmin.base.urls import URL_PATTERNS as BASE_URLS
-from arimo.IoT.DataAdmin.PredMaint.urls import URL_PATTERNS as PRED_MAINT_URLS
+from h1st.IoT.DataAdmin.base.urls import URL_PATTERNS as BASE_URLS
+from h1st.IoT.DataAdmin.PredMaint.urls import URL_PATTERNS as PRED_MAINT_URLS
 
 
-admin.site.index_title = 'Arimo'
+admin.site.index_title = 'H1st'
 admin.site.site_title = 'IoT'
-admin.site.site_header = 'Arimo IoT'
+admin.site.site_header = 'H1st IoT'
 
 
 urlpatterns = [

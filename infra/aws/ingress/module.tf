@@ -10,7 +10,7 @@
 # module "ingress-docker-portus" {
 #   source = "./ingress"
 #   load_balancer_name = "infra"
-#   zone_id            = "${aws_route53_zone.arimo_com.zone_id}"
+#   zone_id            = "${aws_route53_zone.h1st_com.zone_id}"
 #   domain_prefix      = "portus"
 #   instances          = ["${aws_instance.docker_portus.id}"]
 # }

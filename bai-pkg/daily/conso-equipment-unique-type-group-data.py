@@ -4,15 +4,15 @@ from datetime import date, timedelta
 import os
 import subprocess
 
-from arimo_pw.runtime import params
+from h1st_pw.runtime import params
 
-from arimo.IoT.PredMaint import __path__
+from h1st.IoT.PredMaint import __path__
 
 
 today = date.today()
 
 cmd_args = [
-    os.path.join(__path__[0], 'bin', 'arimo-iot-pm'),
+    os.path.join(__path__[0], 'bin', 'h1st-iot-pm'),
     params.PROJECT,
     'conso-data',
     params.EQUIPMENT_GENERAL_TYPE, params.EQUIPMENT_UNIQUE_TYPE_GROUP,

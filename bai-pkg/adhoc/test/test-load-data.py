@@ -1,6 +1,6 @@
 import sys
 
-from arimo.IoT.PredMaint import project
+from h1st.IoT.PredMaint import project
 
 
 PROJECT, EQUIPMENT_GENERAL_TYPE, EQUIPMENT_UNIQUE_TYPE_GROUP = sys.argv[1:4]

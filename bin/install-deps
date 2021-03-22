@@ -14,7 +14,7 @@ PRED_MAINT_DIR_NAME=PredMaint
 
 
 git config --global credential.helper cache
-git config --global credential.helper "cache --timeout=3600"
+git config --global credential.helper "cache --timeout=36000"
 
 
 python3 -m pip install pip --upgrade --user
@@ -29,7 +29,7 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python3 -m pip uninstall Arimo-Util --yes
+python3 -m pip uninstall H1st-Util --yes
 python3 -m pip install -e $UTIL_DIR_NAME --upgrade --user
 
 
@@ -41,7 +41,7 @@ else
   cd $CURRENT_DIR_PATH
 fi
 
-python3 -m pip uninstall Arimo-SDK --yes
+python3 -m pip uninstall H1st-SDK --yes
 python3 -m pip install -e $SDK_DIR_NAME --upgrade --user
 
 
@@ -49,6 +49,6 @@ cd $PRED_MAINT_DIR_NAME
 git pull
 cd $CURRENT_DIR_PATH
 
-python3 -m pip uninstall Arimo-PredMaint --yes
+python3 -m pip uninstall H1st-PredMaint --yes
 python3 -m pip install -e $PRED_MAINT_DIR_NAME --upgrade --user
 python3 -m pip install -r $PRED_MAINT_DIR_NAME/requirements.txt --upgrade --user

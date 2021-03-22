@@ -6,11 +6,11 @@ import os
 import random
 import tqdm
 
-from arimo.util import fs, Namespace
-from arimo.util.aws import s3
+from h1st.util import fs, Namespace
+from h1st.util.aws import s3
 
-from arimo.IoT.DataAdmin.util import _YAML_EXT
-from arimo.IoT.PredMaint import Project
+from h1st.IoT.DataAdmin.util import _YAML_EXT
+from h1st.IoT.PredMaint import Project
 
 
 CMD_ARG_NAME = 'cmd'
@@ -514,7 +514,7 @@ elif cmd == RECOMMEND_AUTO_INCLUDED_PPP_INPUT_DATA_FIELDS_CMD:
 elif cmd == TRAIN_PPP_CMD:
     if args.dl_train_keras:
         __model_params__ = \
-            {'factory.name': 'arimo.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
+            {'factory.name': 'h1st.dl.experimental.keras.simple_crosssect_fdfwd_regressor',
              'train.n_samples': 10 ** 8,
              'train.n_train_samples_per_epoch': 10 ** 6,
              'train.min_n_val_samples_per_epoch': 10 ** 5,
@@ -524,7 +524,7 @@ elif cmd == TRAIN_PPP_CMD:
 
     else:
         __model_params__ = \
-            {'factory.name': 'arimo.dl.cross_sectional.FfnResnetRegressor',
+            {'factory.name': 'h1st.dl.cross_sectional.FfnResnetRegressor',
              'factory.hidden_size': 1024,
              'factory.num_residual_blocks': 4,
              'factory.residual_block_keep_prob': .95,

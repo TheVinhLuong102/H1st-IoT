@@ -1,9 +1,9 @@
 {
-  "name": "Arimo IoT PredMaint",
+  "name": "h1st IoT PredMaint",
 
-  "title": "Arimo IoT PredMaint",
+  "title": "h1st IoT PredMaint",
 
-  "description": "Arimo IoT Predictive Maintenance",
+  "description": "h1st IoT Predictive Maintenance",
 
   "files": [
     "**/*.py",

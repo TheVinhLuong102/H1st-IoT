@@ -51,12 +51,12 @@ tasks:
         - ${EQUIPMENT_UNIQUE_TYPE_GROUP}
 
       deploy-mode: client
-      master: yarn://${YARN_CLUSTER}.arimo.internal
+      master: yarn://${YARN_CLUSTER}.h1st.internal
       conf:
-        spark.hadoop.yarn.resourcemanager.hostname: ${YARN_CLUSTER}.arimo.internal
-        spark.hadoop.fs.default.name: hdfs://${YARN_CLUSTER}.arimo.internal:9000
-        spark.hadoop.fs.defaultFS: hdfs://${YARN_CLUSTER}.arimo.internal:9000
-        spark.yarn.access.hadoopFileSystems: hdfs://${YARN_CLUSTER}.arimo.internal:9000
+        spark.hadoop.yarn.resourcemanager.hostname: ${YARN_CLUSTER}.h1st.internal
+        spark.hadoop.fs.default.name: hdfs://${YARN_CLUSTER}.h1st.internal:9000
+        spark.hadoop.fs.defaultFS: hdfs://${YARN_CLUSTER}.h1st.internal:9000
+        spark.yarn.access.hadoopFileSystems: hdfs://${YARN_CLUSTER}.h1st.internal:9000
         spark.driver.extraJavaOptions: '-Dlog4jspark.root.logger=WARN,console'
         spark.executor.extraJavaOptions: '-Dlog4jspark.root.logger=WARN,console'
       packages:
@@ -80,7 +80,7 @@ on_failure:
         type: slack
         worker_role: ${WORKER_ROLE}
         channel: ${SLACK_CHANNEL}
-        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-test-load-data has failed :cry:'
+        text: 'h1st.IoT.PredMaint BAI-pkg: adhoc-test-load-data has failed :cry:'
 
 on_success:
   - type: parallel
@@ -99,4 +99,4 @@ on_success:
         type: slack
         worker_role: ${WORKER_ROLE}
         channel: ${SLACK_CHANNEL}
-        text: 'Arimo.IoT.PredMaint BAI-pkg: adhoc-test-load-data has succeeded :smile:'
+        text: 'h1st.IoT.PredMaint BAI-pkg: adhoc-test-load-data has succeeded :smile:'

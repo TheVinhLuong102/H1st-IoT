@@ -1,14 +1,14 @@
 global:
-  application_name: Arimo-IoT
+  application_name: Aitomatic-PredMaint
   branch: null
-  default_ec2_keyname: null
+  default_ec2_keyname: pred-maint
   default_platform: Python 3.7
   default_region: ap-northeast-1
   include_git_submodules: true
   instance_profile: null
   platform_name: null
   platform_version: null
-  profile: arimo
+  profile: default
   repository: null
   sc: git
   workspace_type: Application
