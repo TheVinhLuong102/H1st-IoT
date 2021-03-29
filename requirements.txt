@@ -5,5 +5,5 @@ https://GitHub.com/H1st-AI/H1st-Django/archive/main.zip
 DRF-Writable-Nested >= 0.6.2
 
 # viz
-PlotNine >= 0.7.1
+PlotNine >= 0.8.0
 StatsModels >= 0.12.2
