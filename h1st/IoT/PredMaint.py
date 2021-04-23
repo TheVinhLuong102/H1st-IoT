@@ -121,12 +121,15 @@ class Project:
             parse_config_file(local_project_config_file_path),
             **kwargs)
 
+        os.environ['H1ST_DJANGO_CONFIG_FILE_PATH'] = \
+            local_project_config_file_path
+
         import_spec = \
             spec_from_file_location(
                 name='settings',
                 location=Path(__file__).parent.parent.parent / 'settings.py')
         h1st_pm_settings = module_from_spec(spec=import_spec)
-        import_spec.loader.exec_module(module=h1st_pm_settings) 
+        import_spec.loader.exec_module(module=h1st_pm_settings)
 
         django_db_settings = h1st_pm_settings.DATABASES['default']
         django_db_settings['HOST'] = self.params.db.HOST
@@ -135,9 +138,9 @@ class Project:
         django_db_settings['PASSWORD'] = self.params.db.PASSWORD
         django_db_settings['NAME'] = self.params.db.NAME
         settings.configure(
-            **{K: v
-               for K, v in h1st_pm_settings.__dict__.items()
-               if K.isupper()})
+            **{k: v
+               for k, v in h1st_pm_settings.__dict__.items()
+               if k.isupper()})
         get_wsgi_application()
 
         tic = time()
@@ -266,7 +269,7 @@ class Project:
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
                     self.params.s3.equipment_data.train_val_benchmark_dir_prefix)
-    
+
             self.params.s3.ppp.blueprints_dir_path = \
                 's3://{}/{}'.format(
                     self.params.s3.bucket,
