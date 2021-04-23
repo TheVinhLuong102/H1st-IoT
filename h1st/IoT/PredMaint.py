@@ -2417,6 +2417,7 @@ class Project:
                     equipment_unique_type_group=equipment_unique_type_group,
                     active=True):
                 equipment_unique_type_group_name = equipment_unique_type_group.name
+                print(equipment_unique_type_group_name)
 
                 _dir_path = \
                     os.path.join(
