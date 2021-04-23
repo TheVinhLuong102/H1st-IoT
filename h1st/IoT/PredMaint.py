@@ -2370,7 +2370,7 @@ class Project:
 
     def ppp_viz(
             self,
-            equipment_instance_id, dir_path='/home/h1st/data/viz',
+            equipment_instance_id, dir_path='/home/arimo/data/viz',
             from_month=None, to_month=None, dates_of_interest=()):
         SCORE_STR = 'score'
         ANOM_SCORE_STR = 'Anomaly Score'
