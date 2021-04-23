@@ -2445,6 +2445,8 @@ class Project:
                                 aws_access_key_id=self.params.s3.access_key_id,
                                 aws_secret_access_key=self.params.s3.secret_access_key,
                                 verbose=True)
+                            
+                        print(daily_anom_scores_s3_parquet_df)
 
                     except:
                         daily_anom_scores_s3_parquet_df = None
