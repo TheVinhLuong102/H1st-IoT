@@ -1,3 +1,6 @@
+branch-defaults:
+  main:
+    environment: Aitomatic-PredMaint
 global:
   application_name: Aitomatic-PredMaint
   branch: null
