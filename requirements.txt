@@ -1,7 +1,7 @@
 # H1st
-https://GitHub.com/H1st-AI/H1st/archive/django.zip
+https://GitHub.com/Aitomatic/H1st/archive/ai-app.zip
 
-DRF-Writable-Nested >= 0.6.2
+DRF-Writable-Nested >= 0.6.3
 
 # viz
 PlotNine >= 0.8.0
