@@ -80,18 +80,18 @@ class Project:
         Namespace(
             s3=Namespace(
                 equipment_data=Namespace(
-                    dir_prefix='.arimo/PredMaint/EquipmentData',
-                    raw_dir_prefix='.arimo/PredMaint/EquipmentData/raw',
-                    daily_agg_dir_prefix='.arimo/PredMaint/EquipmentData/DailyAgg',
-                    train_val_benchmark_dir_prefix='.arimo/PredMaint/EquipmentData/TrainValBenchmark'),
+                    dir_prefix='data/PredMaint/EquipmentData',
+                    raw_dir_prefix='data/PredMaint/EquipmentData/raw',
+                    daily_agg_dir_prefix='data/PredMaint/EquipmentData/DailyAgg',
+                    train_val_benchmark_dir_prefix='data/PredMaint/EquipmentData/TrainValBenchmark'),
 
                 ppp=Namespace(
-                    blueprints_dir_prefix='.arimo/PredMaint/PPP/Blueprints',
-                    err_mults_dir_prefix='.arimo/PredMaint/PPP/ErrMults',
-                    daily_err_mults_dir_prefix='.arimo/PredMaint/PPP/DailyErrMults'),
+                    blueprints_dir_prefix='data/PredMaint/PPP/Blueprints',
+                    err_mults_dir_prefix='data/PredMaint/PPP/ErrMults',
+                    daily_err_mults_dir_prefix='data/PredMaint/PPP/DailyErrMults'),
 
                 anom_scores=Namespace(
-                    dir_prefix='.arimo/PredMaint/AnomScores')),
+                    dir_prefix='data/PredMaint/AnomScores')),
 
             equipment_monitoring=Namespace(
                 anom_score_names_and_thresholds=dict(
