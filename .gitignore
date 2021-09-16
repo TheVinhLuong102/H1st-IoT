@@ -11,3 +11,6 @@ src/
 
 # Static Files
 .staticfiles/
+
+# misc/other
+.DS_Store
