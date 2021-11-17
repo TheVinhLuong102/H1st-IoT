@@ -1,1 +1,0 @@
-default_app_config = 'h1st_iot.data_mgmt.maint_ops.apps.H1stIoTDataManagementMaintenanceOperationsModuleConfig'

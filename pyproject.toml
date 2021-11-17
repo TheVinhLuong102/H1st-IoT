@@ -17,7 +17,7 @@ packages = [
 Python = '>= 3.8, < 3.10'
 
 # Django-AutoComplete-Light & related
-Django-Autocomplete-Light = '^3.8.2'
+Django-Autocomplete-Light = '^3.9.0rc1'
 Django-Generic-M2M = '^0.3.1'
 Django-GM2M = '^1.1.1'
 Django-QuerySetSequence = '^0.14'
