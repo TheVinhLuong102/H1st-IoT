@@ -12,6 +12,8 @@
 
   "python.linting.pylintEnabled": true,
   "python.linting.pylintArgs": [
+    "--disable", "no-member",   // Django ModelClass.objects
+    "--disable", "too-few-public-methods",   // Django ModelClass.Meta
   ],
 
   "python.linting.flake8Enabled": true,

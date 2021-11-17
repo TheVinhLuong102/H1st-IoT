@@ -1,25 +1,33 @@
+"""H1st IoT Data Management (Base) Filters."""
+
+
 from django.db.models.fields.json import JSONField
 
 from rest_framework_filters import CharFilter, FilterSet, RelatedFilter
 
-from .models import \
-    GlobalConfig, \
-    DataType, \
-    NumericMeasurementUnit, \
-    EquipmentDataFieldType, \
-    EquipmentGeneralType, \
-    EquipmentComponent, \
-    EquipmentDataField, \
-    EquipmentUniqueTypeGroup, \
-    EquipmentUniqueType, \
-    EquipmentFacility, \
-    EquipmentInstance, \
-    EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem
+from h1st_iot.data_mgmt.base.models import (
+    GlobalConfig,
+    DataType,
+    NumericMeasurementUnit,
+    EquipmentDataFieldType,
+    EquipmentGeneralType,
+    EquipmentComponent,
+    EquipmentDataField,
+    EquipmentUniqueTypeGroup,
+    EquipmentUniqueType,
+    EquipmentFacility,
+    EquipmentInstance,
+    EquipmentInstanceDataFieldDailyAgg,
+    EquipmentSystem,
+)
 
 
 class GlobalConfigFilter(FilterSet):
+    """GlobalConfigFilter."""
+
     class Meta:
+        """GlobalConfigFilter metadata."""
+
         model = GlobalConfig
 
         fields = dict(
@@ -34,7 +42,11 @@ class GlobalConfigFilter(FilterSet):
 
 
 class DataTypeFilter(FilterSet):
+    """DataTypeFilter."""
+
     class Meta:
+        """DataTypeFilter metadata."""
+
         model = DataType
 
         fields = dict(
@@ -43,7 +55,11 @@ class DataTypeFilter(FilterSet):
 
 
 class NumericMeasurementUnitFilter(FilterSet):
+    """NumericMeasurementUnitFilter."""
+
     class Meta:
+        """NumericMeasurementUnitFilter metadata."""
+
         model = NumericMeasurementUnit
 
         fields = dict(
@@ -58,7 +74,11 @@ class NumericMeasurementUnitFilter(FilterSet):
 
 
 class EquipmentDataFieldTypeFilter(FilterSet):
+    """EquipmentDataFieldTypeFilter."""
+
     class Meta:
+        """EquipmentDataFieldTypeFilter metadata."""
+
         model = EquipmentDataFieldType
 
         fields = dict(
@@ -67,7 +87,11 @@ class EquipmentDataFieldTypeFilter(FilterSet):
 
 
 class EquipmentGeneralTypeFilter(FilterSet):
+    """EquipmentGeneralTypeFilter."""
+
     class Meta:
+        """EquipmentGeneralTypeFilter metadata."""
+
         model = EquipmentGeneralType
 
         fields = dict(
@@ -82,6 +106,8 @@ class EquipmentGeneralTypeFilter(FilterSet):
 
 
 class EquipmentComponentFilter(FilterSet):
+    """EquipmentComponentFilter."""
+
     equipment_general_type = \
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
@@ -98,6 +124,8 @@ class EquipmentComponentFilter(FilterSet):
             filterset='EquipmentUniqueTypeFilter')
 
     class Meta:
+        """EquipmentComponentFilter metadata."""
+
         model = EquipmentComponent
 
         fields = dict(
@@ -120,6 +148,8 @@ class EquipmentComponentFilter(FilterSet):
 
 
 class EquipmentDataFieldFilter(FilterSet):
+    """EquipmentDataFieldFilter."""
+
     equipment_general_type = \
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
@@ -151,6 +181,8 @@ class EquipmentDataFieldFilter(FilterSet):
             filterset='EquipmentUniqueTypeFilter')
 
     class Meta:
+        """EquipmentDataFieldFilter metadata."""
+
         model = EquipmentDataField
 
         fields = dict(
@@ -226,6 +258,8 @@ class EquipmentDataFieldFilter(FilterSet):
 
 
 class EquipmentUniqueTypeGroupFilter(FilterSet):
+    """EquipmentUniqueTypeGroupFilter."""
+
     equipment_general_type = \
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
@@ -247,6 +281,8 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
             filterset=EquipmentDataFieldFilter)
 
     class Meta:
+        """EquipmentUniqueTypeGroupFilter metadata."""
+
         model = EquipmentUniqueTypeGroup
 
         fields = dict(
@@ -269,6 +305,8 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
 
 
 class EquipmentUniqueTypeFilter(FilterSet):
+    """EquipmentUniqueTypeFilter."""
+
     equipment_general_type = \
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
@@ -290,6 +328,8 @@ class EquipmentUniqueTypeFilter(FilterSet):
             filterset=EquipmentUniqueTypeGroupFilter)
 
     class Meta:
+        """EquipmentUniqueTypeFilter metadata."""
+
         model = EquipmentUniqueType
 
         fields = dict(
@@ -312,7 +352,11 @@ class EquipmentUniqueTypeFilter(FilterSet):
 
 
 class EquipmentFacilityFilter(FilterSet):
+    """EquipmentFacilityFilter."""
+
     class Meta:
+        """EquipmentFacilityFilter metadata."""
+
         model = EquipmentFacility
 
         fields = dict(
@@ -335,6 +379,8 @@ class EquipmentFacilityFilter(FilterSet):
 
 
 class EquipmentInstanceFilter(FilterSet):
+    """EquipmentInstanceFilter."""
+
     equipment_general_type = \
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
@@ -351,6 +397,8 @@ class EquipmentInstanceFilter(FilterSet):
             filterset=EquipmentFacilityFilter)
 
     class Meta:
+        """EquipmentInstanceFilter metadata."""
+
         model = EquipmentInstance
 
         fields = dict(
@@ -373,6 +421,8 @@ class EquipmentInstanceFilter(FilterSet):
 
 
 class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
+    """EquipmentInstanceDataFieldDailyAggFilter."""
+
     equipment_instance = \
         RelatedFilter(
             queryset=EquipmentInstance.objects.all(),
@@ -384,6 +434,8 @@ class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
             filterset=EquipmentDataFieldFilter)
 
     class Meta:
+        """EquipmentInstanceDataFieldDailyAggFilter metadata."""
+
         model = EquipmentInstanceDataFieldDailyAgg
 
         fields = dict(
@@ -507,6 +559,8 @@ class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
 
 
 class EquipmentSystemFilter(FilterSet):
+    """EquipmentSystemFilter."""
+
     equipment_facility = \
         RelatedFilter(
             queryset=EquipmentFacility.objects.all(),
@@ -518,6 +572,8 @@ class EquipmentSystemFilter(FilterSet):
             filterset=EquipmentInstanceFilter)
 
     class Meta:
+        """EquipmentSystemFilter metadata."""
+
         model = EquipmentSystem
 
         fields = dict(
