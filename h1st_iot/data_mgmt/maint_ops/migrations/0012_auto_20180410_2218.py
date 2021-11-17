@@ -9,13 +9,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_PredMaint', '0011_auto_20180410_2100'),
+        ('H1stIoT_DataMgmt_MaintOps', '0011_auto_20180410_2100'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='blueprint',
             name='equipment_unique_type_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
         ),
     ]

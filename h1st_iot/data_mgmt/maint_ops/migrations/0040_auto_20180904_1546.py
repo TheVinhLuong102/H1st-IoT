@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0014_auto_20180803_1031'),
-        ('Arimo_IoT_DataAdmin_PredMaint', '0039_auto_20180831_1539'),
+        ('H1stIoT_DataMgmt_Base', '0014_auto_20180803_1031'),
+        ('H1stIoT_DataMgmt_MaintOps', '0039_auto_20180831_1539'),
     ]
 
     operations = [
@@ -19,8 +19,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('active', models.BooleanField(default=True)),
-                ('excluded_equipment_data_fields', models.ManyToManyField(related_name='monitored_equipment_data_field_configs', related_query_name='monitored_equipment_data_field_config', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField')),
-                ('monitored_equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='monitored_equipment_data_field_configs', related_query_name='monitored_equipment_data_field_config', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField')),
+                ('excluded_equipment_data_fields', models.ManyToManyField(related_name='monitored_equipment_data_field_configs', related_query_name='monitored_equipment_data_field_config', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
+                ('monitored_equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='monitored_equipment_data_field_configs', related_query_name='monitored_equipment_data_field_config', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
             ],
         ),
         migrations.AddField(
@@ -31,6 +31,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipmentuniquetypegroupserviceconfig',
             name='monitored_equipment_data_field_configs',
-            field=models.ManyToManyField(related_name='equipment_unique_type_group_service_configs', related_query_name='equipment_unique_type_group_service_config', to='Arimo_IoT_DataAdmin_PredMaint.MonitoredEquipmentDataFieldConfig'),
+            field=models.ManyToManyField(related_name='equipment_unique_type_group_service_configs', related_query_name='equipment_unique_type_group_service_config', to='H1stIoT_DataMgmt_MaintOps.MonitoredEquipmentDataFieldConfig'),
         ),
     ]

@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0007_auto_20180703_1156'),
+        ('H1stIoT_DataMgmt_Base', '0007_auto_20180703_1156'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(default=None, max_length=255)),
                 ('date', models.DateField()),
-                ('equipment_instances', models.ManyToManyField(blank=True, related_name='equipment_instance_associations', related_query_name='equipment_instance_association', to='Arimo_IoT_DataAdmin_Base.EquipmentInstance')),
+                ('equipment_instances', models.ManyToManyField(blank=True, related_name='equipment_instance_associations', related_query_name='equipment_instance_association', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
             ],
             options={
                 'ordering': ('name', 'date'),

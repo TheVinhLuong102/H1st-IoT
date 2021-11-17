@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0005_auto_20180103_1059'),
+        ('H1stIoT_DataMgmt_Base', '0005_auto_20180103_1059'),
     ]
 
     operations = [
@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType')),
-                ('equipment_unique_types', models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueType')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
+                ('equipment_unique_types', models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='H1stIoT_DataMgmt_Base.EquipmentUniqueType')),
             ],
             options={
                 'ordering': ('equipment_general_type', 'name'),
@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipmentuniquetype',
             name='groups',
-            field=models.ManyToManyField(blank=True, to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup'),
+            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
         ),
     ]

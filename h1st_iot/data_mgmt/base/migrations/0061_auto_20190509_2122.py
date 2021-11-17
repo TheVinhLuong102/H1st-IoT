@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0060_equipmentdatafield_components'),
+        ('H1stIoT_DataMgmt_Base', '0060_equipmentdatafield_components'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='equipmentuniquetype',
             name='components',
-            field=models.ManyToManyField(blank=True, to='Arimo_IoT_DataAdmin_Base.EquipmentComponent'),
+            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_Base.EquipmentComponent'),
         ),
         migrations.AddField(
             model_name='equipmentuniquetypegroup',
             name='equipment_components',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='Arimo_IoT_DataAdmin_Base.EquipmentComponent'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='H1stIoT_DataMgmt_Base.EquipmentComponent'),
         ),
     ]

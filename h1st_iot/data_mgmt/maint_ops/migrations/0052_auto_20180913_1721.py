@@ -9,24 +9,24 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_PredMaint', '0051_equipmentinstancedailyriskscore'),
+        ('H1stIoT_DataMgmt_MaintOps', '0051_equipmentinstancedailyriskscore'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentinstancedailyriskscore',
             name='equipment_general_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType'),
         ),
         migrations.AlterField(
             model_name='equipmentinstancedailyriskscore',
             name='equipment_instance',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='Arimo_IoT_DataAdmin_Base.EquipmentInstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='H1stIoT_DataMgmt_Base.EquipmentInstance'),
         ),
         migrations.AlterField(
             model_name='equipmentinstancedailyriskscore',
             name='equipment_unique_type_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_risk_scores', related_query_name='equipment_instance_daily_risk_score', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
         ),
         migrations.AlterField(
             model_name='equipmentinstancedailyriskscore',

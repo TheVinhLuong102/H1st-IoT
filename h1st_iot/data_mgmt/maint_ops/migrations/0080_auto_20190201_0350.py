@@ -6,15 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0037_auto_20190128_2137'),
-        ('Arimo_IoT_DataAdmin_PredMaint', '0079_equipmentuniquetypegroupdatafieldpairwisecorrelation'),
+        ('H1stIoT_DataMgmt_Base', '0037_auto_20190128_2137'),
+        ('H1stIoT_DataMgmt_MaintOps', '0079_equipmentuniquetypegroupdatafieldpairwisecorrelation'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='equipmentuniquetypegroupmonitoreddatafieldconfig',
             name='auto_included_numeric_equipment_data_fields',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_group_monitored_data_field_configs_auto_incl', related_query_name='equipment_unique_type_group_monitored_data_field_config_auto_incl', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_group_monitored_data_field_configs_auto_incl', related_query_name='equipment_unique_type_group_monitored_data_field_config_auto_incl', to='H1stIoT_DataMgmt_Base.EquipmentDataField'),
         ),
         migrations.AddField(
             model_name='equipmentuniquetypegroupmonitoreddatafieldconfig',
@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipmentuniquetypegroupmonitoreddatafieldconfig',
             name='manually_included_equipment_data_fields',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_group_monitored_data_field_configs_extra_manual_incl', related_query_name='equipment_unique_type_group_monitored_data_field_config_extra_manual_incl', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_group_monitored_data_field_configs_extra_manual_incl', related_query_name='equipment_unique_type_group_monitored_data_field_config_extra_manual_incl', to='H1stIoT_DataMgmt_Base.EquipmentDataField'),
         ),
     ]

@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0006_auto_20180410_1904'),
-        ('Arimo_IoT_DataAdmin_PredMaint', '0013_auto_20180414_0052'),
+        ('H1stIoT_DataMgmt_Base', '0006_auto_20180410_1904'),
+        ('H1stIoT_DataMgmt_MaintOps', '0013_auto_20180414_0052'),
     ]
 
     operations = [
@@ -24,9 +24,9 @@ class Migration(migrations.Migration):
                 ('to_date', models.DateField(default=None)),
                 ('quantified_risk_degree', models.FloatField(default=0)),
                 ('active', models.BooleanField(default=False)),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType')),
-                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='Arimo_IoT_DataAdmin_Base.EquipmentInstance')),
-                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
+                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
+                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup')),
             ],
             options={
                 'ordering': ('equipment_general_type', 'equipment_unique_type_group', 'equipment_instance', 'risk_score_name', 'threshold', 'from_date', 'to_date', 'quantified_risk_degree', 'active'),

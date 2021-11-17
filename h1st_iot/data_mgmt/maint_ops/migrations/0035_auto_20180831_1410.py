@@ -10,8 +10,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0014_auto_20180803_1031'),
-        ('Arimo_IoT_DataAdmin_PredMaint', '0034_auto_20180831_1311'),
+        ('H1stIoT_DataMgmt_Base', '0014_auto_20180803_1031'),
+        ('H1stIoT_DataMgmt_MaintOps', '0034_auto_20180831_1311'),
     ]
 
     operations = [
@@ -25,9 +25,9 @@ class Migration(migrations.Migration):
                 ('medae', models.FloatField(blank=True, null=True)),
                 ('r2', models.FloatField(blank=True, null=True)),
                 ('last_updated', models.DateTimeField()),
-                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField')),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType')),
-                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup')),
+                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
+                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profiles', related_query_name='equipment_unique_type_group_data_field_measurement_data_field_benchmark_metric_profile', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup')),
             ],
         ),
         migrations.CreateModel(
@@ -46,9 +46,9 @@ class Migration(migrations.Migration):
                 ('outlier_rst_max', models.FloatField(blank=True, null=True)),
                 ('sample_max', models.FloatField(blank=True, null=True)),
                 ('last_updated', models.DateTimeField()),
-                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField')),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType')),
-                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup')),
+                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
+                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_field_profiles', related_query_name='equipment_unique_type_group_data_field_profile', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup')),
             ],
         ),
         migrations.RemoveField(

@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0031_remove_equipmentgeneraltype_last_updated'),
+        ('H1stIoT_DataMgmt_Base', '0031_remove_equipmentgeneraltype_last_updated'),
     ]
 
     operations = [
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', models.DateField(default=None)),
                 ('finished', models.DateTimeField(blank=True, default=None, null=True)),
-                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_risk_scoring_task', related_query_name='equipment_unique_type_group_risk_scoring_tasks', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup')),
+                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_risk_scoring_task', related_query_name='equipment_unique_type_group_risk_scoring_tasks', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup')),
             ],
             options={
                 'ordering': ('equipment_unique_type_group', '-date'),

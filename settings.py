@@ -42,9 +42,9 @@ INSTALLED_APPS = [
 
     'silk',
 
-    'h1st.IoT.DataAdmin.base',
-    'h1st.IoT.DataAdmin.PredMaint',
-    'h1st.IoT.DataAdmin.tasks'
+    'h1st_iot.data_mgmt.base',
+    'h1st_iot.data_mgmt.maint_ops',
+    'h1st_iot.data_mgmt.tasks',
 ]
 
 MIDDLEWARE = [

@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class TasksConfig(AppConfig):
-    name = 'h1st.IoT.DataAdmin.tasks'
-    label = 'Arimo_IoT_DataAdmin_Tasks'
-    verbose_name = 'Tasks'
+class H1stIoTDataManagementTasksConfig(AppConfig):
+    name = 'h1st_iot.data_mgmt.tasks'
+    label = 'H1stIoT_DataMgmt_Tasks'
+    verbose_name = 'H1st IoT Data Management Tasks'

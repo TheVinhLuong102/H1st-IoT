@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0005_auto_20180103_1059'),
-        ('Arimo_IoT_DataAdmin_PredMaint', '0006_auto_20180410_0348'),
+        ('H1stIoT_DataMgmt_Base', '0005_auto_20180103_1059'),
+        ('H1stIoT_DataMgmt_MaintOps', '0006_auto_20180410_0348'),
     ]
 
     operations = [
@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blueprint',
             name='equipment_unique_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueType'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentUniqueType'),
         ),
         migrations.AlterField(
             model_name='blueprint',
             name='equipment_general_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='Arimo_IoT_DataAdmin_Base.EquipmentGeneralType'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType'),
         ),
     ]

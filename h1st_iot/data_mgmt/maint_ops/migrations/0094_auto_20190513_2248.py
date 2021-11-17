@@ -7,18 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_PredMaint', '0093_auto_20190224_1536'),
+        ('H1stIoT_DataMgmt_MaintOps', '0093_auto_20190224_1536'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentproblemperiod',
             name='equipment_instance',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_problem_diagnoses', related_query_name='equipment_instance_problem_diagnosis', to='Arimo_IoT_DataAdmin_Base.EquipmentInstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_problem_diagnoses', related_query_name='equipment_instance_problem_diagnosis', to='H1stIoT_DataMgmt_Base.EquipmentInstance'),
         ),
         migrations.AlterField(
             model_name='equipmentproblemperiod',
             name='equipment_problem_types',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instance_problem_diagnoses', related_query_name='equipment_instance_problem_diagnosis', to='Arimo_IoT_DataAdmin_PredMaint.EquipmentProblemType'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instance_problem_diagnoses', related_query_name='equipment_instance_problem_diagnosis', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemType'),
         ),
     ]

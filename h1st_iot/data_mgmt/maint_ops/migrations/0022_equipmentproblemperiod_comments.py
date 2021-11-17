@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_PredMaint', '0021_remove_blueprint_url'),
+        ('H1stIoT_DataMgmt_MaintOps', '0021_remove_blueprint_url'),
     ]
 
     operations = [

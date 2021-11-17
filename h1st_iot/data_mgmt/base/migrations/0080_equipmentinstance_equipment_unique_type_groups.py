@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0079_auto_20190626_2123'),
+        ('H1stIoT_DataMgmt_Base', '0079_auto_20190626_2123'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='equipmentinstance',
             name='equipment_unique_type_groups',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instances', related_query_name='equipment_instance', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instances', related_query_name='equipment_instance', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
         ),
     ]

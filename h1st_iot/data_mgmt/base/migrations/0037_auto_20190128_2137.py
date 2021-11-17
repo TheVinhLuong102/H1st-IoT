@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0036_auto_20190126_1922'),
+        ('H1stIoT_DataMgmt_Base', '0036_auto_20190126_1922'),
     ]
 
     operations = [

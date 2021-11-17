@@ -8,13 +8,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0014_auto_20180803_1031'),
+        ('H1stIoT_DataMgmt_Base', '0014_auto_20180803_1031'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='equipmentuniquetypegroup',
             name='equipment_data_fields',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='Arimo_IoT_DataAdmin_Base.EquipmentDataField'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_type_groups', related_query_name='equipment_unique_type_group', to='H1stIoT_DataMgmt_Base.EquipmentDataField'),
         ),
     ]

@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class BaseConfig(AppConfig):
-    name = 'h1st.IoT.DataAdmin.base'
-    label = 'Arimo_IoT_DataAdmin_Base'
-    verbose_name = 'Data Admin'
+class H1stIoTDataManagementBaseModuleConfig(AppConfig):
+    name = 'h1st_iot.data_mgmt.base'
+    label = 'H1stIoT_DataMgmt_Base'
+    verbose_name = 'H1st IoT Data Management'

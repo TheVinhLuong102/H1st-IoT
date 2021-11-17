@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class PredMaintConfig(AppConfig):
-    name = 'h1st.IoT.DataAdmin.PredMaint'
-    label = 'Arimo_IoT_DataAdmin_PredMaint'
-    verbose_name = 'Predictive Maintenance'
+class H1stIoTDataManagementMaintenanceOperationsModuleConfig(AppConfig):
+    name = 'h1st_iot.data_mgmt.maint_ops'
+    label = 'H1stIoT_DataMgmt_MaintOps'
+    verbose_name = 'H1st IoT Data Management: Maintenance Operations'

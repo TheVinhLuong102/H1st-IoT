@@ -1,1 +1,1 @@
-default_app_config = 'h1st.IoT.DataAdmin.base.apps.BaseConfig'
+default_app_config = 'h1st_iot.data_mgmt.base.apps.H1stIoTDataManagementBaseModuleConfig'

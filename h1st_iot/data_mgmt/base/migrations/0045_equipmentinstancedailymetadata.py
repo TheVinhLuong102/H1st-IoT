@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Base', '0044_auto_20190220_0336'),
+        ('H1stIoT_DataMgmt_Base', '0044_auto_20190220_0336'),
     ]
 
     operations = [
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateField(db_index=True)),
                 ('schema', django.contrib.postgres.fields.jsonb.JSONField(default=None)),
                 ('n_rows', models.IntegerField(default=0)),
-                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_metadata', related_query_name='equipment_instance_daily_metadata', to='Arimo_IoT_DataAdmin_Base.EquipmentInstance')),
+                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_daily_metadata', related_query_name='equipment_instance_daily_metadata', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
             ],
             options={
                 'ordering': ('equipment_instance', 'date'),

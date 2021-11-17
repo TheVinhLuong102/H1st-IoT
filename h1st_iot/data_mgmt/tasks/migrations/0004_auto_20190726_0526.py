@@ -7,13 +7,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_Tasks', '0003_auto_20190726_0525'),
+        ('H1stIoT_DataMgmt_Tasks', '0003_auto_20190726_0525'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentuniquetypegroupdataaggtask',
             name='equipment_unique_type_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_agg_task', related_query_name='equipment_unique_type_group_data_agg_tasks', to='Arimo_IoT_DataAdmin_Base.EquipmentUniqueTypeGroup'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_data_agg_task', related_query_name='equipment_unique_type_group_data_agg_tasks', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
         ),
     ]

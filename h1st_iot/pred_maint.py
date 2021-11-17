@@ -147,7 +147,7 @@ class Project:
         call_command('migrate')
         print(f'Applied DB Migrations ({time() - tic:.3f}s)')
 
-        from h1st.IoT.DataAdmin.base.models import \
+        from h1st_iot.data_mgmt.base.models import \
             GlobalConfig, \
             DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, \
@@ -157,7 +157,7 @@ class Project:
             EquipmentInstance, EquipmentInstanceDataFieldDailyAgg, \
             EquipmentFacility, EquipmentSystem
 
-        from h1st.IoT.DataAdmin.PredMaint.models import \
+        from h1st_iot.data_mgmt.maint_ops.models import \
             EquipmentUniqueTypeGroupDataFieldProfile, \
             EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation, \
             EquipmentUniqueTypeGroupServiceConfig, \
@@ -167,7 +167,7 @@ class Project:
             EquipmentProblemType, EquipmentInstanceAlarmPeriod, EquipmentInstanceProblemDiagnosis, \
             AlertDiagnosisStatus, Alert
 
-        from h1st.IoT.DataAdmin.tasks.models import \
+        from h1st_iot.data_mgmt.tasks.models import \
             EquipmentUniqueTypeGroupRiskScoringTask, \
             EquipmentUniqueTypeGroupDataAggTask
 
@@ -508,7 +508,7 @@ class Project:
 
         n_equipment_data_fields = equipment_data_fields.count()
 
-        from h1st.IoT.DataAdmin.PredMaint.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
+        from h1st_iot.data_mgmt.maint_ops.models import EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation
 
         for i in tqdm(range(n_equipment_data_fields - 1)):
             equipment_data_field = equipment_data_fields[i]
@@ -1590,7 +1590,7 @@ class Project:
                         name=equipment_instance_id)[0]
                  for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
-            from h1st.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
+            from h1st_iot.data_mgmt.maint_ops.models import EquipmentInstanceDailyRiskScore
 
             print('Writing {} Anom Scores to DB: {:,} Rows x {}...'.format(
                     equipment_unique_type_group_data_set_name,
@@ -1639,7 +1639,7 @@ class Project:
                     name=clean_lower_str(str(equipment_instance_id)))[0]
              for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
 
-        from h1st.IoT.DataAdmin.PredMaint.models import EquipmentInstanceDailyRiskScore
+        from h1st_iot.data_mgmt.maint_ops.models import EquipmentInstanceDailyRiskScore
 
         for i in tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
             _anom_scores_df = \
@@ -2272,7 +2272,7 @@ class Project:
                 date__in=copy_agg_daily_equipment_data_to_db_for_dates) \
             .delete()
 
-            from h1st.IoT.DataAdmin.base.models import EquipmentInstanceDataFieldDailyAgg
+            from h1st_iot.data_mgmt.base.models import EquipmentInstanceDataFieldDailyAgg
 
             for equipment_unique_type_group_daily_agg_df in \
                     tqdm(iter(equipment_unique_type_group_daily_agg_s3_parquet_df),

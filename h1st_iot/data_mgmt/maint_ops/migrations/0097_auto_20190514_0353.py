@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('Arimo_IoT_DataAdmin_PredMaint', '0096_auto_20190514_0353'),
+        ('H1stIoT_DataMgmt_MaintOps', '0096_auto_20190514_0353'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='alert',
             name='alarm_periods',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alert_periods_reverse', related_query_name='equipment_instance_alert_period', to='Arimo_IoT_DataAdmin_PredMaint.EquipmentInstanceAlarmPeriod'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alert_periods_reverse', related_query_name='equipment_instance_alert_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceAlarmPeriod'),
         ),
         migrations.AlterField(
             model_name='alert',
             name='equipment_instance_problem_diagnoses',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alert_periods_reverse', related_query_name='equipment_instance_alert_period', to='Arimo_IoT_DataAdmin_PredMaint.EquipmentProblemPeriod'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alert_periods_reverse', related_query_name='equipment_instance_alert_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemPeriod'),
         ),
         migrations.AlterField(
             model_name='equipmentproblemperiod',
             name='alarm_periods',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instance_problem_diagnoses_reverse', related_query_name='equipment_instance_problem_diagnosis', to='Arimo_IoT_DataAdmin_PredMaint.EquipmentInstanceAlarmPeriod'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instance_problem_diagnoses_reverse', related_query_name='equipment_instance_problem_diagnosis', to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceAlarmPeriod'),
         ),
     ]

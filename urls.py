@@ -2,8 +2,8 @@ from django.urls.conf import include, path
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 
-from h1st.IoT.DataAdmin.base.urls import URL_PATTERNS as BASE_URLS
-from h1st.IoT.DataAdmin.PredMaint.urls import URL_PATTERNS as PRED_MAINT_URLS
+from h1st_iot.data_mgmt.base.urls import URL_PATTERNS as BASE_URLS
+from h1st_iot.data_mgmt.maint_ops.urls import URL_PATTERNS as MAINT_OPS_URLS
 
 
 admin.site.index_title = 'H1st'
@@ -24,4 +24,4 @@ urlpatterns = [
     path('silk/',
          include('silk.urls', namespace='silk'))
 
-] + BASE_URLS + PRED_MAINT_URLS
+] + BASE_URLS + MAINT_OPS_URLS
