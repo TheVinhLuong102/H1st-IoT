@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='has_equipment_problems',
             field=models.BooleanField(default=False),
         ),

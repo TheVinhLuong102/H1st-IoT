@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='EquipmentProblemPeriod',
+            name='EquipmentInstanceProblemDiagnosis',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('from_date', models.DateField(default=None)),
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='equipment_problem_types',
             field=models.ManyToManyField(blank=True, related_name='equipment_problem_instances', related_query_name='equipment_problem_instance', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemType'),
         ),

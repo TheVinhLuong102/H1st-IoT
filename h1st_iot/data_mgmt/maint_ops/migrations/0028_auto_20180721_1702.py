@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='problems',
         ),
         migrations.RemoveField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='alerts',
         ),
     ]

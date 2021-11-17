@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='ongoing',
             field=models.BooleanField(default=False),
         ),

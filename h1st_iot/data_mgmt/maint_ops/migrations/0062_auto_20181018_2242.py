@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='has_associated_alerts',
             field=models.BooleanField(default=False),
         ),

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             options={'ordering': ('-from_date', '-to_date', 'equipment_instance')},
         ),
     ]

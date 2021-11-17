@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             options={'ordering': ('dismissed', '-to_date', 'from_date')},
         ),
         migrations.RemoveField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='ongoing',
         ),
     ]

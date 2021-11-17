@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='alerts',
             field=models.ManyToManyField(blank=True, related_name='equipment_problem_instances', related_query_name='equipment_problem_instance', to='H1stIoT_DataMgmt_MaintOps.Alert'),
         ),

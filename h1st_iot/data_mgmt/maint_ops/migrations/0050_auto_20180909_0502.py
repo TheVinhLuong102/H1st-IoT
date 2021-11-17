@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='last_updated',
             field=models.DateTimeField(auto_now=True),
         ),

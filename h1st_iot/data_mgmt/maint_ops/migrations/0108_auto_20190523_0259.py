@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             unique_together={('equipment_instance', 'alarm_type', 'from_utc_date_time')},
         ),
         migrations.AlterUniqueTogether(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             unique_together={('equipment_instance', 'from_date')},
         ),
     ]

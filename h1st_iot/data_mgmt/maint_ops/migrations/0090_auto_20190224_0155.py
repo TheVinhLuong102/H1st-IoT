@@ -28,12 +28,12 @@ class Migration(migrations.Migration):
             field=models.FloatField(),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='from_date',
             field=models.DateField(db_index=True),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='to_date',
             field=models.DateField(db_index=True),
         ),

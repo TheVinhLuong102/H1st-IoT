@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             new_name='equipment_instance_alarm_periods',
         ),
         migrations.RenameField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             old_name='alarm_periods',
             new_name='equipment_instance_alarm_periods',
         ),

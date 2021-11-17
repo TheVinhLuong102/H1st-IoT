@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             unique_together={('equipment_instance', 'to_date'), ('equipment_instance', 'from_date')},
         ),
     ]

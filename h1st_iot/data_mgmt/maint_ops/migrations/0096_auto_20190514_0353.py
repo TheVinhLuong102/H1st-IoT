@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='equipmentinstancealarmperiod',
             name='equipment_instance_problem_diagnoses',
-            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods_reverse', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemPeriod'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods_reverse', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceProblemDiagnosis'),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='alert_periods',
             field=models.ManyToManyField(blank=True, related_name='equipment_instance_problem_diagnoses_reverse', related_query_name='equipment_instance_problem_diagnosis', to='H1stIoT_DataMgmt_MaintOps.Alert'),
         ),

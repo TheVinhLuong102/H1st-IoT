@@ -12,17 +12,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='duration',
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='to_date',
             field=models.DateField(blank=True, db_index=True, null=True),
         ),
         migrations.AlterUniqueTogether(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             unique_together={('equipment_instance', 'from_date'), ('equipment_instance', 'from_date', 'to_date')},
         ),
     ]

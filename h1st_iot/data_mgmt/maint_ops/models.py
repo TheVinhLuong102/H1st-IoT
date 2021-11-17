@@ -613,7 +613,7 @@ class EquipmentInstanceAlarmPeriod(Model):
 
     equipment_instance_problem_diagnoses = \
         ManyToManyField(
-            to='EquipmentProblemPeriod',   # EquipmentInstanceProblemDiagnosis
+            to='EquipmentInstanceProblemDiagnosis',
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -669,7 +669,7 @@ class EquipmentInstanceAlarmPeriod(Model):
         super(type(self), self).save(*args, **kwargs)
 
 
-class EquipmentProblemPeriod(Model):
+class EquipmentInstanceProblemDiagnosis(Model):
     RELATED_NAME = 'equipment_instance_problem_diagnoses'
     RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
 
@@ -803,10 +803,6 @@ class EquipmentProblemPeriod(Model):
             else None
 
         super(type(self), self).save(*args, **kwargs)
-
-
-# rename more correctly
-EquipmentInstanceProblemDiagnosis = EquipmentProblemPeriod
 
 
 class AlertDiagnosisStatus(Model):

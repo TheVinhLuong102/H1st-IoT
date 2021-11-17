@@ -15,10 +15,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='alert',
             name='equipment_problem_periods',
-            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemPeriod'),
+            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceProblemDiagnosis'),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='alerts',
             field=models.ManyToManyField(blank=True, related_name='equipment_problem_instances', related_query_name='equipment_problem_instance', to='H1stIoT_DataMgmt_MaintOps.Alert'),
         ),

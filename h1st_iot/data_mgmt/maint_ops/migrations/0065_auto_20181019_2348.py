@@ -12,17 +12,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='alerts',
             field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.Alert'),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='equipment_instance',
             field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='H1stIoT_DataMgmt_Base.EquipmentInstance'),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='equipment_problem_types',
             field=models.ManyToManyField(blank=True, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemType'),
         ),

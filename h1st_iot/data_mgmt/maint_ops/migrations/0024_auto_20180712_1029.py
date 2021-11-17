@@ -13,16 +13,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='equipmentproblemperiod',
+            name='equipmentinstanceproblemdiagnosis',
             options={'ordering': ('-from_date', '-to_date', 'equipment_instance', 'dismissed')},
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='dismissed',
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='comments',
             field=models.TextField(blank=True, null=True),
         ),

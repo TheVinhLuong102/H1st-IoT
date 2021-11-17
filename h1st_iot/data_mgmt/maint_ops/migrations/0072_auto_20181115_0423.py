@@ -56,27 +56,27 @@ class Migration(migrations.Migration):
             field=models.CharField(db_index=True, max_length=255),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='dismissed',
             field=models.BooleanField(db_index=True, default=False),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='from_date',
             field=models.DateField(db_index=True, default=None),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='has_associated_alerts',
             field=models.BooleanField(db_index=True, default=False),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='has_equipment_problems',
             field=models.BooleanField(db_index=True, default=False),
         ),
         migrations.AlterField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='to_date',
             field=models.DateField(db_index=True, default=None),
         ),

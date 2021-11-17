@@ -29,12 +29,12 @@ class Migration(migrations.Migration):
             field=models.IntegerField(default=0),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='date_range',
             field=django.contrib.postgres.fields.ranges.DateRangeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='equipmentproblemperiod',
+            model_name='equipmentinstanceproblemdiagnosis',
             name='duration',
             field=models.IntegerField(default=0),
         ),
