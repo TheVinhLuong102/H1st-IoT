@@ -1,6 +1,0 @@
-git+ssh://git@github.com/adatao/SDK.git
-git+ssh://git@github.com/adatao/BAI-dev.git
-git+ssh://git@github.com/adatao/IoT-DataAdmin.git
-git+ssh://git@github.com/adatao/IoT-PredMaint.git
-
-pip >= 19.0.2
