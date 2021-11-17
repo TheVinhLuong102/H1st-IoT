@@ -102,11 +102,11 @@ class GlobalConfigViewSet(ModelViewSet):
 
     @silk_profile(name='API: Global Configs')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Global Config')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class DataTypeViewSet(ReadOnlyModelViewSet):
@@ -147,11 +147,11 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
 
     @silk_profile(name='API: Data Types')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Data Type')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class NumericMeasurementUnitViewSet(ModelViewSet):
@@ -204,11 +204,11 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
 
     @silk_profile(name='API: Numeric Measurement Units')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Numeric Measurement Unit')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
@@ -249,11 +249,11 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
 
     @silk_profile(name='API: Equipment Data Field Types')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Data Field Type')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentGeneralTypeViewSet(ModelViewSet):
@@ -306,11 +306,11 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment General Types')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment General Type')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentComponentViewSet(ModelViewSet):
@@ -363,11 +363,11 @@ class EquipmentComponentViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Components')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Component')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentDataFieldViewSet(ModelViewSet):
@@ -423,11 +423,11 @@ class EquipmentDataFieldViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Data Fields')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Data Field')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
@@ -484,11 +484,11 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Unique Type Groups')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Unique Type Group')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentUniqueTypeViewSet(ModelViewSet):
@@ -545,11 +545,11 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Unique Types')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Unique Type')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentFacilityViewSet(ModelViewSet):
@@ -602,11 +602,11 @@ class EquipmentFacilityViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Facilities')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Facility')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentInstanceViewSet(ModelViewSet):
@@ -666,11 +666,11 @@ class EquipmentInstanceViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Instances')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Instance')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
@@ -713,11 +713,11 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
 
     @silk_profile(name='API: Equipment Instance Data Field Daily Aggregates')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Instance Data Field Daily Aggregate')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EquipmentSystemViewSet(ModelViewSet):
@@ -772,8 +772,8 @@ class EquipmentSystemViewSet(ModelViewSet):
 
     @silk_profile(name='API: Equipment Systems')
     def list(self, request, *args, **kwargs):
-        return super(type(self), self).list(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment System')
     def retrieve(self, request, *args, **kwargs):
-        return super(type(self), self).retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)

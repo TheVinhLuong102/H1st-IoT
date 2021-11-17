@@ -35,7 +35,7 @@ class GlobalConfig(Model):
 
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class DataType(Model):
@@ -56,7 +56,7 @@ class DataType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class NumericMeasurementUnit(Model):
@@ -82,7 +82,7 @@ class NumericMeasurementUnit(Model):
 
     def save(self, *args, **kwargs):
         self.name = self.name.strip()
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentDataFieldType(Model):
@@ -103,7 +103,7 @@ class EquipmentDataFieldType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentGeneralType(Model):
@@ -124,7 +124,7 @@ class EquipmentGeneralType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentComponent(Model):
@@ -203,7 +203,7 @@ class EquipmentComponent(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentDataField(Model):
@@ -338,7 +338,7 @@ class EquipmentDataField(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentUniqueTypeGroup(Model):
@@ -405,7 +405,7 @@ class EquipmentUniqueTypeGroup(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentUniqueType(Model):
@@ -475,7 +475,7 @@ class EquipmentUniqueType(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 def equipment_unique_types_equipment_components_m2m_changed(
@@ -906,7 +906,7 @@ class EquipmentFacility(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentInstance(Model):
@@ -990,7 +990,7 @@ class EquipmentInstance(Model):
 
             self.equipment_unique_type = None
 
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentInstanceDataFieldDailyAgg(Model):
@@ -1144,4 +1144,4 @@ class EquipmentSystem(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)

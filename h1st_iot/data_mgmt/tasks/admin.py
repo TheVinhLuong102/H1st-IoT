@@ -30,7 +30,7 @@ class EquipmentUniqueTypeGroupRiskScoringTaskAdmin(ModelAdmin):
         'finished'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
             .select_related(
                 'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
             .defer(
@@ -79,7 +79,7 @@ class EquipmentUniqueTypeGroupDataAggTaskAdmin(ModelAdmin):
         'finished'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
                 .defer(

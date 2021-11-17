@@ -43,11 +43,11 @@ class GlobalConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -106,7 +106,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_max'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
@@ -119,11 +119,11 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profile')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -162,7 +162,7 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
         'sample_correlation'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
@@ -180,11 +180,11 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlation')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -215,7 +215,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
         'lowly_correlated_numeric_equipment_data_fields'
     
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'monitored_equipment_data_field') \
                 .defer(
@@ -288,7 +288,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
                     else '')
 
     def get_queryset(self, request):
-        query_set = super(type(self), self).get_queryset(request=request) \
+        query_set = super().get_queryset(request=request) \
 
         return query_set \
                 .select_related(
@@ -342,11 +342,11 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Configs')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Service Config')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -432,7 +432,7 @@ class BlueprintAdmin(ModelAdmin):
                 for k, v in sorted(d.items(), key=lambda i: i[1]['good'], reverse=True))
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type') \
                 .defer(
@@ -440,11 +440,11 @@ class BlueprintAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Blueprints')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Blueprint')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -487,7 +487,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'rmse'
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
@@ -500,11 +500,11 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profiles')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -521,11 +521,11 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Types')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Problem Type')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -573,7 +573,7 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request=request) \
+            super().get_queryset(request=request) \
             .select_related(
                 'equipment_instance',
                 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
@@ -597,11 +597,11 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Alarm Period')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -652,7 +652,7 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request) \
+            super().get_queryset(request) \
             .select_related(
                 'equipment_instance',
                 'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
@@ -678,11 +678,11 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Diagnoses')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Problem Diagnosis')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -699,11 +699,11 @@ class AlertDiagnosisStatusAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Alert Diagnosis Statuses')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Alert Diagnosis Status')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -771,7 +771,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request) \
+            super().get_queryset(request) \
             .select_related(
                 'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                 'equipment_instance',
@@ -799,11 +799,11 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Alert Period')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(

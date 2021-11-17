@@ -45,7 +45,7 @@ class GlobalConfig(Model):
 
     def save(self, *args, **kwargs):
         self.key = clean_upper_str(self.key)
-        super(type(self), self).save( *args, **kwargs)
+        super().save( *args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldProfile(Model):
@@ -549,7 +549,7 @@ class EquipmentProblemType(Model):
 
     def save(self, *args, **kwargs):
         self.name = self.name.strip()
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentInstanceAlarmPeriod(Model):
@@ -666,7 +666,7 @@ class EquipmentInstanceAlarmPeriod(Model):
                 bounds='[]',
                 empty=False)
 
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentInstanceProblemDiagnosis(Model):
@@ -802,7 +802,7 @@ class EquipmentInstanceProblemDiagnosis(Model):
             if self.to_date \
             else None
 
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class AlertDiagnosisStatus(Model):
@@ -836,7 +836,7 @@ class AlertDiagnosisStatus(Model):
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class Alert(Model):
@@ -1035,7 +1035,7 @@ class Alert(Model):
         if self.diagnosis_status is None:
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
-        super(type(self), self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 # rename more correctly
