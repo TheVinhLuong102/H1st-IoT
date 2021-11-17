@@ -19,19 +19,19 @@ from time import time
 from tqdm import tqdm
 import uuid
 
-import h1st.util.data_backend
-from h1st.blueprints import AbstractPPPBlueprint, load as load_blueprint
-from h1st.blueprints.cs import anom as cs_anom, regr as cs_regr
-from h1st.data.parquet import S3ParquetDataFeeder
-from h1st.data.distributed import DDF
-from h1st.data.distributed_parquet import S3ParquetDistributedDataFrame
-from h1st.util import fs, Namespace
-from h1st.util.aws import key_pair, s3
-from h1st.util.date_time import \
+import h1st_util.util.data_backend
+from h1st_ml.blueprints import AbstractPPPBlueprint, load as load_blueprint
+from h1st_ml.blueprints.cs import anom as cs_anom, regr as cs_regr
+from h1st_util.data.parquet import S3ParquetDataFeeder
+from h1st_util.data.distributed import DDF
+from h1st_util.data.distributed_parquet import S3ParquetDistributedDataFrame
+from h1st_util.util import fs, Namespace
+from h1st_util.util.aws import key_pair, s3
+from h1st_util.util.date_time import \
     DATE_COL, MONTH_COL, \
     _PRED_VARS_INCL_T_AUX_COLS, _T_WoM_COL, _T_DoW_COL, _T_DELTA_COL, _T_PoM_COL, _T_PoW_COL, _T_PoD_COL, \
     month_end, month_str
-from h1st.util.types.spark_sql import _BOOL_TYPE
+from h1st_util.util.types.spark_sql import _BOOL_TYPE
 
 from django.conf import settings
 from django.core.management import call_command
@@ -1424,7 +1424,7 @@ class Project:
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                h1st.util.data_backend.spark.stop()
+                h1st_util.util.data_backend.spark.stop()
 
                 if fs._ON_LINUX_CLUSTER_WITH_HDFS:
                     fs.get(
@@ -1467,7 +1467,7 @@ class Project:
                     verbose=True)
 
                 # free up Spark resources for other tasks
-                h1st.util.data_backend.spark.stop()
+                h1st_util.util.data_backend.spark.stop()
 
             daily_mean_abs_mae_mult_prefix = \
                 AbstractPPPBlueprint._dailyMean_PREFIX + \
@@ -2230,9 +2230,9 @@ class Project:
                     defaults=dict(finished=None))
 
         if copy_agg_daily_equipment_data_to_db_for_dates:
-            if h1st.util.data_backend.chkSpark():
+            if h1st_util.util.data_backend.chkSpark():
                 # free up Spark resources for other tasks
-                h1st.util.data_backend.spark.stop()
+                h1st_util.util.data_backend.spark.stop()
 
             equipment_unique_type_group_s3_parquet_df = \
                 self.load_equipment_data(
