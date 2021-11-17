@@ -1,16 +1,12 @@
 # Python
-*.pyc
-build/
 dist/
-src/
-*egg-info*
+*.egg-info/
+__pycache__/
+
 
 # Visual Studio Code
-.vscode/
 *.code-workspace
 
-# Static Files
-.staticfiles/
 
 # misc/other
 .DS_Store
