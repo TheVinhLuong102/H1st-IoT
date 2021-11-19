@@ -1,106 +1,108 @@
+"""H1st IoT Data Management (Base) Admin."""
+
+
 from django.contrib.admin import ModelAdmin, site, TabularInline
 from django.db.models.query import Prefetch
 from django.forms import BaseInlineFormSet
 
 from silk.profiling.profiler import silk_profile
 
-from .forms import \
-    EquipmentComponentForm, \
-    EquipmentDataFieldForm, \
-    EquipmentUniqueTypeGroupForm, \
-    EquipmentUniqueTypeForm, \
-    EquipmentInstanceForm, \
-    EquipmentSystemForm
-
-from .models import \
-    GlobalConfig, \
-    NumericMeasurementUnit, \
-    EquipmentGeneralType, \
-    EquipmentComponent, \
-    EquipmentDataField, \
-    EquipmentUniqueTypeGroup, \
-    EquipmentUniqueType, \
-    EquipmentFacility, \
-    EquipmentInstance, \
-    EquipmentSystem
-
-from .query_sets import \
-    EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET, \
-    EQUIPMENT_COMPONENT_STR_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_STR_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET, \
-    EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET, \
-    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET
+# from h1st_iot.data_mgmt.base.forms import (
+#     EquipmentComponentForm,
+#     EquipmentDataFieldForm,
+#     EquipmentUniqueTypeGroupForm,
+#     EquipmentUniqueTypeForm,
+#     EquipmentInstanceForm,
+#     EquipmentSystemForm,
+# )
+from h1st_iot.data_mgmt.base.models import (
+    GlobalConfig,
+    NumericMeasurementUnit,
+    EquipmentGeneralType,
+    EquipmentComponent,
+    EquipmentDataField,
+    EquipmentUniqueTypeGroup,
+    EquipmentUniqueType,
+    EquipmentFacility,
+    EquipmentInstance,
+    EquipmentSystem,
+)
+from h1st_iot.data_mgmt.base.query_sets import (
+    EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET,
+    EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET,
+    EQUIPMENT_COMPONENT_STR_QUERY_SET,
+    EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET,
+    EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
+    EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET,
+    EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET,
+    EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET,
+    EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET,
+    EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET,
+    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET,   # noqa: E501
+    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET,   # noqa: E501
+)
 
 
 class GlobalConfigAdmin(ModelAdmin):
-    list_display = \
-        'key', \
-        'value'
+    """GlobalConfigAdmin."""
+
+    list_display = 'key', 'value'
 
     show_full_result_count = False
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    GlobalConfig,
-    admin_class=GlobalConfigAdmin)
+site.register(GlobalConfig, admin_class=GlobalConfigAdmin)
 
 
 class NumericMeasurementUnitAdmin(ModelAdmin):
-    list_display = \
-        'name', \
-        'description'
+    """NumericMeasurementUnitAdmin."""
+
+    list_display = 'name', 'description'
 
     show_full_result_count = False
 
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Numeric Measurement Unit')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    NumericMeasurementUnit,
-    admin_class=NumericMeasurementUnitAdmin)
+site.register(NumericMeasurementUnit, admin_class=NumericMeasurementUnitAdmin)
 
 
 class EquipmentGeneralTypeAdmin(ModelAdmin):
-    list_display = 'name',
+    """EquipmentGeneralTypeAdmin."""
+
+    list_display = ('name',)
 
     show_full_result_count = False
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment General Type')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentGeneralType,
-    admin_class=EquipmentGeneralTypeAdmin)
+site.register(EquipmentGeneralType, admin_class=EquipmentGeneralTypeAdmin)
 
 
 class EquipmentComponentAdmin(ModelAdmin):
+    """EquipmentComponentAdmin."""
+
     list_display = \
         'equipment_general_type', \
         'name', \
@@ -111,7 +113,7 @@ class EquipmentComponentAdmin(ModelAdmin):
         'n_equipment_unique_types', \
         'last_updated'
 
-    list_filter = 'equipment_general_type__name',
+    list_filter = ('equipment_general_type__name',)
 
     search_fields = \
         'equipment_general_type__name', \
@@ -120,13 +122,14 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentComponentForm
+    # form = EquipmentComponentForm
 
     def directly_interacting_component_list(self, obj):
         n = obj.directly_interacts_with_components.count()
         return '{}: {}'.format(
                 n, '; '.join(equipment_component.name
-                             for equipment_component in obj.directly_interacts_with_components.all())) \
+                             for equipment_component in
+                             obj.directly_interacts_with_components.all())) \
             if n \
           else ''
 
@@ -134,7 +137,8 @@ class EquipmentComponentAdmin(ModelAdmin):
         n = obj.sub_components.count()
         return '{}: {}'.format(
                 n, '; '.join(equipment_component.name
-                             for equipment_component in obj.sub_components.all())) \
+                             for equipment_component in
+                             obj.sub_components.all())) \
             if n \
           else ''
 
@@ -151,7 +155,7 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request=request) \
+            super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
@@ -185,19 +189,19 @@ class EquipmentComponentAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Components')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Component')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentComponent,
-    admin_class=EquipmentComponentAdmin)
+site.register(EquipmentComponent, admin_class=EquipmentComponentAdmin)
 
 
 class EquipmentDataFieldAdmin(ModelAdmin):
+    """EquipmentDataFieldAdmin."""
+
     list_display = \
         'equipment_general_type', \
         'equipment_component_list', \
@@ -236,7 +240,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentDataFieldForm
+    # form = EquipmentDataFieldForm
 
     def equipment_component_list(self, obj):
         n = obj.equipment_components.count()
@@ -250,7 +254,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         return obj.equipment_unique_types.count()
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_general_type',
                     'equipment_data_field_type',
@@ -271,19 +275,19 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Data Field')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentDataField,
-    admin_class=EquipmentDataFieldAdmin)
+site.register(EquipmentDataField, admin_class=EquipmentDataFieldAdmin)
 
 
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
+    """EquipmentUniqueTypeGroupAdmin."""
+
     list_display = \
         'equipment_general_type', \
         'name', \
@@ -303,7 +307,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentUniqueTypeGroupForm
+    # form = EquipmentUniqueTypeGroupForm
 
     readonly_fields = \
         'equipment_components', \
@@ -333,7 +337,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request=request) \
+            super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type')
 
@@ -366,19 +370,20 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentUniqueTypeGroup,
-    admin_class=EquipmentUniqueTypeGroupAdmin)
+site.register(EquipmentUniqueTypeGroup,
+              admin_class=EquipmentUniqueTypeGroupAdmin)
 
 
 class EquipmentUniqueTypeAdmin(ModelAdmin):
+    """EquipmentUniqueTypeAdmin."""
+
     list_display = \
         'equipment_general_type', \
         'name', \
@@ -398,7 +403,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'name', \
         'description'
 
-    form = EquipmentUniqueTypeForm
+    # form = EquipmentUniqueTypeForm
 
     def equipment_component_list(self, obj):
         n = obj.equipment_components.count()
@@ -424,7 +429,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     def get_queryset(self, request):
         query_set = \
-            super(type(self), self).get_queryset(request=request) \
+            super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
@@ -455,11 +460,11 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -471,7 +476,7 @@ class EquipmentInstanceInLineFormSet(BaseInlineFormSet):
     model = EquipmentInstance
 
     # def get_queryset(self):
-    #     return super(type(self), self).get_queryset() \
+    #     return super().get_queryset() \
     #         .select_related(
     #             'equipment_general_type',
     #             'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
@@ -486,14 +491,14 @@ class EquipmentInstanceTabularInline(TabularInline):
         'name'
         # 'last_updated' cannot be specified for EquipmentInstance model form as it is a non-editable field
 
-    form = EquipmentInstanceForm
+    # form = EquipmentInstanceForm
 
     formset = EquipmentInstanceInLineFormSet
 
     extra = 0
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
@@ -518,7 +523,7 @@ class EquipmentFacilityAdmin(ModelAdmin):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        query_set = super(type(self), self).get_queryset(request=request)
+        query_set = super().get_queryset(request=request)
 
         return query_set \
             if request.resolver_match.url_name.endswith('_change') \
@@ -530,11 +535,11 @@ class EquipmentFacilityAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Facility')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -565,10 +570,10 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentInstanceForm
+    # form = EquipmentInstanceForm
 
     def get_queryset(self, request):
-        query_set = super(type(self), self).get_queryset(request=request)
+        query_set = super().get_queryset(request=request)
 
         return query_set \
                 .select_related(
@@ -594,11 +599,11 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(
@@ -624,13 +629,13 @@ class EquipmentSystemAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentSystemForm
+    # form = EquipmentSystemForm
 
     def n_equipment_instances(self, obj):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        return super(type(self), self).get_queryset(request=request) \
+        return super().get_queryset(request=request) \
                 .select_related(
                     'equipment_facility') \
                 .defer(
@@ -642,11 +647,11 @@ class EquipmentSystemAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):
-        return super(type(self), self).changelist_view(*args, **kwargs)
+        return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment System')
     def changeform_view(self, *args, **kwargs):
-        return super(type(self), self).changeform_view(*args, **kwargs)
+        return super().changeform_view(*args, **kwargs)
 
 
 site.register(

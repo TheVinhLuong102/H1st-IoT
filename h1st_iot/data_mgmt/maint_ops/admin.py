@@ -7,11 +7,12 @@ from ..base.query_sets import \
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET
 
-from .forms import \
-    EquipmentUniqueTypeGroupServiceConfigForm, \
-    EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm, \
-    EquipmentInstanceProblemDiagnosisForm, \
-    EquipmentInstanceAlertPeriodForm
+# from .forms import (
+#     EquipmentUniqueTypeGroupServiceConfigForm,
+#     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm,
+#     EquipmentInstanceProblemDiagnosisForm,
+#     EquipmentInstanceAlertPeriodForm
+# )
 
 from .models import \
     GlobalConfig, \
@@ -205,7 +206,7 @@ class EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline(StackedInlin
         'active', \
         'comments'
 
-    form = EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm
+    # form = EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm
 
     extra = 0
 
@@ -263,7 +264,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentUniqueTypeGroupServiceConfigForm
+    # form = EquipmentUniqueTypeGroupServiceConfigForm
 
     inlines = EquipmentUniqueTypeGroupMonitoredDataFieldConfigStackedInline,
 
@@ -644,7 +645,7 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'equipment_instance__equipment_unique_type__name', \
         'equipment_instance__name'
 
-    form = EquipmentInstanceProblemDiagnosisForm
+    # form = EquipmentInstanceProblemDiagnosisForm
 
     def equipment_problem_type_names(self, obj):
         return ', '.join(equipment_problem_type.name
@@ -749,7 +750,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    form = EquipmentInstanceAlertPeriodForm
+    # form = EquipmentInstanceAlertPeriodForm
 
     readonly_fields = \
         'equipment_unique_type_group', \
