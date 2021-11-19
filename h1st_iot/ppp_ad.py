@@ -1441,45 +1441,6 @@ class Project:
             .update(
                 finished=datetime.datetime.utcnow())
 
-    def save_vae_daily_anom_score_to_db(self, s3_path, from_date, to_date, equipment_general_type_name, equipment_unique_type_group_name):
-        import pandas as pd
-        df_vae_anom_score = pd.read_parquet(s3_path)
-        print(df_vae_anom_score.shape)
-
-        anom_scores_df = df_vae_anom_score[(from_date <= df_vae_anom_score[DATE_COL]) & (df_vae_anom_score[DATE_COL] <= to_date)]
-        
-        equipment_unique_type_group = \
-            self.data.EquipmentUniqueTypeGroups.get(
-                equipment_general_type__name=equipment_general_type_name,
-                name=equipment_unique_type_group_name)
-
-        equipment_general_type = self.data.EquipmentGeneralTypes.get(name=equipment_general_type_name)
-
-        equipment_instances = \
-            {equipment_instance_id:
-                self.data.EquipmentInstances.get_or_create(
-                    equipment_general_type=equipment_general_type,
-                    name=clean_lower_str(str(equipment_instance_id)))[0]
-             for equipment_instance_id in tqdm(anom_scores_df[self._EQUIPMENT_INSTANCE_ID_COL_NAME].unique())}
-
-        from h1st_iot.data_mgmt.maint_ops.models import EquipmentInstanceDailyRiskScore
-
-        for i in tqdm(range(int(math.ceil(len(anom_scores_df) / self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)))):
-            _anom_scores_df = \
-                anom_scores_df.iloc[
-                    (i * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME):((i + 1) * self._MAX_N_ROWS_TO_COPY_TO_DB_AT_ONE_TIME)]
-
-            self.data.EquipmentInstanceDailyRiskScores.bulk_create(
-                EquipmentInstanceDailyRiskScore(
-                    equipment_unique_type_group=equipment_unique_type_group,
-                    equipment_instance=equipment_instances[row[self._EQUIPMENT_INSTANCE_ID_COL_NAME]],
-                    risk_score_name=row['risk_score_name'],
-                    date=row[DATE_COL],
-                    risk_score_value=row['risk_score_value'])
-                for _, row in tqdm(_anom_scores_df.iterrows(), total=len(_anom_scores_df))
-                    for col_name in set(row.index).difference((self._EQUIPMENT_INSTANCE_ID_COL_NAME, DATE_COL))
-                        if pandas.notnull(row[col_name]))
-
     def ppp_anom_alert(
             self,
             equipment_general_type_name, equipment_unique_type_group_name,
