@@ -1,3 +1,6 @@
+"""H1st IoT URLs."""
+
+
 from django.urls.conf import include, path
 from django.contrib import admin
 from django.views.generic.base import RedirectView
