@@ -22,9 +22,9 @@ import uuid
 import h1st_util.util.data_backend
 from h1st_ml.blueprints import AbstractPPPBlueprint, load as load_blueprint
 from h1st_ml.blueprints.cs import anom as cs_anom, regr as cs_regr
-from h1st_util.data.parquet import S3ParquetDataFeeder
-from h1st_util.data.distributed import DDF
-from h1st_util.data.distributed_parquet import S3ParquetDistributedDataFrame
+from h1st_util.data_proc.parquet import S3ParquetDataFeeder
+from h1st_util.data_proc.distributed import DDF
+from h1st_util.data_proc.distributed_parquet import S3ParquetDistributedDataFrame
 from h1st_util.util import fs, Namespace
 from h1st_util.util.aws import key_pair, s3
 from h1st_util.util.date_time import \
