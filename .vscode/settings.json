@@ -12,6 +12,7 @@
 
   "python.linting.pylintEnabled": true,
   "python.linting.pylintArgs": [
+    "--disable", "fixme",
     "--disable", "no-member",   // Django ModelClass.objects
     "--disable", "too-few-public-methods",   // Django ModelClass.Meta
     "--disable", "too-many-ancestors",
