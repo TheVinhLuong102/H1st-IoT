@@ -7,13 +7,6 @@ from django.forms import BaseInlineFormSet
 
 from silk.profiling.profiler import silk_profile
 
-# from h1st_iot.data_mgmt.base.forms import (
-#     EquipmentDataFieldForm,
-#     EquipmentUniqueTypeGroupForm,
-#     EquipmentUniqueTypeForm,
-#     EquipmentInstanceForm,
-#     EquipmentSystemForm,
-# )
 from h1st_iot.data_mgmt.base.models import (
     GlobalConfig,
     NumericMeasurementUnit,

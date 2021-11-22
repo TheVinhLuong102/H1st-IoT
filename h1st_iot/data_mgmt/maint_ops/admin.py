@@ -7,13 +7,6 @@ from ..base.query_sets import \
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET
 
-# from .forms import (
-#     EquipmentUniqueTypeGroupServiceConfigForm,
-#     EquipmentUniqueTypeGroupMonitoredDataFieldConfigForm,
-#     EquipmentInstanceProblemDiagnosisForm,
-#     EquipmentInstanceAlertPeriodForm
-# )
-
 from .models import \
     GlobalConfig, \
     EquipmentUniqueTypeGroupMonitoredDataFieldConfig, \

@@ -16,8 +16,6 @@ packages = [
 [tool.poetry.dependencies]
 Python = '>= 3.8, < 3.10'
 
-Django-Autocomplete-Light = '^3.9.0rc1'
-
 
 [build-system]
 requires = ['Poetry-Core >= 1.0.0']
