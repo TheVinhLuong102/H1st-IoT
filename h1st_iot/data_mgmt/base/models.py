@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from django.db.models import \
     Model, \
-    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, URLField, \
+    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, \
     JSONField, \
     ForeignKey, ManyToManyField, \
     PROTECT
@@ -68,11 +68,6 @@ class NumericMeasurementUnit(Model):
             unique=True,
             db_index=True,
             max_length=MAX_CHAR_LEN)
-
-    description = \
-        JSONField(
-            blank=True,
-            null=True)
 
     class Meta:
         ordering = 'name',
@@ -150,11 +145,6 @@ class EquipmentDataField(Model):
             null=False,
             db_index=True,
             max_length=MAX_CHAR_LEN)
-
-    description = \
-        JSONField(
-            blank=True,
-            null=True)
 
     equipment_data_field_type = \
         ForeignKey(
@@ -276,11 +266,6 @@ class EquipmentUniqueTypeGroup(Model):
             db_index=True,
             max_length=MAX_CHAR_LEN)
 
-    description = \
-        JSONField(
-            blank=True,
-            null=True)
-
     equipment_unique_types = \
         ManyToManyField(
             to='EquipmentUniqueType',
@@ -335,11 +320,6 @@ class EquipmentUniqueType(Model):
             unique=True,
             db_index=True,
             max_length=MAX_CHAR_LEN)
-
-    description = \
-        JSONField(
-            blank=True,
-            null=True)
 
     equipment_data_fields = \
         ManyToManyField(

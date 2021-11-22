@@ -62,7 +62,7 @@ site.register(GlobalConfig, admin_class=GlobalConfigAdmin)
 class NumericMeasurementUnitAdmin(ModelAdmin):
     """NumericMeasurementUnitAdmin."""
 
-    list_display = 'name', 'description'
+    list_display = ('name',)
 
     show_full_result_count = False
 
@@ -103,7 +103,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
-        'description', \
         'equipment_data_field_type', \
         'data_type', \
         'numeric_measurement_unit', \
@@ -131,7 +130,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
         'name', \
-        'description', \
         'data_type__name', \
         'numeric_measurement_unit__name'
 
@@ -149,8 +147,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                     'equipment_data_field_type',
                     'data_type',
                     'numeric_measurement_unit') \
-                .defer(
-                    'numeric_measurement_unit__description') \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_types',
@@ -174,7 +170,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
-        'description', \
         'equipment_unique_type_list', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
@@ -182,10 +177,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     list_filter = 'equipment_general_type__name',
 
-    search_fields = \
-        'equipment_general_type__name', \
-        'name', \
-        'description'
+    search_fields = 'equipment_general_type__name', 'name',
 
     show_full_result_count = False
 
@@ -253,7 +245,6 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
     list_display = \
         'equipment_general_type', \
         'name', \
-        'description', \
         'n_equipment_data_fields', \
         'equipment_unique_type_group_list', \
         'n_equipment_instances', \
@@ -263,10 +254,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    search_fields = \
-        'equipment_general_type__name', \
-        'name', \
-        'description'
+    search_fields = 'equipment_general_type__name', 'name'
 
     # form = EquipmentUniqueTypeForm
 
@@ -432,7 +420,6 @@ class EquipmentInstanceAdmin(ModelAdmin):
                     'equipment_unique_type') \
                 .defer(
                     'equipment_unique_type__equipment_general_type',
-                    'equipment_unique_type__description',
                     'equipment_unique_type__last_updated') \
                 .prefetch_related(
                     Prefetch(
@@ -445,7 +432,7 @@ class EquipmentInstanceAdmin(ModelAdmin):
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
                     'equipment_facility') \
                 .defer(
-                    'equipment_unique_type__description', 'equipment_unique_type__last_updated',
+                    'equipment_unique_type__last_updated',
                     'equipment_facility__info', 'equipment_facility__last_updated')
 
     @silk_profile(name='Admin: Equipment Instances')
@@ -568,9 +555,8 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
                     'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
                     'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
                 .defer(
-                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
-                    'equipment_data_field__description', 'equipment_data_field__last_updated',
-                    'equipment_data_field__numeric_measurement_unit__description')
+                    'equipment_unique_type_group__last_updated',
+                    'equipment_data_field__last_updated')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
@@ -627,11 +613,9 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
                     'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type',
                     'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit') \
                 .defer(
-                    'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
-                    'equipment_data_field__description', 'equipment_data_field__last_updated',
-                    'equipment_data_field__numeric_measurement_unit__description',
-                    'equipment_data_field_2__description', 'equipment_data_field_2__last_updated',
-                    'equipment_data_field_2__numeric_measurement_unit__description')
+                    'equipment_unique_type_group__last_updated',
+                    'equipment_data_field__last_updated',
+                    'equipment_data_field_2__last_updated')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
     def changelist_view(self, *args, **kwargs):
