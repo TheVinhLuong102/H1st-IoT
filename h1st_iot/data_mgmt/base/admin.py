@@ -8,7 +8,6 @@ from django.forms import BaseInlineFormSet
 from silk.profiling.profiler import silk_profile
 
 # from h1st_iot.data_mgmt.base.forms import (
-#     EquipmentComponentForm,
 #     EquipmentDataFieldForm,
 #     EquipmentUniqueTypeGroupForm,
 #     EquipmentUniqueTypeForm,
@@ -19,7 +18,6 @@ from h1st_iot.data_mgmt.base.models import (
     GlobalConfig,
     NumericMeasurementUnit,
     EquipmentGeneralType,
-    EquipmentComponent,
     EquipmentDataField,
     EquipmentUniqueTypeGroup,
     EquipmentUniqueType,
@@ -30,9 +28,6 @@ from h1st_iot.data_mgmt.base.models import (
     EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation,
 )
 from h1st_iot.data_mgmt.base.query_sets import (
-    EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET,
-    EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET,
-    EQUIPMENT_COMPONENT_STR_QUERY_SET,
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET,
     EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
     EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET,
@@ -102,111 +97,11 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 site.register(EquipmentGeneralType, admin_class=EquipmentGeneralTypeAdmin)
 
 
-class EquipmentComponentAdmin(ModelAdmin):
-    """EquipmentComponentAdmin."""
-
-    list_display = \
-        'equipment_general_type', \
-        'name', \
-        'description', \
-        'directly_interacting_component_list', \
-        'sub_component_list', \
-        'equipment_data_field_list', \
-        'n_equipment_unique_types', \
-        'last_updated'
-
-    list_filter = ('equipment_general_type__name',)
-
-    search_fields = \
-        'equipment_general_type__name', \
-        'name', \
-        'description'
-
-    show_full_result_count = False
-
-    # form = EquipmentComponentForm
-
-    def directly_interacting_component_list(self, obj):
-        n = obj.directly_interacts_with_components.count()
-        return '{}: {}'.format(
-                n, '; '.join(equipment_component.name
-                             for equipment_component in
-                             obj.directly_interacts_with_components.all())) \
-            if n \
-          else ''
-
-    def sub_component_list(self, obj):
-        n = obj.sub_components.count()
-        return '{}: {}'.format(
-                n, '; '.join(equipment_component.name
-                             for equipment_component in
-                             obj.sub_components.all())) \
-            if n \
-          else ''
-
-    def equipment_data_field_list(self, obj):
-        n = obj.equipment_data_fields.count()
-        return '{}: {}'.format(
-                n, '; '.join(str(equipment_data_field)
-                             for equipment_data_field in obj.equipment_data_fields.all())) \
-            if n \
-          else ''
-
-    def n_equipment_unique_types(self, obj):
-        return obj.equipment_unique_types.count()
-
-    def get_queryset(self, request):
-        query_set = \
-            super().get_queryset(request=request) \
-            .select_related(
-                'equipment_general_type') \
-            .prefetch_related(
-                Prefetch(
-                    lookup='equipment_unique_types',
-                    queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))
-
-        return query_set \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='directly_interacts_with_components',
-                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
-                    Prefetch(
-                        lookup='sub_components',
-                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
-                    Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET)) \
-            if request.resolver_match.url_name.endswith('_change') \
-          else query_set \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='directly_interacts_with_components',
-                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
-                    Prefetch(
-                        lookup='sub_components',
-                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
-                    Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET))
-
-    @silk_profile(name='Admin: Equipment Components')
-    def changelist_view(self, *args, **kwargs):
-        return super().changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Equipment Component')
-    def changeform_view(self, *args, **kwargs):
-        return super().changeform_view(*args, **kwargs)
-
-
-site.register(EquipmentComponent, admin_class=EquipmentComponentAdmin)
-
-
 class EquipmentDataFieldAdmin(ModelAdmin):
     """EquipmentDataFieldAdmin."""
 
     list_display = \
         'equipment_general_type', \
-        'equipment_component_list', \
         'name', \
         'description', \
         'equipment_data_field_type', \
@@ -244,14 +139,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     # form = EquipmentDataFieldForm
 
-    def equipment_component_list(self, obj):
-        n = obj.equipment_components.count()
-        return '{}: {}'.format(
-                n, ', '.join(equipment_component.name
-                             for equipment_component in obj.equipment_components.all())) \
-            if n \
-          else ''
-
     def n_equipment_unique_types(self, obj):
         return obj.equipment_unique_types.count()
 
@@ -265,12 +152,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                 .defer(
                     'numeric_measurement_unit__description') \
                 .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_components',
-                        queryset=
-                            EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET
-                            if request.resolver_match.url_name.endswith('_change')
-                            else EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='equipment_unique_types',
                         queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))
@@ -295,7 +176,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'name', \
         'description', \
         'equipment_unique_type_list', \
-        'equipment_component_list', \
         'n_equipment_data_fields', \
         'n_equipment_instances', \
         'last_updated'
@@ -311,23 +191,13 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     # form = EquipmentUniqueTypeGroupForm
 
-    readonly_fields = \
-        'equipment_components', \
-        'equipment_data_fields',
+    readonly_fields = ('equipment_data_fields',)
 
     def equipment_unique_type_list(self, obj):
         n = obj.equipment_unique_types.count()
         return '{}: {}'.format(
                 n, ', '.join(equipment_unique_type.name
                              for equipment_unique_type in obj.equipment_unique_types.all())) \
-            if n \
-          else ''
-
-    def equipment_component_list(self, obj):
-        n = obj.equipment_components.count()
-        return '{}: {}'.format(
-                n, ', '.join(equipment_component.name
-                             for equipment_component in obj.equipment_components.all())) \
             if n \
           else ''
 
@@ -349,9 +219,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                         lookup='equipment_unique_types',
                         queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET),
                     Prefetch(
-                        lookup='equipment_components',
-                        queryset=EQUIPMENT_COMPONENT_STR_QUERY_SET),
-                    Prefetch(
                         lookup='equipment_data_fields',
                         queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET)) \
             if request.resolver_match.url_name.endswith('_change') \
@@ -360,9 +227,6 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
                     Prefetch(
                         lookup='equipment_unique_types',
                         queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET),
-                    Prefetch(
-                        lookup='equipment_components',
-                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='equipment_data_fields',
                         queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET),
@@ -390,7 +254,6 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'description', \
-        'equipment_component_list', \
         'n_equipment_data_fields', \
         'equipment_unique_type_group_list', \
         'n_equipment_instances', \
@@ -406,14 +269,6 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'description'
 
     # form = EquipmentUniqueTypeForm
-
-    def equipment_component_list(self, obj):
-        n = obj.equipment_components.count()
-        return '{}: {}'.format(
-                n, ', '.join(equipment_component.name
-                             for equipment_component in obj.equipment_components.all())) \
-            if n \
-          else ''
 
     def n_equipment_data_fields(self, obj):
         return obj.equipment_data_fields.count()
@@ -442,17 +297,11 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         return query_set \
                 .prefetch_related(
                     Prefetch(
-                        lookup='equipment_components',
-                        queryset=EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET),
-                    Prefetch(
                         lookup='equipment_unique_type_groups',
                         queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET)) \
             if request.resolver_match.url_name.endswith('_change') \
           else query_set \
                 .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_components',
-                        queryset=EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET),
                     Prefetch(
                         lookup='equipment_instances',
                         queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET),

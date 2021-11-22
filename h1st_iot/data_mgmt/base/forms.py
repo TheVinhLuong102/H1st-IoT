@@ -4,7 +4,6 @@ from dal import autocomplete   # *** DON'T IMPORT SPECIFIC ITEMS INSIDE autocomp
 
 from .autocompletes import \
     EquipmentGeneralTypeAutoComplete, \
-    EquipmentComponentAutoComplete, \
     EquipmentDataFieldAutoComplete, \
     EquipmentUniqueTypeGroupAutoComplete, \
     EquipmentUniqueTypeAutoComplete, \
@@ -12,7 +11,6 @@ from .autocompletes import \
     EquipmentInstanceAutoComplete
 
 from .models import \
-    EquipmentComponent, \
     EquipmentDataField, \
     EquipmentUniqueTypeGroup, \
     EquipmentUniqueType, \
@@ -21,21 +19,12 @@ from .models import \
 
 from .query_sets import \
     EQUIPMENT_GENERAL_TYPE_UNORDERED_QUERY_SET, \
-    EQUIPMENT_COMPONENT_STR_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_STR_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_STR_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_STR_QUERY_SET, \
     EQUIPMENT_UNIQUE_TYPE_STR_UNORDERED_QUERY_SET, \
     EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_INSTANCE_STR_QUERY_SET
-
-
-EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD = \
-    ModelMultipleChoiceField(
-        queryset=EQUIPMENT_COMPONENT_STR_QUERY_SET,
-        widget=autocomplete.ModelSelect2Multiple(
-                url=EquipmentComponentAutoComplete.name),
-        required=False)
 
 
 EQUIPMENT_DATA_FIELDS_MODEL_MULTIPLE_CHOICE_FIELD = \
@@ -65,19 +54,7 @@ EQUIPMENT_UNIQUE_TYPES_MODEL_MULTIPLE_CHOICE_FIELD = \
         required=False)
 
 
-class EquipmentComponentForm(autocomplete.FutureModelForm):
-    directly_interacts_with_components = EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD
-    sub_components = EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD
-    equipment_data_fields = EQUIPMENT_DATA_FIELDS_MODEL_MULTIPLE_CHOICE_FIELD
-    equipment_unique_types = EQUIPMENT_UNIQUE_TYPES_MODEL_MULTIPLE_CHOICE_FIELD
-
-    class Meta:
-        model = EquipmentComponent
-        fields = '__all__'
-
-
 class EquipmentDataFieldForm(autocomplete.FutureModelForm):
-    equipment_components = EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD
     equipment_unique_types = EQUIPMENT_UNIQUE_TYPES_MODEL_MULTIPLE_CHOICE_FIELD
 
     class Meta:
@@ -94,7 +71,6 @@ class EquipmentUniqueTypeGroupForm(autocomplete.FutureModelForm):
 
 
 class EquipmentUniqueTypeForm(autocomplete.FutureModelForm):
-    equipment_components = EQUIPMENT_COMPONENTS_MODEL_MULTIPLE_CHOICE_FIELD
     equipment_data_fields = EQUIPMENT_DATA_FIELDS_MODEL_MULTIPLE_CHOICE_FIELD
     equipment_unique_type_groups = EQUIPMENT_UNIQUE_TYPE_GROUPS_MODEL_MULTIPLE_CHOICE_FIELD
 

@@ -6,7 +6,6 @@ from .models import (
     NumericMeasurementUnit,
     EquipmentDataFieldType,
     EquipmentGeneralType,
-    EquipmentComponent,
     EquipmentDataField,
     EquipmentUniqueTypeGroup,
     EquipmentUniqueType,
@@ -47,31 +46,6 @@ EQUIPMENT_GENERAL_TYPE_UNORDERED_QUERY_SET = \
 
 EQUIPMENT_GENERAL_TYPE_QUERY_SET = \
     EquipmentGeneralType.objects.all()
-
-
-EQUIPMENT_COMPONENT_ID_ONLY_UNORDERED_QUERY_SET = \
-    EquipmentComponent.objects \
-    .only('id') \
-    .order_by()
-
-
-EQUIPMENT_COMPONENT_NAME_ONLY_QUERY_SET = \
-    EquipmentComponent.objects \
-    .only('name') \
-    .order_by('name')
-
-
-EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET = \
-    EquipmentComponent.objects \
-    .defer(
-        'last_updated') \
-    .select_related(
-        'equipment_general_type')
-
-
-EQUIPMENT_COMPONENT_STR_QUERY_SET = \
-    EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET \
-    .defer('description')
 
 
 EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET = \
@@ -173,23 +147,9 @@ EQUIPMENT_UNIQUE_TYPE_STR_UNORDERED_QUERY_SET = \
     .order_by()
 
 
-EQUIPMENT_COMPONENT_REST_API_QUERY_SET = \
-    EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET \
-    .prefetch_related(
-        Prefetch(
-            lookup='equipment_data_fields',
-            queryset=EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET),
-        Prefetch(
-            lookup='equipment_unique_types',
-            queryset=EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET))
-
-
 EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET = \
     EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET \
     .prefetch_related(
-        Prefetch(
-            lookup='equipment_components',
-            queryset=EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET),
         Prefetch(
             lookup='equipment_unique_types',
             queryset=EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET))
@@ -202,9 +162,6 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET = \
             lookup='equipment_unique_types',
             queryset=EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET),
         Prefetch(
-            lookup='equipment_components',
-            queryset=EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET),
-        Prefetch(
             lookup='equipment_data_fields',
             queryset=EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET))
 
@@ -212,9 +169,6 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET = \
 EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET = \
     EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET \
     .prefetch_related(
-        Prefetch(
-            lookup='equipment_components',
-            queryset=EQUIPMENT_COMPONENT_INCL_DESCRIPTION_QUERY_SET),
         Prefetch(
             lookup='equipment_data_fields',
             queryset=EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET),
