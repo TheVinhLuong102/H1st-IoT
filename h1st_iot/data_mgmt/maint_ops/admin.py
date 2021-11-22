@@ -111,8 +111,7 @@ class EquipmentUniqueTypeGroupServiceConfigAdmin(ModelAdmin):
         'from_date', \
         'to_date', \
         'configs', \
-        'comments', \
-        'last_updated'
+        'comments'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -223,8 +222,7 @@ class BlueprintAdmin(ModelAdmin):
         'uuid', \
         'timestamp', \
         'active', \
-        'benchmark_metrics_summary', \
-        'last_updated'
+        'benchmark_metrics_summary'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -323,8 +321,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileAdmin(Mode
         'r2', \
         'mae', \
         'medae', \
-        'rmse', \
-        'last_updated'
+        'rmse'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -403,8 +400,7 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
         'to_utc_date_time', \
         'duration_in_days', \
         'has_associated_equipment_instance_alert_periods', \
-        'has_associated_equipment_instance_problem_diagnoses', \
-        'last_updated'
+        'has_associated_equipment_instance_problem_diagnoses'
 
     list_filter = \
         'equipment_instance__equipment_general_type__name', \
@@ -481,8 +477,7 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
         'dismissed', \
         'comments', \
         'has_associated_equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_alert_periods', \
-        'last_updated'
+        'has_associated_equipment_instance_alert_periods'
 
     list_filter = \
         'equipment_instance__equipment_general_type__name', \
@@ -588,8 +583,7 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
         'ongoing', \
         'diagnosis_status', \
         'has_associated_equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_problem_diagnoses', \
-        'last_updated'
+        'has_associated_equipment_instance_problem_diagnoses'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \

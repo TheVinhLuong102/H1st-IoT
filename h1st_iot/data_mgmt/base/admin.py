@@ -111,8 +111,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'default_val', \
         'min_val', \
         'max_val', \
-        'n_equipment_unique_types', \
-        'last_updated'
+        'n_equipment_unique_types'
 
     list_filter = \
         'equipment_general_type__name', \
@@ -172,8 +171,7 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'name', \
         'equipment_unique_type_list', \
         'n_equipment_data_fields', \
-        'n_equipment_instances', \
-        'last_updated'
+        'n_equipment_instances'
 
     list_filter = 'equipment_general_type__name',
 
@@ -247,8 +245,7 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'name', \
         'n_equipment_data_fields', \
         'equipment_unique_type_group_list', \
-        'n_equipment_instances', \
-        'last_updated'
+        'n_equipment_instances'
 
     list_filter = 'equipment_general_type__name',
 
@@ -328,7 +325,6 @@ class EquipmentInstanceTabularInline(TabularInline):
         'equipment_general_type', \
         'equipment_unique_type', \
         'name'
-        # 'last_updated' cannot be specified for EquipmentInstance model form as it is a non-editable field
 
     # form = EquipmentInstanceForm
 
@@ -347,8 +343,7 @@ class EquipmentFacilityAdmin(ModelAdmin):
     list_display = \
         'name', \
         'info', \
-        'n_equipment_instances', \
-        'last_updated'
+        'n_equipment_instances'
 
     search_fields = \
         'name', \
@@ -392,8 +387,7 @@ class EquipmentInstanceAdmin(ModelAdmin):
         'equipment_unique_type', \
         'equipment_facility', \
         'name', \
-        'info', \
-        'last_updated'
+        'info'
 
     list_filter = \
         'equipment_general_type__name', \
@@ -454,8 +448,7 @@ class EquipmentSystemAdmin(ModelAdmin):
         'equipment_facility', \
         'name', \
         'date', \
-        'n_equipment_instances', \
-        'last_updated'
+        'n_equipment_instances'
 
     list_filter = \
         'equipment_facility__name', \
@@ -511,8 +504,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_median', \
         'sample_3rd_quartile', \
         'outlier_rst_max', \
-        'sample_max', \
-        'last_updated'
+        'sample_max'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \
@@ -577,8 +569,7 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
         'equipment_unique_type_group', \
         'equipment_data_field', \
         'equipment_data_field_2', \
-        'sample_correlation', \
-        'last_updated'
+        'sample_correlation'
 
     list_filter = \
         'equipment_unique_type_group__equipment_general_type__name', \

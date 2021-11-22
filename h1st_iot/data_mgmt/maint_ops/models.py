@@ -101,10 +101,6 @@ class EquipmentUniqueTypeGroupServiceConfig(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = \
             '-active', \
@@ -237,10 +233,6 @@ class Blueprint(Model):
             null=False,
             default=False)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = \
             'equipment_unique_type_group', \
@@ -307,10 +299,6 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         unique_together = \
             'equipment_unique_type_group', \
@@ -365,10 +353,6 @@ class EquipmentInstanceDailyRiskScore(Model):
         FloatField(
             blank=False,
             null=False)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \
@@ -480,10 +464,6 @@ class EquipmentInstanceAlarmPeriod(Model):
             null=False,
             default=False,
             db_index=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \
@@ -614,10 +594,6 @@ class EquipmentInstanceProblemDiagnosis(Model):
             null=False,
             default=False,
             db_index=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \
@@ -828,10 +804,6 @@ class Alert(Model):
             null=False,
             default=False,
             db_index=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \

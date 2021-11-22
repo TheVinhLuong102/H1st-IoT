@@ -62,15 +62,11 @@ EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET = \
 
 EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET = \
     EquipmentDataField.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_general_type',
         'equipment_data_field_type',
         'data_type',
-        'numeric_measurement_unit') \
-    .defer(
-        'numeric_measurement_unit__description')
+        'numeric_measurement_unit')
 
 
 EQUIPMENT_DATA_FIELD_STR_QUERY_SET = \
@@ -97,8 +93,6 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET = \
 
 EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET = \
     EquipmentUniqueTypeGroup.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_general_type')
 
@@ -122,17 +116,13 @@ EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET = \
 EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET = \
     EquipmentUniqueType.objects \
     .defer(
-        'equipment_general_type',
-        'description',
-        'last_updated') \
+        'equipment_general_type') \
     .order_by(
         'name')
 
 
 EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET = \
     EquipmentUniqueType.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_general_type')
 
@@ -220,28 +210,22 @@ EQUIPMENT_INSTANCE_STR_QUERY_SET = \
     EquipmentInstance.objects \
     .defer(
         'equipment_facility',
-        'info',
-        'last_updated') \
+        'info') \
     .select_related(
         'equipment_general_type',
         'equipment_unique_type') \
     .defer(
-        'equipment_unique_type__equipment_general_type',
-        'equipment_unique_type__description',
-        'equipment_unique_type__last_updated')
+        'equipment_unique_type__equipment_general_type')
 
 
 EQUIPMENT_INSTANCE_REST_API_QUERY_SET = \
     EquipmentInstance.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_general_type',
         'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
         'equipment_facility') \
     .defer(
-        'equipment_unique_type__last_updated',
-        'equipment_facility__info', 'equipment_facility__last_updated') \
+        'equipment_facility__info') \
     .prefetch_related(
         Prefetch(
             lookup='equipment_unique_type_groups',
@@ -255,8 +239,7 @@ EQUIPMENT_FACILITY_NAME_ONLY_UNORDERED_QUERY_SET = \
 
 
 EQUIPMENT_FACILITY_STR_QUERY_SET = \
-    EquipmentFacility.objects \
-    .defer('last_updated')
+    EquipmentFacility.objects
 
 
 EQUIPMENT_FACILITY_REST_API_QUERY_SET = \
@@ -269,8 +252,6 @@ EQUIPMENT_FACILITY_REST_API_QUERY_SET = \
 
 EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET = \
     EquipmentInstanceDataFieldDailyAgg.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_instance',
         'equipment_data_field',
@@ -280,20 +261,15 @@ EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET = \
         'equipment_instance__equipment_general_type',
         'equipment_instance__equipment_unique_type',
         'equipment_instance__equipment_facility',
-        'equipment_instance__info',
-        'equipment_instance__last_updated',
-        'equipment_data_field__last_updated',
-        'equipment_data_field__numeric_measurement_unit__description')
+        'equipment_instance__info')
 
 
 EQUIPMENT_SYSTEM_REST_API_QUERY_SET = \
     EquipmentSystem.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_facility') \
     .defer(
-        'equipment_facility__info', 'equipment_facility__last_updated') \
+        'equipment_facility__info') \
     .prefetch_related(
         Prefetch(
             lookup='equipment_instances',

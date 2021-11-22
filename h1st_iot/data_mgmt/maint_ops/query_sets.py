@@ -24,14 +24,10 @@ GLOBAL_CONFIG_QUERY_SET = \
 
 EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET = \
     EquipmentUniqueTypeGroupServiceConfig.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_unique_type_group') \
     .defer(
-        'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description',
-        'equipment_unique_type_group__last_updated') \
+        'equipment_unique_type_group__equipment_general_type') \
     .prefetch_related(
         Prefetch(
             lookup='equipment_unique_type_group_monitored_data_field_configs',
@@ -53,8 +49,7 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET = \
                     'monitored_equipment_data_field__upper_numeric_null',
                     'monitored_equipment_data_field__default_val',
                     'monitored_equipment_data_field__min_val',
-                    'monitored_equipment_data_field__max_val',
-                    'monitored_equipment_data_field__last_updated')
+                    'monitored_equipment_data_field__max_val')
                 .prefetch_related(
                     Prefetch(
                         lookup='manually_included_equipment_data_fields',
@@ -69,29 +64,20 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET = \
 
 BLUEPRINT_REST_API_QUERY_SET = \
     Blueprint.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_unique_type_group') \
     .defer(
-        'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description',
-        'equipment_unique_type_group__last_updated')
+        'equipment_unique_type_group__equipment_general_type')
 
 
 EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET = \
     EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfile.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_unique_type_group',
         'equipment_data_field') \
     .defer(
         'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description',
-        'equipment_unique_type_group__last_updated',
         'equipment_data_field__equipment_general_type',
-        'equipment_data_field__description',
         'equipment_data_field__equipment_data_field_type',
         'equipment_data_field__data_type',
         'equipment_data_field__numeric_measurement_unit',
@@ -99,26 +85,20 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_A
         'equipment_data_field__upper_numeric_null',
         'equipment_data_field__default_val',
         'equipment_data_field__min_val',
-        'equipment_data_field__max_val',
-        'equipment_data_field__last_updated')
+        'equipment_data_field__max_val')
 
 
 EQUIPMENT_INSTANCE_DAILY_RISK_SCORE = \
     EquipmentInstanceDailyRiskScore.objects \
-    .defer(
-        'last_updated') \
     .select_related(
         'equipment_unique_type_group',
         'equipment_instance') \
     .defer(
         'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description',
-        'equipment_unique_type_group__last_updated',
         'equipment_instance__equipment_general_type',
         'equipment_instance__equipment_unique_type',
         'equipment_instance__equipment_facility',
-        'equipment_instance__info',
-        'equipment_instance__last_updated')
+        'equipment_instance__info')
 
 
 EQUIPMENT_PROBLEM_TYPE_QUERY_SET = \
@@ -130,15 +110,13 @@ EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET = \
     .defer(
         'date_range',
         'has_associated_equipment_instance_alert_periods',
-        'has_associated_equipment_instance_problem_diagnoses',
-        'last_updated') \
+        'has_associated_equipment_instance_problem_diagnoses') \
     .select_related(
         'equipment_instance',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
         'alarm_type') \
     .defer(
-        'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+        'equipment_instance__equipment_facility', 'equipment_instance__info') \
     .order_by(
         'from_utc_date_time')
 
@@ -146,14 +124,13 @@ EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERY_SET = \
 EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlarmPeriod.objects \
     .defer(
-        'date_range',
-        'last_updated') \
+        'date_range') \
     .select_related(
         'equipment_instance',
         'alarm_type') \
     .defer(
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+        'equipment_instance__equipment_facility', 'equipment_instance__info') \
     .order_by(
         'from_utc_date_time')
 
@@ -168,33 +145,29 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERY_SET = \
         'date_range',
         'info',
         'has_associated_equipment_instance_alarm_periods',
-        'has_associated_equipment_instance_problem_diagnoses',
-        'last_updated') \
+        'has_associated_equipment_instance_problem_diagnoses') \
     .select_related(
         'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
         'equipment_instance',
         'diagnosis_status') \
     .defer(
-        'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated',
+        'equipment_instance__equipment_facility', 'equipment_instance__info',
         'diagnosis_status__index')
 
 
 EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERY_SET = \
     EquipmentInstanceAlertPeriod.objects \
     .defer(
-        'date_range',
-        'last_updated') \
+        'date_range') \
     .select_related(
         'equipment_unique_type_group',
         'equipment_instance',
         'diagnosis_status') \
     .defer(
         'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description', 'equipment_unique_type_group__last_updated',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated',
+        'equipment_instance__equipment_facility', 'equipment_instance__info',
         'diagnosis_status__index')
 
 
@@ -212,14 +185,12 @@ EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET = \
         'has_equipment_problems',
         'comments',
         'has_associated_equipment_instance_alarm_periods',
-        'has_associated_equipment_instance_alert_periods',
-        'last_updated') \
+        'has_associated_equipment_instance_alert_periods') \
     .select_related(
         'equipment_instance',
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
     .defer(
-        'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+        'equipment_instance__equipment_facility', 'equipment_instance__info') \
     .prefetch_related(
         'equipment_problem_types')
 
@@ -227,13 +198,12 @@ EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERY_SET = \
 EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERY_SET = \
     EquipmentInstanceProblemDiagnosis.objects \
     .defer(
-        'date_range',
-        'last_updated') \
+        'date_range') \
     .select_related(
         'equipment_instance') \
     .defer(
         'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated') \
+        'equipment_instance__equipment_facility', 'equipment_instance__info') \
     .prefetch_related(
         'equipment_problem_types')
 

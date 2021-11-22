@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from django.db.models import \
     Model, \
     BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, \
@@ -207,10 +205,6 @@ class EquipmentDataField(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         unique_together = \
             'equipment_general_type', \
@@ -280,10 +274,6 @@ class EquipmentUniqueTypeGroup(Model):
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         ordering = \
             'equipment_general_type', \
@@ -336,10 +326,6 @@ class EquipmentUniqueType(Model):
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         ordering = \
@@ -621,10 +607,6 @@ class EquipmentFacility(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         verbose_name_plural = 'Equipment Facilities'
 
@@ -689,10 +671,6 @@ class EquipmentInstance(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         ordering = \
@@ -803,10 +781,6 @@ class EquipmentInstanceDataFieldDailyAgg(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         unique_together = \
             'equipment_instance', \
@@ -848,10 +822,6 @@ class EquipmentSystem(Model):
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \
@@ -954,10 +924,6 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
             blank=True,
             null=True)
 
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
-
     class Meta:
         unique_together = \
             'equipment_unique_type_group', \
@@ -1003,10 +969,6 @@ class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation(Model):
         FloatField(
             blank=False,
             null=False)
-
-    last_updated = \
-        DateTimeField(
-            auto_now=True)
 
     class Meta:
         unique_together = \

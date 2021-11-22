@@ -82,13 +82,10 @@ class EquipmentInstanceProblemDiagnosisForm(autocomplete.FutureModelForm):
                 EquipmentInstance.objects
                 .defer(
                     'equipment_facility',
-                    'info',
-                    'last_updated')
+                    'info')
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type')
-                .defer(
-                    'equipment_unique_type__description', 'equipment_unique_type__last_updated')
                 .order_by(),
             widget=autocomplete.ModelSelect2(
                     url=EquipmentInstanceAutoComplete.name,
@@ -117,14 +114,12 @@ class EquipmentInstanceAlertPeriodForm(autocomplete.FutureModelForm):
                     'has_equipment_problems',
                     'comments',
                     'has_associated_equipment_instance_alarm_periods',
-                    'has_associated_equipment_instance_alert_periods',
-                    'last_updated')
+                    'has_associated_equipment_instance_alert_periods')
                 .select_related(
                     'equipment_instance',
                     'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type')
                 .defer(
-                    'equipment_instance__equipment_unique_type__description', 'equipment_instance__equipment_unique_type__last_updated',
-                    'equipment_instance__equipment_facility', 'equipment_instance__info', 'equipment_instance__last_updated')
+                    'equipment_instance__equipment_facility', 'equipment_instance__info')
                 .prefetch_related(
                     'equipment_problem_types'),
             widget=
