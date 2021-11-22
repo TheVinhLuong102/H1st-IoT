@@ -1,9 +1,9 @@
-from django.db.models import \
-    Model, \
-    BigAutoField, CharField, DateField, DateTimeField, FloatField, IntegerField, \
-    JSONField, \
-    ForeignKey, ManyToManyField, \
-    PROTECT
+from django.db.models import (
+    Model,
+    BigAutoField, CharField, DateField, FloatField, IntegerField,
+    JSONField,
+    ForeignKey, ManyToManyField,
+    PROTECT)
 from django.db.models.signals import m2m_changed, pre_delete
 
 import warnings
