@@ -11,7 +11,6 @@ from .models import (
     EquipmentUniqueType,
     EquipmentFacility,
     EquipmentInstance,
-    EquipmentInstanceDataFieldDailyAgg,
     EquipmentSystem,
     EquipmentUniqueTypeGroupDataFieldProfile,
 )
@@ -248,20 +247,6 @@ EQUIPMENT_FACILITY_REST_API_QUERY_SET = \
         Prefetch(
             lookup='equipment_instances',
             queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERY_SET))
-
-
-EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET = \
-    EquipmentInstanceDataFieldDailyAgg.objects \
-    .select_related(
-        'equipment_instance',
-        'equipment_data_field',
-        'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-        'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
-    .defer(
-        'equipment_instance__equipment_general_type',
-        'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility',
-        'equipment_instance__info')
 
 
 EQUIPMENT_SYSTEM_REST_API_QUERY_SET = \
