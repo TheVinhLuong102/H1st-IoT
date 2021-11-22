@@ -108,7 +108,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \
-        'default_val', \
         'min_val', \
         'max_val', \
         'n_equipment_unique_types'
@@ -120,7 +119,6 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'numeric_measurement_unit__name', \
         'lower_numeric_null', \
         'upper_numeric_null', \
-        'default_val', \
         'name', \
         'min_val', \
         'max_val'

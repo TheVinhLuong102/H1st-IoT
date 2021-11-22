@@ -214,17 +214,6 @@ class EquipmentDataFieldFilter(FilterSet):
                 'range'
             ],
 
-            default_val=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
             min_val=[
                 'exact',
                 'gt', 'gte', 'lt', 'lte',

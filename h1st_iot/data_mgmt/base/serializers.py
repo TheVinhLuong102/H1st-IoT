@@ -83,7 +83,6 @@ class EquipmentDataFieldRelatedField(RelatedField):
                     numeric_measurement_unit=NumericMeasurementUnit.objects.get_or_create(name=data['numeric_measurement_unit'].strip())[0],
                     lower_numeric_null=data['lower_numeric_null'],
                     upper_numeric_null=data['upper_numeric_null'],
-                    default_val=data['default_val'],
                     min_val=data['min_val'],
                     max_val=data['max_val']))[0]
 
@@ -102,7 +101,6 @@ class EquipmentDataFieldRelatedField(RelatedField):
                     else None,
                 lower_numeric_null=value.lower_numeric_null,
                 upper_numeric_null=value.upper_numeric_null,
-                default_val=value.default_val,
                 min_val=value.min_val,
                 max_val=value.max_val)
 
@@ -223,7 +221,6 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'numeric_measurement_unit', \
             'lower_numeric_null', \
             'upper_numeric_null', \
-            'default_val', \
             'min_val', \
             'max_val', \
             'equipment_components', \

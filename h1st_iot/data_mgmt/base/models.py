@@ -183,11 +183,6 @@ class EquipmentDataField(Model):
             null=False,
             default=DEFAULT_UPPER_NUMERIC_NULL)
 
-    default_val = \
-        FloatField(
-            blank=True,
-            null=True)
-
     min_val = \
         FloatField(
             blank=True,
@@ -215,7 +210,7 @@ class EquipmentDataField(Model):
             'name'
         
     def __str__(self):
-        return '{} [{}] {} [{}{}{}{}{}{}]'.format(
+        return '{} [{}] {} [{}{}{}{}{}]'.format(
                 self.equipment_general_type.name.upper(),
                 self.equipment_data_field_type.name,
                 self.name,
@@ -226,8 +221,6 @@ class EquipmentDataField(Model):
                     if self.numeric_measurement_unit and self.numeric_measurement_unit.name
                     else '',
                 ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null),
-                '' if self.default_val is None
-                   else ', default {}'.format(self.default_val),
                 '' if self.min_val is None
                    else ', min {}'.format(self.min_val),
                 '' if self.max_val is None
