@@ -148,7 +148,7 @@ class Project:
 
         from h1st_iot.data_mgmt.base.models import \
             GlobalConfig, \
-            DataType, EquipmentDataFieldType, NumericMeasurementUnit, \
+            LogicalDataType, EquipmentDataFieldType, NumericMeasurementUnit, \
             EquipmentGeneralType, \
             EquipmentComponent, \
             EquipmentDataField, \
@@ -216,8 +216,8 @@ class Project:
                 EquipmentUniqueTypeGroupDataAggTasks=EquipmentUniqueTypeGroupDataAggTask.objects)
 
         tic = time()
-        self.CAT_DATA_TYPE = DataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
-        self.NUM_DATA_TYPE = DataType.objects.get_or_create(name=self._NUM_DATA_TYPE_NAME)[0]
+        self.CAT_DATA_TYPE = LogicalDataType.objects.get_or_create(name=self._CAT_DATA_TYPE_NAME)[0]
+        self.NUM_DATA_TYPE = LogicalDataType.objects.get_or_create(name=self._NUM_DATA_TYPE_NAME)[0]
         print(f'Set Up CAT/NUM Data Types ({time() - tic:.3f}s)')
 
         tic = time()

@@ -7,7 +7,7 @@ from rest_framework_filters import CharFilter, FilterSet, RelatedFilter
 
 from h1st_iot.data_mgmt.base.models import (
     GlobalConfig,
-    DataType,
+    LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
     EquipmentGeneralType,
@@ -47,7 +47,7 @@ class DataTypeFilter(FilterSet):
     class Meta:
         """DataTypeFilter metadata."""
 
-        model = DataType
+        model = LogicalDataType
 
         fields = dict(
             name=['exact']
@@ -162,7 +162,7 @@ class EquipmentDataFieldFilter(FilterSet):
 
     data_type = \
         RelatedFilter(
-            queryset=DataType.objects.all(),
+            queryset=LogicalDataType.objects.all(),
             filterset=DataTypeFilter)
 
     numeric_measurement_unit = \

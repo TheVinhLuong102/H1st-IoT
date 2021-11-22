@@ -2,7 +2,7 @@ from django.db.models import Prefetch
 
 from .models import (
     GlobalConfig,
-    DataType,
+    LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
     EquipmentGeneralType,
@@ -21,7 +21,7 @@ GLOBAL_CONFIG_QUERY_SET = \
 
 
 DATA_TYPE_QUERY_SET = \
-    DataType.objects.all()
+    LogicalDataType.objects.all()
 
 
 NUMERIC_MEASUREMENT_UNIT_NAME_ONLY_UNORDERED_QUERY_SET = \
@@ -69,8 +69,7 @@ EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET = \
 
 
 EQUIPMENT_DATA_FIELD_STR_QUERY_SET = \
-    EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET \
-    .defer('description')
+    EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET
 
 
 EQUIPMENT_DATA_FIELD_STR_UNORDERED_QUERY_SET = \
@@ -97,8 +96,7 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET = \
 
 
 EQUIPMENT_UNIQUE_TYPE_GROUP_STR_QUERY_SET = \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET \
-    .defer('description')
+    EQUIPMENT_UNIQUE_TYPE_GROUP_INCL_DESCRIPTION_QUERY_SET
 
 
 EQUIPMENT_UNIQUE_TYPE_GROUP_STR_UNORDERED_QUERY_SET = \
@@ -127,8 +125,7 @@ EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET = \
 
 
 EQUIPMENT_UNIQUE_TYPE_STR_QUERY_SET = \
-    EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET  \
-    .defer('description')
+    EQUIPMENT_UNIQUE_TYPE_INCL_DESCRIPTION_QUERY_SET
 
 
 EQUIPMENT_UNIQUE_TYPE_STR_UNORDERED_QUERY_SET = \
@@ -269,8 +266,4 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET = \
         'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
         'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
     .defer(
-        'equipment_unique_type_group__equipment_general_type',
-        'equipment_unique_type_group__description',
-        'equipment_unique_type_group__last_updated',
-        'equipment_data_field__last_updated',
-        'equipment_data_field__numeric_measurement_unit__description')
+        'equipment_unique_type_group__equipment_general_type')

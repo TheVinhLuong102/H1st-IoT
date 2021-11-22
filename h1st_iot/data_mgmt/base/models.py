@@ -36,7 +36,7 @@ class GlobalConfig(Model):
         super().save(*args, **kwargs)
 
 
-class DataType(Model):
+class LogicalDataType(Model):
     name = \
         CharField(
             verbose_name='Data Type',
@@ -50,7 +50,7 @@ class DataType(Model):
         ordering = 'name',
 
     def __str__(self):
-        return 'DataTp {}'.format(self.name.upper())
+        return 'LogicalDataTp {}'.format(self.name.upper())
 
     def save(self, *args, **kwargs):
         self.name = clean_lower_str(self.name)
@@ -155,7 +155,7 @@ class EquipmentDataField(Model):
 
     data_type = \
         ForeignKey(
-            to=DataType,
+            to=LogicalDataType,
             related_name=RELATED_NAME,
             related_query_name=RELATED_QUERY_NAME,
             blank=True,

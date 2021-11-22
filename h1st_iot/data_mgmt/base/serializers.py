@@ -2,20 +2,19 @@ from rest_framework.serializers import ModelSerializer, RelatedField, SlugRelate
 
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
-from .models import \
-    GlobalConfig, \
-    DataType, \
-    NumericMeasurementUnit, \
-    EquipmentDataFieldType, \
-    EquipmentGeneralType, \
-    EquipmentComponent, \
-    EquipmentDataField, \
-    EquipmentUniqueTypeGroup, \
-    EquipmentUniqueType, \
-    EquipmentFacility, \
-    EquipmentInstance, \
-    EquipmentInstanceDataFieldDailyAgg, \
-    EquipmentSystem
+from .models import (
+    GlobalConfig,
+    LogicalDataType,
+    NumericMeasurementUnit,
+    EquipmentDataFieldType,
+    EquipmentGeneralType,
+    EquipmentDataField,
+    EquipmentUniqueTypeGroup,
+    EquipmentUniqueType,
+    EquipmentFacility,
+    EquipmentInstance,
+    EquipmentSystem,
+)
 
 from ..util import clean_lower_str
 
@@ -31,7 +30,7 @@ class GlobalConfigSerializer(ModelSerializer):
 
 class DataTypeSerializer(ModelSerializer):
     class Meta:
-        model = DataType
+        model = LogicalDataType
         fields = 'name',
 
 
@@ -39,9 +38,7 @@ class NumericMeasurementUnitSerializer(ModelSerializer):
     class Meta:
         model = NumericMeasurementUnit
 
-        fields = \
-            'name', \
-            'description'
+        fields = ('name',)
 
 
 class EquipmentDataFieldTypeSerializer(ModelSerializer):
@@ -56,22 +53,6 @@ class EquipmentGeneralTypeSerializer(ModelSerializer):
         fields = 'name',
 
 
-class EquipmentComponentRelatedField(RelatedField):
-    def to_internal_value(self, data):
-        return EquipmentComponent.objects.update_or_create(
-                equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']),
-                defaults=dict(
-                    description=data['description']))[0]
-
-    def to_representation(self, value):
-        return dict(
-                id=value.id,
-                equipment_general_type=value.equipment_general_type.name,
-                name=value.name,
-                description=value.description)
-
-
 class EquipmentDataFieldRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentDataField.objects.update_or_create(
@@ -79,7 +60,7 @@ class EquipmentDataFieldRelatedField(RelatedField):
                 name=clean_lower_str(data['name']),
                 defaults=dict(
                     equipment_data_field_type=EquipmentDataFieldType.objects.get(name=clean_lower_str(data['equipment_data_field_type'])),
-                    data_type=DataType.objects.get(name=clean_lower_str(data['data_type'])),
+                    data_type=LogicalDataType.objects.get(name=clean_lower_str(data['data_type'])),
                     numeric_measurement_unit=NumericMeasurementUnit.objects.get_or_create(name=data['numeric_measurement_unit'].strip())[0],
                     lower_numeric_null=data['lower_numeric_null'],
                     upper_numeric_null=data['upper_numeric_null'],
@@ -109,62 +90,24 @@ class EquipmentUniqueTypeRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentUniqueType.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']),
-                defaults=dict(
-                    description=data['description']))[0]
+                name=clean_lower_str(data['name']))[0]
 
     def to_representation(self, value):
         return dict(
                 equipment_general_type=value.equipment_general_type.name,
-                name=value.name,
-                description=value.description)
+                name=value.name)
 
 
 class EquipmentUniqueTypeGroupRelatedField(RelatedField):
     def to_internal_value(self, data):
         return EquipmentUniqueTypeGroup.objects.update_or_create(
                 equipment_general_type=EquipmentGeneralType.objects.get_or_create(name=clean_lower_str(data['equipment_general_type']))[0],
-                name=clean_lower_str(data['name']),
-                defaults=dict(
-                    description=data['description']))[0]
+                name=clean_lower_str(data['name']))[0]
 
     def to_representation(self, value):
         return dict(
                 equipment_general_type=value.equipment_general_type.name,
-                name=value.name,
-                description=value.description)
-
-
-class EquipmentComponentSerializer(WritableNestedModelSerializer):
-    equipment_general_type = \
-        SlugRelatedField(
-            queryset=EquipmentGeneralType.objects.all(), read_only=False,
-            slug_field='name',
-            many=False,
-            required=True)
-
-    equipment_data_fields = \
-        EquipmentDataFieldRelatedField(
-            queryset=EquipmentDataField.objects.all(), read_only=False,
-            many=True,
-            required=False)
-
-    equipment_unique_types = \
-        EquipmentUniqueTypeRelatedField(
-            queryset=EquipmentUniqueType.objects.all(), read_only=False,
-            many=True,
-            required=False)
-
-    class Meta:
-        model = EquipmentComponent
-
-        fields = \
-            'id', \
-            'equipment_general_type', \
-            'name', \
-            'description', \
-            'equipment_data_fields', \
-            'equipment_unique_types'
+                name=value.name)
 
 
 class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
@@ -184,7 +127,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
 
     data_type = \
         SlugRelatedField(
-            queryset=DataType.objects.all(), read_only=False,
+            queryset=LogicalDataType.objects.all(), read_only=False,
             slug_field='name',
             many=False,
             required=False)
@@ -194,12 +137,6 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             queryset=NumericMeasurementUnit.objects.all(), read_only=False,
             slug_field='name',
             many=False,
-            required=False)
-
-    equipment_components = \
-        EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.all(), read_only=False,
-            many=True,
             required=False)
 
     equipment_unique_types = \
@@ -214,8 +151,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
         fields = \
             'id', \
             'equipment_general_type', \
-            'name', \
-            'description', \
+            'name',
             'equipment_data_field_type', \
             'data_type', \
             'numeric_measurement_unit', \
@@ -241,12 +177,6 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
             many=True,
             required=False)
 
-    equipment_components = \
-        EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.all(), read_only=False,
-            many=True,
-            required=False)
-
     equipment_data_fields = \
         EquipmentDataFieldRelatedField(
             queryset=EquipmentDataField.objects.all(), read_only=False,
@@ -259,7 +189,6 @@ class EquipmentUniqueTypeGroupSerializer(WritableNestedModelSerializer):
         fields = \
             'equipment_general_type', \
             'name', \
-            'description', \
             'equipment_unique_types', \
             'equipment_components', \
             'equipment_data_fields'
@@ -272,12 +201,6 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
             slug_field='name',
             many=False,
             required=True)
-
-    equipment_components = \
-        EquipmentComponentRelatedField(
-            queryset=EquipmentComponent.objects.all(), read_only=False,
-            many=True,
-            required=False)
 
     equipment_data_fields = \
         EquipmentDataFieldRelatedField(
@@ -297,7 +220,6 @@ class EquipmentUniqueTypeSerializer(WritableNestedModelSerializer):
         fields = \
             'equipment_general_type', \
             'name', \
-            'description', \
             'equipment_components', \
             'equipment_data_fields', \
             'equipment_unique_type_groups'
