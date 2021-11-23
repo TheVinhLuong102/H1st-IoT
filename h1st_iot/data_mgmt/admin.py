@@ -533,7 +533,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
                     'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
                     'equipment_data_field',
                     'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit')
+                    'equipment_data_field__logical_data_type', 'equipment_data_field__numeric_measurement_unit')
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
