@@ -175,7 +175,7 @@ class EquipmentInstanceAlarmPeriod(Model):
 
     equipment_instance_alert_periods = \
         ManyToManyField(
-            to='Alert',   # EquipmentInstanceAlertPeriods
+            to='EquipmentInstanceAlertPeriod',
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -319,7 +319,7 @@ class EquipmentInstanceProblemDiagnosis(Model):
 
     equipment_instance_alert_periods = \
         ManyToManyField(
-            to='Alert',   # EquipmentInstanceAlertPeriod
+            to='EquipmentInstanceAlertPeriod',
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -407,7 +407,7 @@ class AlertDiagnosisStatus(Model):
         super().save(*args, **kwargs)
 
 
-class Alert(Model):
+class EquipmentInstanceAlertPeriod(Model):
     RELATED_NAME = 'equipment_instance_alert_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alert_period'
 
@@ -600,10 +600,6 @@ class Alert(Model):
             self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
         super().save(*args, **kwargs)
-
-
-# rename more correctly
-EquipmentInstanceAlertPeriod = Alert
 
 
 def equipment_instance_alarm_period_post_save(sender, instance, *args, **kwargs):
