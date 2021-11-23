@@ -8,7 +8,7 @@ def run():
     """Run this script to create CAT & NUM logical data types."""
     try:
         ctl, _ = EquipmentDataFieldType.objects.get_or_create(name='ctl')
-        msrmt, _ = EquipmentDataFieldType.objects.get_or_create(name='msrmr')
+        msrmt, _ = EquipmentDataFieldType.objects.get_or_create(name='msrmt')
         print(ctl, msrmt)
 
     except Exception as err:   # pylint: disable=broad-except
