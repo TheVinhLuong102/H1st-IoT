@@ -64,7 +64,7 @@ EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERYSET = \
     .select_related(
         'equipment_general_type',
         'equipment_data_field_type',
-        'data_type',
+        'logical_data_type',
         'numeric_measurement_unit')
 
 

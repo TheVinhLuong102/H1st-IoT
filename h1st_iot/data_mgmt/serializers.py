@@ -60,7 +60,7 @@ class EquipmentDataFieldRelatedField(RelatedField):
                 name=clean_lower_str(data['name']),
                 defaults=dict(
                     equipment_data_field_type=EquipmentDataFieldType.objects.get(name=clean_lower_str(data['equipment_data_field_type'])),
-                    data_type=LogicalDataType.objects.get(name=clean_lower_str(data['data_type'])),
+                    logical_data_type=LogicalDataType.objects.get(name=clean_lower_str(data['logical_data_type'])),
                     numeric_measurement_unit=NumericMeasurementUnit.objects.get_or_create(name=data['numeric_measurement_unit'].strip())[0],
                     lower_numeric_null=data['lower_numeric_null'],
                     upper_numeric_null=data['upper_numeric_null'],
@@ -74,8 +74,8 @@ class EquipmentDataFieldRelatedField(RelatedField):
                 name=value.name,
                 description=value.description,
                 equipment_data_field_type=value.equipment_data_field_type.name,
-                data_type=value.data_type.name
-                    if value.data_type
+                logical_data_type=value.logical_data_type.name
+                    if value.logical_data_type
                     else None,
                 numeric_measurement_unit=value.numeric_measurement_unit.name
                     if value.numeric_measurement_unit
@@ -153,7 +153,7 @@ class EquipmentDataFieldSerializer(WritableNestedModelSerializer):
             'equipment_general_type', \
             'name',
             'equipment_data_field_type', \
-            'data_type', \
+            'logical_data_type', \
             'numeric_measurement_unit', \
             'lower_numeric_null', \
             'upper_numeric_null', \

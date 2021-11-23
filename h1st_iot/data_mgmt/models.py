@@ -153,7 +153,7 @@ class EquipmentDataField(Model):
             null=False,
             on_delete=PROTECT)
 
-    data_type = \
+    logical_data_type = \
         ForeignKey(
             to=LogicalDataType,
             related_name=RELATED_NAME,
@@ -214,8 +214,8 @@ class EquipmentDataField(Model):
                 self.equipment_general_type.name.upper(),
                 self.equipment_data_field_type.name,
                 self.name,
-                self.data_type.name
-                    if self.data_type
+                self.logical_data_type.name
+                    if self.logical_data_type
                     else 'UNTYPED',
                 f', unit {self.numeric_measurement_unit.name.upper()}'
                     if self.numeric_measurement_unit and self.numeric_measurement_unit.name

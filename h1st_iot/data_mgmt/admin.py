@@ -96,7 +96,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type', \
         'name', \
         'equipment_data_field_type', \
-        'data_type', \
+        'logical_data_type', \
         'numeric_measurement_unit', \
         'lower_numeric_null', \
         'upper_numeric_null', \
@@ -107,7 +107,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
     list_filter = \
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
-        'data_type__name', \
+        'logical_data_type__name', \
         'numeric_measurement_unit__name', \
         'lower_numeric_null', \
         'upper_numeric_null', \
@@ -119,7 +119,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
         'equipment_general_type__name', \
         'equipment_data_field_type__name', \
         'name', \
-        'data_type__name', \
+        'logical_data_type__name', \
         'numeric_measurement_unit__name'
 
     show_full_result_count = False
@@ -134,7 +134,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                 .select_related(
                     'equipment_general_type',
                     'equipment_data_field_type',
-                    'data_type',
+                    'logical_data_type',
                     'numeric_measurement_unit') \
                 .prefetch_related(
                     Prefetch(

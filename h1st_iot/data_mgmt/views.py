@@ -345,7 +345,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
         'equipment_general_type', \
         'name', \
         'equipment_data_field_type', \
-        'data_type', \
+        'logical_data_type', \
         'numeric_measurement_unit'
 
     ordering = \
