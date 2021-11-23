@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Remove JSON Description fields to boost performance."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0084_remove_EquipmentComponent'),
+        ('IoT_DataMgmt', '0084_remove_EquipmentComponent'),
     ]
 
     operations = [

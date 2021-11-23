@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Remove PPP."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_MaintOps', '0114_remove_last_updated_fields')
+        ('IoT_MaintOps', '0114_remove_last_updated_fields')
     ]
 
     operations = [

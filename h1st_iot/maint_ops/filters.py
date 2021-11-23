@@ -17,13 +17,13 @@ from .models import (
     EquipmentInstanceAlertPeriod,
 )
 
-from h1st_iot.data_mgmt.base.filters import (
+from h1st_iot.data_mgmt.filters import (
     EquipmentUniqueTypeGroupFilter,
     EquipmentDataFieldFilter,
     EquipmentInstanceFilter,
 )
 
-from h1st_iot.data_mgmt.base.models import \
+from h1st_iot.data_mgmt.models import \
     EquipmentUniqueTypeGroup, \
     EquipmentDataField, \
     EquipmentInstance

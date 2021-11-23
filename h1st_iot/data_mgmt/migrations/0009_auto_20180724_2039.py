@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0008_equipmentinstanceassociation'),
+        ('IoT_DataMgmt', '0008_equipmentinstanceassociation'),
     ]
 
     operations = [
@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipmentdatafield',
             name='numeric_measurement_unit',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='equipment_data_fields', related_query_name='equipment_data_field', to='H1stIoT_DataMgmt_Base.NumericMeasurementUnit'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='equipment_data_fields', related_query_name='equipment_data_field', to='IoT_DataMgmt.NumericMeasurementUnit'),
         ),
     ]

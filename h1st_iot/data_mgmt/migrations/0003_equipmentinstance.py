@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0002_equipmentuniquetype_data_fields'),
+        ('IoT_DataMgmt', '0002_equipmentuniquetype_data_fields'),
     ]
 
     operations = [
@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('data_fields', models.ManyToManyField(blank=True, related_name='equipment_instances', related_query_name='equipment_instance', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instances', related_query_name='equipment_instance', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
-                ('equipment_unique_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instances', related_query_name='equipment_instance', to='H1stIoT_DataMgmt_Base.EquipmentUniqueType')),
+                ('data_fields', models.ManyToManyField(blank=True, related_name='equipment_instances', related_query_name='equipment_instance', to='IoT_DataMgmt.EquipmentDataField')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instances', related_query_name='equipment_instance', to='IoT_DataMgmt.EquipmentGeneralType')),
+                ('equipment_unique_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instances', related_query_name='equipment_instance', to='IoT_DataMgmt.EquipmentUniqueType')),
             ],
             options={
                 'ordering': ('equipment_general_type', 'equipment_unique_type', 'name'),

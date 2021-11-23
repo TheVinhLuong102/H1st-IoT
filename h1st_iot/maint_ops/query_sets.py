@@ -1,6 +1,6 @@
 from django.db.models import Prefetch
 
-from ..base.query_sets import \
+from h1st_iot.data_mgmt.query_sets import \
     EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERY_SET
 

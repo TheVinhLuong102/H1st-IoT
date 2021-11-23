@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Remove EquipmentComponent."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base',
+        ('IoT_DataMgmt',
          '0083_move_data_field_profile_models_to_base')
     ]
 

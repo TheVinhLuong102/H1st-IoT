@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Rename LogicalDataType."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0088_remove_EquipmentDataField_default_val')
+        ('IoT_DataMgmt', '0088_remove_EquipmentDataField_default_val')
     ]
 
     operations = [

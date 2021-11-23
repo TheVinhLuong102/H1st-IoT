@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0057_auto_20190322_2153'),
+        ('IoT_DataMgmt', '0057_auto_20190322_2153'),
     ]
 
     operations = [
@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(db_index=True, max_length=255, unique=True, verbose_name='Equipment Component')),
                 ('description', django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True)),
-                ('equipment_data_fields', models.ManyToManyField(blank=True, related_name='equipment_components', related_query_name='equipment_component', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_components', related_query_name='equipment_component', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
-                ('equipment_unique_types', models.ManyToManyField(blank=True, related_name='equipment_components', related_query_name='equipment_component', to='H1stIoT_DataMgmt_Base.EquipmentUniqueType')),
+                ('equipment_data_fields', models.ManyToManyField(blank=True, related_name='equipment_components', related_query_name='equipment_component', to='IoT_DataMgmt.EquipmentDataField')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_components', related_query_name='equipment_component', to='IoT_DataMgmt.EquipmentGeneralType')),
+                ('equipment_unique_types', models.ManyToManyField(blank=True, related_name='equipment_components', related_query_name='equipment_component', to='IoT_DataMgmt.EquipmentUniqueType')),
             ],
             options={
                 'ordering': ('equipment_general_type', 'name'),
@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipmentdatafield',
             name='components',
-            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_Base.EquipmentComponent'),
+            field=models.ManyToManyField(blank=True, to='IoT_DataMgmt.EquipmentComponent'),
         ),
     ]

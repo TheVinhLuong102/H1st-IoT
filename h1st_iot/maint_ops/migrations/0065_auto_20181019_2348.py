@@ -7,23 +7,23 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_MaintOps', '0064_auto_20181019_2323'),
+        ('IoT_MaintOps', '0064_auto_20181019_2323'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentinstanceproblemdiagnosis',
             name='alerts',
-            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.Alert'),
+            field=models.ManyToManyField(blank=True, to='IoT_MaintOps.Alert'),
         ),
         migrations.AlterField(
             model_name='equipmentinstanceproblemdiagnosis',
             name='equipment_instance',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='H1stIoT_DataMgmt_Base.EquipmentInstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='IoT_DataMgmt.EquipmentInstance'),
         ),
         migrations.AlterField(
             model_name='equipmentinstanceproblemdiagnosis',
             name='equipment_problem_types',
-            field=models.ManyToManyField(blank=True, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemType'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_diagnoses', related_query_name='equipment_diagnosis', to='IoT_MaintOps.EquipmentProblemType'),
         ),
     ]

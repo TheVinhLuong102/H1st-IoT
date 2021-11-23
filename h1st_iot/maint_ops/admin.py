@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 
 from silk.profiling.profiler import silk_profile
 
-from ..base.query_sets import \
+from h1st_iot.data_mgmt.query_sets import \
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET, \
     EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERY_SET
 

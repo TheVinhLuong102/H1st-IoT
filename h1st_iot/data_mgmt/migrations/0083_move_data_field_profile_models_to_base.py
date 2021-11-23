@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     """Move Data Field Profile models to Base module."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0082_auto_20200916_2306'),
+        ('IoT_DataMgmt', '0082_auto_20200916_2306'),
     ]
 
     operations = [
@@ -89,7 +89,7 @@ class Migration(migrations.Migration):
                                    'data_field_profiles'),
                      related_query_name=('equipment_unique_type_group_'
                                          'data_field_profile'),
-                     to='H1stIoT_DataMgmt_Base.equipmentdatafield')),
+                     to='IoT_DataMgmt.equipmentdatafield')),
 
                 ('equipment_unique_type_group',
                  models.ForeignKey(
@@ -98,7 +98,7 @@ class Migration(migrations.Migration):
                                    'data_field_profiles'),
                      related_query_name=('equipment_unique_type_group_'
                                          'data_field_profile'),
-                     to='H1stIoT_DataMgmt_Base.equipmentuniquetypegroup'))
+                     to='IoT_DataMgmt.equipmentuniquetypegroup'))
             ],
 
             options={
@@ -138,12 +138,12 @@ class Migration(migrations.Migration):
                                    'data_field_pairwise_correlations'),
                      related_query_name=('equipment_unique_type_group_'
                                          'data_field_pairwise_correlation'),
-                     to='H1stIoT_DataMgmt_Base.equipmentdatafield')),
+                     to='IoT_DataMgmt.equipmentdatafield')),
 
                 ('equipment_data_field_2',
                  models.ForeignKey(
                      on_delete=django.db.models.deletion.PROTECT,
-                     to='H1stIoT_DataMgmt_Base.equipmentdatafield')),
+                     to='IoT_DataMgmt.equipmentdatafield')),
 
                 ('equipment_unique_type_group',
                  models.ForeignKey(
@@ -152,7 +152,7 @@ class Migration(migrations.Migration):
                                    'data_field_pairwise_correlations'),
                      related_query_name=('equipment_unique_type_group_'
                                          'data_field_pairwise_correlation'),
-                     to='H1stIoT_DataMgmt_Base.equipmentuniquetypegroup'))
+                     to='IoT_DataMgmt.equipmentuniquetypegroup'))
             ],
 
             options={

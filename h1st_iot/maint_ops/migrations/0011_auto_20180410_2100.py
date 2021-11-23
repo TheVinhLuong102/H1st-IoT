@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0006_auto_20180410_1904'),
-        ('H1stIoT_DataMgmt_MaintOps', '0010_auto_20180410_1113'),
+        ('IoT_DataMgmt', '0006_auto_20180410_1904'),
+        ('IoT_MaintOps', '0010_auto_20180410_1113'),
     ]
 
     operations = [
@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blueprint',
             name='equipment_unique_type_group',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='IoT_DataMgmt.EquipmentUniqueTypeGroup'),
         ),
     ]

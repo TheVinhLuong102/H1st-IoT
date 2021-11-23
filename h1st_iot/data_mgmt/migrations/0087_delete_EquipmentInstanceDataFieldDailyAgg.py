@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Delete model EquipmentInstanceDataFieldDailyAgg."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0086_remove_last_updated_fields')
+        ('IoT_DataMgmt', '0086_remove_last_updated_fields')
     ]
 
     operations = [

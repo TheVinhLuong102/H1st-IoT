@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0005_auto_20180103_1059'),
-        ('H1stIoT_DataMgmt_MaintOps', '0005_auto_20180410_0337'),
+        ('IoT_DataMgmt', '0005_auto_20180103_1059'),
+        ('IoT_MaintOps', '0005_auto_20180410_0337'),
     ]
 
     operations = [
@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blueprint',
             name='equipment_general_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='blueprints', related_query_name='blueprint', to='IoT_DataMgmt.EquipmentGeneralType'),
         ),
         migrations.AddField(
             model_name='blueprint',
             name='equipment_unique_types',
-            field=models.ManyToManyField(blank=True, related_name='blueprints', related_query_name='blueprint', to='H1stIoT_DataMgmt_Base.EquipmentUniqueType'),
+            field=models.ManyToManyField(blank=True, related_name='blueprints', related_query_name='blueprint', to='IoT_DataMgmt.EquipmentUniqueType'),
         ),
     ]

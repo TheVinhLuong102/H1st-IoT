@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Remove EquipmentDataField default_val."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base',
+        ('IoT_DataMgmt',
          '0087_delete_EquipmentInstanceDataFieldDailyAgg')
     ]
 

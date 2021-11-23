@@ -8,8 +8,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0063_auto_20190511_0024'),
-        ('H1stIoT_DataMgmt_MaintOps', '0094_auto_20190513_2248'),
+        ('IoT_DataMgmt', '0063_auto_20190511_0024'),
+        ('IoT_MaintOps', '0094_auto_20190513_2248'),
     ]
 
     operations = [
@@ -46,12 +46,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='alert',
             name='equipment_instance',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alert_periods', related_query_name='equipment_instance_alert_period', to='H1stIoT_DataMgmt_Base.EquipmentInstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alert_periods', related_query_name='equipment_instance_alert_period', to='IoT_DataMgmt.EquipmentInstance'),
         ),
         migrations.AlterField(
             model_name='alert',
             name='equipment_unique_type_group',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alert_periods', related_query_name='equipment_instance_alert_period', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alert_periods', related_query_name='equipment_instance_alert_period', to='IoT_DataMgmt.EquipmentUniqueTypeGroup'),
         ),
         migrations.CreateModel(
             name='EquipmentInstanceAlarmPeriod',
@@ -64,10 +64,10 @@ class Migration(migrations.Migration):
                 ('has_associated_equipment_instance_alert_periods', models.BooleanField(db_index=True, default=False)),
                 ('has_associated_equipment_instance_problem_diagnoses', models.BooleanField(db_index=True, default=False)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('alarm_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentProblemType')),
-                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
-                ('equipment_instance_alert_periods', models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_MaintOps.Alert')),
-                ('equipment_instance_problem_diagnoses', models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceProblemDiagnosis')),
+                ('alarm_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='IoT_MaintOps.EquipmentProblemType')),
+                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='IoT_DataMgmt.EquipmentInstance')),
+                ('equipment_instance_alert_periods', models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='IoT_MaintOps.Alert')),
+                ('equipment_instance_problem_diagnoses', models.ManyToManyField(blank=True, related_name='equipment_instance_alarm_periods', related_query_name='equipment_instance_alarm_period', to='IoT_MaintOps.EquipmentInstanceProblemDiagnosis')),
             ],
             options={
                 'ordering': ('equipment_instance', 'alarm_type', 'from_utc_date_time'),
@@ -77,11 +77,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='alert',
             name='alarm_periods',
-            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceAlarmPeriod'),
+            field=models.ManyToManyField(blank=True, to='IoT_MaintOps.EquipmentInstanceAlarmPeriod'),
         ),
         migrations.AddField(
             model_name='equipmentinstanceproblemdiagnosis',
             name='alarm_periods',
-            field=models.ManyToManyField(blank=True, to='H1stIoT_DataMgmt_MaintOps.EquipmentInstanceAlarmPeriod'),
+            field=models.ManyToManyField(blank=True, to='IoT_MaintOps.EquipmentInstanceAlarmPeriod'),
         ),
     ]

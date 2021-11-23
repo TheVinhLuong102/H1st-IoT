@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Remove last_updated fields."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0085_remove_description_json_fields'),
+        ('IoT_DataMgmt', '0085_remove_description_json_fields'),
     ]
 
     operations = [

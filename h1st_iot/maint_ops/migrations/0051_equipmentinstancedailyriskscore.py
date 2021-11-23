@@ -9,8 +9,8 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0017_auto_20180909_0502'),
-        ('H1stIoT_DataMgmt_MaintOps', '0050_auto_20180909_0502'),
+        ('IoT_DataMgmt', '0017_auto_20180909_0502'),
+        ('IoT_MaintOps', '0050_auto_20180909_0502'),
     ]
 
     operations = [
@@ -22,9 +22,9 @@ class Migration(migrations.Migration):
                 ('date', models.DateField(default=None)),
                 ('risk_score_value', models.FloatField(default=0)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentGeneralType')),
-                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
-                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup')),
+                ('equipment_general_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='IoT_DataMgmt.EquipmentGeneralType')),
+                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='IoT_DataMgmt.EquipmentInstance')),
+                ('equipment_unique_type_group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='alerts', related_query_name='alert', to='IoT_DataMgmt.EquipmentUniqueTypeGroup')),
             ],
             options={
                 'ordering': ('equipment_general_type', 'equipment_unique_type_group', 'equipment_instance', 'risk_score_name', '-date'),

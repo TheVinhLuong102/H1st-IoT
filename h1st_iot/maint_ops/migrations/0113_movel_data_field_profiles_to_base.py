@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     """Move Data Field Profile models to Base module."""
 
     dependencies = [
-        ('H1stIoT_DataMgmt_MaintOps', '0112_auto_20200916_2306'),
+        ('IoT_MaintOps', '0112_auto_20200916_2306'),
     ]
 
     operations = [

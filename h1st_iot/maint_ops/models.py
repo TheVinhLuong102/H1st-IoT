@@ -11,11 +11,12 @@ from django.contrib.postgres.fields import DateRangeField
 
 from psycopg2.extras import DateRange
 
-from ..base.models import \
-    EquipmentDataField, \
-    EquipmentUniqueTypeGroup, \
-    EquipmentInstance
-from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
+from h1st_iot.data_mgmt.models import (
+    EquipmentDataField,
+    EquipmentUniqueTypeGroup,
+    EquipmentInstance,
+)
+from h1st_iot.util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
 
 _ONE_DAY_TIME_DELTA = timedelta(days=1)

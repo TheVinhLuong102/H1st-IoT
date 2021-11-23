@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0064_auto_20190514_0331'),
+        ('IoT_DataMgmt', '0064_auto_20190514_0331'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentdatafield',
             name='components',
-            field=models.ManyToManyField(blank=True, related_name='equipment_data_fields_reverse', related_query_name='equipment_data_field', to='H1stIoT_DataMgmt_Base.EquipmentComponent'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_data_fields_reverse', related_query_name='equipment_data_field', to='IoT_DataMgmt.EquipmentComponent'),
         ),
         migrations.AlterField(
             model_name='equipmentuniquetype',
             name='components',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='H1stIoT_DataMgmt_Base.EquipmentComponent'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='IoT_DataMgmt.EquipmentComponent'),
         ),
         migrations.AlterField(
             model_name='equipmentuniquetype',
             name='data_fields',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='H1stIoT_DataMgmt_Base.EquipmentDataField'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='IoT_DataMgmt.EquipmentDataField'),
         ),
         migrations.AlterField(
             model_name='equipmentuniquetype',
             name='groups',
-            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
+            field=models.ManyToManyField(blank=True, related_name='equipment_unique_types_reverse', related_query_name='equipment_unique_type', to='IoT_DataMgmt.EquipmentUniqueTypeGroup'),
         ),
     ]

@@ -7,13 +7,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_MaintOps', '0088_alert_info'),
+        ('IoT_MaintOps', '0088_alert_info'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='equipmentuniquetypegroupserviceconfig',
             name='equipment_unique_type_group',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_service_configs', related_query_name='equipment_unique_type_group_service_config', to='H1stIoT_DataMgmt_Base.EquipmentUniqueTypeGroup'),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_unique_type_group_service_configs', related_query_name='equipment_unique_type_group_service_config', to='IoT_DataMgmt.EquipmentUniqueTypeGroup'),
         ),
     ]

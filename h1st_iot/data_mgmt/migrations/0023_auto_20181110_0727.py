@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('H1stIoT_DataMgmt_Base', '0022_equipmentinstancedatafielddailyaggregate'),
+        ('IoT_DataMgmt', '0022_equipmentinstancedatafielddailyaggregate'),
     ]
 
     operations = [
@@ -26,8 +26,8 @@ class Migration(migrations.Migration):
                 ('daily_3rd_quartile', models.FloatField(blank=True, null=True)),
                 ('daily_max', models.FloatField(blank=True, null=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_data_field_daily_aggs', related_query_name='equipment_instance_data_field_daily_agg', to='H1stIoT_DataMgmt_Base.EquipmentDataField')),
-                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_data_field_daily_aggs', related_query_name='equipment_instance_data_field_daily_agg', to='H1stIoT_DataMgmt_Base.EquipmentInstance')),
+                ('equipment_data_field', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_data_field_daily_aggs', related_query_name='equipment_instance_data_field_daily_agg', to='IoT_DataMgmt.EquipmentDataField')),
+                ('equipment_instance', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='equipment_instance_data_field_daily_aggs', related_query_name='equipment_instance_data_field_daily_agg', to='IoT_DataMgmt.EquipmentInstance')),
             ],
             options={
                 'ordering': ('equipment_instance', 'equipment_data_field', 'date'),
