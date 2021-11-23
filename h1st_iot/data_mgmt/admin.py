@@ -18,7 +18,6 @@ from h1st_iot.data_mgmt.models import (
     EquipmentInstance,
     EquipmentSystem,
     EquipmentUniqueTypeGroupDataFieldProfile,
-    EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation,
 )
 from h1st_iot.data_mgmt.querysets import (
     EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET,
@@ -548,57 +547,3 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
 site.register(
     EquipmentUniqueTypeGroupDataFieldProfile,
     admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
-
-
-class EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin(ModelAdmin):
-    list_display = \
-        'equipment_unique_type_group', \
-        'equipment_data_field', \
-        'equipment_data_field_2', \
-        'sample_correlation'
-
-    list_filter = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_data_field__name'
-
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_data_field__name'
-
-    show_full_result_count = False
-
-    ordering = \
-        'equipment_unique_type_group', \
-        '-sample_correlation'
-
-    readonly_fields = \
-        'equipment_unique_type_group', \
-        'equipment_data_field', \
-        'equipment_data_field_2', \
-        'sample_correlation'
-
-    def get_queryset(self, request):
-        return super().get_queryset(request=request) \
-                .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_data_field',
-                    'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                    'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit',
-                    'equipment_data_field_2',
-                    'equipment_data_field_2__equipment_general_type', 'equipment_data_field_2__equipment_data_field_type',
-                    'equipment_data_field_2__data_type', 'equipment_data_field_2__numeric_measurement_unit')
-
-    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlations')
-    def changelist_view(self, *args, **kwargs):
-        return super().changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Pairwise Correlation')
-    def changeform_view(self, *args, **kwargs):
-        return super().changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation,
-    admin_class=EquipmentUniqueTypeGroupDataFieldPairwiseCorrelationAdmin)

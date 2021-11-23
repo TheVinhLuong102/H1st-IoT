@@ -12,7 +12,6 @@ from .filters import \
     NumericMeasurementUnitFilter, \
     EquipmentDataFieldTypeFilter, \
     EquipmentGeneralTypeFilter, \
-    EquipmentComponentFilter, \
     EquipmentDataFieldFilter, \
     EquipmentUniqueTypeGroupFilter, \
     EquipmentUniqueTypeFilter, \
