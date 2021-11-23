@@ -11,13 +11,11 @@ from h1st_iot.data_mgmt.models import (
     NumericMeasurementUnit,
     EquipmentDataFieldType,
     EquipmentGeneralType,
-    EquipmentComponent,
     EquipmentDataField,
     EquipmentUniqueTypeGroup,
     EquipmentUniqueType,
     EquipmentFacility,
     EquipmentInstance,
-    EquipmentInstanceDataFieldDailyAgg,
     EquipmentSystem,
 )
 
@@ -103,48 +101,6 @@ class EquipmentGeneralTypeFilter(FilterSet):
                 'regex', 'iregex'
             ]
         )
-
-
-class EquipmentComponentFilter(FilterSet):
-    """EquipmentComponentFilter."""
-
-    equipment_general_type = \
-        RelatedFilter(
-            queryset=EquipmentGeneralType.objects.all(),
-            filterset=EquipmentGeneralTypeFilter)
-
-    equipment_data_fields = \
-        RelatedFilter(
-            queryset=EquipmentDataField.objects.all(),
-            filterset='EquipmentDataFieldFilter')
-
-    equipment_unique_types = \
-        RelatedFilter(
-            queryset=EquipmentUniqueType.objects.all(),
-            filterset='EquipmentUniqueTypeFilter')
-
-    class Meta:
-        """EquipmentComponentFilter metadata."""
-
-        model = EquipmentComponent
-
-        fields = dict(
-            name=[
-                'exact', 'iexact',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
-                'regex', 'iregex'
-            ],
-
-            description='__all__')
-
-        filter_overrides = {
-            JSONField: dict(
-                filter_class=CharFilter
-                # 'extra': lambda f: {'lookup_expr': 'icontains'}
-            )
-        }
 
 
 class EquipmentDataFieldFilter(FilterSet):
@@ -407,144 +363,6 @@ class EquipmentInstanceFilter(FilterSet):
                 # 'extra': lambda f: {'lookup_expr': 'icontains'}
             )
         }
-
-
-class EquipmentInstanceDataFieldDailyAggFilter(FilterSet):
-    """EquipmentInstanceDataFieldDailyAggFilter."""
-
-    equipment_instance = \
-        RelatedFilter(
-            queryset=EquipmentInstance.objects.all(),
-            filterset=EquipmentInstanceFilter)
-
-    equipment_data_field = \
-        RelatedFilter(
-            queryset=EquipmentDataField.objects.all(),
-            filterset=EquipmentDataFieldFilter)
-
-    class Meta:
-        """EquipmentInstanceDataFieldDailyAggFilter metadata."""
-
-        model = EquipmentInstanceDataFieldDailyAgg
-
-        fields = dict(
-            date=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull',
-                'year',
-                'year__gt', 'year__gte', 'year__lt', 'year__lte',
-                'year__in',
-                'year__range',
-                'month',
-                'month__gt', 'month__gte', 'month__lt', 'month__lte',
-                'month__in',
-                'month__range'
-            ],
-
-            daily_count=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_min=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_outlier_rst_min=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_quartile=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_median=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_mean=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_3rd_quartile=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_outlier_rst_max=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ],
-
-            daily_max=[
-                'exact',
-                'gt', 'gte', 'lt', 'lte',
-                'in',
-                'contains',
-                'startswith',
-                'endswith',
-                'range',
-                'isnull'
-            ])
 
 
 class EquipmentSystemFilter(FilterSet):

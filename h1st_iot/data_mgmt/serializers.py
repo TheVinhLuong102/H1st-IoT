@@ -281,38 +281,6 @@ class EquipmentInstanceSerializer(WritableNestedModelSerializer):
             'equipment_unique_type_groups'
 
 
-class EquipmentInstanceDataFieldDailyAggSerializer(ModelSerializer):
-    equipment_instance = \
-        SlugRelatedField(
-            read_only=True,
-            slug_field='name',
-            many=False)
-
-    equipment_data_field = \
-        EquipmentDataFieldRelatedField(
-            read_only=True,
-            many=False)
-
-    class Meta:
-        model = EquipmentInstanceDataFieldDailyAgg
-
-        fields = \
-            'id', \
-            'equipment_instance', \
-            'equipment_data_field', \
-            'date', \
-            'daily_count', \
-            'daily_distinct_value_counts', \
-            'daily_min', \
-            'daily_outlier_rst_min', \
-            'daily_quartile', \
-            'daily_median', \
-            'daily_mean', \
-            'daily_3rd_quartile', \
-            'daily_outlier_rst_max', \
-            'daily_max'
-
-
 class EquipmentSystemSerializer(ModelSerializer):
     equipment_facility = \
         SlugRelatedField(

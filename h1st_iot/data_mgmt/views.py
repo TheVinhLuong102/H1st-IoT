@@ -18,7 +18,6 @@ from .filters import \
     EquipmentUniqueTypeFilter, \
     EquipmentFacilityFilter, \
     EquipmentInstanceFilter, \
-    EquipmentInstanceDataFieldDailyAggFilter, \
     EquipmentSystemFilter
 
 from .querysets import \
@@ -27,14 +26,12 @@ from .querysets import \
     NUMERIC_MEASUREMENT_UNIT_QUERYSET, \
     EQUIPMENT_DATA_FIELD_TYPE_QUERYSET, \
     EQUIPMENT_GENERAL_TYPE_QUERYSET, \
-    EQUIPMENT_COMPONENT_REST_API_QUERYSET, \
     EQUIPMENT_DATA_FIELD_REST_API_QUERYSET, \
     EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERYSET, \
     EQUIPMENT_UNIQUE_TYPE_REST_API_QUERYSET, \
     EQUIPMENT_FACILITY_REST_API_QUERYSET, \
     EQUIPMENT_INSTANCE_REST_API_QUERYSET, \
-    EQUIPMENT_SYSTEM_REST_API_QUERYSET, \
-    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERYSET
+    EQUIPMENT_SYSTEM_REST_API_QUERYSET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -42,13 +39,11 @@ from .serializers import \
     NumericMeasurementUnitSerializer, \
     EquipmentDataFieldTypeSerializer, \
     EquipmentGeneralTypeSerializer, \
-    EquipmentComponentSerializer, \
     EquipmentDataFieldSerializer, \
     EquipmentUniqueTypeGroupSerializer, \
     EquipmentUniqueTypeSerializer, \
     EquipmentFacilitySerializer, \
     EquipmentInstanceSerializer, \
-    EquipmentInstanceDataFieldDailyAggSerializer, \
     EquipmentSystemSerializer
 
 
@@ -309,63 +304,6 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment General Type')
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-
-class EquipmentComponentViewSet(ModelViewSet):
-    """
-    list:
-    `GET` a filterable, unpaginated list of Equipment Components
-
-    retrieve:
-    `GET` the Equipment Component specified by `id`
-
-    create:
-    `POST` a new Equipment Component
-
-    update:
-    `PUT` updated data for the Equipment Component specified by `id`
-
-    partial_update:
-    `PATCH` the Equipment Component specified by `id`
-
-    destroy:
-    `DELETE` the Equipment Component specified by `id`
-    """
-    queryset = EQUIPMENT_COMPONENT_REST_API_QUERYSET
-
-    serializer_class = EquipmentComponentSerializer
-
-    authentication_classes = \
-        BasicAuthentication, \
-        RemoteUserAuthentication, \
-        SessionAuthentication, \
-        TokenAuthentication
-
-    permission_classes = IsAuthenticated,
-
-    filter_class = EquipmentComponentFilter
-
-    ordering_fields = \
-        'equipment_general_type', \
-        'name'
-
-    ordering = \
-        'equipment_general_type', \
-        'name'
-
-    pagination_class = None
-
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
-    @silk_profile(name='API: Equipment Components')
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @silk_profile(name='API: Equipment Component')
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
@@ -669,53 +607,6 @@ class EquipmentInstanceViewSet(ModelViewSet):
         return super().list(request, *args, **kwargs)
 
     @silk_profile(name='API: Equipment Instance')
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-
-class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
-    """
-    list:
-    `GET` a filterable, paginated list of Equipment Instance Data Field Daily Aggs
-
-    retrieve:
-    `GET` the Equipment Instance Data Field Daily Agg specified by `id`
-    """
-    queryset = EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERYSET
-
-    serializer_class = EquipmentInstanceDataFieldDailyAggSerializer
-
-    authentication_classes = \
-        BasicAuthentication, \
-        RemoteUserAuthentication, \
-        SessionAuthentication, \
-        TokenAuthentication
-
-    permission_classes = IsAuthenticated,
-
-    filter_class = EquipmentInstanceDataFieldDailyAggFilter
-
-    ordering_fields = \
-        'equipment_instance', \
-        'equipment_data_field', \
-        'date'
-
-    # ordering = \
-    #     'equipment_instance', \
-    #     'equipment_data_field', \
-    #     'date'
-
-    pagination_class = LimitOffsetPagination
-
-    renderer_classes = \
-        CoreJSONRenderer, \
-        JSONRenderer
-
-    @silk_profile(name='API: Equipment Instance Data Field Daily Aggregates')
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    @silk_profile(name='API: Equipment Instance Data Field Daily Aggregate')
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
