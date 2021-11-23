@@ -19,18 +19,18 @@ from .filters import \
     AlertDiagnosisStatusFilter, \
     EquipmentInstanceAlertPeriodFilter
 
-from .query_sets import \
-    GLOBAL_CONFIG_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET, \
-    BLUEPRINT_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET, \
+from .querysets import \
+    GLOBAL_CONFIG_QUERYSET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERYSET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERYSET, \
+    BLUEPRINT_REST_API_QUERYSET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERYSET, \
     EQUIPMENT_INSTANCE_DAILY_RISK_SCORE, \
-    EQUIPMENT_PROBLEM_TYPE_QUERY_SET, \
-    EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET, \
-    ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET
+    EQUIPMENT_PROBLEM_TYPE_QUERYSET, \
+    EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERYSET, \
+    ALERT_DIAGNOSIS_STATUS_REST_API_QUERYSET, \
+    EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERYSET, \
+    EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERYSET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -66,7 +66,7 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = GLOBAL_CONFIG_QUERY_SET
+    queryset = GLOBAL_CONFIG_QUERYSET
 
     serializer_class = GlobalConfigSerializer
 
@@ -111,7 +111,7 @@ class EquipmentUniqueTypeGroupDataFieldProfileViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Unique Type Group Data Field Profile specified by `id`
     """
-    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERY_SET
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERYSET
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldProfileSerializer
 
@@ -158,7 +158,7 @@ class EquipmentUniqueTypeGroupServiceConfigViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Unique Type Group Service Config specified by `id`
     """
-    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERY_SET
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_SERVICE_CONFIG_REST_API_QUERYSET
 
     serializer_class = EquipmentUniqueTypeGroupServiceConfigSerializer
 
@@ -203,7 +203,7 @@ class BlueprintViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Blueprint specified by `uuid`
     """
-    queryset = BLUEPRINT_REST_API_QUERY_SET
+    queryset = BLUEPRINT_REST_API_QUERYSET
 
     serializer_class = BlueprintSerializer
 
@@ -254,7 +254,7 @@ class EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileViewSet(Re
     retrieve:
     `GET` the Equipment Unique Type Group Data Field Blueprint Benchmark Metric Profile specified by `id`
     """
-    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERY_SET
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_BLUEPRINT_BENCHMARK_METRIC_PROFILE_REST_API_QUERYSET
 
     serializer_class = EquipmentUniqueTypeGroupDataFieldBlueprintBenchmarkMetricProfileSerializer
 
@@ -356,7 +356,7 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Problem Type specified by `name`
     """
-    queryset = EQUIPMENT_PROBLEM_TYPE_QUERY_SET
+    queryset = EQUIPMENT_PROBLEM_TYPE_QUERYSET
 
     serializer_class = EquipmentProblemTypeSerializer
 
@@ -394,7 +394,7 @@ class EquipmentProblemTypeViewSet(ModelViewSet):
 
 
 class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
-    queryset = EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERY_SET
+    queryset = EQUIPMENT_INSTANCE_ALARM_PERIOD_REST_API_QUERYSET
 
     serializer_class = EquipmentInstanceAlarmPeriodSerializer
 
@@ -431,7 +431,7 @@ class EquipmentInstanceAlarmPeriodViewSet(ModelViewSet):
 
 
 class EquipmentInstanceProblemDiagnosisViewSet(ModelViewSet):
-    queryset = EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERY_SET
+    queryset = EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_REST_API_QUERYSET
 
     serializer_class = EquipmentInstanceProblemDiagnosisSerializer
 
@@ -481,7 +481,7 @@ class AlertDiagnosisStatusViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Alert Diagnosis Status specified by `name`
     """
-    queryset = ALERT_DIAGNOSIS_STATUS_REST_API_QUERY_SET
+    queryset = ALERT_DIAGNOSIS_STATUS_REST_API_QUERYSET
 
     serializer_class = AlertDiagnosisStatusSerializer
 
@@ -529,7 +529,7 @@ class EquipmentInstanceAlertPeriodViewSet(ModelViewSet):
     partial_update:
     `PATCH` the `diagnosis_status` of the Alert specified by `id`
     """
-    queryset = EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERY_SET
+    queryset = EQUIPMENT_INSTANCE_ALERT_PERIOD_REST_API_QUERYSET
 
     serializer_class = EquipmentInstanceAlertPeriodSerializer
 

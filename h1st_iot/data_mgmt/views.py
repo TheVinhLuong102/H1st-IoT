@@ -21,20 +21,20 @@ from .filters import \
     EquipmentInstanceDataFieldDailyAggFilter, \
     EquipmentSystemFilter
 
-from .query_sets import \
-    GLOBAL_CONFIG_QUERY_SET, \
-    DATA_TYPE_QUERY_SET, \
-    NUMERIC_MEASUREMENT_UNIT_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_TYPE_QUERY_SET, \
-    EQUIPMENT_GENERAL_TYPE_QUERY_SET, \
-    EQUIPMENT_COMPONENT_REST_API_QUERY_SET, \
-    EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET, \
-    EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET, \
-    EQUIPMENT_FACILITY_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_REST_API_QUERY_SET, \
-    EQUIPMENT_SYSTEM_REST_API_QUERY_SET, \
-    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET
+from .querysets import \
+    GLOBAL_CONFIG_QUERYSET, \
+    DATA_TYPE_QUERYSET, \
+    NUMERIC_MEASUREMENT_UNIT_QUERYSET, \
+    EQUIPMENT_DATA_FIELD_TYPE_QUERYSET, \
+    EQUIPMENT_GENERAL_TYPE_QUERYSET, \
+    EQUIPMENT_COMPONENT_REST_API_QUERYSET, \
+    EQUIPMENT_DATA_FIELD_REST_API_QUERYSET, \
+    EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERYSET, \
+    EQUIPMENT_UNIQUE_TYPE_REST_API_QUERYSET, \
+    EQUIPMENT_FACILITY_REST_API_QUERYSET, \
+    EQUIPMENT_INSTANCE_REST_API_QUERYSET, \
+    EQUIPMENT_SYSTEM_REST_API_QUERYSET, \
+    EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERYSET
 
 from .serializers import \
     GlobalConfigSerializer, \
@@ -72,7 +72,7 @@ class GlobalConfigViewSet(ModelViewSet):
     destroy:
     `DELETE` the Global Config specified by `key`
     """
-    queryset = GLOBAL_CONFIG_QUERY_SET
+    queryset = GLOBAL_CONFIG_QUERYSET
 
     serializer_class = GlobalConfigSerializer
 
@@ -117,7 +117,7 @@ class DataTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Data Type specified by `name` "cat" or "num"
     """
-    queryset = DATA_TYPE_QUERY_SET
+    queryset = DATA_TYPE_QUERYSET
 
     serializer_class = DataTypeSerializer
 
@@ -174,7 +174,7 @@ class NumericMeasurementUnitViewSet(ModelViewSet):
     destroy:
     `DELETE` the Numeric Measurement Unit specified by `name`
     """
-    queryset = NUMERIC_MEASUREMENT_UNIT_QUERY_SET
+    queryset = NUMERIC_MEASUREMENT_UNIT_QUERYSET
 
     serializer_class = NumericMeasurementUnitSerializer
 
@@ -219,7 +219,7 @@ class EquipmentDataFieldTypeViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Data Field Type specified by `name`
     """
-    queryset = EQUIPMENT_DATA_FIELD_TYPE_QUERY_SET
+    queryset = EQUIPMENT_DATA_FIELD_TYPE_QUERYSET
 
     serializer_class = EquipmentDataFieldTypeSerializer
 
@@ -276,7 +276,7 @@ class EquipmentGeneralTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment General Type specified by `name`
     """
-    queryset = EQUIPMENT_GENERAL_TYPE_QUERY_SET
+    queryset = EQUIPMENT_GENERAL_TYPE_QUERYSET
 
     serializer_class = EquipmentGeneralTypeSerializer
 
@@ -333,7 +333,7 @@ class EquipmentComponentViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Component specified by `id`
     """
-    queryset = EQUIPMENT_COMPONENT_REST_API_QUERY_SET
+    queryset = EQUIPMENT_COMPONENT_REST_API_QUERYSET
 
     serializer_class = EquipmentComponentSerializer
 
@@ -390,7 +390,7 @@ class EquipmentDataFieldViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Data Field specified by `id`
     """
-    queryset = EQUIPMENT_DATA_FIELD_REST_API_QUERY_SET
+    queryset = EQUIPMENT_DATA_FIELD_REST_API_QUERYSET
 
     serializer_class = EquipmentDataFieldSerializer
 
@@ -450,7 +450,7 @@ class EquipmentUniqueTypeGroupViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type Group specified by `name`
     """
-    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERY_SET
+    queryset = EQUIPMENT_UNIQUE_TYPE_GROUP_REST_API_QUERYSET
 
     serializer_class = EquipmentUniqueTypeGroupSerializer
 
@@ -511,7 +511,7 @@ class EquipmentUniqueTypeViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Unique Type specified by `name`
     """
-    queryset = EQUIPMENT_UNIQUE_TYPE_REST_API_QUERY_SET
+    queryset = EQUIPMENT_UNIQUE_TYPE_REST_API_QUERYSET
 
     serializer_class = EquipmentUniqueTypeSerializer
 
@@ -572,7 +572,7 @@ class EquipmentFacilityViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Facility specified by `name`
     """
-    queryset = EQUIPMENT_FACILITY_REST_API_QUERY_SET
+    queryset = EQUIPMENT_FACILITY_REST_API_QUERYSET
 
     serializer_class = EquipmentFacilitySerializer
 
@@ -629,7 +629,7 @@ class EquipmentInstanceViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment Instance specified by `name`
     """
-    queryset = EQUIPMENT_INSTANCE_REST_API_QUERY_SET
+    queryset = EQUIPMENT_INSTANCE_REST_API_QUERYSET
 
     serializer_class = EquipmentInstanceSerializer
 
@@ -681,7 +681,7 @@ class EquipmentInstanceDataFieldDailyAggViewSet(ReadOnlyModelViewSet):
     retrieve:
     `GET` the Equipment Instance Data Field Daily Agg specified by `id`
     """
-    queryset = EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERY_SET
+    queryset = EQUIPMENT_INSTANCE_DATA_FIELD_DAILY_AGG_REST_API_QUERYSET
 
     serializer_class = EquipmentInstanceDataFieldDailyAggSerializer
 
@@ -740,7 +740,7 @@ class EquipmentSystemViewSet(ModelViewSet):
     destroy:
     `DELETE` the Equipment System specified by `id`
     """
-    queryset = EQUIPMENT_SYSTEM_REST_API_QUERY_SET
+    queryset = EQUIPMENT_SYSTEM_REST_API_QUERYSET
 
     serializer_class = EquipmentSystemSerializer
 

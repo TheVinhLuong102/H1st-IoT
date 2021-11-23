@@ -20,16 +20,16 @@ from h1st_iot.data_mgmt.models import (
     EquipmentUniqueTypeGroupDataFieldProfile,
     EquipmentUniqueTypeGroupDataFieldPairwiseCorrelation,
 )
-from h1st_iot.data_mgmt.query_sets import (
-    EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET,
-    EQUIPMENT_DATA_FIELD_STR_QUERY_SET,
-    EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET,
-    EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET,
-    EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET,
-    EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET,
-    EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET,
-    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET,   # noqa: E501
-    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET,   # noqa: E501
+from h1st_iot.data_mgmt.querysets import (
+    EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET,
+    EQUIPMENT_DATA_FIELD_STR_QUERYSET,
+    EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET,
+    EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERYSET,
+    EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET,
+    EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERYSET,
+    EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET,
+    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET,   # noqa: E501
+    EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERYSET,   # noqa: E501
 )
 
 
@@ -140,7 +140,7 @@ class EquipmentDataFieldAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
@@ -189,31 +189,31 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        query_set = \
+        QUERYSET = \
             super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type')
 
-        return query_set \
+        return QUERYSET \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET),
+                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),
                     Prefetch(
                         lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_STR_QUERY_SET)) \
+                        queryset=EQUIPMENT_DATA_FIELD_STR_QUERYSET)) \
             if request.resolver_match.url_name.endswith('_change') \
-          else query_set \
+          else QUERYSET \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERY_SET),
+                        queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERYSET),
                     Prefetch(
                         lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET),
+                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET),
                     Prefetch(
                         lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
@@ -261,29 +261,29 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
           else ''
 
     def get_queryset(self, request):
-        query_set = \
+        QUERYSET = \
             super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
                 Prefetch(
                     lookup='equipment_data_fields',
-                    queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERY_SET))
+                    queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET))
 
-        return query_set \
+        return QUERYSET \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET)) \
+                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET)) \
             if request.resolver_match.url_name.endswith('_change') \
-          else query_set \
+          else QUERYSET \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERY_SET),
+                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),
                     Prefetch(
                         lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERY_SET))
+                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):
@@ -348,15 +348,15 @@ class EquipmentFacilityAdmin(ModelAdmin):
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        query_set = super().get_queryset(request=request)
+        QUERYSET = super().get_queryset(request=request)
 
-        return query_set \
+        return QUERYSET \
             if request.resolver_match.url_name.endswith('_change') \
-          else query_set \
+          else QUERYSET \
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, *args, **kwargs):
@@ -397,9 +397,9 @@ class EquipmentInstanceAdmin(ModelAdmin):
     # form = EquipmentInstanceForm
 
     def get_queryset(self, request):
-        query_set = super().get_queryset(request=request)
+        QUERYSET = super().get_queryset(request=request)
 
-        return query_set \
+        return QUERYSET \
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type') \
@@ -408,9 +408,9 @@ class EquipmentInstanceAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERY_SET)) \
+                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET)) \
             if request.resolver_match.url_name.endswith('_change') \
-          else query_set \
+          else QUERYSET \
                 .select_related(
                     'equipment_general_type',
                     'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
@@ -463,7 +463,7 @@ class EquipmentSystemAdmin(ModelAdmin):
                 .prefetch_related(
                     Prefetch(
                         lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERY_SET))
+                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):
