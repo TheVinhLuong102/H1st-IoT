@@ -10,3 +10,14 @@ class H1stIoTDataManagementBaseModuleConfig(AppConfig):
     name = 'h1st_iot.data_mgmt'
     label = 'IoT_DataMgmt'
     verbose_name = 'H1st IoT Data Management'
+
+    def ready(self) -> None:
+        """Run tasks to initialize module."""
+        # pylint: disable=import-outside-toplevel
+        from h1st_iot.data_mgmt.scripts import (
+            create_logical_data_types,
+            create_control_and_measurement_equipment_data_field_types,
+        )
+
+        create_logical_data_types.run()
+        create_control_and_measurement_equipment_data_field_types.run()
