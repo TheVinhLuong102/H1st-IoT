@@ -1,4 +1,4 @@
-"""H1st IoT Data Management Utilities."""
+"""Utilities."""
 
 
 import re
@@ -12,23 +12,14 @@ else:
 
 __all__: Sequence[str] = (
     'MAX_CHAR_LEN',
-    '_JSON_FMT', '_JSON_EXT',
-    '_PARQUET_FMT', '_PARQUET_EXT',
     'clean_lower_str', 'clean_upper_str',
 )
 
 
-MAX_CHAR_LEN = 255
-
-
-_JSON_FMT = 'json'
-_JSON_EXT = f'.{_JSON_FMT}'
-
-_PARQUET_FMT = 'parquet'
-_PARQUET_EXT = f'.{_PARQUET_FMT}'
-
-
 # pylint: disable=invalid-name
+
+
+MAX_CHAR_LEN = 255
 
 
 def _clean_str(s: str) -> str:
