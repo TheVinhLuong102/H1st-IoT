@@ -18,7 +18,7 @@ from h1st_iot.util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
 
 class GlobalConfig(Model):
-    """GlobalConfig."""
+    """Global Config."""
 
     key = \
         CharField(
@@ -36,6 +36,9 @@ class GlobalConfig(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Global Config'
+        verbose_name_plural = 'Global Configs'
+
         ordering = ('key',)
 
     def __str__(self):
@@ -49,7 +52,7 @@ class GlobalConfig(Model):
 
 
 class LogicalDataType(Model):
-    """LogicalDataType."""
+    """Logical Data Type."""
 
     name = \
         CharField(
@@ -62,6 +65,9 @@ class LogicalDataType(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Logical Data Type'
+        verbose_name_plural = 'Logical Data Types'
 
         ordering = ('name',)
 
@@ -76,7 +82,7 @@ class LogicalDataType(Model):
 
 
 class NumericMeasurementUnit(Model):
-    """NumericMeasurementUnit."""
+    """Numeric Measurement Unit."""
 
     name = \
         CharField(
@@ -89,6 +95,9 @@ class NumericMeasurementUnit(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Numeric Measurement Unit'
+        verbose_name_plural = 'Numeric Measurement Units'
 
         ordering = ('name',)
 
@@ -103,7 +112,7 @@ class NumericMeasurementUnit(Model):
 
 
 class EquipmentDataFieldType(Model):
-    """EquipmentDataFieldType."""
+    """Equipment Data Field Type."""
 
     name = \
         CharField(
@@ -116,6 +125,9 @@ class EquipmentDataFieldType(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment Data Field Type'
+        verbose_name_plural = 'Equipment Data Field Types'
 
         ordering = ('name',)
 
@@ -130,7 +142,7 @@ class EquipmentDataFieldType(Model):
 
 
 class EquipmentGeneralType(Model):
-    """EquipmentGeneralType."""
+    """Equipment General Type."""
 
     name = \
         CharField(
@@ -143,6 +155,9 @@ class EquipmentGeneralType(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment General Type'
+        verbose_name_plural = 'Equipment General Types'
 
         ordering = ('name',)
 
@@ -157,7 +172,7 @@ class EquipmentGeneralType(Model):
 
 
 class EquipmentDataField(Model):
-    """EquipmentDataField."""
+    """Equipment Data Field."""
 
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
@@ -241,6 +256,9 @@ class EquipmentDataField(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Equipment Data Field'
+        verbose_name_plural = 'Equipment Data Fields'
+
         unique_together = 'equipment_general_type', 'name'
 
         ordering = 'equipment_general_type', 'name'
@@ -254,8 +272,7 @@ class EquipmentDataField(Model):
                  if self.logical_data_type
                  else 'UNTYPED') +
                 (f', unit {self.numeric_measurement_unit.name.upper()}'
-                 if self.numeric_measurement_unit
-                 and self.numeric_measurement_unit.name
+                 if self.numeric_measurement_unit and self.numeric_measurement_unit.name   # noqa: E501
                  else '') +
                 f', nulls ({self.lower_numeric_null}, {self.upper_numeric_null})' +   # noqa: E501
                 (''
@@ -273,7 +290,7 @@ class EquipmentDataField(Model):
 
 
 class EquipmentUniqueTypeGroup(Model):
-    """EquipmentUniqueTypeGroup."""
+    """Equipment Unique Type Group."""
 
     RELATED_NAME = 'equipment_unique_type_groups'
     RELATED_QUERY_NAME = 'equipment_unique_type_group'
@@ -313,9 +330,10 @@ class EquipmentUniqueTypeGroup(Model):
     class Meta:
         """Metadata."""
 
-        ordering = \
-            'equipment_general_type', \
-            'name'
+        verbose_name = 'Equipment Unique Type Group'
+        verbose_name_plural = 'Equipment Unique Type Groups'
+
+        ordering = 'equipment_general_type', 'name'
 
     def __str__(self):
         """Return string repr."""
@@ -329,7 +347,7 @@ class EquipmentUniqueTypeGroup(Model):
 
 
 class EquipmentUniqueType(Model):
-    """EquipmentUniqueType."""
+    """Equipment Unique Type."""
 
     RELATED_NAME = 'equipment_unique_types'
     RELATED_QUERY_NAME = 'equipment_unique_type'
@@ -370,6 +388,9 @@ class EquipmentUniqueType(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment Unique Type'
+        verbose_name_plural = 'Equipment Unique Types'
 
         ordering = 'equipment_general_type', 'name'
 
@@ -693,7 +714,7 @@ pre_delete.connect(
 
 
 class EquipmentFacility(Model):
-    """EquipmentFacility."""
+    """Equipment Facility."""
 
     RELATED_NAME = 'equipment_facilities'
     RELATED_QUERY_NAME = 'equipment_facility'
@@ -715,6 +736,7 @@ class EquipmentFacility(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Equipment Facility'
         verbose_name_plural = 'Equipment Facilities'
 
         ordering = ('name',)
@@ -730,7 +752,7 @@ class EquipmentFacility(Model):
 
 
 class EquipmentInstance(Model):
-    """EquipmentInstance."""
+    """Equipment Instance."""
 
     RELATED_NAME = 'equipment_instances'
     RELATED_QUERY_NAME = 'equipment_instance'
@@ -786,6 +808,9 @@ class EquipmentInstance(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Equipment Instance'
+        verbose_name_plural = 'Equipment Instances'
+
         ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     def __str__(self):
@@ -815,7 +840,7 @@ class EquipmentInstance(Model):
 
 
 class EquipmentSystem(Model):
-    """EquipmentSystem."""
+    """Equipment System."""
 
     RELATED_NAME = 'equipment_systems'
     RELATED_QUERY_NAME = 'equipment_system'
@@ -854,9 +879,10 @@ class EquipmentSystem(Model):
     class Meta:
         """Metadata."""
 
-        unique_together = \
-            'name', \
-            'date'
+        verbose_name = 'Equipment System'
+        verbose_name_plural = 'Equipment Systems'
+
+        unique_together = 'name', 'date'
 
         ordering = 'equipment_facility', 'name', 'date'
 
@@ -875,7 +901,7 @@ class EquipmentSystem(Model):
 
 
 class EquipmentUniqueTypeGroupDataFieldProfile(Model):
-    """EquipmentUniqueTypeGroupDataFieldProfile."""
+    """Equipment Unique Type Group Data Field Profile."""
 
     RELATED_NAME = 'equipment_unique_type_group_data_field_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_profile'
@@ -956,6 +982,9 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment Unique Type Group Data Field Profile'
+        verbose_name_plural = 'Equipment Unique Type Group Data Field Profiles'
 
         unique_together = \
             'equipment_unique_type_group', \

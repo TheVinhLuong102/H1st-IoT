@@ -28,7 +28,7 @@ _ONE_DAY_TIME_DELTA_TOTAL_SECONDS = _ONE_DAY_TIME_DELTA.total_seconds()
 
 
 class GlobalConfig(Model):
-    """GlobalConfig."""
+    """Global Config."""
 
     key = \
         CharField(
@@ -45,6 +45,9 @@ class GlobalConfig(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Global Config'
+        verbose_name_plural = 'Global Configs'
+
         ordering = ('key',)
 
     def __str__(self):
@@ -58,7 +61,7 @@ class GlobalConfig(Model):
 
 
 class EquipmentInstanceDailyRiskScore(Model):
-    """EquipmentInstanceDailyRiskScore."""
+    """Equipment Instance Daily Risk Score."""
 
     RELATED_NAME = 'equipment_instance_daily_risk_scores'
     RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
@@ -105,6 +108,9 @@ class EquipmentInstanceDailyRiskScore(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Equipment Instance Daily Risk Score'
+        verbose_name_plural = 'Equipment Instance Daily Risk Scores'
+
         unique_together = \
             'equipment_unique_type_group', \
             'equipment_instance', \
@@ -120,7 +126,7 @@ class EquipmentInstanceDailyRiskScore(Model):
 
 
 class EquipmentProblemType(Model):
-    """EquipmentProblemType."""
+    """Equipment Problem Type."""
 
     name = \
         CharField(
@@ -133,6 +139,9 @@ class EquipmentProblemType(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment Problem Type'
+        verbose_name_plural = 'Equipment Problem Types'
 
         ordering = ('name',)
 
@@ -147,7 +156,7 @@ class EquipmentProblemType(Model):
 
 
 class EquipmentInstanceAlarmPeriod(Model):
-    """EquipmentInstanceAlarmPeriod."""
+    """Equipment Instance Alarm Period."""
 
     RELATED_NAME = 'equipment_instance_alarm_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alarm_period'
@@ -224,14 +233,15 @@ class EquipmentInstanceAlarmPeriod(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Equipment Instance Alarm Period'
+        verbose_name_plural = 'Equipment Instance Alarm Periods'
+
         unique_together = \
             'equipment_instance', \
             'alarm_type', \
             'from_utc_date_time'
 
-        ordering = \
-            'equipment_instance', \
-            '-from_utc_date_time'
+        ordering = 'equipment_instance', '-from_utc_date_time'
 
     def __str__(self):
         """Return string repr."""
@@ -265,7 +275,7 @@ class EquipmentInstanceAlarmPeriod(Model):
 
 
 class EquipmentInstanceProblemDiagnosis(Model):
-    """EquipmentInstanceProblemDiagnosis."""
+    """Equipment Instance Problem Diagnosis."""
 
     RELATED_NAME = 'equipment_instance_problem_diagnoses'
     RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
@@ -360,14 +370,12 @@ class EquipmentInstanceProblemDiagnosis(Model):
     class Meta:
         """Metadata."""
 
-        unique_together = \
-            'equipment_instance', \
-            'from_date'
+        verbose_name = 'Equipment Instance Problem Diagnosis'
+        verbose_name_plural = 'Equipment Instance Problem Diagnoses'
 
-        ordering = \
-            'dismissed', \
-            '-to_date', \
-            'from_date'
+        unique_together = 'equipment_instance', 'from_date'
+
+        ordering = 'dismissed', '-to_date', 'from_date'
 
     def __str__(self):
         """Return string repr."""
@@ -403,7 +411,7 @@ class EquipmentInstanceProblemDiagnosis(Model):
 
 
 class AlertDiagnosisStatus(Model):
-    """AlertDiagnosisStatus."""
+    """Alert Diagnosis Status."""
 
     RELATED_NAME = 'alert_diagnosis_statuses'
     RELATED_QUERY_NAME = 'alert_diagnosis_status'
@@ -428,6 +436,7 @@ class AlertDiagnosisStatus(Model):
     class Meta:
         """Metadata."""
 
+        verbose_name = 'Alert Diagnosis Status'
         verbose_name_plural = 'Alert Diagnosis Statuses'
 
         ordering = ('index',)
@@ -443,7 +452,7 @@ class AlertDiagnosisStatus(Model):
 
 
 class EquipmentInstanceAlertPeriod(Model):
-    """EquipmentInstanceAlertPeriod."""
+    """Equipment Instance Alert Period."""
 
     RELATED_NAME = 'equipment_instance_alert_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alert_period'
@@ -582,6 +591,9 @@ class EquipmentInstanceAlertPeriod(Model):
 
     class Meta:
         """Metadata."""
+
+        verbose_name = 'Equipment Instance Alert Period'
+        verbose_name_plural = 'Equipment Instance Alert Periods'
 
         unique_together = \
             ('equipment_unique_type_group',

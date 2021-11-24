@@ -6,7 +6,8 @@ from h1st_iot.data_mgmt.models import EquipmentDataFieldType
 
 def run():
     """Run this script to create CAT & NUM logical data types."""
-    print('Creating Control & Measurement equipment data field types...')
+    msg = 'Creating Control & Measurement equipment data field types...'
+    print(msg)
 
     try:
         ctl, _ = EquipmentDataFieldType.objects.get_or_create(name='ctl')
@@ -15,3 +16,5 @@ def run():
 
     except Exception as err:   # pylint: disable=broad-except
         print(f'*** {err} ***')
+
+    print(f'{msg} DONE!\n')

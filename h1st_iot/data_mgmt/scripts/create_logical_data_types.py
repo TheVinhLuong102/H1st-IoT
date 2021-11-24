@@ -6,7 +6,8 @@ from h1st_iot.data_mgmt.models import LogicalDataType
 
 def run():
     """Run this script to create CAT & NUM logical data types."""
-    print('Creating Categorical & Numerical logical data types...')
+    msg = 'Creating Categorical & Numerical logical data types...'
+    print(msg)
 
     try:
         cat, _ = LogicalDataType.objects.get_or_create(name='cat')
@@ -15,3 +16,5 @@ def run():
 
     except Exception as err:   # pylint: disable=broad-except
         print(f'*** {err} ***')
+
+    print(f'{msg} DONE!\n')
