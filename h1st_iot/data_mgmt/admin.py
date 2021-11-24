@@ -1,4 +1,4 @@
-"""H1st IoT Data Management Admin."""
+"""H1st IoT Data Management: admin."""
 
 
 from django.contrib.admin import ModelAdmin, site, TabularInline
@@ -32,6 +32,9 @@ from h1st_iot.data_mgmt.querysets import (
 )
 
 
+# pylint: disable=invalid-name,line-too-long
+
+
 class GlobalConfigAdmin(ModelAdmin):
     """GlobalConfigAdmin."""
 
@@ -41,10 +44,12 @@ class GlobalConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -60,10 +65,12 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Numeric Measurement Unit')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -79,10 +86,12 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment General Type')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -124,29 +133,31 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    # form = EquipmentDataFieldForm
-
-    def n_equipment_unique_types(self, obj):
+    def n_equipment_unique_types(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_unique_types.count()
 
     def get_queryset(self, request):
+        """Get queryset."""
         return super().get_queryset(request=request) \
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_data_field_type',
-                    'logical_data_type',
-                    'numeric_measurement_unit') \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET))
+            .select_related(
+                'equipment_general_type',
+                'equipment_data_field_type',
+                'logical_data_type',
+                'numeric_measurement_unit') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_types',
+                    queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Data Field')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -163,63 +174,65 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
         'n_equipment_data_fields', \
         'n_equipment_instances'
 
-    list_filter = 'equipment_general_type__name',
+    list_filter = ('equipment_general_type__name',)
 
-    search_fields = 'equipment_general_type__name', 'name',
+    search_fields = 'equipment_general_type__name', 'name'
 
     show_full_result_count = False
 
-    # form = EquipmentUniqueTypeGroupForm
-
     readonly_fields = ('equipment_data_fields',)
 
-    def equipment_unique_type_list(self, obj):
+    def equipment_unique_type_list(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         n = obj.equipment_unique_types.count()
-        return '{}: {}'.format(
-                n, ', '.join(equipment_unique_type.name
-                             for equipment_unique_type in obj.equipment_unique_types.all())) \
-            if n \
-          else ''
+        return ((f'{n}: ' +
+                 ', '.join(equipment_unique_type.name
+                           for equipment_unique_type in
+                           obj.equipment_unique_types.all()))
+                if n
+                else '')
 
-    def n_equipment_data_fields(self, obj):
+    def n_equipment_data_fields(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_data_fields.count()
 
-    def n_equipment_instances(self, obj):
+    def n_equipment_instances(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        QUERYSET = \
-            super().get_queryset(request=request) \
+        """Get queryset."""
+        qs = super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type')
 
-        return QUERYSET \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),
-                    Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_STR_QUERYSET)) \
+        return qs.prefetch_related(
+            Prefetch(
+                lookup='equipment_unique_types',
+                queryset=EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),
+            Prefetch(
+                lookup='equipment_data_fields',
+                queryset=EQUIPMENT_DATA_FIELD_STR_QUERYSET)) \
             if request.resolver_match.url_name.endswith('_change') \
-          else QUERYSET \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_unique_types',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERYSET),
-                    Prefetch(
-                        lookup='equipment_data_fields',
-                        queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET),
-                    Prefetch(
-                        lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
+            else qs.prefetch_related(
+            Prefetch(
+                lookup='equipment_unique_types',
+                queryset=EQUIPMENT_UNIQUE_TYPE_NAME_ONLY_QUERYSET),
+            Prefetch(
+                lookup='equipment_data_fields',
+                queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET),
+            Prefetch(
+                lookup='equipment_instances',
+                queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -237,31 +250,34 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
         'equipment_unique_type_group_list', \
         'n_equipment_instances'
 
-    list_filter = 'equipment_general_type__name',
+    list_filter = ('equipment_general_type__name',)
 
     show_full_result_count = False
 
     search_fields = 'equipment_general_type__name', 'name'
 
-    # form = EquipmentUniqueTypeForm
-
-    def n_equipment_data_fields(self, obj):
+    def n_equipment_data_fields(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_data_fields.count()
 
-    def n_equipment_instances(self, obj):
+    def n_equipment_instances(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_instances.count()
 
     def equipment_unique_type_group_list(self, obj):
+        # pylint: disable=no-self-use
+        """Extra displayed field."""
         n = obj.equipment_unique_type_groups.count()
-        return '{}: {}'.format(
-                n, ', '.join(equipment_unique_type_group.name
-                             for equipment_unique_type_group in obj.equipment_unique_type_groups.all())) \
-            if n \
-          else ''
+        return ((f'{n}: ' +
+                 ', '.join(equipment_unique_type_group.name
+                           for equipment_unique_type_group in
+                           obj.equipment_unique_type_groups.all()))
+                if n
+                else '')
 
     def get_queryset(self, request):
-        QUERYSET = \
-            super().get_queryset(request=request) \
+        """Get queryset."""
+        qs = super().get_queryset(request=request) \
             .select_related(
                 'equipment_general_type') \
             .prefetch_related(
@@ -269,27 +285,28 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
                     lookup='equipment_data_fields',
                     queryset=EQUIPMENT_DATA_FIELD_ID_ONLY_UNORDERED_QUERYSET))
 
-        return QUERYSET \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET)) \
-            if request.resolver_match.url_name.endswith('_change') \
-          else QUERYSET \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),
-                    Prefetch(
-                        lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERYSET))
+        return (
+            qs.prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_type_groups',
+                    queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET))   # noqa: E501
+            ) if request.resolver_match.url_name.endswith('_change') \
+            else qs.prefetch_related(
+            Prefetch(
+                lookup='equipment_instances',
+                queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET),   # noqa: E501
+            Prefetch(
+                lookup='equipment_unique_type_groups',
+                queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_NAME_ONLY_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -299,37 +316,41 @@ site.register(
 
 
 class EquipmentInstanceInLineFormSet(BaseInlineFormSet):
+    """EquipmentInstanceInLineFormSet."""
+
     model = EquipmentInstance
 
     # def get_queryset(self):
     #     return super().get_queryset() \
     #         .select_related(
     #             'equipment_general_type',
-    #             'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
+    #             'equipment_unique_type',
+    #             'equipment_unique_type__equipment_general_type')
 
 
 class EquipmentInstanceTabularInline(TabularInline):
+    """EquipmentInstanceTabularInline."""
+
     model = EquipmentInstance
 
-    fields = \
-        'equipment_general_type', \
-        'equipment_unique_type', \
-        'name'
-
-    # form = EquipmentInstanceForm
+    fields = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     formset = EquipmentInstanceInLineFormSet
 
     extra = 0
 
     def get_queryset(self, request):
+        """Get queryset."""
         return super().get_queryset(request=request) \
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type')
+            .select_related(
+                'equipment_general_type',
+                'equipment_unique_type',
+                'equipment_unique_type__equipment_general_type')
 
 
 class EquipmentFacilityAdmin(ModelAdmin):
+    """EquipmentFacilityAdmin."""
+
     list_display = \
         'name', \
         'info', \
@@ -343,26 +364,29 @@ class EquipmentFacilityAdmin(ModelAdmin):
 
     # inlines = EquipmentInstanceTabularInline,
 
-    def n_equipment_instances(self, obj):
+    def n_equipment_instances(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
-        QUERYSET = super().get_queryset(request=request)
+        """Get queryset."""
+        qs = super().get_queryset(request=request)
 
-        return QUERYSET \
+        return qs \
             if request.resolver_match.url_name.endswith('_change') \
-          else QUERYSET \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERYSET))
+            else qs.prefetch_related(
+                Prefetch(
+                    lookup='equipment_instances',
+                    queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERYSET))   # noqa: E501
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Facility')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -372,6 +396,8 @@ site.register(
 
 
 class EquipmentInstanceAdmin(ModelAdmin):
+    """EquipmentInstanceAdmin."""
+
     list_display = \
         'equipment_general_type', \
         'equipment_unique_type', \
@@ -393,36 +419,37 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     show_full_result_count = False
 
-    # form = EquipmentInstanceForm
-
     def get_queryset(self, request):
-        QUERYSET = super().get_queryset(request=request)
+        """Get queryset."""
+        qs = super().get_queryset(request=request)
 
-        return QUERYSET \
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_unique_type') \
-                .defer(
-                    'equipment_unique_type__equipment_general_type') \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_unique_type_groups',
-                        queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET)) \
-            if request.resolver_match.url_name.endswith('_change') \
-          else QUERYSET \
-                .select_related(
-                    'equipment_general_type',
-                    'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
-                    'equipment_facility') \
-                .defer(
-                    'equipment_facility__info')
+        return (
+            qs.select_related(
+                'equipment_general_type',
+                'equipment_unique_type')
+            .defer(
+                'equipment_unique_type__equipment_general_type')
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_unique_type_groups',
+                    queryset=EQUIPMENT_UNIQUE_TYPE_GROUP_ID_ONLY_UNORDERED_QUERYSET))   # noqa: E501
+            ) if request.resolver_match.url_name.endswith('_change') \
+            else qs.select_related(
+            'equipment_general_type',
+            'equipment_unique_type',
+            'equipment_unique_type__equipment_general_type',
+            'equipment_facility') \
+            .defer(
+                'equipment_facility__info')
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -432,44 +459,44 @@ site.register(
 
 
 class EquipmentSystemAdmin(ModelAdmin):
+    """EquipmentSystemAdmin."""
+
     list_display = \
         'equipment_facility', \
         'name', \
         'date', \
         'n_equipment_instances'
 
-    list_filter = \
-        'equipment_facility__name', \
-        'date'
+    list_filter = 'equipment_facility__name', 'date'
 
-    search_fields = \
-        'equipment_facility__name', \
-        'name',
+    search_fields = 'equipment_facility__name', 'name'
 
     show_full_result_count = False
 
-    # form = EquipmentSystemForm
-
-    def n_equipment_instances(self, obj):
+    def n_equipment_instances(self, obj):   # pylint: disable=no-self-use
+        """Extra displayed field."""
         return obj.equipment_instances.count()
 
     def get_queryset(self, request):
+        """Get queryset."""
         return super().get_queryset(request=request) \
-                .select_related(
-                    'equipment_facility') \
-                .defer(
-                    'equipment_facility__info') \
-                .prefetch_related(
-                    Prefetch(
-                        lookup='equipment_instances',
-                        queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
+            .select_related(
+                'equipment_facility') \
+            .defer(
+                'equipment_facility__info') \
+            .prefetch_related(
+                Prefetch(
+                    lookup='equipment_instances',
+                    queryset=EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET))
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment System')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
@@ -479,6 +506,8 @@ site.register(
 
 
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
+    """EquipmentUniqueTypeGroupDataFieldProfileAdmin."""
+
     list_display = \
         'equipment_unique_type_group', \
         'equipment_data_field', \
@@ -528,19 +557,26 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
         'sample_max'
 
     def get_queryset(self, request):
+        """Get queryset."""
         return super().get_queryset(request=request) \
-                .select_related(
-                    'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
-                    'equipment_data_field',
-                    'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-                    'equipment_data_field__logical_data_type', 'equipment_data_field__numeric_measurement_unit')
+            .select_related(
+                'equipment_unique_type_group',
+                'equipment_unique_type_group__equipment_general_type',
+                'equipment_data_field',
+                'equipment_data_field__equipment_general_type',
+                'equipment_data_field__equipment_data_field_type',
+                'equipment_data_field__logical_data_type',
+                'equipment_data_field__numeric_measurement_unit')
 
-    @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profiles')
+    @silk_profile(
+        name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
+        """Change-List view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profile')
     def changeform_view(self, *args, **kwargs):
+        """Change-Form view."""
         return super().changeform_view(*args, **kwargs)
 
 
