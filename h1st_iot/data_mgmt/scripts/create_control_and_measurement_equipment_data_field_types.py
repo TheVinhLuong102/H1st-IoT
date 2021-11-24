@@ -6,6 +6,8 @@ from h1st_iot.data_mgmt.models import EquipmentDataFieldType
 
 def run():
     """Run this script to create CAT & NUM logical data types."""
+    print('Creating Control & Measurement equipment data field types...')
+
     try:
         ctl, _ = EquipmentDataFieldType.objects.get_or_create(name='ctl')
         msrmt, _ = EquipmentDataFieldType.objects.get_or_create(name='msrmt')
