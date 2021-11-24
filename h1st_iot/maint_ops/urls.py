@@ -1,15 +1,19 @@
+"""H1st IoT Maintenance Operations: URL configs."""
+
+
 from django.conf.urls import include, url
 
 from rest_framework.routers import DefaultRouter
 
-from .views import \
-    GlobalConfigViewSet, \
-    EquipmentInstanceDailyRiskScoreViewSet, \
-    EquipmentProblemTypeViewSet, \
-    EquipmentInstanceAlarmPeriodViewSet, \
-    EquipmentInstanceProblemDiagnosisViewSet, \
-    AlertDiagnosisStatusViewSet, \
-    EquipmentInstanceAlertPeriodViewSet
+from h1st_iot.maint_ops.views import (
+    GlobalConfigViewSet,
+    EquipmentInstanceDailyRiskScoreViewSet,
+    EquipmentProblemTypeViewSet,
+    EquipmentInstanceAlarmPeriodViewSet,
+    EquipmentInstanceProblemDiagnosisViewSet,
+    AlertDiagnosisStatusViewSet,
+    EquipmentInstanceAlertPeriodViewSet,
+)
 
 
 ROUTER = DefaultRouter()
@@ -45,5 +49,5 @@ ROUTER.register(
 
 URL_PATTERNS = [
     # API URLs
-    url('^iot/api/maint-ops/', include(ROUTER.urls)),
+    url('iot/api/maint-ops/', include(ROUTER.urls)),
 ]

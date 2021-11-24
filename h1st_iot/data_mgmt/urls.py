@@ -37,5 +37,5 @@ ROUTER.register('equipment-systems', EquipmentSystemViewSet)
 
 URL_PATTERNS = [
     # API URLs
-    url('^iot/api/data-mgmt/', include(ROUTER.urls)),
+    url('iot/api/data-mgmt/', include(ROUTER.urls)),
 ]

@@ -1,4 +1,4 @@
-"""H1st IoT Maintenance Operations: Filters."""
+"""H1st IoT Maintenance Operations: filters."""
 
 
 from rest_framework_filters import FilterSet, RelatedFilter
@@ -19,7 +19,11 @@ from h1st_iot.maint_ops.models import (
 
 
 class GlobalConfigFilter(FilterSet):
+    """GlobalConfigFilter."""
+
     class Meta:
+        """Metadata."""
+
         model = GlobalConfig
 
         fields = dict(
@@ -28,12 +32,14 @@ class GlobalConfigFilter(FilterSet):
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                'regex', 'iregex'
+                'regex', 'iregex',
             ]
         )
 
 
 class EquipmentInstanceDailyRiskScoreFilter(FilterSet):
+    """EquipmentInstanceDailyRiskScoreFilter."""
+
     equipment_unique_type_group = \
         RelatedFilter(
             queryset=EquipmentUniqueTypeGroup.objects.all(),
@@ -45,6 +51,8 @@ class EquipmentInstanceDailyRiskScoreFilter(FilterSet):
             filterset=EquipmentInstanceFilter)
 
     class Meta:
+        """Metadata."""
+
         model = EquipmentInstanceDailyRiskScore
 
         fields = dict(
@@ -52,7 +60,7 @@ class EquipmentInstanceDailyRiskScoreFilter(FilterSet):
                 'exact', 'iexact',
                 'in',
                 'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith'
+                'startswith', 'istartswith', 'endswith', 'iendswith',
             ],
 
             date=[
@@ -71,34 +79,36 @@ class EquipmentInstanceDailyRiskScoreFilter(FilterSet):
                 'month',
                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                 'month__in',
-                'month__range'
+                'month__range',
             ],
 
             risk_score_value=[
                 'gt', 'gte', 'lt', 'lte',
                 'startswith', 'istartswith',
-                'range'
+                'range',
             ])
 
 
 class EquipmentProblemTypeFilter(FilterSet):
+    """EquipmentProblemTypeFilter."""
+
     class Meta:
+        """Metadata."""
+
         model = EquipmentProblemType
 
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
             ])
 
 
 class EquipmentInstanceAlarmPeriodFilter(FilterSet):
+    """EquipmentInstanceAlarmPeriodFilter."""
+
     equipment_instance = \
         RelatedFilter(
             queryset=EquipmentInstance.objects.all(),
@@ -110,6 +120,8 @@ class EquipmentInstanceAlarmPeriodFilter(FilterSet):
             filterset=EquipmentProblemTypeFilter)
 
     class Meta:
+        """Metadata."""
+
         model = EquipmentInstanceAlarmPeriod
 
         fields = dict(
@@ -122,65 +134,14 @@ class EquipmentInstanceAlarmPeriodFilter(FilterSet):
                 'endswith',   # 'iendswith',
                 'range',
                 'isnull',
-                # 'regex', 'iregex',
                 'year',   # 'year__iexact'
                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
                 'year__in',
-                # 'year__contains', 'year__icontains',
-                # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
                 'year__range',
-                # 'year__isnull',
-                # 'year__regex', 'year__iregex',
-                # 'year__contained_by',
                 'month',   # 'month__iexact',
                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                 'month__in',
-                # 'month__contains', 'month__icontains',
-                # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
                 'month__range',
-                # 'month__isnull',
-                # 'month__regex', 'month__iregex',
-                # 'month__contained_by',
-                # 'day', 'day__iexact',
-                # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                # 'day__in',
-                # 'day__contains', 'day__icontains',
-                # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                # 'day__range',
-                # 'day__isnull'
-                # 'day__regex', 'day__iregex'
-                # 'day__contained_by'
-                # 'week_day', 'week_day__iexact',
-                # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                # 'week_day__in',
-                # 'week_day__contains', 'week_day__icontains',
-                # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                # 'week_day__range',
-                # 'week_day__isnull',
-                # 'week_day__regex', 'week_day__iregex'
-                # 'week_day__contained_by',
-                # 'week', 'week__iexact',
-                # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                # 'week__in',
-                # 'week__contains', 'week__icontains',
-                # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                # 'week__range',
-                # 'week__isnull',
-                # 'week__regex', 'week__iregex',
-                # 'week__contained_by',
-
-                # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                # 'quarter',   # 'quarter__iexact',
-                # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                # 'quarter__in',
-                # 'quarter__contains', 'quarter__icontains',
-                # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                # 'quarter__range'
-                # 'quarter__isnull',
-                # 'quarter__regex', 'quarter__iregex',
-                # 'quarter__contained_by'
-
-                # 'to_date__contained_by'
             ],
 
             to_utc_date_time=[
@@ -192,65 +153,14 @@ class EquipmentInstanceAlarmPeriodFilter(FilterSet):
                 'endswith',   # 'iendswith',
                 'range',
                 'isnull',
-                # 'regex', 'iregex',
                 'year',   # 'year__iexact'
                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
                 'year__in',
-                # 'year__contains', 'year__icontains',
-                # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
                 'year__range',
-                # 'year__isnull',
-                # 'year__regex', 'year__iregex',
-                # 'year__contained_by',
                 'month',   # 'month__iexact',
                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                 'month__in',
-                # 'month__contains', 'month__icontains',
-                # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
                 'month__range',
-                # 'month__isnull',
-                # 'month__regex', 'month__iregex',
-                # 'month__contained_by',
-                # 'day', 'day__iexact',
-                # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                # 'day__in',
-                # 'day__contains', 'day__icontains',
-                # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                # 'day__range',
-                # 'day__isnull'
-                # 'day__regex', 'day__iregex'
-                # 'day__contained_by'
-                # 'week_day', 'week_day__iexact',
-                # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                # 'week_day__in',
-                # 'week_day__contains', 'week_day__icontains',
-                # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                # 'week_day__range',
-                # 'week_day__isnull',
-                # 'week_day__regex', 'week_day__iregex'
-                # 'week_day__contained_by',
-                # 'week', 'week__iexact',
-                # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                # 'week__in',
-                # 'week__contains', 'week__icontains',
-                # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                # 'week__range',
-                # 'week__isnull',
-                # 'week__regex', 'week__iregex',
-                # 'week__contained_by',
-
-                # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                # 'quarter',   # 'quarter__iexact',
-                # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                # 'quarter__in',
-                # 'quarter__contains', 'quarter__icontains',
-                # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                # 'quarter__range'
-                # 'quarter__isnull',
-                # 'quarter__regex', 'quarter__iregex',
-                # 'quarter__contained_by'
-
-                # 'to_date__contained_by'
             ],
 
             duration_in_days=[
@@ -260,10 +170,7 @@ class EquipmentInstanceAlarmPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             has_associated_equipment_instance_alert_periods=['exact'],
@@ -272,6 +179,8 @@ class EquipmentInstanceAlarmPeriodFilter(FilterSet):
 
 
 class EquipmentInstanceProblemDiagnosisFilter(FilterSet):
+    """EquipmentInstanceProblemDiagnosisFilter."""
+
     equipment_instance = \
         RelatedFilter(
             queryset=EquipmentInstance.objects.all(),
@@ -283,189 +192,88 @@ class EquipmentInstanceProblemDiagnosisFilter(FilterSet):
             filterset=EquipmentProblemTypeFilter)
 
     class Meta:
-         model = EquipmentInstanceProblemDiagnosis
+        """Metadata."""
 
-         fields = dict(
-             from_date=[
-                 'exact',   # 'iexact',
-                 'gt', 'gte', 'lt', 'lte',
-                 'in',
-                 'contains',   # 'icontains'
-                 'startswith',   # 'istartswith'
-                 'endswith',   # 'iendswith',
-                 'range',
-                 'isnull',
-                 # 'regex', 'iregex',
-                 'year',   # 'year__iexact'
-                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
-                 'year__in',
-                 # 'year__contains', 'year__icontains',
-                 # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
-                 'year__range',
-                 # 'year__isnull',
-                 # 'year__regex', 'year__iregex',
-                 # 'year__contained_by',
-                 'month',   # 'month__iexact',
-                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
-                 'month__in',
-                 # 'month__contains', 'month__icontains',
-                 # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
-                 'month__range',
-                 # 'month__isnull',
-                 # 'month__regex', 'month__iregex',
-                 # 'month__contained_by',
-                 # 'day', 'day__iexact',
-                 # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                 # 'day__in',
-                 # 'day__contains', 'day__icontains',
-                 # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                 # 'day__range',
-                 # 'day__isnull'
-                 # 'day__regex', 'day__iregex'
-                 # 'day__contained_by'
-                 # 'week_day', 'week_day__iexact',
-                 # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                 # 'week_day__in',
-                 # 'week_day__contains', 'week_day__icontains',
-                 # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                 # 'week_day__range',
-                 # 'week_day__isnull',
-                 # 'week_day__regex', 'week_day__iregex'
-                 # 'week_day__contained_by',
-                 # 'week', 'week__iexact',
-                 # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                 # 'week__in',
-                 # 'week__contains', 'week__icontains',
-                 # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                 # 'week__range',
-                 # 'week__isnull',
-                 # 'week__regex', 'week__iregex',
-                 # 'week__contained_by',
+        model = EquipmentInstanceProblemDiagnosis
 
-                 # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                 # 'quarter',   # 'quarter__iexact',
-                 # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                 # 'quarter__in',
-                 # 'quarter__contains', 'quarter__icontains',
-                 # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                 # 'quarter__range'
-                 # 'quarter__isnull',
-                 # 'quarter__regex', 'quarter__iregex',
-                 # 'quarter__contained_by'
+        fields = dict(
+            from_date=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains'
+                'startswith',   # 'istartswith'
+                'endswith',   # 'iendswith',
+                'range',
+                'isnull',
+                'year',   # 'year__iexact'
+                'year__gt', 'year__gte', 'year__lt', 'year__lte',
+                'year__in',
+                'year__range',
+                'month',   # 'month__iexact',
+                'month__gt', 'month__gte', 'month__lt', 'month__lte',
+                'month__in',
+                'month__range',
+            ],
 
-                 # 'to_date__contained_by'
-             ],
+            to_date=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains'
+                'startswith',   # 'istartswith'
+                'endswith',   # 'iendswith',
+                'range',
+                'isnull',
+                'year',   # 'year__iexact'
+                'year__gt', 'year__gte', 'year__lt', 'year__lte',
+                'year__in',
+                'year__range',
+                'month',   # 'month__iexact',
+                'month__gt', 'month__gte', 'month__lt', 'month__lte',
+                'month__in',
+                'month__range',
+            ],
 
-             to_date=[
-                 'exact',   # 'iexact',
-                 'gt', 'gte', 'lt', 'lte',
-                 'in',
-                 'contains',   # 'icontains'
-                 'startswith',   # 'istartswith'
-                 'endswith',   # 'iendswith',
-                 'range',
-                 'isnull',
-                 # 'regex', 'iregex',
-                 'year',   # 'year__iexact'
-                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
-                 'year__in',
-                 # 'year__contains', 'year__icontains',
-                 # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
-                 'year__range',
-                 # 'year__isnull',
-                 # 'year__regex', 'year__iregex',
-                 # 'year__contained_by',
-                 'month',   # 'month__iexact',
-                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
-                 'month__in',
-                 # 'month__contains', 'month__icontains',
-                 # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
-                 'month__range',
-                 # 'month__isnull',
-                 # 'month__regex', 'month__iregex',
-                 # 'month__contained_by',
-                 # 'day', 'day__iexact',
-                 # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                 # 'day__in',
-                 # 'day__contains', 'day__icontains',
-                 # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                 # 'day__range',
-                 # 'day__isnull'
-                 # 'day__regex', 'day__iregex'
-                 # 'day__contained_by'
-                 # 'week_day', 'week_day__iexact',
-                 # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                 # 'week_day__in',
-                 # 'week_day__contains', 'week_day__icontains',
-                 # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                 # 'week_day__range',
-                 # 'week_day__isnull',
-                 # 'week_day__regex', 'week_day__iregex'
-                 # 'week_day__contained_by',
-                 # 'week', 'week__iexact',
-                 # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                 # 'week__in',
-                 # 'week__contains', 'week__icontains',
-                 # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                 # 'week__range',
-                 # 'week__isnull',
-                 # 'week__regex', 'week__iregex',
-                 # 'week__contained_by',
+            duration=[
+                'exact',   # 'iexact',
+                'gt', 'gte', 'lt', 'lte',
+                'in',
+                'contains',   # 'icontains',
+                'startswith',   # 'istartswith',
+                'endswith',   # 'iendswith',
+                'range',
+            ],
 
-                 # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                 # 'quarter',   # 'quarter__iexact',
-                 # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                 # 'quarter__in',
-                 # 'quarter__contains', 'quarter__icontains',
-                 # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                 # 'quarter__range'
-                 # 'quarter__isnull',
-                 # 'quarter__regex', 'quarter__iregex',
-                 # 'quarter__contained_by'
+            has_equipment_problems=['exact'],
 
-                 # 'to_date__contained_by'
-             ],
+            dismissed=['exact'],
 
-             duration=[
-                 'exact',   # 'iexact',
-                 'gt', 'gte', 'lt', 'lte',
-                 'in',
-                 'contains',   # 'icontains',
-                 'startswith',   # 'istartswith',
-                 'endswith',   # 'iendswith',
-                 'range'
-                 # 'isnull',
-                 # 'regex', 'iregex',
-                 # 'contained_by'
-             ],
+            has_associated_equipment_instance_alarm_periods=['exact'],
 
-             has_equipment_problems=['exact'],
-
-             dismissed=['exact'],
-
-             has_associated_equipment_instance_alarm_periods=['exact'],
-
-             has_associated_equipment_instance_alert_periods=['exact'])
+            has_associated_equipment_instance_alert_periods=['exact'])
 
 
 class AlertDiagnosisStatusFilter(FilterSet):
+    """AlertDiagnosisStatusFilter."""
+
     class Meta:
+        """Metadata."""
+
         model = AlertDiagnosisStatus
 
         fields = dict(
             name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
             ])
 
 
 class EquipmentInstanceAlertPeriodFilter(FilterSet):
+    """EquipmentInstanceAlertPeriodFilter."""
+
     equipment_unique_type_group = \
         RelatedFilter(
             queryset=EquipmentUniqueTypeGroup.objects.all(),
@@ -482,18 +290,16 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
             filterset=AlertDiagnosisStatusFilter)
 
     class Meta:
+        """Metadata."""
+
         model = EquipmentInstanceAlertPeriod
 
         fields = dict(
             risk_score_name=[
                 'exact', 'iexact',
-                # 'gt', 'gte', 'lt', 'lte',
                 'in',
                 'contains', 'icontains',
                 'startswith', 'istartswith', 'endswith', 'iendswith',
-                # 'range',
-                # 'isnull',
-                # 'regex', 'iregex'
             ],
 
             threshold=[
@@ -503,10 +309,7 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             from_date=[
@@ -518,65 +321,14 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'endswith',   # 'iendswith',
                 'range',
                 'isnull',
-                # 'regex', 'iregex',
                 'year',   # 'year__iexact'
                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
                 'year__in',
-                # 'year__contains', 'year__icontains',
-                # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
                 'year__range',
-                # 'year__isnull',
-                # 'year__regex', 'year__iregex',
-                # 'year__contained_by',
                 'month',   # 'month__iexact',
                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                 'month__in',
-                # 'month__contains', 'month__icontains',
-                # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
                 'month__range',
-                # 'month__isnull',
-                # 'month__regex', 'month__iregex',
-                # 'month__contained_by',
-                # 'day', 'day__iexact',
-                # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                # 'day__in',
-                # 'day__contains', 'day__icontains',
-                # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                # 'day__range',
-                # 'day__isnull'
-                # 'day__regex', 'day__iregex'
-                # 'day__contained_by'
-                # 'week_day', 'week_day__iexact',
-                # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                # 'week_day__in',
-                # 'week_day__contains', 'week_day__icontains',
-                # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                # 'week_day__range',
-                # 'week_day__isnull',
-                # 'week_day__regex', 'week_day__iregex'
-                # 'week_day__contained_by',
-                # 'week', 'week__iexact',
-                # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                # 'week__in',
-                # 'week__contains', 'week__icontains',
-                # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                # 'week__range',
-                # 'week__isnull',
-                # 'week__regex', 'week__iregex',
-                # 'week__contained_by',
-
-                # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                # 'quarter',   # 'quarter__iexact',
-                # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                # 'quarter__in',
-                # 'quarter__contains', 'quarter__icontains',
-                # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                # 'quarter__range'
-                # 'quarter__isnull',
-                # 'quarter__regex', 'quarter__iregex',
-                # 'quarter__contained_by'
-
-                # 'to_date__contained_by'
             ],
 
             to_date=[
@@ -588,65 +340,14 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'endswith',   # 'iendswith',
                 'range',
                 'isnull',
-                # 'regex', 'iregex',
                 'year',   # 'year__iexact'
                 'year__gt', 'year__gte', 'year__lt', 'year__lte',
                 'year__in',
-                # 'year__contains', 'year__icontains',
-                # 'year__startswith', 'year__istartswith', 'year__endswith', year__iendswith',
                 'year__range',
-                # 'year__isnull',
-                # 'year__regex', 'year__iregex',
-                # 'year__contained_by',
                 'month',   # 'month__iexact',
                 'month__gt', 'month__gte', 'month__lt', 'month__lte',
                 'month__in',
-                # 'month__contains', 'month__icontains',
-                # 'month__startswith', 'month__istartswith', 'month__endswith', 'month__iendswith'
                 'month__range',
-                # 'month__isnull',
-                # 'month__regex', 'month__iregex',
-                # 'month__contained_by',
-                # 'day', 'day__iexact',
-                # 'day__gt', 'day__gte', 'day__lt', 'day__lte',
-                # 'day__in',
-                # 'day__contains', 'day__icontains',
-                # 'day__startswith', 'day__istartswith', 'day__endswith', 'day__iendswith',
-                # 'day__range',
-                # 'day__isnull'
-                # 'day__regex', 'day__iregex'
-                # 'day__contained_by'
-                # 'week_day', 'week_day__iexact',
-                # 'week_day__gt', 'week_day__gte', 'week_day__lt', 'week_day__lte',
-                # 'week_day__in',
-                # 'week_day__contains', 'week_day__icontains',
-                # 'week_day__startswith', 'week_day__istartswith', 'week_day__endswith', 'week_day__iendswith',
-                # 'week_day__range',
-                # 'week_day__isnull',
-                # 'week_day__regex', 'week_day__iregex'
-                # 'week_day__contained_by',
-                # 'week', 'week__iexact',
-                # 'week__gt', 'week__gte', 'week__lt', 'week__lte',
-                # 'week__in',
-                # 'week__contains', 'week__icontains',
-                # 'week__startswith', 'week__istartswith', 'week__endswith', 'week__iendswith',
-                # 'week__range',
-                # 'week__isnull',
-                # 'week__regex', 'week__iregex',
-                # 'week__contained_by',
-
-                # django_filters.exceptions.FieldLookupError: Unsupported lookup 'quarter'
-                # 'quarter',   # 'quarter__iexact',
-                # 'quarter__gt', 'quarter__gte', 'quarter__lt', 'quarter__lte',
-                # 'quarter__in',
-                # 'quarter__contains', 'quarter__icontains',
-                # 'quarter__startswith', 'quarter__istartswith', 'quarter__endswith', 'quarter__iendswith',
-                # 'quarter__range'
-                # 'quarter__isnull',
-                # 'quarter__regex', 'quarter__iregex',
-                # 'quarter__contained_by'
-
-                # 'to_date__contained_by'
             ],
 
             duration=[
@@ -656,10 +357,7 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             cumulative_excess_risk_score=[
@@ -669,10 +367,7 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             approx_average_risk_score=[
@@ -682,10 +377,7 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             last_risk_score=[
@@ -695,10 +387,7 @@ class EquipmentInstanceAlertPeriodFilter(FilterSet):
                 'contains',   # 'icontains',
                 'startswith',   # 'istartswith',
                 'endswith',   # 'iendswith',
-                'range'
-                # 'isnull',
-                # 'regex', 'iregex',
-                # 'contained_by'
+                'range',
             ],
 
             ongoing=['exact'],

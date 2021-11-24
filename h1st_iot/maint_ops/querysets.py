@@ -1,17 +1,17 @@
+"""H1st IoT Maintenance Operations: querysets."""
+
+
 from django.db.models import Prefetch
 
-from h1st_iot.data_mgmt.querysets import \
-    EQUIPMENT_DATA_FIELD_NAME_ONLY_QUERYSET, \
-    EQUIPMENT_DATA_FIELD_INCL_DESCRIPTION_QUERYSET
-
-from .models import \
-    GlobalConfig, \
-    EquipmentInstanceDailyRiskScore, \
-    EquipmentProblemType, \
-    EquipmentInstanceAlarmPeriod, \
-    AlertDiagnosisStatus, \
-    EquipmentInstanceAlertPeriod, \
-    EquipmentInstanceProblemDiagnosis
+from h1st_iot.maint_ops.models import (
+    GlobalConfig,
+    EquipmentInstanceDailyRiskScore,
+    EquipmentProblemType,
+    EquipmentInstanceAlarmPeriod,
+    AlertDiagnosisStatus,
+    EquipmentInstanceAlertPeriod,
+    EquipmentInstanceProblemDiagnosis,
+)
 
 
 GLOBAL_CONFIG_QUERYSET = \
@@ -43,10 +43,12 @@ EQUIPMENT_INSTANCE_ALARM_PERIOD_STR_QUERYSET = \
         'has_associated_equipment_instance_problem_diagnoses') \
     .select_related(
         'equipment_instance',
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type',
         'alarm_type') \
     .defer(
-        'equipment_instance__equipment_facility', 'equipment_instance__info') \
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info') \
     .order_by(
         'from_utc_date_time')
 
@@ -59,8 +61,10 @@ EQUIPMENT_INSTANCE_ALARM_PERIOD_FULL_QUERYSET = \
         'equipment_instance',
         'alarm_type') \
     .defer(
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info') \
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info') \
     .order_by(
         'from_utc_date_time')
 
@@ -77,12 +81,15 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_STR_QUERYSET = \
         'has_associated_equipment_instance_alarm_periods',
         'has_associated_equipment_instance_problem_diagnoses') \
     .select_related(
-        'equipment_unique_type_group', 'equipment_unique_type_group__equipment_general_type',
+        'equipment_unique_type_group',
+        'equipment_unique_type_group__equipment_general_type',
         'equipment_instance',
         'diagnosis_status') \
     .defer(
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info',
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info',
         'diagnosis_status__index')
 
 
@@ -96,8 +103,10 @@ EQUIPMENT_INSTANCE_ALERT_PERIOD_FULL_QUERYSET = \
         'diagnosis_status') \
     .defer(
         'equipment_unique_type_group__equipment_general_type',
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info',
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info',
         'diagnosis_status__index')
 
 
@@ -118,9 +127,11 @@ EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_STR_QUERYSET = \
         'has_associated_equipment_instance_alert_periods') \
     .select_related(
         'equipment_instance',
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type') \
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type') \
     .defer(
-        'equipment_instance__equipment_facility', 'equipment_instance__info') \
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info') \
     .prefetch_related(
         'equipment_problem_types')
 
@@ -132,8 +143,10 @@ EQUIPMENT_INSTANCE_PROBLEM_DIAGNOSIS_FULL_QUERYSET = \
     .select_related(
         'equipment_instance') \
     .defer(
-        'equipment_instance__equipment_general_type', 'equipment_instance__equipment_unique_type',
-        'equipment_instance__equipment_facility', 'equipment_instance__info') \
+        'equipment_instance__equipment_general_type',
+        'equipment_instance__equipment_unique_type',
+        'equipment_instance__equipment_facility',
+        'equipment_instance__info') \
     .prefetch_related(
         'equipment_problem_types')
 

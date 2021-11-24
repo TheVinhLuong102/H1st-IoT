@@ -1,11 +1,11 @@
-"""H1st IoT Data Management Base Module Config."""
+"""H1st IoT Data Management Base module config."""
 
 
 from django.apps.config import AppConfig
 
 
 class H1stIoTDataManagementBaseModuleConfig(AppConfig):
-    """H1st IoT Data Management Base Module Config."""
+    """H1st IoT Data Management Base module config."""
 
     name = 'h1st_iot.data_mgmt'
 
@@ -13,7 +13,7 @@ class H1stIoTDataManagementBaseModuleConfig(AppConfig):
 
     verbose_name = 'H1st IoT Data Management'
 
-    def ready(self) -> None:
+    def ready(self):
         """Run scripts/tasks to initialize module."""
         # pylint: disable=import-outside-toplevel
         from h1st_iot.data_mgmt.scripts import (

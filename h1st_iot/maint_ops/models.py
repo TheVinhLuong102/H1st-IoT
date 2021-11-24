@@ -1,21 +1,22 @@
+"""H1st IoT Maintenance Operations: models."""
+
+
 from datetime import timedelta
 
-from django.db.models import \
-    Model, \
-    BigAutoField, BigIntegerField, BooleanField, CharField, DateField, DateTimeField, FloatField, PositiveSmallIntegerField, IntegerField, TextField, \
-    JSONField, \
-    ForeignKey, ManyToManyField, OneToOneField, \
-    CASCADE, PROTECT
+from django.db.models import (
+    Model,
+    BigAutoField, BooleanField, CharField, DateField, DateTimeField,
+    FloatField, PositiveSmallIntegerField, IntegerField, TextField,
+    JSONField,
+    ForeignKey, ManyToManyField,
+    PROTECT)
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField
 
 from psycopg2.extras import DateRange
 
-from h1st_iot.data_mgmt.models import (
-    EquipmentDataField,
-    EquipmentUniqueTypeGroup,
-    EquipmentInstance,
-)
+from h1st_iot.data_mgmt.models import (EquipmentUniqueTypeGroup,
+                                       EquipmentInstance)
 from h1st_iot.util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
 
@@ -23,7 +24,12 @@ _ONE_DAY_TIME_DELTA = timedelta(days=1)
 _ONE_DAY_TIME_DELTA_TOTAL_SECONDS = _ONE_DAY_TIME_DELTA.total_seconds()
 
 
+# pylint: disable=line-too-long
+
+
 class GlobalConfig(Model):
+    """GlobalConfig."""
+
     key = \
         CharField(
             blank=False,
@@ -37,22 +43,28 @@ class GlobalConfig(Model):
             null=True)
 
     class Meta:
-        ordering = 'key',
+        """Metadata."""
+
+        ordering = ('key',)
 
     def __str__(self):
-        return '{} = {}'.format(self.key, self.value)
+        """Return string repr."""
+        return f'{self.key} = {self.value}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.key = clean_upper_str(self.key)
-        super().save( *args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class EquipmentInstanceDailyRiskScore(Model):
+    """EquipmentInstanceDailyRiskScore."""
+
     RELATED_NAME = 'equipment_instance_daily_risk_scores'
     RELATED_QUERY_NAME = 'equipment_instance_daily_risk_score'
 
     id = BigAutoField(
-            primary_key=True)
+        primary_key=True)
 
     equipment_unique_type_group = \
         ForeignKey(
@@ -91,6 +103,8 @@ class EquipmentInstanceDailyRiskScore(Model):
             null=False)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             'equipment_unique_type_group', \
             'equipment_instance', \
@@ -98,16 +112,16 @@ class EquipmentInstanceDailyRiskScore(Model):
             'date'
 
     def __str__(self):
-        return '{} {} #{} on {}: {} = {:.3g}'.format(
-                self.equipment_unique_type_group.equipment_general_type.name,
-                self.equipment_unique_type_group.name,
-                self.equipment_instance.name,
-                self.date,
-                self.risk_score_name,
-                self.risk_score_value)
+        """Return string repr."""
+        return (f'{self.equipment_unique_type_group.equipment_general_type.name} '   # noqa: E501
+                f'{self.equipment_unique_type_group.name} '
+                f'#{self.equipment_instance.name} on {self.date}: '
+                f'{self.risk_score_name} = {self.risk_score_value:.3g}')
 
 
 class EquipmentProblemType(Model):
+    """EquipmentProblemType."""
+
     name = \
         CharField(
             verbose_name='Equipment Problem Type',
@@ -118,17 +132,23 @@ class EquipmentProblemType(Model):
             db_index=True)
 
     class Meta:
-        ordering = 'name',
+        """Metadata."""
+
+        ordering = ('name',)
 
     def __str__(self):
+        """Return string repr."""
         return f'EqProbTp "{self.name}""'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = self.name.strip()
         super().save(*args, **kwargs)
 
 
 class EquipmentInstanceAlarmPeriod(Model):
+    """EquipmentInstanceAlarmPeriod."""
+
     RELATED_NAME = 'equipment_instance_alarm_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alarm_period'
 
@@ -202,6 +222,8 @@ class EquipmentInstanceAlarmPeriod(Model):
             db_index=True)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             'equipment_instance', \
             'alarm_type', \
@@ -212,19 +234,20 @@ class EquipmentInstanceAlarmPeriod(Model):
             '-from_utc_date_time'
 
     def __str__(self):
-        return '{}: {} from {}{}'.format(
-                self.equipment_instance,
-                self.alarm_type.name.upper(),
-                self.from_utc_date_time,
-                ' to {} ({:.3f} Days)'.format(self.to_utc_date_time, self.duration_in_days)
-                    if self.to_utc_date_time
-                    else ' (ONGOING)')
+        """Return string repr."""
+        return ((f'{self.equipment_instance}: {self.alarm_type.name.upper()} '
+                 f'from {self.from_utc_date_time}') +   # noqa: W504
+                (f' to {self.to_utc_date_time} ({self.duration_in_days:.3f} Days)'   # noqa: E501
+                 if self.to_utc_date_time
+                 else ' (ONGOING)'))
 
     def save(self, *args, **kwargs):
+        """Save."""
         if self.to_utc_date_time:
-            self.duration_in_days = \
-                (self.to_utc_date_time - self.from_utc_date_time).total_seconds() \
-                / _ONE_DAY_TIME_DELTA_TOTAL_SECONDS
+            self.duration_in_days = (
+                (self.to_utc_date_time -   # noqa: W504
+                 self.from_utc_date_time).total_seconds()
+            ) / _ONE_DAY_TIME_DELTA_TOTAL_SECONDS
 
             _to_date = (self.to_utc_date_time + _ONE_DAY_TIME_DELTA).date()
 
@@ -242,6 +265,8 @@ class EquipmentInstanceAlarmPeriod(Model):
 
 
 class EquipmentInstanceProblemDiagnosis(Model):
+    """EquipmentInstanceProblemDiagnosis."""
+
     RELATED_NAME = 'equipment_instance_problem_diagnoses'
     RELATED_QUERY_NAME = 'equipment_instance_problem_diagnosis'
 
@@ -305,7 +330,8 @@ class EquipmentInstanceProblemDiagnosis(Model):
     equipment_instance_alarm_periods = \
         ManyToManyField(
             to=EquipmentInstanceAlarmPeriod,
-            through=EquipmentInstanceAlarmPeriod.equipment_instance_problem_diagnoses.through,
+            through=(EquipmentInstanceAlarmPeriod
+                     .equipment_instance_problem_diagnoses.through),
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -323,7 +349,7 @@ class EquipmentInstanceProblemDiagnosis(Model):
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
-    
+
     has_associated_equipment_instance_alert_periods = \
         BooleanField(
             blank=False,
@@ -332,6 +358,8 @@ class EquipmentInstanceProblemDiagnosis(Model):
             db_index=True)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             'equipment_instance', \
             'from_date'
@@ -342,22 +370,23 @@ class EquipmentInstanceProblemDiagnosis(Model):
             'from_date'
 
     def __str__(self):
-        return '{} from {} {}{}{}'.format(
-                self.equipment_instance,
-                self.from_date,
-                'to {}'.format(self.to_date)
-                    if self.to_date
-                    else '(ONGOING)',
-                ': {}'.format(
+        """Return string repr."""
+        return (f'{self.equipment_instance} from {self.from_date} ' +
+                (f'to {self.to_date}'
+                 if self.to_date
+                 else '(ONGOING)') +
+                (': {}'.format(   # pylint: disable=consider-using-f-string
                     ', '.join(equipment_problem_type.name.upper()
-                              for equipment_problem_type in self.equipment_problem_types.all()))
-                    if self.equipment_problem_types.count()
-                    else '',
-                ' (DISMISSED)'
-                    if self.dismissed
-                    else '')
+                              for equipment_problem_type in
+                              self.equipment_problem_types.all()))
+                 if self.equipment_problem_types.count()
+                 else '') +
+                (' (DISMISSED)'
+                 if self.dismissed
+                 else ''))
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.date_range = \
             DateRange(
                 lower=self.from_date,
@@ -374,6 +403,8 @@ class EquipmentInstanceProblemDiagnosis(Model):
 
 
 class AlertDiagnosisStatus(Model):
+    """AlertDiagnosisStatus."""
+
     RELATED_NAME = 'alert_diagnosis_statuses'
     RELATED_QUERY_NAME = 'alert_diagnosis_status'
 
@@ -395,19 +426,25 @@ class AlertDiagnosisStatus(Model):
             default='to_diagnose')
 
     class Meta:
+        """Metadata."""
+
         verbose_name_plural = 'Alert Diagnosis Statuses'
 
-        ordering = 'index',
+        ordering = ('index',)
 
     def __str__(self):
-        return '{}. {}'.format(self.index, self.name)
+        """Return string repr."""
+        return f'{self.index}. {self.name}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentInstanceAlertPeriod(Model):
+    """EquipmentInstanceAlertPeriod."""
+
     RELATED_NAME = 'equipment_instance_alert_periods'
     RELATED_QUERY_NAME = 'equipment_instance_alert_period'
 
@@ -514,7 +551,8 @@ class EquipmentInstanceAlertPeriod(Model):
     equipment_instance_alarm_periods = \
         ManyToManyField(
             to=EquipmentInstanceAlarmPeriod,
-            through=EquipmentInstanceAlarmPeriod.equipment_instance_alert_periods.through,
+            through=(EquipmentInstanceAlarmPeriod
+                     .equipment_instance_alert_periods.through),
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
@@ -529,11 +567,12 @@ class EquipmentInstanceAlertPeriod(Model):
     equipment_instance_problem_diagnoses = \
         ManyToManyField(
             to=EquipmentInstanceProblemDiagnosis,
-            through=EquipmentInstanceProblemDiagnosis.equipment_instance_alert_periods.through,
+            through=(EquipmentInstanceProblemDiagnosis
+                     .equipment_instance_alert_periods.through),
             related_name=RELATED_NAME + '_reverse',
             related_query_name=RELATED_QUERY_NAME,
             blank=True)
-    
+
     has_associated_equipment_instance_problem_diagnoses = \
         BooleanField(
             blank=False,
@@ -542,6 +581,8 @@ class EquipmentInstanceAlertPeriod(Model):
             db_index=True)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             ('equipment_unique_type_group',
              'equipment_instance',
@@ -562,26 +603,28 @@ class EquipmentInstanceAlertPeriod(Model):
             '-cumulative_excess_risk_score'
 
     def __str__(self):
+        """Return string repr."""
         if self.diagnosis_status is None:
             self.save()
-            
-        return '{}: {}Alert on {} {} #{} from {} to {} w Approx Avg Risk Score {:,.1f} (Last: {:,.1f}) (based on {} > {}) for {:,} Day(s)'.format(
-                self.diagnosis_status.name.upper(),
-                'ONGOING '
-                    if self.ongoing
-                    else '',
-                self.equipment_unique_type_group.equipment_general_type.name.upper(),
-                self.equipment_unique_type_group.name,
-                self.equipment_instance.name,
-                self.from_date,
-                self.to_date,
-                self.approx_average_risk_score,
-                self.last_risk_score,
-                self.risk_score_name,
-                self.threshold,
-                self.duration)
+
+        return (
+            f'{self.diagnosis_status.name.upper()}: ' +
+            ('ONGOING '
+             if self.ongoing
+             else '') +
+            'Alert on ' +
+            (f'{self.equipment_unique_type_group.equipment_general_type.name.upper()} '   # noqa: E501
+             f'{self.equipment_unique_type_group.name} '
+             f'#{self.equipment_instance.name} '
+             f'from {self.from_date} to {self.to_date} '
+             f'w Approx Avg Risk Score {self.approx_average_risk_score:,.1f} '
+             f'(Last: {self.last_risk_score:,.1f}) '
+             f'(based on {self.risk_score_name} > {self.threshold}) '
+             f'for {self.duration:,} Day(s)')
+        )
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.date_range = \
             DateRange(
                 lower=self.from_date,
@@ -597,12 +640,16 @@ class EquipmentInstanceAlertPeriod(Model):
             (self.cumulative_excess_risk_score / duration)
 
         if self.diagnosis_status is None:
-            self.diagnosis_status = AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
+            self.diagnosis_status = \
+                AlertDiagnosisStatus.objects.get_or_create(index=0)[0]
 
         super().save(*args, **kwargs)
 
 
-def equipment_instance_alarm_period_post_save(sender, instance, *args, **kwargs):
+def equipment_instance_alarm_period_post_save(
+        sender, instance, *args, **kwargs):
+    """Post-Save signal."""
+    # pylint: disable=unused-argument
     equipment_instance_alert_periods = \
         EquipmentInstanceAlertPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
@@ -628,8 +675,11 @@ def equipment_instance_alarm_period_post_save(sender, instance, *args, **kwargs)
         has_associated_equipment_instance_alarm_periods=True)
 
     EquipmentInstanceAlarmPeriod.objects.filter(pk=instance.pk).update(
-        has_associated_equipment_instance_alert_periods=bool(equipment_instance_alert_periods.count()),
-        has_associated_equipment_instance_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
+        has_associated_equipment_instance_alert_periods=   # noqa: E251
+        bool(equipment_instance_alert_periods.count()),
+
+        has_associated_equipment_instance_problem_diagnoses=   # noqa: E251
+        bool(equipment_instance_problem_diagnoses.count()))
 
 
 post_save.connect(
@@ -640,7 +690,11 @@ post_save.connect(
     apps=None)
 
 
-def equipment_instance_alert_period(sender, instance, *args, **kwargs):
+def equipment_instance_alert_period_post_save(
+        sender, instance, *args, **kwargs):
+    """Post-Save signal."""
+    # pylint: disable=unused-argument
+
     equipment_instance_alarm_periods = \
         EquipmentInstanceAlarmPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
@@ -657,7 +711,7 @@ def equipment_instance_alert_period(sender, instance, *args, **kwargs):
         EquipmentInstanceProblemDiagnosis.objects.filter(
             equipment_instance=instance.equipment_instance,
             date_range__overlap=instance.date_range)
-    
+
     instance.equipment_instance_problem_diagnoses.set(
         equipment_instance_problem_diagnoses,
         clear=False)
@@ -665,19 +719,23 @@ def equipment_instance_alert_period(sender, instance, *args, **kwargs):
     equipment_instance_problem_diagnoses.update(
         has_associated_equipment_instance_alert_periods=True)
 
-    Alert.objects.filter(pk=instance.pk).update(
-        has_associated_equipment_instance_problem_diagnoses=bool(equipment_instance_problem_diagnoses.count()))
+    EquipmentInstanceAlertPeriod.objects.filter(pk=instance.pk).update(
+        has_associated_equipment_instance_problem_diagnoses=   # noqa: E251
+        bool(equipment_instance_problem_diagnoses.count()))
 
 
 post_save.connect(
-    receiver=equipment_instance_alert_period,
+    receiver=equipment_instance_alert_period_post_save,
     sender=EquipmentInstanceAlertPeriod,
     weak=True,
     dispatch_uid=None,
     apps=None)
 
 
-def equipment_instance_problem_diagnosis_post_save(sender, instance, *args, **kwargs):
+def equipment_instance_problem_diagnosis_post_save(
+        sender, instance, *args, **kwargs):
+    """Post-Save signal."""
+    # pylint: disable=unused-argument
     equipment_instance_alarm_periods = \
         EquipmentInstanceAlarmPeriod.objects.filter(
             equipment_instance=instance.equipment_instance,
@@ -704,8 +762,12 @@ def equipment_instance_problem_diagnosis_post_save(sender, instance, *args, **kw
 
     EquipmentInstanceProblemDiagnosis.objects.filter(pk=instance.pk).update(
         has_equipment_problems=bool(instance.equipment_problem_types.count()),
-        has_associated_equipment_instance_alarm_periods=bool(equipment_instance_alarm_periods.count()),
-        has_associated_equipment_instance_alert_periods=bool(equipment_instance_alert_periods.count()))
+
+        has_associated_equipment_instance_alarm_periods=   # noqa: E251
+        bool(equipment_instance_alarm_periods.count()),
+
+        has_associated_equipment_instance_alert_periods=   # noqa: E251
+        bool(equipment_instance_alert_periods.count()))
 
 
 post_save.connect(
