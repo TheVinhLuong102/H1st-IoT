@@ -1,0 +1,7 @@
+mccabe:
+  disable:
+    - MC0001
+
+pylint:
+  disable:
+    - useless-suppression

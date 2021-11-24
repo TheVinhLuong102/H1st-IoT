@@ -1,17 +1,25 @@
+"""H1st IoT Data Management: models."""
+
+
+import warnings
+
 from django.db.models import (
     Model,
-    BigAutoField, CharField, DateField, FloatField, IntegerField,
+    CharField, DateField, FloatField, IntegerField,
     JSONField,
     ForeignKey, ManyToManyField,
     PROTECT)
 from django.db.models.signals import m2m_changed, pre_delete
 
-import warnings
+from h1st_iot.util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
 
-from ..util import MAX_CHAR_LEN, clean_lower_str, clean_upper_str
+
+# pylint: disable=line-too-long
 
 
 class GlobalConfig(Model):
+    """GlobalConfig."""
+
     key = \
         CharField(
             blank=False,
@@ -26,20 +34,26 @@ class GlobalConfig(Model):
             null=True)
 
     class Meta:
-        ordering = 'key',
+        """Metadata."""
+
+        ordering = ('key',)
 
     def __str__(self):
-        return '{} = {}'.format(self.key, self.value)
+        """Return string repr."""
+        return f'{self.key} = {self.value}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.key = clean_upper_str(self.key)
         super().save(*args, **kwargs)
 
 
 class LogicalDataType(Model):
+    """LogicalDataType."""
+
     name = \
         CharField(
-            verbose_name='Data Type',
+            verbose_name='Logical Data Type',
             blank=False,
             null=False,
             unique=True,
@@ -47,17 +61,23 @@ class LogicalDataType(Model):
             max_length=MAX_CHAR_LEN)
 
     class Meta:
-        ordering = 'name',
+        """Metadata."""
+
+        ordering = ('name',)
 
     def __str__(self):
-        return 'LogicalDataTp {}'.format(self.name.upper())
+        """Return string repr."""
+        return f'LogicalDataTp {self.name.upper()}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class NumericMeasurementUnit(Model):
+    """NumericMeasurementUnit."""
+
     name = \
         CharField(
             verbose_name='Numeric Measurement Unit',
@@ -68,17 +88,23 @@ class NumericMeasurementUnit(Model):
             max_length=MAX_CHAR_LEN)
 
     class Meta:
-        ordering = 'name',
+        """Metadata."""
+
+        ordering = ('name',)
 
     def __str__(self):
+        """Return string repr."""
         return f'NumMeasureUnit "{self.name}"'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = self.name.strip()
         super().save(*args, **kwargs)
 
 
 class EquipmentDataFieldType(Model):
+    """EquipmentDataFieldType."""
+
     name = \
         CharField(
             verbose_name='Equipment Data Field Type',
@@ -89,17 +115,23 @@ class EquipmentDataFieldType(Model):
             max_length=MAX_CHAR_LEN)
 
     class Meta:
-        ordering = 'name',
+        """Metadata."""
+
+        ordering = ('name',)
 
     def __str__(self):
-        return 'EqDataFldTp {}'.format(self.name.upper())
+        """Return string repr."""
+        return f'EqDataFldTp {self.name.upper()}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentGeneralType(Model):
+    """EquipmentGeneralType."""
+
     name = \
         CharField(
             verbose_name='Equipment General Type',
@@ -110,17 +142,23 @@ class EquipmentGeneralType(Model):
             max_length=MAX_CHAR_LEN)
 
     class Meta:
-        ordering = 'name',
+        """Metadata."""
+
+        ordering = ('name',)
 
     def __str__(self):
-        return 'EqGenTp {}'.format(self.name.upper())
+        """Return string repr."""
+        return f'EqGenTp {self.name.upper()}'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentDataField(Model):
+    """EquipmentDataField."""
+
     RELATED_NAME = 'equipment_data_fields'
     RELATED_QUERY_NAME = 'equipment_data_field'
 
@@ -201,37 +239,42 @@ class EquipmentDataField(Model):
             blank=True)
 
     class Meta:
-        unique_together = \
-            'equipment_general_type', \
-            'name'
+        """Metadata."""
 
-        ordering = \
-            'equipment_general_type', \
-            'name'
-        
+        unique_together = 'equipment_general_type', 'name'
+
+        ordering = 'equipment_general_type', 'name'
+
     def __str__(self):
-        return '{} [{}] {} [{}{}{}{}{}]'.format(
-                self.equipment_general_type.name.upper(),
-                self.equipment_data_field_type.name,
-                self.name,
-                self.logical_data_type.name
-                    if self.logical_data_type
-                    else 'UNTYPED',
-                f', unit {self.numeric_measurement_unit.name.upper()}'
-                    if self.numeric_measurement_unit and self.numeric_measurement_unit.name
-                    else '',
-                ', nulls ({}, {})'.format(self.lower_numeric_null, self.upper_numeric_null),
-                '' if self.min_val is None
-                   else ', min {}'.format(self.min_val),
-                '' if self.max_val is None
-                   else ', max {}'.format(self.max_val))
+        """Return string repr."""
+        return ((f'{self.equipment_general_type.name.upper()} '
+                 f'[{self.equipment_data_field_type.name}] '
+                 f'{self.name} [') +
+                (self.logical_data_type.name
+                 if self.logical_data_type
+                 else 'UNTYPED') +
+                (f', unit {self.numeric_measurement_unit.name.upper()}'
+                 if self.numeric_measurement_unit
+                 and self.numeric_measurement_unit.name
+                 else '') +
+                f', nulls ({self.lower_numeric_null}, {self.upper_numeric_null})' +   # noqa: E501
+                (''
+                 if self.min_val is None
+                 else f', min {self.min_val}') +
+                (''
+                 if self.max_val is None
+                 else f', max {self.max_val}') +
+                ']')
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentUniqueTypeGroup(Model):
+    """EquipmentUniqueTypeGroup."""
+
     RELATED_NAME = 'equipment_unique_type_groups'
     RELATED_QUERY_NAME = 'equipment_unique_type_group'
 
@@ -268,21 +311,26 @@ class EquipmentUniqueTypeGroup(Model):
             blank=True)
 
     class Meta:
+        """Metadata."""
+
         ordering = \
             'equipment_general_type', \
             'name'
 
     def __str__(self):
-        return '{} UnqTpGrp {}'.format(
-                self.equipment_general_type.name.upper(),
-                self.name.upper())
+        """Return string repr."""
+        return (f'{self.equipment_general_type.name.upper()} '
+                f'UnqTpGrp {self.name.upper()}')
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentUniqueType(Model):
+    """EquipmentUniqueType."""
+
     RELATED_NAME = 'equipment_unique_types'
     RELATED_QUERY_NAME = 'equipment_unique_type'
 
@@ -321,22 +369,28 @@ class EquipmentUniqueType(Model):
             blank=True)
 
     class Meta:
-        ordering = \
-            'equipment_general_type', \
-            'name'
+        """Metadata."""
+
+        ordering = 'equipment_general_type', 'name'
 
     def __str__(self):
-        return '{} UnqTp {}'.format(
-                self.equipment_general_type.name.upper(),
-                self.name.upper())
+        """Return string repr."""
+        return (f'{self.equipment_general_type.name.upper()} '
+                f'UnqTp {self.name.upper()}')
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 def equipment_unique_types_equipment_data_fields_m2m_changed(
-        sender, instance, action, reverse, model, pk_set, using, *args, **kwargs):
+        sender, instance, action, reverse, model, pk_set, using,
+        *args, **kwargs):
+    """M2M-changed signal."""
+    # pylint: disable=too-many-arguments,too-many-branches,too-many-locals
+    # pylint: disable=unused-argument
+
     if action == 'pre_add':
         invalid_objs = \
             model.objects \
@@ -345,100 +399,129 @@ def equipment_unique_types_equipment_data_fields_m2m_changed(
 
         if invalid_objs:
             warnings.warn(
-                message='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
-                        instance, invalid_objs))
+                message=(f'*** {instance}: CANNOT ADD INVALID {invalid_objs} '
+                         'WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'))
 
             pk_set.difference_update(
                 i['pk']
                 for i in invalid_objs.values('pk'))
 
     elif action in ('post_add', 'post_remove') and pk_set:
-        if (model is EquipmentDataField) and instance.equipment_unique_type_groups.count():
-            equipment_unique_type_groups_to_update = instance.equipment_unique_type_groups.all()
+        if (model is EquipmentDataField) and \
+                instance.equipment_unique_type_groups.count():
+            equipment_unique_type_groups_to_update = \
+                instance.equipment_unique_type_groups.all()
 
-            print('{}: Changed Equipment Data Fields: {}: Updating Equipment Data Fields of {}...'
-                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+            print(
+                f'{instance}: Changed Equipment Data Fields: {action.upper()}:'
+                f' Updating Equipment Data Fields of {equipment_unique_type_groups_to_update}...'   # noqa: E501
+            )
 
-            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                equipment_unique_type_group_to_update.equipment_data_fields.set(
-                    equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(
+            for equipment_unique_type_group_to_update in \
+                    equipment_unique_type_groups_to_update:
+                equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                    equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                         *(equipment_unique_type.equipment_data_fields.all()
-                          for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                          for equipment_unique_type in
+                          equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),   # noqa: E501
                         all=False),
                     clear=False)
 
         elif model is EquipmentUniqueType:
-            changed_equipment_unique_types = model.objects.filter(pk__in=pk_set)
+            changed_equipment_unique_types = \
+                model.objects.filter(pk__in=pk_set)
 
             equipment_unique_type_groups_to_update = \
-                changed_equipment_unique_types[0].equipment_unique_type_groups.all().union(
+                changed_equipment_unique_types[0].equipment_unique_type_groups.all().union(   # noqa: E501
                     *(equipment_unique_type.equipment_unique_type_groups.all()
-                      for equipment_unique_type in changed_equipment_unique_types[1:]),
+                      for equipment_unique_type in changed_equipment_unique_types[1:]),   # noqa: E501
                     all=False)
 
             if equipment_unique_type_groups_to_update:
-                print('{}: Changed Equipment Unique Types: {}: Updating Equipment Data Fields of {} Related to Added/Removed {}...'
-                    .format(instance, action.upper(), equipment_unique_type_groups_to_update, changed_equipment_unique_types))
+                print(
+                    f'{instance}: Changed Equipment Unique Types: '
+                    f'{action.upper()}: Updating Equipment Data Fields of '
+                    f'{equipment_unique_type_groups_to_update} Related to '
+                    f'Added/Removed {changed_equipment_unique_types}...')
 
-                for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                    equipment_unique_type_group_to_update.equipment_data_fields.set(
-                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(
+                for equipment_unique_type_group_to_update in \
+                        equipment_unique_type_groups_to_update:
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                             *(equipment_unique_type.equipment_data_fields.all()
-                              for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                              for equipment_unique_type in
+                              equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),   # noqa: E501
                             all=False),
                         clear=False)
 
     elif action == 'pre_clear':
-        if (model is EquipmentDataField) and instance.equipment_unique_type_groups.count():
-            equipment_unique_type_groups_to_update = instance.equipment_unique_type_groups.all()
+        if (model is EquipmentDataField) and \
+                instance.equipment_unique_type_groups.count():
+            equipment_unique_type_groups_to_update = \
+                instance.equipment_unique_type_groups.all()
 
-            print('*** {}: CLEARING Equipment Data Fields: {}: Updating Equipment Data Fields of {}... ***'
-                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+            print(
+                f'*** {instance}: CLEARING Equipment Data Fields: '
+                f'{action.upper()}: Updating Equipment Data Fields of '
+                f'{equipment_unique_type_groups_to_update}... ***')
 
-            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                remaining_equipment_unique_types = \
-                    equipment_unique_type_group_to_update.equipment_unique_types.exclude(pk=instance.pk)
+            for equipment_unique_type_group_to_update in \
+                    equipment_unique_type_groups_to_update:
+                remaining_equipment_unique_types = (
+                    equipment_unique_type_group_to_update
+                    .equipment_unique_types.exclude(pk=instance.pk))
 
                 if remaining_equipment_unique_types.count():
-                    equipment_unique_type_group_to_update.equipment_data_fields.set(
-                        remaining_equipment_unique_types[0].equipment_data_fields.all().union(
-                            *(remaining_equipment_unique_type.equipment_data_fields.all()
-                              for remaining_equipment_unique_type in remaining_equipment_unique_types[1:]),
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                        remaining_equipment_unique_types[0].equipment_data_fields.all().union(   # noqa: E501
+                            *(remaining_equipment_unique_type.equipment_data_fields.all()   # noqa: E501
+                              for remaining_equipment_unique_type in
+                              remaining_equipment_unique_types[1:]),
                             all=False),
                         clear=False)
 
                 else:
-                    print('*** {}: CLEARING Equipment Data Fields: {}: CLEARING Equipment Data Fields of {}... ***'
-                        .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+                    print(
+                        f'*** {instance}: CLEARING Equipment Data Fields: '
+                        f'{action.upper()}: CLEARING Equipment Data Fields '
+                        f'of {equipment_unique_type_groups_to_update}... ***')
 
-                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()   # noqa: E501
 
-        elif (model is EquipmentUniqueType) and instance.equipment_unique_types.count():
-            equipment_unique_types_to_clear = instance.equipment_unique_types.all()
+        elif (model is EquipmentUniqueType) and \
+                instance.equipment_unique_types.count():
+            equipment_unique_types_to_clear = \
+                instance.equipment_unique_types.all()
 
             equipment_unique_type_groups_to_update = \
-                equipment_unique_types_to_clear[0].equipment_unique_type_groups.all().union(
-                    *(equipment_unique_type_to_clear.equipment_unique_type_groups.all()
-                      for equipment_unique_type_to_clear in equipment_unique_types_to_clear[1:]),
+                equipment_unique_types_to_clear[0].equipment_unique_type_groups.all().union(   # noqa: E501
+                    *(equipment_unique_type_to_clear.equipment_unique_type_groups.all()   # noqa: E501
+                      for equipment_unique_type_to_clear in
+                      equipment_unique_types_to_clear[1:]),
                     all=False)
 
             if equipment_unique_type_groups_to_update:
-                print('*** {}: CLEARING Equipment Unique Types: {}: Updating Equipment Data Fields of {} Related to {} to Clear...'
-                    .format(instance, action.upper(), equipment_unique_type_groups_to_update, equipment_unique_types_to_clear))
+                print(
+                    f'*** {instance}: CLEARING Equipment Unique Types: '
+                    f'{action.upper()}: Updating Equipment Data Fields of '
+                    f'{equipment_unique_type_groups_to_update} Related to '
+                    f'{equipment_unique_types_to_clear} to Clear...')
 
-                for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                    first_equipment_unique_type = \
-                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0]
+                for equipment_unique_type_group_to_update in \
+                        equipment_unique_type_groups_to_update:
+                    first_equipment_unique_type = (
+                        equipment_unique_type_group_to_update
+                        .equipment_unique_types.all()[0])
 
-                    equipment_unique_type_group_to_update.equipment_data_fields.set(
-                        (first_equipment_unique_type.equipment_data_fields.exclude(pk=instance.pk)
-                         if first_equipment_unique_type in equipment_unique_types_to_clear
-                         else first_equipment_unique_type.equipment_data_fields.all()).union(
-                            *((equipment_unique_type_group_equipment_unique_type.equipment_data_fields.exclude(pk=instance.pk)
-                               if equipment_unique_type_group_equipment_unique_type in equipment_unique_types_to_clear
-                               else equipment_unique_type_group_equipment_unique_type.equipment_data_fields.all())
-                              for equipment_unique_type_group_equipment_unique_type in
-                                equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                        (first_equipment_unique_type.equipment_data_fields.exclude(pk=instance.pk)   # noqa: E501
+                         if first_equipment_unique_type in equipment_unique_types_to_clear   # noqa: E501
+                         else first_equipment_unique_type.equipment_data_fields.all()).union(   # noqa: E501
+                            *((equipment_unique_type_group_equipment_unique_type.equipment_data_fields.exclude(pk=instance.pk)   # noqa: E501
+                               if equipment_unique_type_group_equipment_unique_type in equipment_unique_types_to_clear   # noqa: E501
+                               else equipment_unique_type_group_equipment_unique_type.equipment_data_fields.all())   # noqa: E501
+                              for equipment_unique_type_group_equipment_unique_type in   # noqa: E501
+                                equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),   # noqa: E501
                             all=False),
                         clear=False)
 
@@ -452,17 +535,21 @@ m2m_changed.connect(
 
 
 def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
-        sender, instance, action, reverse, model, pk_set, using, *args, **kwargs):
+        sender, instance, action, reverse, model, pk_set, using,
+        *args, **kwargs):
+    """M2M-changed signal."""
+    # pylint: disable=too-many-arguments,too-many-branches,unused-argument
+
     if action == 'pre_add':
-        invalid_objs = \
-            model.objects \
-                .filter(pk__in=pk_set) \
-                .exclude(equipment_general_type=instance.equipment_general_type)
+        invalid_objs = (
+            model.objects
+            .filter(pk__in=pk_set)
+            .exclude(equipment_general_type=instance.equipment_general_type))
 
         if invalid_objs:
             warnings.warn(
-                message='*** {}: CANNOT ADD INVALID {} WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'.format(
-                    instance, invalid_objs))
+                message=(f'*** {instance}: CANNOT ADD INVALID {invalid_objs} '
+                         'WITH DIFFERENT EQUIPMENT GENERAL TYPE(S) ***'))
 
             pk_set.difference_update(
                 i['pk']
@@ -471,73 +558,86 @@ def equipment_unique_type_groups_equipment_unique_types_m2m_changed(
     elif action in ('post_add', 'post_remove') and pk_set:
         if model is EquipmentUniqueType:
             if instance.equipment_unique_types.count():
-                print('{}: Changed Equipment Unique Types: {}: Updating Data Fields...'
-                    .format(instance, action.upper()))
+                print(f'{instance}: Changed Equipment Unique Types: '
+                      f'{action.upper()}: Updating Data Fields...')
 
                 instance.equipment_data_fields.set(
-                    instance.equipment_unique_types.all()[0].equipment_data_fields.all().union(
+                    instance.equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                         *(equipment_unique_type.equipment_data_fields.all()
-                          for equipment_unique_type in instance.equipment_unique_types.all()[1:]),
+                          for equipment_unique_type in
+                          instance.equipment_unique_types.all()[1:]),
                         all=False),
                     clear=False)
 
             else:
-                print('*** {}: REMOVED Equipment Unique Types: {}: CLEARING Data Fields... ***'
-                    .format(instance, action.upper()))
+                print(f'*** {instance}: REMOVED Equipment Unique Types: '
+                      f'{action.upper()}: CLEARING Data Fields... ***')
 
                 instance.equipment_data_fields.clear()
 
         elif model is EquipmentUniqueTypeGroup:
-            equipment_unique_type_groups_to_update = model.objects.filter(pk__in=pk_set)
+            equipment_unique_type_groups_to_update = \
+                model.objects.filter(pk__in=pk_set)
 
-            print('{}: Changed Equipment Unique Type Groups: {}: Updating Data Fields of Added/Removed {}...'
-                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+            print(f'{instance}: Changed Equipment Unique Type Groups: '
+                  f'{action.upper()}: Updating Data Fields of Added/Removed '
+                  f'{equipment_unique_type_groups_to_update}...')
 
-            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                if equipment_unique_type_group_to_update.equipment_unique_types.count():
-                    equipment_unique_type_group_to_update.equipment_data_fields.set(
-                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(
+            for equipment_unique_type_group_to_update in \
+                    equipment_unique_type_groups_to_update:
+                if equipment_unique_type_group_to_update.equipment_unique_types.count():   # noqa: E501
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                        equipment_unique_type_group_to_update.equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                             *(equipment_unique_type.equipment_data_fields.all()
-                              for equipment_unique_type in equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),
+                              for equipment_unique_type in
+                              equipment_unique_type_group_to_update.equipment_unique_types.all()[1:]),   # noqa: E501
                             all=False),
                         clear=False)
 
                 else:
-                    print('*** {}: REMOVED Equipment Unique Types: {}: CLEARING Data Fields... ***'
-                        .format(equipment_unique_type_group_to_update, action.upper()))
+                    print(f'*** {equipment_unique_type_group_to_update}: '
+                          f'REMOVED Equipment Unique Types: {action.upper()}: '
+                          'CLEARING Data Fields... ***')
 
-                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()   # noqa: E501
 
     elif action == 'pre_clear':
         if model is EquipmentUniqueType:
-            print('*** {}: CLEARING Equipment Unique Types: {}: CLEARING Data Fields... ***'
-                .format(instance, action.upper()))
+            print(f'*** {instance}: CLEARING Equipment Unique Types: '
+                  f'{action.upper()}: CLEARING Data Fields... ***')
 
             instance.equipment_data_fields.clear()
 
-        elif (model is EquipmentUniqueTypeGroup) and instance.equipment_unique_type_groups.count():
-            equipment_unique_type_groups_to_update = instance.equipment_unique_type_groups.all()
+        elif (model is EquipmentUniqueTypeGroup) and \
+                instance.equipment_unique_type_groups.count():
+            equipment_unique_type_groups_to_update = \
+                instance.equipment_unique_type_groups.all()
 
-            print('{}: CLEARING Equipment Unique Type Groups: {}: Updating Data Fields of {} to Clear...'
-                .format(instance, action.upper(), equipment_unique_type_groups_to_update))
+            print(f'{instance}: CLEARING Equipment Unique Type Groups: '
+                  f'{action.upper()}: Updating Data Fields of '
+                  f'{equipment_unique_type_groups_to_update} to Clear...')
 
-            for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-                remaining_equipment_unique_types = \
-                    equipment_unique_type_group_to_update.equipment_unique_types.exclude(pk=instance.pk)
+            for equipment_unique_type_group_to_update in \
+                    equipment_unique_type_groups_to_update:
+                remaining_equipment_unique_types = (
+                    equipment_unique_type_group_to_update
+                    .equipment_unique_types.exclude(pk=instance.pk))
 
                 if remaining_equipment_unique_types.count():
-                    equipment_unique_type_group_to_update.equipment_data_fields.set(
-                        remaining_equipment_unique_types.all()[0].equipment_data_fields.all().union(
+                    equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                        remaining_equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                             *(equipment_unique_type.equipment_data_fields.all()
-                              for equipment_unique_type in remaining_equipment_unique_types[1:]),
+                              for equipment_unique_type in
+                              remaining_equipment_unique_types[1:]),
                             all=False),
                         clear=False)
 
                 else:
-                    print('*** {}: REMOVING Equipment Unique Types: {}: CLEARING Data Fields... ***'
-                        .format(equipment_unique_type_group_to_update, action.upper()))
+                    print(f'*** {equipment_unique_type_group_to_update}: '
+                          f'REMOVING Equipment Unique Types: {action.upper()}:'
+                          f' CLEARING Data Fields... ***')
 
-                    equipment_unique_type_group_to_update.equipment_data_fields.clear()
+                    equipment_unique_type_group_to_update.equipment_data_fields.clear()   # noqa: E501
 
 
 m2m_changed.connect(
@@ -549,29 +649,39 @@ m2m_changed.connect(
 
 
 def equipment_unique_type_pre_delete(sender, instance, using, *args, **kwargs):
+    """Pre-Delete signal."""
+    # pylint: disable=unused-argument
+
     if instance.equipment_unique_type_groups.count():
-        equipment_unique_type_groups_to_update = instance.equipment_unique_type_groups.all()
+        equipment_unique_type_groups_to_update = \
+            instance.equipment_unique_type_groups.all()
 
-        print('*** DELETING {}: Updating Data Streams of {}... ***'
-            .format(instance, equipment_unique_type_groups_to_update))
+        print(f'*** DELETING {instance}: '
+              'Updating Data Streams of '
+              f'{equipment_unique_type_groups_to_update}... ***'   # noqa: E501
+              )
 
-        for equipment_unique_type_group_to_update in equipment_unique_type_groups_to_update:
-            remaining_equipment_unique_types = \
-                equipment_unique_type_groups_to_update.equipment_unique_types.exclude(pk=instance.pk)
+        for equipment_unique_type_group_to_update in \
+                equipment_unique_type_groups_to_update:
+            remaining_equipment_unique_types = (
+                equipment_unique_type_groups_to_update.equipment_unique_types
+                .exclude(pk=instance.pk))
 
             if remaining_equipment_unique_types.count():
-                equipment_unique_type_group_to_update.equipment_data_fields.set(
-                    remaining_equipment_unique_types.all()[0].equipment_data_fields.all().union(
+                equipment_unique_type_group_to_update.equipment_data_fields.set(   # noqa: E501
+                    remaining_equipment_unique_types.all()[0].equipment_data_fields.all().union(   # noqa: E501
                         *(equipment_unique_type.equipment_data_fields.all()
-                          for equipment_unique_type in remaining_equipment_unique_types[1:]),
+                          for equipment_unique_type in
+                          remaining_equipment_unique_types[1:]),
                         all=False),
                     clear=False)
 
             else:
-                print('*** DELETING {}: CLEARING Data Streams of {}... ***'
-                    .format(instance, equipment_unique_type_group_to_update))
+                print(f'*** DELETING {instance}: '
+                      f'CLEARING Data Streams of {equipment_unique_type_group_to_update}... ***'   # noqa: E501
+                      )
 
-                equipment_unique_type_group_to_update.equipment_data_fields.clear()
+                equipment_unique_type_group_to_update.equipment_data_fields.clear()   # noqa: E501
 
 
 pre_delete.connect(
@@ -583,6 +693,8 @@ pre_delete.connect(
 
 
 class EquipmentFacility(Model):
+    """EquipmentFacility."""
+
     RELATED_NAME = 'equipment_facilities'
     RELATED_QUERY_NAME = 'equipment_facility'
 
@@ -601,19 +713,25 @@ class EquipmentFacility(Model):
             null=True)
 
     class Meta:
+        """Metadata."""
+
         verbose_name_plural = 'Equipment Facilities'
 
-        ordering = 'name',
+        ordering = ('name',)
 
     def __str__(self):
-        return 'EqFacility "{}"'.format(self.name)
+        """Return string repr."""
+        return f'EqFacility "{self.name}"'
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentInstance(Model):
+    """EquipmentInstance."""
+
     RELATED_NAME = 'equipment_instances'
     RELATED_QUERY_NAME = 'equipment_instance'
 
@@ -666,27 +784,30 @@ class EquipmentInstance(Model):
             blank=True)
 
     class Meta:
-        ordering = \
-            'equipment_general_type', \
-            'equipment_unique_type', \
-            'name'
+        """Metadata."""
+
+        ordering = 'equipment_general_type', 'equipment_unique_type', 'name'
 
     def __str__(self):
-        return '{}{} #{}'.format(
-                self.equipment_general_type.name.upper(),
-                ' UnqTp {}'.format(self.equipment_unique_type.name)
-                    if self.equipment_unique_type
-                    else '',
-                self.name)
+        """Return string repr."""
+        return (self.equipment_general_type.name.upper() +
+                (f' UnqTp {self.equipment_unique_type.name}'
+                 if self.equipment_unique_type
+                 else '') +
+                f' #{self.name}')
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
 
-        if self.equipment_unique_type and \
-                (self.equipment_unique_type.equipment_general_type != self.equipment_general_type):
+        if self.equipment_unique_type and (
+                self.equipment_unique_type.equipment_general_type !=
+                self.equipment_general_type):
             warnings.warn(
-                message='*** EQUIPMENT INSTANCE #{}: EQUIPMENT UNIQUE TYPE {} NOT OF EQUIPMENT GENERAL TYPE {} ***'
-                    .format(self.name, self.equipment_unique_type, self.equipment_general_type))
+                message=(f'*** EQUIPMENT INSTANCE #{self.name}: '
+                         f'EQUIPMENT UNIQUE TYPE {self.equipment_unique_type} '
+                         'NOT OF EQUIPMENT GENERAL TYPE '
+                         f'{self.equipment_general_type} ***'))
 
             self.equipment_unique_type = None
 
@@ -694,6 +815,8 @@ class EquipmentInstance(Model):
 
 
 class EquipmentSystem(Model):
+    """EquipmentSystem."""
+
     RELATED_NAME = 'equipment_systems'
     RELATED_QUERY_NAME = 'equipment_system'
 
@@ -729,29 +852,31 @@ class EquipmentSystem(Model):
             blank=True)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             'name', \
             'date'
 
-        ordering = \
-            'equipment_facility', \
-            'name', \
-            'date'
+        ordering = 'equipment_facility', 'name', 'date'
 
     def __str__(self):
-        return '{}{} on {}'.format(
-                self.name,
-                ' @ EqFacility "{}"'.format(self.equipment_facility.name)
-                    if self.equipment_facility
-                    else '',
-                self.date)
+        """Return string repr."""
+        return (self.name +
+                (f' @ EqFacility "{self.equipment_facility.name}"'
+                 if self.equipment_facility
+                 else '') +
+                f' on {self.date}')
 
     def save(self, *args, **kwargs):
+        """Save."""
         self.name = clean_lower_str(self.name)
         super().save(*args, **kwargs)
 
 
 class EquipmentUniqueTypeGroupDataFieldProfile(Model):
+    """EquipmentUniqueTypeGroupDataFieldProfile."""
+
     RELATED_NAME = 'equipment_unique_type_group_data_field_profiles'
     RELATED_QUERY_NAME = 'equipment_unique_type_group_data_field_profile'
 
@@ -830,6 +955,8 @@ class EquipmentUniqueTypeGroupDataFieldProfile(Model):
             null=True)
 
     class Meta:
+        """Metadata."""
+
         unique_together = \
             'equipment_unique_type_group', \
             'equipment_data_field', \

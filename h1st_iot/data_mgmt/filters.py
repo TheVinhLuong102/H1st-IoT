@@ -126,11 +126,6 @@ class EquipmentDataFieldFilter(FilterSet):
             queryset=NumericMeasurementUnit.objects.all(),
             filterset=NumericMeasurementUnitFilter)
 
-    equipment_components = \
-        RelatedFilter(
-            queryset=EquipmentComponent.objects.all(),
-            filterset=EquipmentComponentFilter)
-
     equipment_unique_types = \
         RelatedFilter(
             queryset=EquipmentUniqueType.objects.all(),
@@ -215,11 +210,6 @@ class EquipmentUniqueTypeGroupFilter(FilterSet):
             queryset=EquipmentUniqueType.objects.all(),
             filterset='EquipmentUniqueTypeFilter')
 
-    equipment_components = \
-        RelatedFilter(
-            queryset=EquipmentComponent.objects.all(),
-            filterset=EquipmentComponentFilter)
-
     equipment_data_fields = \
         RelatedFilter(
             queryset=EquipmentDataField.objects.all(),
@@ -256,11 +246,6 @@ class EquipmentUniqueTypeFilter(FilterSet):
         RelatedFilter(
             queryset=EquipmentGeneralType.objects.all(),
             filterset=EquipmentGeneralTypeFilter)
-
-    equipment_components = \
-        RelatedFilter(
-            queryset=EquipmentComponent.objects.all(),
-            filterset=EquipmentComponentFilter)
 
     equipment_data_fields = \
         RelatedFilter(

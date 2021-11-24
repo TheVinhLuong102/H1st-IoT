@@ -1,6 +1,9 @@
+"""H1st IoT Data Management: querysets."""
+
+
 from django.db.models import Prefetch
 
-from .models import (
+from h1st_iot.data_mgmt.models import (
     GlobalConfig,
     LogicalDataType,
     NumericMeasurementUnit,
@@ -169,12 +172,10 @@ EQUIPMENT_INSTANCE_ID_ONLY_UNORDERED_QUERYSET = \
     .order_by()
 
 
-EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET = \
-    EquipmentInstance.objects \
-    .only(
-        'id',
-        'equipment_unique_type') \
-    .order_by()
+EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_UNIQUE_TYPE_ID_ONLY_UNORDERED_QUERYSET = (   # noqa: E501
+    EquipmentInstance.objects
+    .only('id', 'equipment_unique_type')
+    .order_by())
 
 
 EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_ID_ONLY_UNORDERED_QUERYSET = \
@@ -218,7 +219,8 @@ EQUIPMENT_INSTANCE_REST_API_QUERYSET = \
     EquipmentInstance.objects \
     .select_related(
         'equipment_general_type',
-        'equipment_unique_type', 'equipment_unique_type__equipment_general_type',
+        'equipment_unique_type',
+        'equipment_unique_type__equipment_general_type',
         'equipment_facility') \
     .defer(
         'equipment_facility__info') \
@@ -243,7 +245,7 @@ EQUIPMENT_FACILITY_REST_API_QUERYSET = \
     .prefetch_related(
         Prefetch(
             lookup='equipment_instances',
-            queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERYSET))
+            queryset=EQUIPMENT_INSTANCE_RELATED_TO_EQUIPMENT_FACILITY_STR_QUERYSET))   # noqa: E501
 
 
 EQUIPMENT_SYSTEM_REST_API_QUERYSET = \
@@ -263,7 +265,9 @@ EQUIPMENT_UNIQUE_TYPE_GROUP_DATA_FIELD_PROFILE_REST_API_QUERYSET = \
     .select_related(
         'equipment_unique_type_group',
         'equipment_data_field',
-        'equipment_data_field__equipment_general_type', 'equipment_data_field__equipment_data_field_type',
-        'equipment_data_field__data_type', 'equipment_data_field__numeric_measurement_unit') \
+        'equipment_data_field__equipment_general_type',
+        'equipment_data_field__equipment_data_field_type',
+        'equipment_data_field__data_type',
+        'equipment_data_field__numeric_measurement_unit') \
     .defer(
         'equipment_unique_type_group__equipment_general_type')
