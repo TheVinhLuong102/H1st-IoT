@@ -1,19 +1,23 @@
+"""H1st IoT Data Management: URL configs."""
+
+
 from django.conf.urls import include, url
 
 from rest_framework.routers import DefaultRouter
 
-from .views import \
-    GlobalConfigViewSet, \
-    DataTypeViewSet, \
-    NumericMeasurementUnitViewSet, \
-    EquipmentDataFieldTypeViewSet, \
-    EquipmentGeneralTypeViewSet, \
-    EquipmentDataFieldViewSet, \
-    EquipmentUniqueTypeGroupViewSet, \
-    EquipmentUniqueTypeViewSet, \
-    EquipmentFacilityViewSet, \
-    EquipmentInstanceViewSet, \
-    EquipmentSystemViewSet
+from h1st_iot.data_mgmt.views import (
+    GlobalConfigViewSet,
+    DataTypeViewSet,
+    NumericMeasurementUnitViewSet,
+    EquipmentDataFieldTypeViewSet,
+    EquipmentGeneralTypeViewSet,
+    EquipmentDataFieldViewSet,
+    EquipmentUniqueTypeGroupViewSet,
+    EquipmentUniqueTypeViewSet,
+    EquipmentFacilityViewSet,
+    EquipmentInstanceViewSet,
+    EquipmentSystemViewSet,
+)
 
 
 ROUTER = DefaultRouter()
@@ -23,7 +27,8 @@ ROUTER.register('numeric-measurement-units', NumericMeasurementUnitViewSet)
 ROUTER.register('equipment-data-field-types', EquipmentDataFieldTypeViewSet)
 ROUTER.register('equipment-general-types', EquipmentGeneralTypeViewSet)
 ROUTER.register('equipment-data-fields', EquipmentDataFieldViewSet)
-ROUTER.register('equipment-unique-type-groups', EquipmentUniqueTypeGroupViewSet)
+ROUTER.register('equipment-unique-type-groups',
+                EquipmentUniqueTypeGroupViewSet)
 ROUTER.register('equipment-unique-types', EquipmentUniqueTypeViewSet)
 ROUTER.register('equipment-facilities', EquipmentFacilityViewSet)
 ROUTER.register('equipment-instances', EquipmentInstanceViewSet)
