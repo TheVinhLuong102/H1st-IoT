@@ -1,1 +1,1 @@
-"""H1st IoT Data Management (Base) Migrations."""
+"""H1st IoT Data Management Migrations."""

@@ -1,4 +1,4 @@
-"""H1st IoT Data Management: Maintenance Operations: Filters."""
+"""H1st IoT Maintenance Operations: Filters."""
 
 
 from rest_framework_filters import FilterSet, RelatedFilter

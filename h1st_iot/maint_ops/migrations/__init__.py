@@ -1,1 +1,1 @@
-"""H1st IoT Data Management: Maintenance Operations: Migrations."""
+"""H1st IoT Maintenance Operations: Migrations."""

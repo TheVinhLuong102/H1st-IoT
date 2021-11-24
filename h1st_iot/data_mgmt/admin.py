@@ -1,4 +1,4 @@
-"""H1st IoT Data Management (Base) Admin."""
+"""H1st IoT Data Management Admin."""
 
 
 from django.contrib.admin import ModelAdmin, site, TabularInline

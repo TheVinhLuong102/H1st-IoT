@@ -1,4 +1,4 @@
-"""H1st IoT Data Management (Base) Filters."""
+"""H1st IoT Data Management Filters."""
 
 
 from django.db.models.fields.json import JSONField
