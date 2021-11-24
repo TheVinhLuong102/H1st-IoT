@@ -6,8 +6,7 @@ from h1st_iot.data_mgmt.models import LogicalDataType
 
 def run():
     """Run this script to create CAT & NUM logical data types."""
-    msg = 'Creating Categorical & Numerical logical data types...'
-    print(msg)
+    print(msg := 'Creating Categorical & Numerical logical data types...')
 
     try:
         cat, _ = LogicalDataType.objects.get_or_create(name='cat')
