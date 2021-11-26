@@ -243,7 +243,7 @@ class EquipmentInstanceDailyPredictedFault(Model):
         return (f'{self.equipment_unique_type_group.equipment_general_type.name} '   # noqa: E501
                 f'{self.equipment_unique_type_group.name} '
                 f'#{self.equipment_instance.name} on {self.date}: '
-                f'{self.fault_type.name} predicted '
+                f'{self.fault_type.name.upper()} predicted '
                 f'w/ prob {100 * self.predicted_fault_probability:.1g}% '
                 f'by {self.fault_predictor_name}')
 
