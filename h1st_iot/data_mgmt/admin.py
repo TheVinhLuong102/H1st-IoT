@@ -1,9 +1,10 @@
 """H1st IoT Data Management: admin."""
 
 
-from django.contrib.admin import ModelAdmin, site, TabularInline
+from django.contrib.admin.decorators import register
+from django.contrib.admin.options import ModelAdmin, TabularInline
 from django.db.models.query import Prefetch
-from django.forms import BaseInlineFormSet
+from django.forms.models import BaseInlineFormSet
 
 from silk.profiling.profiler import silk_profile
 
@@ -35,8 +36,9 @@ from h1st_iot.data_mgmt.querysets import (
 # pylint: disable=invalid-name,line-too-long
 
 
+@register(GlobalConfig)
 class GlobalConfigAdmin(ModelAdmin):
-    """GlobalConfigAdmin."""
+    """GlobalConfig admin."""
 
     list_display = 'key', 'value'
 
@@ -44,20 +46,18 @@ class GlobalConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(GlobalConfig, admin_class=GlobalConfigAdmin)
-
-
+@register(NumericMeasurementUnit)
 class NumericMeasurementUnitAdmin(ModelAdmin):
-    """NumericMeasurementUnitAdmin."""
+    """NumericMeasurementUnit admin."""
 
     list_display = ('name',)
 
@@ -65,20 +65,18 @@ class NumericMeasurementUnitAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Numeric Measurement Units')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Numeric Measurement Unit')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(NumericMeasurementUnit, admin_class=NumericMeasurementUnitAdmin)
-
-
+@register(EquipmentGeneralType)
 class EquipmentGeneralTypeAdmin(ModelAdmin):
-    """EquipmentGeneralTypeAdmin."""
+    """EquipmentGeneralType admin."""
 
     list_display = ('name',)
 
@@ -86,50 +84,51 @@ class EquipmentGeneralTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment General Types')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment General Type')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(EquipmentGeneralType, admin_class=EquipmentGeneralTypeAdmin)
-
-
+@register(EquipmentDataField)
 class EquipmentDataFieldAdmin(ModelAdmin):
-    """EquipmentDataFieldAdmin."""
+    """EquipmentDataField admin."""
 
-    list_display = \
-        'equipment_general_type', \
-        'name', \
-        'equipment_data_field_type', \
-        'logical_data_type', \
-        'numeric_measurement_unit', \
-        'lower_numeric_null', \
-        'upper_numeric_null', \
-        'min_val', \
-        'max_val', \
-        'n_equipment_unique_types'
+    list_display = (
+        'equipment_general_type',
+        'name',
+        'equipment_data_field_type',
+        'logical_data_type',
+        'numeric_measurement_unit',
+        'lower_numeric_null',
+        'upper_numeric_null',
+        'min_val',
+        'max_val',
+        'n_equipment_unique_types',
+    )
 
-    list_filter = \
-        'equipment_general_type__name', \
-        'equipment_data_field_type__name', \
-        'logical_data_type__name', \
-        'numeric_measurement_unit__name', \
-        'lower_numeric_null', \
-        'upper_numeric_null', \
-        'name', \
-        'min_val', \
-        'max_val'
+    list_filter = (
+        'equipment_general_type__name',
+        'equipment_data_field_type__name',
+        'logical_data_type__name',
+        'numeric_measurement_unit__name',
+        'lower_numeric_null',
+        'upper_numeric_null',
+        'name',
+        'min_val',
+        'max_val',
+    )
 
-    search_fields = \
-        'equipment_general_type__name', \
-        'equipment_data_field_type__name', \
-        'name', \
-        'logical_data_type__name', \
-        'numeric_measurement_unit__name'
+    search_fields = (
+        'equipment_general_type__name',
+        'equipment_data_field_type__name',
+        'name',
+        'logical_data_type__name',
+        'numeric_measurement_unit__name',
+    )
 
     show_full_result_count = False
 
@@ -152,27 +151,26 @@ class EquipmentDataFieldAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Data Fields')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Data Field')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(EquipmentDataField, admin_class=EquipmentDataFieldAdmin)
-
-
+@register(EquipmentUniqueTypeGroup)
 class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
-    """EquipmentUniqueTypeGroupAdmin."""
+    """EquipmentUniqueTypeGroup admin."""
 
-    list_display = \
-        'equipment_general_type', \
-        'name', \
-        'equipment_unique_type_list', \
-        'n_equipment_data_fields', \
-        'n_equipment_instances'
+    list_display = (
+        'equipment_general_type',
+        'name',
+        'equipment_unique_type_list',
+        'n_equipment_data_fields',
+        'n_equipment_instances',
+    )
 
     list_filter = ('equipment_general_type__name',)
 
@@ -227,28 +225,26 @@ class EquipmentUniqueTypeGroupAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Type Groups')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(EquipmentUniqueTypeGroup,
-              admin_class=EquipmentUniqueTypeGroupAdmin)
-
-
+@register(EquipmentUniqueType)
 class EquipmentUniqueTypeAdmin(ModelAdmin):
-    """EquipmentUniqueTypeAdmin."""
+    """EquipmentUniqueType admin."""
 
-    list_display = \
-        'equipment_general_type', \
-        'name', \
-        'n_equipment_data_fields', \
-        'equipment_unique_type_group_list', \
-        'n_equipment_instances'
+    list_display = (
+        'equipment_general_type',
+        'name',
+        'n_equipment_data_fields',
+        'equipment_unique_type_group_list',
+        'n_equipment_instances',
+    )
 
     list_filter = ('equipment_general_type__name',)
 
@@ -301,18 +297,13 @@ class EquipmentUniqueTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Unique Types')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentUniqueType,
-    admin_class=EquipmentUniqueTypeAdmin)
 
 
 class EquipmentInstanceInLineFormSet(BaseInlineFormSet):
@@ -348,17 +339,17 @@ class EquipmentInstanceTabularInline(TabularInline):
                 'equipment_unique_type__equipment_general_type')
 
 
+@register(EquipmentFacility)
 class EquipmentFacilityAdmin(ModelAdmin):
-    """EquipmentFacilityAdmin."""
+    """EquipmentFacility admin."""
 
-    list_display = \
-        'name', \
-        'info', \
-        'n_equipment_instances'
+    list_display = (
+        'name',
+        'info',
+        'n_equipment_instances',
+    )
 
-    search_fields = \
-        'name', \
-        'info'
+    search_fields = 'name', 'info'
 
     show_full_result_count = False
 
@@ -381,41 +372,40 @@ class EquipmentFacilityAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Facilities')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Facility')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentFacility,
-    admin_class=EquipmentFacilityAdmin)
-
-
+@register(EquipmentInstance)
 class EquipmentInstanceAdmin(ModelAdmin):
-    """EquipmentInstanceAdmin."""
+    """EquipmentInstance admin."""
 
-    list_display = \
-        'equipment_general_type', \
-        'equipment_unique_type', \
-        'equipment_facility', \
-        'name', \
-        'info'
+    list_display = (
+        'equipment_general_type',
+        'equipment_unique_type',
+        'equipment_facility',
+        'name',
+        'info',
+    )
 
-    list_filter = \
-        'equipment_general_type__name', \
-        'equipment_unique_type__name', \
-        'equipment_facility__name'
+    list_filter = (
+        'equipment_general_type__name',
+        'equipment_unique_type__name',
+        'equipment_facility__name',
+    )
 
-    search_fields = \
-        'equipment_general_type__name', \
-        'equipment_unique_type__name', \
-        'equipment_facility__name', \
-        'name', \
-        'info'
+    search_fields = (
+        'equipment_general_type__name',
+        'equipment_unique_type__name',
+        'equipment_facility__name',
+        'name',
+        'info',
+    )
 
     show_full_result_count = False
 
@@ -444,28 +434,25 @@ class EquipmentInstanceAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instances')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentInstance,
-    admin_class=EquipmentInstanceAdmin)
-
-
+@register(EquipmentSystem)
 class EquipmentSystemAdmin(ModelAdmin):
-    """EquipmentSystemAdmin."""
+    """EquipmentSystem admin."""
 
-    list_display = \
-        'equipment_facility', \
-        'name', \
-        'date', \
-        'n_equipment_instances'
+    list_display = (
+        'equipment_facility',
+        'name',
+        'date',
+        'n_equipment_instances',
+    )
 
     list_filter = 'equipment_facility__name', 'date'
 
@@ -491,70 +478,71 @@ class EquipmentSystemAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Systems')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment System')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentSystem,
-    admin_class=EquipmentSystemAdmin)
-
-
+@register(EquipmentUniqueTypeGroupDataFieldProfile)
 class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
-    """EquipmentUniqueTypeGroupDataFieldProfileAdmin."""
+    """EquipmentUniqueTypeGroupDataFieldProfile admin."""
 
-    list_display = \
-        'equipment_unique_type_group', \
-        'equipment_data_field', \
-        'to_date', \
-        'valid_proportion', \
-        'n_distinct_values', \
-        'distinct_values', \
-        'sample_min', \
-        'outlier_rst_min', \
-        'sample_quartile', \
-        'sample_median', \
-        'sample_3rd_quartile', \
-        'outlier_rst_max', \
-        'sample_max'
+    list_display = (
+        'equipment_unique_type_group',
+        'equipment_data_field',
+        'to_date',
+        'valid_proportion',
+        'n_distinct_values',
+        'distinct_values',
+        'sample_min',
+        'outlier_rst_min',
+        'sample_quartile',
+        'sample_median',
+        'sample_3rd_quartile',
+        'outlier_rst_max',
+        'sample_max',
+    )
 
-    list_filter = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'to_date', \
-        'equipment_data_field__name'
+    list_filter = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'to_date',
+        'equipment_data_field__name',
+    )
 
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_data_field__name'
+    search_fields = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'equipment_data_field__name',
+    )
 
     show_full_result_count = False
 
-    ordering = \
-        'equipment_unique_type_group', \
-        '-to_date', \
-        '-n_distinct_values'
+    ordering = (
+        'equipment_unique_type_group',
+        '-to_date',
+        '-n_distinct_values',
+    )
 
-    readonly_fields = \
-        'equipment_unique_type_group', \
-        'equipment_data_field', \
-        'to_date', \
-        'valid_proportion', \
-        'n_distinct_values', \
-        'distinct_values', \
-        'sample_min', \
-        'outlier_rst_min', \
-        'sample_quartile', \
-        'sample_median', \
-        'sample_3rd_quartile', \
-        'outlier_rst_max', \
-        'sample_max'
+    readonly_fields = (
+        'equipment_unique_type_group',
+        'equipment_data_field',
+        'to_date',
+        'valid_proportion',
+        'n_distinct_values',
+        'distinct_values',
+        'sample_min',
+        'outlier_rst_min',
+        'sample_quartile',
+        'sample_median',
+        'sample_3rd_quartile',
+        'outlier_rst_max',
+        'sample_max',
+    )
 
     def get_queryset(self, request):
         """Get queryset."""
@@ -571,15 +559,10 @@ class EquipmentUniqueTypeGroupDataFieldProfileAdmin(ModelAdmin):
     @silk_profile(
         name='Admin: Equipment Unique Type Group Data Field Profiles')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Unique Type Group Data Field Profile')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentUniqueTypeGroupDataFieldProfile,
-    admin_class=EquipmentUniqueTypeGroupDataFieldProfileAdmin)
