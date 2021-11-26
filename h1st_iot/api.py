@@ -20,6 +20,7 @@ from .data_mgmt.models import (
 from .maint_ops.models import (
     EquipmentInstanceDailyRiskScore,
     EquipmentProblemType,
+    EquipmentInstanceDailyPredictedFault,
     EquipmentInstanceAlarmPeriod,
     EquipmentInstanceProblemDiagnosis,
     AlertDiagnosisStatus,
@@ -48,6 +49,7 @@ __all__: Sequence[str] = (
 
     'EquipmentInstanceDailyRiskScore',
     'EquipmentProblemType',
+    'EquipmentInstanceDailyPredictedFault',
     'EquipmentInstanceAlarmPeriod',
     'EquipmentInstanceProblemDiagnosis',
     'AlertDiagnosisStatus',

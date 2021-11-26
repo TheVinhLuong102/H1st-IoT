@@ -10,6 +10,7 @@ from django.db.models import (
     JSONField,
     ForeignKey, ManyToManyField,
     PROTECT)
+from django.db.models.constraints import UniqueConstraint
 from django.db.models.signals import post_save
 from django.contrib.postgres.fields import DateRangeField
 
@@ -153,6 +154,98 @@ class EquipmentProblemType(Model):
         """Save."""
         self.name = self.name.strip()
         super().save(*args, **kwargs)
+
+
+class EquipmentInstanceDailyPredictedFault(Model):
+    """Equipment Instance Daily Predicted Fault."""
+
+    RELATED_NAME = 'equipment_instance_daily_predicted_faults'
+    RELATED_QUERY_NAME = 'equipment_instance_daily_predicted_fault'
+
+    id = BigAutoField(
+        primary_key=True)
+
+    equipment_unique_type_group = \
+        ForeignKey(
+            verbose_name='Equipment Unique Type Group',
+            help_text='Equipment Unique Type Group',
+            to=EquipmentUniqueTypeGroup,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    equipment_instance = \
+        ForeignKey(
+            verbose_name='Equipment Instance',
+            help_text='Equipment Instance',
+            to=EquipmentInstance,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    date = \
+        DateField(
+            verbose_name='Date',
+            help_text='Date',
+            blank=False,
+            null=False,
+            db_index=True)
+
+    fault_type = \
+        ForeignKey(
+            verbose_name='Fault Type',
+            help_text='Fault Type',
+            to=EquipmentProblemType,
+            related_name=RELATED_NAME,
+            related_query_name=RELATED_QUERY_NAME,
+            blank=False,
+            null=False,
+            on_delete=PROTECT)
+
+    fault_predictor_name = \
+        CharField(
+            verbose_name='Fault Predictor Name',
+            help_text='Fault Predictor Name',
+            max_length=MAX_CHAR_LEN,
+            blank=False,
+            null=False,
+            db_index=True)
+
+    predicted_fault_probability = \
+        FloatField(
+            verbose_name='Predicted Fault Probability',
+            help_text='Predicted Fault Probability',
+            blank=False,
+            null=False)
+
+    class Meta:
+        """Metadata."""
+
+        verbose_name = 'Equipment Instance Daily Predicted Fault'
+        verbose_name_plural = 'Equipment Instance Daily Predicted Faults'
+
+        constraints = (
+            UniqueConstraint(
+                fields=('equipment_unique_type_group',
+                        'equipment_instance',
+                        'date',
+                        'fault_type',
+                        'fault_predictor_name'),
+                name='EquipmentInstanceDailyPredictedFault_unique_together'),
+        )
+
+    def __str__(self):
+        """Return string repr."""
+        return (f'{self.equipment_unique_type_group.equipment_general_type.name} '   # noqa: E501
+                f'{self.equipment_unique_type_group.name} '
+                f'#{self.equipment_instance.name} on {self.date}: '
+                f'{self.fault_type.name} predicted '
+                f'w/ prob {100 * self.predicted_fault_probability:.1g}% '
+                f'by {self.fault_predictor_name}')
 
 
 class EquipmentInstanceAlarmPeriod(Model):

@@ -1,7 +1,8 @@
 """H1st IoT Maintenance Operations: admin."""
 
 
-from django.contrib.admin import ModelAdmin, site
+from django.contrib.admin.decorators import register
+from django.contrib.admin.options import ModelAdmin
 from django.db.models import Prefetch
 
 from silk.profiling.profiler import silk_profile
@@ -9,6 +10,7 @@ from silk.profiling.profiler import silk_profile
 from h1st_iot.maint_ops.models import (
     GlobalConfig,
     EquipmentProblemType,
+    EquipmentInstanceDailyPredictedFault,
     EquipmentInstanceAlarmPeriod,
     EquipmentInstanceProblemDiagnosis,
     EquipmentInstanceAlertPeriod,
@@ -25,8 +27,9 @@ from h1st_iot.maint_ops.querysets import (
 # pylint: disable=invalid-name,line-too-long
 
 
+@register(GlobalConfig)
 class GlobalConfigAdmin(ModelAdmin):
-    """GlobalConfigAdmin."""
+    """GlobalConfig admin."""
 
     list_display = 'key', 'value'
 
@@ -34,22 +37,18 @@ class GlobalConfigAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Global Configs')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Global Config')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    GlobalConfig,
-    admin_class=GlobalConfigAdmin)
-
-
+@register(EquipmentProblemType)
 class EquipmentProblemTypeAdmin(ModelAdmin):
-    """EquipmentProblemTypeAdmin."""
+    """EquipmentProblemType admin."""
 
     list_display = ('name',)
 
@@ -59,58 +58,123 @@ class EquipmentProblemTypeAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Types')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Problem Type')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentProblemType,
-    admin_class=EquipmentProblemTypeAdmin)
+@register(EquipmentInstanceDailyPredictedFault)
+class EquipmentInstanceDailyPredictedFaultAdmin(ModelAdmin):
+    """EquipmentInstanceDailyPredictedFault admin."""
 
+    list_display = (
+        'equipment_unique_type_group',
+        'equipment_instance',
+        'date',
+        'fault_type',
+        'fault_predictor_name',
+        'predicted_fault_probability',
+    )
 
-class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
-    """EquipmentInstanceAlarmPeriodAdmin."""
+    list_filter = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'date',
+        'fault_type__name',
+        'fault_predictor_name',
+    )
 
-    list_display = \
-        'equipment_instance', \
-        'alarm_type', \
-        'from_utc_date_time', \
-        'to_utc_date_time', \
-        'duration_in_days', \
-        'has_associated_equipment_instance_alert_periods', \
-        'has_associated_equipment_instance_problem_diagnoses'
-
-    list_filter = \
-        'equipment_instance__equipment_general_type__name', \
-        'alarm_type__name', \
-        'from_utc_date_time', \
-        'to_utc_date_time', \
-        'has_associated_equipment_instance_alert_periods', \
-        'has_associated_equipment_instance_problem_diagnoses'
-
-    search_fields = \
-        'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
-        'equipment_instance__name'
+    search_fields = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'date',
+        'fault_type__name',
+        'fault_predictor_name',
+    )
 
     show_full_result_count = False
 
-    readonly_fields = \
-        'equipment_instance', \
-        'alarm_type', \
-        'from_utc_date_time', \
-        'to_utc_date_time', \
-        'duration_in_days', \
-        'date_range', \
-        'has_associated_equipment_instance_alert_periods', \
-        'equipment_instance_alert_periods', \
-        'has_associated_equipment_instance_problem_diagnoses', \
-        'equipment_instance_problem_diagnoses'
+    readonly_fields = (
+        'equipment_unique_type_group',
+        'equipment_instance',
+        'date',
+        'fault_type',
+        'fault_predictor_name',
+        'predicted_fault_probability',
+    )
+
+    def get_queryset(self, request):
+        """Get queryset."""
+        return super().get_queryset(request) \
+            .select_related(
+                'equipment_unique_type_group',
+                'equipment_unique_type_group__equipment_general_type',
+                'equipment_instance',
+                'equipment_instance__equipment_general_type',
+                'equipment_instance__equipment_unique_type',
+                'fault_type') \
+            .defer(
+                'equipment_instance__equipment_facility',
+                'equipment_instance__info')
+
+    @silk_profile(name='Admin: Equipment Instance Daily Predicted Faults')
+    def changelist_view(self, *args, **kwargs):
+        """Change-list view."""
+        return super().changelist_view(*args, **kwargs)
+
+    @silk_profile(name='Admin: Equipment Instance Daily Predicted Fault')
+    def changeform_view(self, *args, **kwargs):
+        """Change-form view."""
+        return super().changeform_view(*args, **kwargs)
+
+
+@register(EquipmentInstanceAlarmPeriod)
+class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
+    """EquipmentInstanceAlarmPeriod admin."""
+
+    list_display = (
+        'equipment_instance',
+        'alarm_type',
+        'from_utc_date_time',
+        'to_utc_date_time',
+        'duration_in_days',
+        'has_associated_equipment_instance_alert_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+    )
+
+    list_filter = (
+        'equipment_instance__equipment_general_type__name',
+        'alarm_type__name',
+        'from_utc_date_time',
+        'to_utc_date_time',
+        'has_associated_equipment_instance_alert_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+    )
+
+    search_fields = (
+        'equipment_instance__equipment_general_type__name',
+        'equipment_instance__equipment_unique_type__name',
+        'equipment_instance__name',
+    )
+
+    show_full_result_count = False
+
+    readonly_fields = (
+        'equipment_instance',
+        'alarm_type',
+        'from_utc_date_time',
+        'to_utc_date_time',
+        'duration_in_days',
+        'date_range',
+        'has_associated_equipment_instance_alert_periods',
+        'equipment_instance_alert_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+        'equipment_instance_problem_diagnoses',
+    )
 
     def get_queryset(self, request):
         """Get queryset."""
@@ -136,55 +200,55 @@ class EquipmentInstanceAlarmPeriodAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Alarm Periods')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Alarm Period')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentInstanceAlarmPeriod,
-    admin_class=EquipmentInstanceAlarmPeriodAdmin)
-
-
+@register(EquipmentInstanceProblemDiagnosis)
 class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
-    """EquipmentInstanceProblemDiagnosisAdmin."""
+    """EquipmentInstanceProblemDiagnosis admin."""
 
-    list_display = \
-        'equipment_instance', \
-        'from_date', \
-        'to_date', \
-        'duration', \
-        'equipment_problem_type_names', \
-        'dismissed', \
-        'comments', \
-        'has_associated_equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_alert_periods'
+    list_display = (
+        'equipment_instance',
+        'from_date',
+        'to_date',
+        'duration',
+        'equipment_problem_type_names',
+        'dismissed',
+        'comments',
+        'has_associated_equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_alert_periods',
+    )
 
-    list_filter = \
-        'equipment_instance__equipment_general_type__name', \
-        'from_date', \
-        'to_date', \
-        'dismissed'
+    list_filter = (
+        'equipment_instance__equipment_general_type__name',
+        'from_date',
+        'to_date',
+        'dismissed',
+    )
 
-    readonly_fields = \
-        'date_range', \
-        'duration', \
-        'has_equipment_problems', \
-        'has_associated_equipment_instance_alarm_periods', \
-        'equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_alert_periods', \
-        'equipment_instance_alert_periods'
+    readonly_fields = (
+        'date_range',
+        'duration',
+        'has_equipment_problems',
+        'has_associated_equipment_instance_alarm_periods',
+        'equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_alert_periods',
+        'equipment_instance_alert_periods',
+    )
 
     show_full_result_count = False
 
-    search_fields = \
-        'equipment_instance__equipment_general_type__name', \
-        'equipment_instance__equipment_unique_type__name', \
-        'equipment_instance__name'
+    search_fields = (
+        'equipment_instance__equipment_general_type__name',
+        'equipment_instance__equipment_unique_type__name',
+        'equipment_instance__name',
+    )
 
     def equipment_problem_type_names(self, obj):
         # pylint: disable=no-self-use
@@ -218,22 +282,18 @@ class EquipmentInstanceProblemDiagnosisAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Problem Diagnoses')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Problem Diagnosis')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    EquipmentInstanceProblemDiagnosis,
-    admin_class=EquipmentInstanceProblemDiagnosisAdmin)
-
-
+@register(AlertDiagnosisStatus)
 class AlertDiagnosisStatusAdmin(ModelAdmin):
-    """AlertDiagnosisStatusAdmin."""
+    """AlertDiagnosisStatus admin."""
 
     list_display = 'index', 'name'
 
@@ -241,76 +301,76 @@ class AlertDiagnosisStatusAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Alert Diagnosis Statuses')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Alert Diagnosis Status')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
 
 
-site.register(
-    AlertDiagnosisStatus,
-    admin_class=AlertDiagnosisStatusAdmin)
-
-
+@register(EquipmentInstanceAlertPeriod)
 class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
-    """EquipmentInstanceAlertPeriodAdmin."""
+    """EquipmentInstanceAlertPeriod admin."""
 
-    list_display = \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name', \
-        'threshold', \
-        'from_date', \
-        'to_date', \
-        'duration', \
-        'approx_average_risk_score', \
-        'last_risk_score', \
-        'cumulative_excess_risk_score', \
-        'ongoing', \
-        'diagnosis_status', \
-        'has_associated_equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_problem_diagnoses'
+    list_display = (
+        'equipment_unique_type_group',
+        'equipment_instance',
+        'risk_score_name',
+        'threshold',
+        'from_date',
+        'to_date',
+        'duration',
+        'approx_average_risk_score',
+        'last_risk_score',
+        'cumulative_excess_risk_score',
+        'ongoing',
+        'diagnosis_status',
+        'has_associated_equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+    )
 
-    list_filter = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'risk_score_name', \
-        'threshold', \
-        'from_date', \
-        'to_date', \
-        'ongoing', \
-        'diagnosis_status', \
-        'has_associated_equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_problem_diagnoses'
+    list_filter = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'risk_score_name',
+        'threshold',
+        'from_date',
+        'to_date',
+        'ongoing',
+        'diagnosis_status',
+        'has_associated_equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+    )
 
-    search_fields = \
-        'equipment_unique_type_group__equipment_general_type__name', \
-        'equipment_unique_type_group__name', \
-        'equipment_instance__name', \
-        'risk_score_name'
+    search_fields = (
+        'equipment_unique_type_group__equipment_general_type__name',
+        'equipment_unique_type_group__name',
+        'equipment_instance__name',
+        'risk_score_name',
+    )
 
     show_full_result_count = False
 
-    readonly_fields = \
-        'equipment_unique_type_group', \
-        'equipment_instance', \
-        'risk_score_name', \
-        'threshold', \
-        'from_date', \
-        'to_date', \
-        'date_range', \
-        'duration', \
-        'approx_average_risk_score', \
-        'last_risk_score', \
-        'cumulative_excess_risk_score', \
-        'ongoing', \
-        'info', \
-        'has_associated_equipment_instance_alarm_periods', \
-        'equipment_instance_alarm_periods', \
-        'has_associated_equipment_instance_problem_diagnoses'
+    readonly_fields = (
+        'equipment_unique_type_group',
+        'equipment_instance',
+        'risk_score_name',
+        'threshold',
+        'from_date',
+        'to_date',
+        'date_range',
+        'duration',
+        'approx_average_risk_score',
+        'last_risk_score',
+        'cumulative_excess_risk_score',
+        'ongoing',
+        'info',
+        'has_associated_equipment_instance_alarm_periods',
+        'equipment_instance_alarm_periods',
+        'has_associated_equipment_instance_problem_diagnoses',
+    )
 
     def get_queryset(self, request):
         """Get queryset."""
@@ -339,15 +399,10 @@ class EquipmentInstanceAlertPeriodAdmin(ModelAdmin):
 
     @silk_profile(name='Admin: Equipment Instance Alert Periods')
     def changelist_view(self, *args, **kwargs):
-        """Change-List view."""
+        """Change-list view."""
         return super().changelist_view(*args, **kwargs)
 
     @silk_profile(name='Admin: Equipment Instance Alert Period')
     def changeform_view(self, *args, **kwargs):
-        """Change-Form view."""
+        """Change-form view."""
         return super().changeform_view(*args, **kwargs)
-
-
-site.register(
-    EquipmentInstanceAlertPeriod,
-    admin_class=EquipmentInstanceAlertPeriodAdmin)
