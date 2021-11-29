@@ -1,6 +1,6 @@
 [tool.poetry]
 name = 'H1st-IoT'
-version = '0.0.5'
+version = '0.0.6'
 description = 'H1st IoT'
 authors = ['Aitomatic, Inc. <Engineering@Aitomatic.com>']
 license = 'Apache-2.0'
@@ -17,6 +17,7 @@ packages = [
 Python = '>= 3.8, < 3.10'
 
 Django = '^3.2.9'
+Django-Silk = '^4.2.0'
 DRF-Writable-Nested = '^0.6.3'
 
 PsycoPG2-binary = '^2.9.2'
