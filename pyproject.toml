@@ -16,7 +16,7 @@ packages = [
 [tool.poetry.dependencies]
 Python = '>= 3.8, < 3.10'
 
-Django = '^3.2.9'
+Django = '^4.0'
 Django-Silk = '^4.2.0'
 DRF-Writable-Nested = '^0.6.3'
 
