@@ -10,7 +10,6 @@ from drf_writable_nested.serializers import WritableNestedModelSerializer
 from h1st_iot.data_mgmt.models import EquipmentInstance
 
 from h1st_iot.maint_ops.models import (
-    GlobalConfig,
     EquipmentInstanceDailyRiskScore,
     EquipmentProblemType,
     EquipmentInstanceAlarmPeriod,
@@ -18,17 +17,6 @@ from h1st_iot.maint_ops.models import (
     AlertDiagnosisStatus,
     EquipmentInstanceAlertPeriod,
 )
-
-
-class GlobalConfigSerializer(ModelSerializer):
-    """GlobalConfigSerializer."""
-
-    class Meta:
-        """Metadata."""
-
-        model = GlobalConfig
-
-        fields = 'key', 'value'
 
 
 class EquipmentInstanceDailyRiskScoreSerializer(ModelSerializer):

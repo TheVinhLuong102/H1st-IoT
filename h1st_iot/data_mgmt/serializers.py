@@ -8,7 +8,6 @@ from rest_framework.serializers import (ModelSerializer,
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 from h1st_iot.data_mgmt.models import (
-    GlobalConfig,
     LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
@@ -22,17 +21,6 @@ from h1st_iot.data_mgmt.models import (
 )
 
 from h1st_iot.util import clean_lower_str
-
-
-class GlobalConfigSerializer(ModelSerializer):
-    """GlobalConfigSerializer."""
-
-    class Meta:
-        """Metadata."""
-
-        model = GlobalConfig
-
-        fields = 'key', 'value'
 
 
 class DataTypeSerializer(ModelSerializer):

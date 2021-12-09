@@ -4,7 +4,6 @@
 import sys
 
 from .data_mgmt.models import (
-    GlobalConfig,
     LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
@@ -34,7 +33,6 @@ else:
 
 
 __all__: Sequence[str] = (
-    'GlobalConfig',
     'LogicalDataType',
     'NumericMeasurementUnit',
     'EquipmentDataFieldType',

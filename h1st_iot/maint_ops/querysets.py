@@ -4,7 +4,6 @@
 from django.db.models import Prefetch
 
 from h1st_iot.maint_ops.models import (
-    GlobalConfig,
     EquipmentInstanceDailyRiskScore,
     EquipmentProblemType,
     EquipmentInstanceAlarmPeriod,
@@ -12,10 +11,6 @@ from h1st_iot.maint_ops.models import (
     EquipmentInstanceAlertPeriod,
     EquipmentInstanceProblemDiagnosis,
 )
-
-
-GLOBAL_CONFIG_QUERYSET = \
-    GlobalConfig.objects.all()
 
 
 EQUIPMENT_INSTANCE_DAILY_RISK_SCORE = \

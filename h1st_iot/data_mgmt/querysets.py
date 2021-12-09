@@ -4,7 +4,6 @@
 from django.db.models import Prefetch
 
 from h1st_iot.data_mgmt.models import (
-    GlobalConfig,
     LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
@@ -17,10 +16,6 @@ from h1st_iot.data_mgmt.models import (
     EquipmentSystem,
     EquipmentUniqueTypeGroupDataFieldProfile,
 )
-
-
-GLOBAL_CONFIG_QUERYSET = \
-    GlobalConfig.objects.all()
 
 
 DATA_TYPE_QUERYSET = \

@@ -9,7 +9,6 @@ from django.forms.models import BaseInlineFormSet
 from silk.profiling.profiler import silk_profile
 
 from h1st_iot.data_mgmt.models import (
-    GlobalConfig,
     NumericMeasurementUnit,
     EquipmentGeneralType,
     EquipmentDataField,
@@ -34,25 +33,6 @@ from h1st_iot.data_mgmt.querysets import (
 
 
 # pylint: disable=invalid-name,line-too-long
-
-
-@register(GlobalConfig)
-class GlobalConfigAdmin(ModelAdmin):
-    """GlobalConfig admin."""
-
-    list_display = 'key', 'value'
-
-    show_full_result_count = False
-
-    @silk_profile(name='Admin: Global Configs')
-    def changelist_view(self, *args, **kwargs):
-        """Change-list view."""
-        return super().changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Global Config')
-    def changeform_view(self, *args, **kwargs):
-        """Change-form view."""
-        return super().changeform_view(*args, **kwargs)
 
 
 @register(NumericMeasurementUnit)

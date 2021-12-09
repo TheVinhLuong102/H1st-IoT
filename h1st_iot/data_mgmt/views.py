@@ -14,7 +14,6 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from silk.profiling.profiler import silk_profile
 
 from h1st_iot.data_mgmt.filters import (
-    GlobalConfigFilter,
     DataTypeFilter,
     NumericMeasurementUnitFilter,
     EquipmentDataFieldTypeFilter,
@@ -27,7 +26,6 @@ from h1st_iot.data_mgmt.filters import (
     EquipmentSystemFilter,
 )
 from h1st_iot.data_mgmt.querysets import (
-    GLOBAL_CONFIG_QUERYSET,
     DATA_TYPE_QUERYSET,
     NUMERIC_MEASUREMENT_UNIT_QUERYSET,
     EQUIPMENT_DATA_FIELD_TYPE_QUERYSET,
@@ -40,7 +38,6 @@ from h1st_iot.data_mgmt.querysets import (
     EQUIPMENT_SYSTEM_REST_API_QUERYSET,
 )
 from h1st_iot.data_mgmt.serializers import (
-    GlobalConfigSerializer,
     DataTypeSerializer,
     NumericMeasurementUnitSerializer,
     EquipmentDataFieldTypeSerializer,
@@ -52,66 +49,6 @@ from h1st_iot.data_mgmt.serializers import (
     EquipmentInstanceSerializer,
     EquipmentSystemSerializer,
 )
-
-
-class GlobalConfigViewSet(ModelViewSet):
-    """GlobalConfigViewSet.
-
-    list:
-    `GET` a filterable, unpaginated list of Global Configs
-
-    retrieve:
-    `GET` the Global Config specified by `key`
-
-    create:
-    `POST` a new Global Config by `key`
-
-    update:
-    `PUT` updated data for the Global Config specified by `key`
-
-    partial_update:
-    `PATCH` the Global Config specified by `key`
-
-    destroy:
-    `DELETE` the Global Config specified by `key`
-    """
-
-    queryset = GLOBAL_CONFIG_QUERYSET
-
-    serializer_class = GlobalConfigSerializer
-
-    authentication_classes = (
-        BasicAuthentication,
-        RemoteUserAuthentication,
-        SessionAuthentication,
-        TokenAuthentication,
-    )
-
-    permission_classes = (IsAuthenticated,)
-
-    filter_class = GlobalConfigFilter
-
-    ordering_fields = ('key',)
-
-    ordering = ('key',)
-
-    pagination_class = None
-
-    lookup_field = 'key'
-
-    lookup_url_kwarg = 'global_config_key'
-
-    renderer_classes = CoreJSONRenderer, JSONRenderer
-
-    @silk_profile(name='API: Global Configs')
-    def list(self, request, *args, **kwargs):
-        """List items."""
-        return super().list(request, *args, **kwargs)
-
-    @silk_profile(name='API: Global Config')
-    def retrieve(self, request, *args, **kwargs):
-        """Retrieve 1 item."""
-        return super().retrieve(request, *args, **kwargs)
 
 
 class DataTypeViewSet(ReadOnlyModelViewSet):

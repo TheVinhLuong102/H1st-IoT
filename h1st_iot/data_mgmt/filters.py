@@ -6,7 +6,6 @@ from django.db.models.fields.json import JSONField
 from rest_framework_filters import CharFilter, FilterSet, RelatedFilter
 
 from h1st_iot.data_mgmt.models import (
-    GlobalConfig,
     LogicalDataType,
     NumericMeasurementUnit,
     EquipmentDataFieldType,
@@ -18,25 +17,6 @@ from h1st_iot.data_mgmt.models import (
     EquipmentInstance,
     EquipmentSystem,
 )
-
-
-class GlobalConfigFilter(FilterSet):
-    """GlobalConfigFilter."""
-
-    class Meta:
-        """GlobalConfigFilter metadata."""
-
-        model = GlobalConfig
-
-        fields = dict(
-            key=[
-                'exact', 'iexact',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
-                'regex', 'iregex'
-            ]
-        )
 
 
 class DataTypeFilter(FilterSet):

@@ -8,7 +8,6 @@ from h1st_iot.data_mgmt.models import (EquipmentUniqueTypeGroup,
 from h1st_iot.data_mgmt.filters import (EquipmentUniqueTypeGroupFilter,
                                         EquipmentInstanceFilter)
 from h1st_iot.maint_ops.models import (
-    GlobalConfig,
     EquipmentInstanceDailyRiskScore,
     EquipmentProblemType,
     EquipmentInstanceAlarmPeriod,
@@ -16,25 +15,6 @@ from h1st_iot.maint_ops.models import (
     AlertDiagnosisStatus,
     EquipmentInstanceAlertPeriod,
 )
-
-
-class GlobalConfigFilter(FilterSet):
-    """GlobalConfigFilter."""
-
-    class Meta:
-        """Metadata."""
-
-        model = GlobalConfig
-
-        fields = dict(
-            key=[
-                'exact', 'iexact',
-                'in',
-                'contains', 'icontains',
-                'startswith', 'istartswith', 'endswith', 'iendswith',
-                'regex', 'iregex',
-            ]
-        )
 
 
 class EquipmentInstanceDailyRiskScoreFilter(FilterSet):

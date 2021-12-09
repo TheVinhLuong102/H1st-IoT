@@ -6,7 +6,6 @@ from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 
 from h1st_iot.data_mgmt.views import (
-    GlobalConfigViewSet,
     DataTypeViewSet,
     NumericMeasurementUnitViewSet,
     EquipmentDataFieldTypeViewSet,
@@ -21,7 +20,6 @@ from h1st_iot.data_mgmt.views import (
 
 
 ROUTER = DefaultRouter()
-ROUTER.register('global-configs', GlobalConfigViewSet)
 ROUTER.register('data-types', DataTypeViewSet)
 ROUTER.register('numeric-measurement-units', NumericMeasurementUnitViewSet)
 ROUTER.register('equipment-data-field-types', EquipmentDataFieldTypeViewSet)

@@ -8,7 +8,6 @@ from django.db.models import Prefetch
 from silk.profiling.profiler import silk_profile
 
 from h1st_iot.maint_ops.models import (
-    GlobalConfig,
     EquipmentProblemType,
     EquipmentInstanceDailyPredictedFault,
     EquipmentInstanceAlarmPeriod,
@@ -25,25 +24,6 @@ from h1st_iot.maint_ops.querysets import (
 
 
 # pylint: disable=invalid-name,line-too-long
-
-
-@register(GlobalConfig)
-class GlobalConfigAdmin(ModelAdmin):
-    """GlobalConfig admin."""
-
-    list_display = 'key', 'value'
-
-    show_full_result_count = False
-
-    @silk_profile(name='Admin: Global Configs')
-    def changelist_view(self, *args, **kwargs):
-        """Change-list view."""
-        return super().changelist_view(*args, **kwargs)
-
-    @silk_profile(name='Admin: Global Config')
-    def changeform_view(self, *args, **kwargs):
-        """Change-form view."""
-        return super().changeform_view(*args, **kwargs)
 
 
 @register(EquipmentProblemType)

@@ -6,7 +6,6 @@ from django.conf.urls import include, url
 from rest_framework.routers import DefaultRouter
 
 from h1st_iot.maint_ops.views import (
-    GlobalConfigViewSet,
     EquipmentInstanceDailyRiskScoreViewSet,
     EquipmentProblemTypeViewSet,
     EquipmentInstanceAlarmPeriodViewSet,
@@ -17,10 +16,6 @@ from h1st_iot.maint_ops.views import (
 
 
 ROUTER = DefaultRouter()
-
-ROUTER.register(
-    'global-configs',
-    GlobalConfigViewSet)
 
 ROUTER.register(
     'equipment-instance-daily-risk-scores',

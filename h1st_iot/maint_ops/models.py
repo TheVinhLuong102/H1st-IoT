@@ -28,39 +28,6 @@ _ONE_DAY_TIME_DELTA_TOTAL_SECONDS = _ONE_DAY_TIME_DELTA.total_seconds()
 # pylint: disable=line-too-long
 
 
-class GlobalConfig(Model):
-    """Global Config."""
-
-    key = \
-        CharField(
-            blank=False,
-            null=False,
-            unique=True,
-            max_length=MAX_CHAR_LEN)
-
-    value = \
-        JSONField(
-            blank=True,
-            null=True)
-
-    class Meta:
-        """Metadata."""
-
-        verbose_name = 'Global Config'
-        verbose_name_plural = 'Global Configs'
-
-        ordering = ('key',)
-
-    def __str__(self):
-        """Return string repr."""
-        return f'{self.key} = {self.value}'
-
-    def save(self, *args, **kwargs):
-        """Save."""
-        self.key = clean_upper_str(self.key)
-        super().save(*args, **kwargs)
-
-
 class EquipmentInstanceDailyRiskScore(Model):
     """Equipment Instance Daily Risk Score."""
 
