@@ -24,5 +24,8 @@ PsycoPG2-binary = '^2.9.2'
 
 
 [build-system]
-requires = ['Poetry-Core >= 1.0.0']
+requires = [
+  'Poetry-Core >= 1.0.7',
+  'SetUpTools >= 60.1.0',   # github.com/pypa/pip/issues/10743#issuecomment-998321115
+]
 build-backend = 'poetry.core.masonry.api'
