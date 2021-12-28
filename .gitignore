@@ -1,7 +1,9 @@
 # Python
 dist/
 *.egg-info/
+*.pyc
 __pycache__/
+.ropeproject/
 
 
 # Visual Studio Code
