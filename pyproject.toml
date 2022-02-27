@@ -16,13 +16,6 @@ packages = [
 [tool.poetry.dependencies]
 Python = '>= 3.8, < 3.10'
 
-Django = '^4.0'
-DjangoRESTFramework = '^3.13.1'
-Django-Silk = '^4.2.0'
-DRF-Writable-Nested = '^0.6.3'
-
-PsycoPG2-binary = '^2.9.2'
-
 
 [build-system]
 requires = [
